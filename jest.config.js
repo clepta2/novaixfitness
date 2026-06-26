@@ -1,0 +1,37 @@
+module.exports = {
+  preset: 'jest-expo',
+  setupFiles: ['./jest.setup.js'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+    'expo-font': '<rootDir>/__mocks__/expo-font.js',
+    'expo-router': '<rootDir>/__mocks__/expo-router.js',
+    'expo-local-authentication': '<rootDir>/__mocks__/expo-local-authentication.js',
+    'expo-notifications': '<rootDir>/__mocks__/expo-notifications.js',
+    'expo-sharing': '<rootDir>/__mocks__/expo-sharing.js',
+    'expo-file-system': '<rootDir>/__mocks__/expo-file-system.js',
+    'expo-clipboard': '<rootDir>/__mocks__/expo-clipboard.js',
+    'expo-keep-awake': '<rootDir>/__mocks__/expo-keep-awake.js',
+    'react-native-youtube-iframe': '<rootDir>/__mocks__/react-native-youtube-iframe.js',
+    'react-native-chart-kit': '<rootDir>/__mocks__/react-native-chart-kit.js',
+    '@react-native-async-storage/async-storage': '<rootDir>/__mocks__/async-storage.js',
+    '../src/config/supabase': '<rootDir>/__mocks__/supabase.js',
+    './config/supabase': '<rootDir>/__mocks__/supabase.js',
+  },
+  testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/', '/.expo/'],
+  transformIgnorePatterns: [
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|react-native-reanimated|react-native-gesture-handler|react-native-youtube-iframe|react-native-chart-kit|react-native-webview|lucide-react-native)',
+  ],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx}',
+    '!src/**/*.test.{js,jsx}',
+    '!src/**/index.js',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 60,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+};

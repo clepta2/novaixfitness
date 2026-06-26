@@ -22,6 +22,10 @@ export { default as WorkoutInfo } from './workout/WorkoutInfo';
 export { default as VideoPreview } from './workout/VideoPreview';
 export { default as MoreOptionsModal } from './workout/MoreOptionsModal';
 export { default as RatingModal } from './workout/RatingModal';
+export { default as WorkoutTimer } from './workout/WorkoutTimer';
+export { default as ExerciseProgress } from './workout/ExerciseProgress';
+export { default as RestOverlay } from './workout/RestOverlay';
+export { default as WorkoutControls } from './workout/WorkoutControls';
 export { default as SetsTracker } from './workout/SetsTracker';
 export { default as WorkoutListView } from './workout/WorkoutListView';
 
