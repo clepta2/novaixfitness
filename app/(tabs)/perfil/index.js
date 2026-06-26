@@ -162,6 +162,7 @@ export default function ProfileScreen() {
           { icon: 'notifications-outline', label: 'Notificacoes', route: '/notifications' },
           { icon: 'stats-chart-outline', label: 'Analytics', route: '/analytics' },
           { icon: 'body-outline', label: 'Medidas Corporais', route: '/body-measures' },
+          { icon: 'camera-outline', label: 'Fotos de Progresso', route: '/progress-photos' },
           { icon: 'download-outline', label: 'Exportar Dados', route: '/export-data' },
           { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' },
           { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' },

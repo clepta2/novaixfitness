@@ -488,3 +488,25 @@ CREATE POLICY "Salvar medida" ON body_measurements FOR INSERT WITH CHECK (auth.u
 CREATE POLICY "Deletar medida" ON body_measurements FOR DELETE USING (auth.uid() = user_id);
 
 CREATE INDEX IF NOT EXISTS idx_body_measurements_user ON body_measurements(user_id, recorded_at DESC);
+
+-- =============================================
+-- TABELA DE FOTOS DE PROGRESSO
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS progress_photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  storage_path TEXT,
+  label TEXT DEFAULT 'Frente',
+  notes TEXT,
+  recorded_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE progress_photos ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Ver minhas fotos" ON progress_photos FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Salvar foto" ON progress_photos FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Deletar foto" ON progress_photos FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS idx_progress_photos_user ON progress_photos(user_id, label, recorded_at DESC);
