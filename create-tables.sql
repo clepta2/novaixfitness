@@ -415,3 +415,22 @@ CREATE POLICY "Criar depoimento" ON testimonials FOR INSERT WITH CHECK (auth.uid
 CREATE POLICY "Ver meus depoimentos" ON testimonials FOR SELECT USING (auth.uid() = user_id);
 
 CREATE INDEX IF NOT EXISTS idx_testimonials_approved ON testimonials(approved, featured, created_at DESC);
+
+-- =============================================
+-- TABELA DE PERGUNTAS FREQUENTES
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS faqs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  category TEXT DEFAULT 'geral',
+  sort_order INTEGER DEFAULT 0,
+  active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Ver FAQs ativos" ON faqs FOR SELECT USING (active = true);
+
+CREATE INDEX IF NOT EXISTS idx_faqs_active ON faqs(active, sort_order);

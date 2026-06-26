@@ -230,51 +230,9 @@
   <section class="faq">
     <div class="container">
       <h2>Perguntas <span class="highlight">frequentes</span></h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-            <span>Preciso pagar para começar?</span>
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Não! Você pode se cadastrar e experimentar o aplicativo completo gratuitamente por 7 dias. Sem compromisso.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-            <span>Funciona em Android e iOS?</span>
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Sim! O NOVAIX está disponível para download gratuito na App Store e Google Play.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-            <span>Posso cancelar a assinatura?</span>
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Sim, você pode cancelar a qualquer momento. O acesso continua até o fim do período já pago. Sem multa ou burocracia.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-            <span>O Coach IA substitui um personal?</span>
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>O Coach IA é uma ferramenta de apoio para dúvidas rápidas sobre treino e nutrição. Para acompanhamento personalizado, consulte um profissional.</p>
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-            <span>Meus dados estão seguros?</span>
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Sim! Somos totalmente compatíveis com a LGPD. Seus dados são criptografados e você pode exportá-los ou deletar sua conta a qualquer momento.</p>
-          </div>
+      <div class="faq-list" id="faq-container">
+        <div class="faq-loading">
+          <p>Carregando perguntas...</p>
         </div>
       </div>
     </div>
@@ -465,6 +423,37 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadTestimonials);
+
+    async function loadFaqs() {
+      const container = document.getElementById('faq-container');
+      try {
+        const response = await fetch(`${API_BASE}/api/faqs`);
+        if (!response.ok) throw new Error('Erro ao carregar');
+        const faqs = await response.json();
+
+        if (faqs.length === 0) {
+          container.innerHTML = '<p class="faq-empty">Perguntas frequentes em breve.</p>';
+          return;
+        }
+
+        container.innerHTML = faqs.map(faq => `
+          <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+              <span>${faq.question}</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>${faq.answer}</p>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Erro ao carregar FAQs:', err);
+        container.innerHTML = '<p class="faq-empty">Perguntas frequentes em breve.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFaqs);
   </script>
 </body>
 </html>

@@ -15,6 +15,7 @@ const paymentRoutes = require('./routes/payments');
 const webhookRoutes = require('./routes/webhooks');
 const notificationRoutes = require('./routes/notifications');
 const testimonialRoutes = require('./routes/testimonials');
+const faqRoutes = require('./routes/faqs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,7 @@ app.use('/api/workouts', workoutRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/faqs', faqRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/webhooks', webhookRoutes);
 
