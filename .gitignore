@@ -2,6 +2,7 @@ node_modules/
 .env
 .expo/
 dist/
+/android/
 backend/backups/
 *.jks
 *.p8

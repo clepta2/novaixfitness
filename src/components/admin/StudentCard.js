@@ -1,24 +1,34 @@
-// src/components/admin/StudentCard.js
-// Card de aluno no admin - NOVAIX FITNESS
-
-import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { memo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-function StudentCard({ student }) {
+function StudentCard({ student, onEdit }) {
+  const statusColor = student.status === 'active' ? COLORS.success : COLORS.error;
+  const statusLabel = student.status === 'active' ? 'Ativo' : 'Inativo';
+
   return (
     <View style={styles.card}>
+      <View style={styles.avatar}>
+        <Text style={styles.avatarText}>{(student.name || 'S')[0].toUpperCase()}</Text>
+      </View>
       <View style={styles.info}>
-        <Text style={styles.name}>{student.name}</Text>
-        <Text style={styles.email}>{student.email}</Text>
+        <Text style={styles.name} numberOfLines={1}>{student.name}</Text>
+        <Text style={styles.email} numberOfLines={1}>{student.email}</Text>
+        <View style={styles.tags}>
+          <View style={[styles.tag, { backgroundColor: statusColor + '15' }]}>
+            <View style={[styles.dot, { backgroundColor: statusColor }]} />
+            <Text style={[styles.tagText, { color: statusColor }]}>{statusLabel}</Text>
+          </View>
+          <View style={styles.planTag}>
+            <Text style={styles.planText}>{student.plan}</Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.meta}>
-        <Text style={[styles.status, student.status === 'active' ? styles.active : styles.inactive]}>
-          {student.status === 'active' ? 'Ativo' : 'Inativo'}
-        </Text>
-        <Text style={styles.plan}>{student.plan}</Text>
-      </View>
+      <TouchableOpacity style={styles.editBtn} onPress={() => onEdit?.(student)}>
+        <Ionicons name="pencil" size={16} color={COLORS.primary} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -26,13 +36,17 @@ function StudentCard({ student }) {
 export default memo(StudentCard);
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  card: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
+  avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.primary + '20', justifyContent: 'center', alignItems: 'center', marginRight: SPACING.md },
+  avatarText: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.primary },
   info: { flex: 1 },
   name: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
-  email: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted },
-  meta: { alignItems: 'flex-end' },
-  status: { fontFamily: 'Inter_400Regular', fontSize: 10, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 },
-  active: { backgroundColor: COLORS.success + '20', color: COLORS.success },
-  inactive: { backgroundColor: COLORS.error + '20', color: COLORS.error },
-  plan: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 4 },
+  email: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
+  tags: { flexDirection: 'row', gap: SPACING.xs, marginTop: SPACING.xs },
+  tag: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  dot: { width: 5, height: 5, borderRadius: 3 },
+  tagText: { fontFamily: 'Inter_500Medium', fontSize: 10 },
+  planTag: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: COLORS.surface },
+  planText: { fontFamily: 'Inter_500Medium', fontSize: 10, color: COLORS.textMuted },
+  editBtn: { padding: SPACING.sm, borderRadius: 8, backgroundColor: COLORS.background },
 });
