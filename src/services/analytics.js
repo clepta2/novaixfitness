@@ -8,38 +8,67 @@ export async function getWorkoutAnalytics(userId, period = 'month') {
 
   const now = new Date();
   let startDate;
+  let prevStartDate;
+  let prevEndDate;
 
   switch (period) {
     case 'week':
       startDate = new Date(now);
       startDate.setDate(now.getDate() - 7);
+      prevStartDate = new Date(startDate);
+      prevStartDate.setDate(prevStartDate.getDate() - 7);
+      prevEndDate = new Date(startDate);
       break;
     case 'month':
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 1);
+      prevStartDate = new Date(startDate);
+      prevStartDate.setMonth(prevStartDate.getMonth() - 1);
+      prevEndDate = new Date(startDate);
       break;
     case 'quarter':
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 3);
+      prevStartDate = new Date(startDate);
+      prevStartDate.setMonth(prevStartDate.getMonth() - 3);
+      prevEndDate = new Date(startDate);
       break;
     case 'year':
       startDate = new Date(now);
       startDate.setFullYear(now.getFullYear() - 1);
+      prevStartDate = new Date(startDate);
+      prevStartDate.setFullYear(prevStartDate.getFullYear() - 1);
+      prevEndDate = new Date(startDate);
       break;
     default:
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 1);
+      prevStartDate = new Date(startDate);
+      prevStartDate.setMonth(prevStartDate.getMonth() - 1);
+      prevEndDate = new Date(startDate);
   }
 
-  const { data: workouts } = await supabase
-    .from('user_workouts')
-    .select('completed, duration, completed_at, workouts(category)')
-    .eq('user_id', userId)
-    .eq('completed', true)
-    .gte('completed_at', startDate.toISOString())
-    .order('completed_at', { ascending: true });
+  const [currentData, prevData] = await Promise.all([
+    supabase
+      .from('user_workouts')
+      .select('completed, duration, completed_at, workouts(category, level)')
+      .eq('user_id', userId)
+      .eq('completed', true)
+      .gte('completed_at', startDate.toISOString())
+      .order('completed_at', { ascending: true }),
+    supabase
+      .from('user_workouts')
+      .select('completed, duration, completed_at')
+      .eq('user_id', userId)
+      .eq('completed', true)
+      .gte('completed_at', prevStartDate.toISOString())
+      .lt('completed_at', prevEndDate.toISOString()),
+  ]);
 
-  if (!workouts?.length) {
+  const workouts = currentData.data || [];
+  const prevWorkouts = prevData.data || [];
+
+  if (!workouts.length && !prevWorkouts.length) {
     return {
       totalWorkouts: 0,
       totalMinutes: 0,
@@ -48,12 +77,21 @@ export async function getWorkoutAnalytics(userId, period = 'month') {
       byCategory: {},
       byWeek: [],
       byMonth: [],
+      byDayOfWeek: [],
+      byHour: [],
+      comparison: { workouts: 0, minutes: 0, pctChange: 0 },
+      bestDay: null,
+      bestHour: null,
     };
   }
 
   const totalWorkouts = workouts.length;
   const totalMinutes = workouts.reduce((s, w) => s + (w.duration || 0), 0);
-  const avgDuration = Math.round(totalMinutes / totalWorkouts);
+  const avgDuration = totalWorkouts > 0 ? Math.round(totalMinutes / totalWorkouts) : 0;
+
+  const prevTotal = prevWorkouts.length;
+  const prevMinutes = prevWorkouts.reduce((s, w) => s + (w.duration || 0), 0);
+  const pctChange = prevTotal > 0 ? Math.round(((totalWorkouts - prevTotal) / prevTotal) * 100) : 0;
 
   const byCategory = {};
   workouts.forEach(w => {
@@ -61,8 +99,22 @@ export async function getWorkoutAnalytics(userId, period = 'month') {
     byCategory[cat] = (byCategory[cat] || 0) + 1;
   });
 
-  const byWeek = groupByWeek(workouts);
-  const byMonth = groupByMonth(workouts);
+  const byDayOfWeek = {};
+  const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+  workouts.forEach(w => {
+    const day = dayNames[new Date(w.completed_at).getDay()];
+    byDayOfWeek[day] = (byDayOfWeek[day] || 0) + 1;
+  });
+
+  const byHour = {};
+  workouts.forEach(w => {
+    const hour = new Date(w.completed_at).getHours();
+    const h = `${hour.toString().padStart(2, '0')}:00`;
+    byHour[h] = (byHour[h] || 0) + 1;
+  });
+
+  const bestDay = Object.entries(byDayOfWeek).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  const bestHour = Object.entries(byHour).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
 
   return {
     totalWorkouts,
@@ -70,8 +122,17 @@ export async function getWorkoutAnalytics(userId, period = 'month') {
     avgDuration,
     streak: calculateCurrentStreak(workouts),
     byCategory,
-    byWeek,
-    byMonth,
+    byWeek: groupByWeek(workouts),
+    byMonth: groupByMonth(workouts),
+    byDayOfWeek: Object.entries(byDayOfWeek).map(([day, count]) => ({ day, count })),
+    byHour: Object.entries(byHour).map(([hour, count]) => ({ hour, count })),
+    comparison: {
+      workouts: totalWorkouts - prevTotal,
+      minutes: totalMinutes - prevMinutes,
+      pctChange,
+    },
+    bestDay,
+    bestHour,
   };
 }
 
@@ -127,6 +188,38 @@ export async function getWorkoutFrequency(userId) {
   });
 }
 
+export async function getMonthlyComparison(userId) {
+  if (!userId) return [];
+
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    months.push({
+      key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
+      label: d.toLocaleDateString('pt-BR', { month: 'short' }),
+    });
+  }
+
+  const { data: workouts } = await supabase
+    .from('user_workouts')
+    .select('duration, completed_at')
+    .eq('user_id', userId)
+    .eq('completed', true);
+
+  return months.map(m => {
+    const monthWorkouts = (workouts || []).filter(w => {
+      const d = new Date(w.completed_at);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === m.key;
+    });
+    return {
+      month: m.label,
+      workouts: monthWorkouts.length,
+      minutes: monthWorkouts.reduce((s, w) => s + (w.duration || 0), 0),
+    };
+  });
+}
+
 function groupByWeek(workouts) {
   const weeks = {};
   workouts.forEach(w => {
@@ -136,10 +229,7 @@ function groupByWeek(workouts) {
     const key = weekStart.toISOString().split('T')[0];
     weeks[key] = (weeks[key] || 0) + 1;
   });
-  return Object.entries(weeks).map(([date, count]) => ({
-    date,
-    count,
-  }));
+  return Object.entries(weeks).map(([date, count]) => ({ date, count }));
 }
 
 function groupByMonth(workouts) {
@@ -149,10 +239,7 @@ function groupByMonth(workouts) {
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     months[key] = (months[key] || 0) + 1;
   });
-  return Object.entries(months).map(([date, count]) => ({
-    date,
-    count,
-  }));
+  return Object.entries(months).map(([date, count]) => ({ date, count }));
 }
 
 function calculateCurrentStreak(workouts) {

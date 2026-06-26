@@ -9,7 +9,7 @@ import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
-import { getWorkoutAnalytics, getWorkoutFrequency } from '../src/services/analytics';
+import { getWorkoutAnalytics, getWorkoutFrequency, getMonthlyComparison } from '../src/services/analytics';
 import { layout, typography } from '../src/styles';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -36,6 +36,7 @@ export default function AnalyticsScreen() {
   const [period, setPeriod] = useState('month');
   const [analytics, setAnalytics] = useState(null);
   const [frequency, setFrequency] = useState([]);
+  const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,12 +44,14 @@ export default function AnalyticsScreen() {
       if (!user?.id) return;
       setLoading(true);
       try {
-        const [data, freq] = await Promise.all([
+        const [data, freq, monthly] = await Promise.all([
           getWorkoutAnalytics(user.id, period),
           getWorkoutFrequency(user.id),
+          getMonthlyComparison(user.id),
         ]);
         setAnalytics(data);
         setFrequency(freq);
+        setMonthlyData(monthly);
       } catch (err) {
         console.error('Erro ao carregar analytics:', err);
       } finally {
@@ -69,10 +72,7 @@ export default function AnalyticsScreen() {
     propsForDots: { r: '4', strokeWidth: '2', stroke: COLORS.primary },
   };
 
-  const barChartConfig = {
-    ...chartConfig,
-    color: (opacity = 1) => `rgba(204, 255, 0, ${opacity})`,
-  };
+  const comp = analytics?.comparison;
 
   return (
     <View style={layout.screen}>
@@ -97,6 +97,25 @@ export default function AnalyticsScreen() {
           ))}
         </View>
 
+        {/* Comparacao com periodo anterior */}
+        {comp && (
+          <View style={[styles.chartCard, comp.pctChange >= 0 ? styles.positiveCard : styles.negativeCard]}>
+            <View style={styles.comparisonRow}>
+              <View>
+                <Text style={typography.caption}>Vs. periodo anterior</Text>
+                <Text style={[styles.comparisonValue, { color: comp.pctChange >= 0 ? COLORS.success : COLORS.error }]}>
+                  {comp.pctChange >= 0 ? '+' : ''}{comp.pctChange}%
+                </Text>
+              </View>
+              <View style={styles.comparisonDetails}>
+                <Text style={typography.bodySmall}>{comp.workouts >= 0 ? '+' : ''}{comp.workouts} treinos</Text>
+                <Text style={typography.bodySmall}>{comp.minutes >= 0 ? '+' : ''}{comp.minutes} min</Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Stats Grid */}
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
             <Ionicons name="barbell" size={20} color={COLORS.primary} />
@@ -120,18 +139,35 @@ export default function AnalyticsScreen() {
           </View>
         </View>
 
+        {/* Melhor dia/hora */}
+        {analytics?.bestDay && (
+          <View style={styles.insightsRow}>
+            <View style={styles.insightCard}>
+              <Ionicons name="calendar" size={18} color={COLORS.primary} />
+              <Text style={styles.insightLabel}>Melhor dia</Text>
+              <Text style={styles.insightValue}>{analytics.bestDay}</Text>
+            </View>
+            <View style={styles.insightCard}>
+              <Ionicons name="time" size={18} color={COLORS.primary} />
+              <Text style={styles.insightLabel}>Melhor horario</Text>
+              <Text style={styles.insightValue}>{analytics.bestHour}</Text>
+            </View>
+          </View>
+        )}
+
+        {/* Grafico de barras - frequencia semanal */}
         <View style={styles.chartCard}>
           <Text style={typography.h5}>FREQUENCIA SEMANAL</Text>
-          <Text style={typography.caption}>Treinos por semana nos ultimos 12 meses</Text>
+          <Text style={typography.caption}>Treinos por semana</Text>
           {frequency.length > 0 && (
             <BarChart
               data={{
                 labels: frequency.map(f => f.week),
-                datasets: [{ data: frequency.map(f => f.count) }],
+                datasets: [{ data: frequency.map(f => f.count || 0) }],
               }}
               width={SCREEN_WIDTH - 80}
               height={200}
-              chartConfig={barChartConfig}
+              chartConfig={chartConfig}
               style={styles.chart}
               showValuesOnTopOfBars
               fromZero
@@ -139,10 +175,11 @@ export default function AnalyticsScreen() {
           )}
         </View>
 
+        {/* Grafico de pizza - categorias */}
         <View style={styles.chartCard}>
           <Text style={typography.h5}>TREINOS POR CATEGORIA</Text>
           <Text style={typography.caption}>Distribuicao dos seus treinos</Text>
-          {analytics?.byCategory && Object.keys(analytics.byCategory).length > 0 && (
+          {analytics?.byCategory && Object.keys(analytics.byCategory).length > 0 ? (
             <PieChart
               data={Object.entries(analytics.byCategory).map(([name, count]) => ({
                 name,
@@ -158,27 +195,76 @@ export default function AnalyticsScreen() {
               backgroundColor="transparent"
               paddingLeft="15"
             />
+          ) : (
+            <Text style={styles.emptyChart}>Sem dados para exibir</Text>
           )}
         </View>
 
-        <View style={styles.chartCard}>
-          <Text style={typography.h5}>EVOLUCAO MENSAL</Text>
-          <Text style={typography.caption}>Progresso ao longo do tempo</Text>
-          {analytics?.byMonth && analytics.byMonth.length > 1 && (
-            <LineChart
+        {/* Grafico de barras - melhor dia da semana */}
+        {analytics?.byDayOfWeek?.length > 0 && (
+          <View style={styles.chartCard}>
+            <Text style={typography.h5}>TREINOS POR DIA</Text>
+            <Text style={typography.caption}>Qual dia voce mais treina?</Text>
+            <BarChart
               data={{
-                labels: analytics.byMonth.map(m => m.date.split('-')[1]),
-                datasets: [{ data: analytics.byMonth.map(m => m.count) }],
+                labels: analytics.byDayOfWeek.map(d => d.day),
+                datasets: [{ data: analytics.byDayOfWeek.map(d => d.count) }],
               }}
               width={SCREEN_WIDTH - 80}
-              height={200}
+              height={180}
+              chartConfig={chartConfig}
+              style={styles.chart}
+              showValuesOnTopOfBars
+              fromZero
+            />
+          </View>
+        )}
+
+        {/* Grafico de linha - evolucao mensal */}
+        {monthlyData.length > 1 && (
+          <View style={styles.chartCard}>
+            <Text style={typography.h5}>EVOLUCAO MENSAL</Text>
+            <Text style={typography.caption}>Treinos e minutos por mes</Text>
+            <LineChart
+              data={{
+                labels: monthlyData.map(m => m.month),
+                datasets: [
+                  { data: monthlyData.map(m => m.workouts), color: () => COLORS.primary },
+                  { data: monthlyData.map(m => Math.round(m.minutes / 10)), color: () => COLORS.success },
+                ],
+                legend: ['Treinos', 'Minutos (x10)'],
+              }}
+              width={SCREEN_WIDTH - 80}
+              height={220}
               chartConfig={chartConfig}
               style={styles.chart}
               bezier
               fromZero
             />
-          )}
-        </View>
+          </View>
+        )}
+
+        {/* Horarios preferidos */}
+        {analytics?.byHour?.length > 0 && (
+          <View style={styles.chartCard}>
+            <Text style={typography.h5}>HORARIOS PREFERIDOS</Text>
+            <Text style={typography.caption}>Quando voce treina?</Text>
+            <BarChart
+              data={{
+                labels: analytics.byHour.slice(0, 8).map(h => h.hour),
+                datasets: [{ data: analytics.byHour.slice(0, 8).map(h => h.count) }],
+              }}
+              width={SCREEN_WIDTH - 80}
+              height={180}
+              chartConfig={chartConfig}
+              style={styles.chart}
+              showValuesOnTopOfBars
+              fromZero
+            />
+          </View>
+        )}
+
+        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
@@ -196,4 +282,14 @@ const styles = StyleSheet.create({
   statLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
   chartCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
   chart: { marginTop: SPACING.md, borderRadius: 12 },
+  emptyChart: { textAlign: 'center', color: COLORS.textMuted, paddingVertical: SPACING.xl },
+  comparisonRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  comparisonValue: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 32 },
+  comparisonDetails: { alignItems: 'flex-end' },
+  positiveCard: { borderColor: COLORS.success + '40' },
+  negativeCard: { borderColor: COLORS.error + '40' },
+  insightsRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.xl },
+  insightCard: { flex: 1, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border, gap: 4 },
+  insightLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
+  insightValue: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.primary },
 });
