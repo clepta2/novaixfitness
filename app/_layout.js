@@ -65,6 +65,7 @@ export default function RootLayout() {
           <Stack.Screen name="notification-settings" lazy />
           <Stack.Screen name="notifications" lazy />
           <Stack.Screen name="analytics" lazy />
+          <Stack.Screen name="export-data" lazy />
           <Stack.Screen name="workout-detail" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>

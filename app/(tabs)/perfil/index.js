@@ -159,7 +159,9 @@ export default function ProfileScreen() {
         <Text style={typography.label}>CONFIGURACOES</Text>
         {[
           { icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' },
-          { icon: 'notifications-outline', label: 'Notificacoes', route: '/notification-settings' },
+          { icon: 'notifications-outline', label: 'Notificacoes', route: '/notifications' },
+          { icon: 'stats-chart-outline', label: 'Analytics', route: '/analytics' },
+          { icon: 'download-outline', label: 'Exportar Dados', route: '/export-data' },
           { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' },
           { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' },
           { icon: 'information-circle-outline', label: 'Conheca-nos', route: '/(tabs)/perfil/conheca-nos' },
