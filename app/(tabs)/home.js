@@ -127,6 +127,12 @@ export default function HomeScreen() {
           <View style={styles.statItem}><Ionicons name="bar-chart" size={24} color={COLORS.primary} /><Text style={typography.price}>→</Text><Text style={typography.labelSmall}>VER MAIS</Text></View>
         </TouchableOpacity>
 
+        <TouchableOpacity style={styles.weeklyBtn} onPress={() => router.push('/weekly-progress')}>
+          <Ionicons name="calendar-outline" size={20} color={COLORS.primary} />
+          <Text style={typography.h5}>Ver progresso semanal</Text>
+          <Ionicons name="chevron-forward" size={18} color={COLORS.textMuted} />
+        </TouchableOpacity>
+
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>
@@ -151,4 +157,5 @@ const styles = StyleSheet.create({
   statsRow: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: 12, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   statItem: { flex: 1, alignItems: 'center' },
   statDivider: { width: 1, height: 40, backgroundColor: COLORS.border },
+  weeklyBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: 12, padding: SPACING.lg, marginTop: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
 });

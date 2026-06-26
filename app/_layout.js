@@ -68,6 +68,7 @@ export default function RootLayout() {
           <Stack.Screen name="export-data" lazy />
           <Stack.Screen name="body-measures" lazy />
           <Stack.Screen name="progress-photos" lazy />
+          <Stack.Screen name="weekly-progress" lazy />
           <Stack.Screen name="workout-detail" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
