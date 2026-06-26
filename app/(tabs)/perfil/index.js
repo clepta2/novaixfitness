@@ -151,8 +151,16 @@ export default function ProfileScreen() {
       </View>
 
       <View style={layout.section}>
-        <Text style={typography.label}>CONFIGURAÇÕES</Text>
-        {[{ icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' }, { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' }, { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' }, { icon: 'information-circle-outline', label: 'Conheça-nos', route: '/(tabs)/perfil/conheca-nos' }, { icon: 'link-outline', label: 'Links e Redes Sociais', route: '/(tabs)/perfil/links' }, { icon: 'document-text-outline', label: 'Termos e Políticas', route: '/(tabs)/perfil/termos' }].map((item, i) => (
+        <Text style={typography.label}>CONFIGURACOES</Text>
+        {[
+          { icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' },
+          { icon: 'notifications-outline', label: 'Notificacoes', route: '/notification-settings' },
+          { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' },
+          { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' },
+          { icon: 'information-circle-outline', label: 'Conheca-nos', route: '/(tabs)/perfil/conheca-nos' },
+          { icon: 'link-outline', label: 'Links e Redes Sociais', route: '/(tabs)/perfil/links' },
+          { icon: 'document-text-outline', label: 'Termos e Politicas', route: '/(tabs)/perfil/termos' },
+        ].map((item, i) => (
           <TouchableOpacity key={i} style={styles.menuItem} onPress={() => router.push(item.route)}>
             <Ionicons name={item.icon} size={22} color={COLORS.textMuted} />
             <Text style={[typography.h5, { flex: 1, marginLeft: SPACING.md }]}>{item.label}</Text>

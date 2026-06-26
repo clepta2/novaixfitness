@@ -62,6 +62,7 @@ export default function RootLayout() {
           <Stack.Screen name="paywall" lazy />
           <Stack.Screen name="subscription" lazy />
           <Stack.Screen name="chat-coach" lazy />
+          <Stack.Screen name="notification-settings" lazy />
           <Stack.Screen name="workout-detail" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
