@@ -16,6 +16,8 @@ module.exports = {
     '@react-native-async-storage/async-storage': '<rootDir>/__mocks__/async-storage.js',
     '../src/config/supabase': '<rootDir>/__mocks__/supabase.js',
     './config/supabase': '<rootDir>/__mocks__/supabase.js',
+    '^test-renderer$': 'react-test-renderer',
+    '../../__mocks__/render-hook': '<rootDir>/__mocks__/render-hook.js',
   },
   testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/', '/.expo/'],
   transformIgnorePatterns: [
