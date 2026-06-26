@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter , useLocalSearchParams } from 'expo-router';
 import { YoutubeIframe } from 'react-native-youtube-iframe';
 import * as KeepAwake from 'expo-keep-awake';
 import { COLORS } from '../src/constants/colors';
@@ -18,7 +18,6 @@ import { loadSounds, unloadSounds } from '../src/services/audioService';
 import { dailyWorkouts, activeWorkout } from '../src/data/dailyWorkouts';
 import { layout, typography } from '../src/styles';
 
-import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 

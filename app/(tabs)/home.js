@@ -7,10 +7,11 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING } from '../../src/constants/spacing';
-import { DailyWorkoutCard, WaterLogger, GamificationBar, WeeklyProgress } from '../../src/components';
+import { DailyWorkoutCard, WaterLogger, GamificationBar, WeeklyProgress, TutorialOverlay } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { getGamificationData } from '../../src/services/gamification';
+import { hasCompletedTutorial, completeTutorial, markTutorialSkipped, getTutorialSteps } from '../../src/services/tutorial';
 import { layout, typography } from '../../src/styles';
 
 const fallbackDaily = { name: 'QUEIMA SUPERIORES', type: 'HIIT/CALISTENIA', videoId: 'dQw4w9WgXcQ', timer: '00:30:15' };
@@ -23,6 +24,8 @@ export default function HomeScreen() {
   const [workouts, setWorkouts] = useState([]);
   const [stats, setStats] = useState({ streak: 0, completed: 0, hours: 0 });
   const [gamification, setGamification] = useState(null);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialSteps] = useState(getTutorialSteps());
 
   const fetchData = useCallback(async () => {
     try {
@@ -63,6 +66,27 @@ export default function HomeScreen() {
   }, [user?.id]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  useEffect(() => {
+    async function checkTutorial() {
+      if (!user?.id) return;
+      const completed = await hasCompletedTutorial(user.id);
+      if (!completed) {
+        setTimeout(() => setShowTutorial(true), 1000);
+      }
+    }
+    checkTutorial();
+  }, [user?.id]);
+
+  const handleTutorialComplete = async () => {
+    await completeTutorial(user?.id);
+    setShowTutorial(false);
+  };
+
+  const handleTutorialSkip = async () => {
+    await markTutorialSkipped(user?.id);
+    setShowTutorial(false);
+  };
 
   const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Atleta';
 

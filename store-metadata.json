@@ -1,0 +1,22 @@
+{
+  "android": {
+    "title": "NOVAIX FITNESS",
+    "shortDescription": "Treinos com IA e comunidade",
+    "fullDescription": "NOVAIX FITNESS - Sua Nova Evolução no Treino\n\nO NOVAIX FITNESS é um app de treinos personalizados que combina inteligência artificial, gamificação e uma comunidade ativa para te ajudar a alcançar seus objetivos fitness.\n\nPRINCIPAIS FUNCIONALIDADES:\n\n• Treinos Personalizados com IA\nNosso Coach IA analisa seu perfil e cria treinos sob medida.\n\n• Timer de Treino Inteligente\nCronômetro com descanso automático e alertas sonoros.\n\n• Gamificação Completa\nXP, níveis, conquistas e streaks. Desafios semanais.\n\n• Comunidade Ativa\nCompartilhe treinos e interaja com outros atletas.\n\n• Medidas Corporais e Fotos\nRegistre peso, medidas e fotos de progresso.\n\n• Analytics e Dashboard\nGráficos detalhados do seu progresso.\n\n• 100% Seguro e LGPD\nSeus dados protegidos. Conformidade total com a LGPD.\n\nPLANOS:\n- Básico: Treinos básicos e cronômetro\n- Intermediário: Treinos ilimitados + Coach IA\n- Premium: Tudo + Nutrição IA + Apple Watch\n\nBaixe agora e comece sua evolução!",
+    "category": "FITNESS",
+    "languageCode": "pt-BR",
+    "contactEmail": "suporte@novaixfitness.com",
+    "privacyPolicyUrl": "https://novaixfitness.com/privacidade"
+  },
+  "ios": {
+    "name": "NOVAIX FITNESS",
+    "subtitle": "Treinos com IA e comunidade",
+    "description": "NOVAIX FITNESS - Sua Nova Evolução no Treino\n\nO NOVAIX FITNESS é um app de treinos personalizados que combina inteligência artificial, gamificação e uma comunidade ativa para te ajudar a alcançar seus objetivos fitness.\n\nPRINCIPAIS FUNCIONALIDADES:\n\n• Treinos Personalizados com IA\nNosso Coach IA analisa seu perfil e cria treinos sob medida.\n\n• Timer de Treino Inteligente\nCronômetro com descanso automático e alertas sonoros.\n\n• Gamificação Completa\nXP, níveis, conquistas e streaks. Desafios semanais.\n\n• Comunidade Ativa\nCompartilhe treinos e interaja com outros atletas.\n\n• Medidas Corporais e Fotos\nRegistre peso, medidas e fotos de progresso.\n\n• Analytics e Dashboard\nGráficos detalhados do seu progresso.\n\n• 100% Seguro e LGPD\nSeus dados protegidos. Conformidade total com a LGPD.\n\nPLANOS:\n- Básico: Treinos básicos e cronômetro\n- Intermediário: Treinos ilimitados + Coach IA\n- Premium: Tudo + Nutrição IA + Apple Watch\n\nBaixe agora e comece sua evolução!",
+    "keywords": "treino,fitness,musculacao,cardio,ia,comunidade,cronometro,gamificacao,workout,exercicio,personalizado,coach,timer",
+    "category": "Health & Fitness",
+    "primaryLanguage": "pt-BR",
+    "supportUrl": "https://novaixfitness.com/ajuda",
+    "privacyPolicyUrl": "https://novaixfitness.com/privacidade",
+    "marketingUrl": "https://novaixfitness.com"
+  }
+}

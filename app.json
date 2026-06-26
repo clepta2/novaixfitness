@@ -44,11 +44,13 @@
       ],
       "expo-sharing"
     ],
+    "owner": "clepta2",
     "extra": {
       "supabaseUrl": "https://jkoteibpvwlmsilntpof.supabase.co",
       "eas": {
-        "projectId": "novaix-fitness"
-      }
+        "projectId": "f174d6e9-8bfb-4dbe-90e2-00c4f504a159"
+      },
+      "router": {}
     }
   }
 }

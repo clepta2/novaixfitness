@@ -54,6 +54,9 @@ export { default as WeeklyProgress } from './home/WeeklyProgress';
 // Paywall components
 export { default as PlanCard } from './paywall/PlanCard';
 export { default as CouponInput } from './paywall/CouponInput';
+export { default as PixPaymentScreen } from './paywall/PixPaymentScreen';
+export { default as BillingToggle } from './paywall/BillingToggle';
+export { default as VariantBView } from './paywall/VariantBView';
 
 // FAQ components
 export { default as FaqItem } from './faq/FaqItem';
@@ -66,9 +69,34 @@ export { default as SocialButton } from './auth/SocialButton';
 // Admin components
 export { default as StudentCard } from './admin/StudentCard';
 export { default as FinanceStats } from './admin/FinanceStats';
+export { default as TwoFactorSetup } from './admin/TwoFactorSetup';
+export { default as TwoFactorPrompt } from './admin/TwoFactorPrompt';
 
 // Referral components
 export { default as ReferralCard } from './referral/ReferralCard';
 
 // Common components
 export { default as AchievementPopup } from './common/AchievementPopup';
+export { default as TutorialOverlay } from './common/TutorialOverlay';
+
+// Analytics components
+export { default as PeriodSelector } from './analytics/PeriodSelector';
+export { default as ComparisonCard } from './analytics/ComparisonCard';
+export { default as StatsGrid } from './analytics/StatsGrid';
+export { default as InsightsRow } from './analytics/InsightsRow';
+export { FrequencyChart, CategoryChart, DayOfWeekChart, MonthlyChart, HourChart } from './analytics/ChartsSection';
+
+// Chat components
+export { default as ChatHeader } from './chat/ChatHeader';
+export { default as MessageBubble } from './chat/MessageBubble';
+export { default as ChatInput } from './chat/ChatInput';
+export { default as QuickTips } from './chat/QuickTips';
+
+// Landing components
+export { default as HeroSection } from './landing/HeroSection';
+export { default as StatsRow } from './landing/StatsRow';
+export { default as FeaturesSection } from './landing/FeaturesSection';
+export { default as PlansPreview } from './landing/PlansPreview';
+export { default as TestimonialsSection } from './landing/TestimonialsSection';
+export { default as FaqSection } from './landing/FaqSection';
+export { default as CtaSection } from './landing/CtaSection';

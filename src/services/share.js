@@ -2,7 +2,7 @@
 // Serviço de compartilhamento - NOVAIX FITNESS
 
 import * as Sharing from 'expo-sharing';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 
 export async function shareWorkout(workout) {
   if (!workout) return;
