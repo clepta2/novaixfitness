@@ -461,3 +461,30 @@ CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read
 
 -- Coluna de configuracoes de notificacao
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS notification_settings JSONB DEFAULT '{"workout_reminder": true, "weekly_plan": true, "achievements": true, "streak": true, "motivational": false, "rest_day": true}'::jsonb;
+
+-- =============================================
+-- TABELA DE MEDIDAS CORPORAIS
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS body_measurements (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  weight NUMERIC,
+  chest NUMERIC,
+  waist NUMERIC,
+  hips NUMERIC,
+  arms NUMERIC,
+  thighs NUMERIC,
+  calves NUMERIC,
+  body_fat NUMERIC,
+  notes TEXT,
+  recorded_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE body_measurements ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Ver minhas medidas" ON body_measurements FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Salvar medida" ON body_measurements FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Deletar medida" ON body_measurements FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS idx_body_measurements_user ON body_measurements(user_id, recorded_at DESC);
