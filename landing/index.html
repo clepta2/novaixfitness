@@ -310,6 +310,73 @@
     </div>
   </section>
 
+  <!-- Contact -->
+  <section id="contato" class="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Fale <span class="highlight">conosco</span></h2>
+          <p>Tem dúvidas, sugestões ou quer ser um parceiro? Mande uma mensagem!</p>
+          <div class="contact-methods">
+            <div class="contact-method">
+              <div class="contact-method-icon">📧</div>
+              <div>
+                <strong>E-mail</strong>
+                <span>suporte@novaixfitness.com</span>
+              </div>
+            </div>
+            <div class="contact-method">
+              <div class="contact-method-icon">💬</div>
+              <div>
+                <strong>WhatsApp</strong>
+                <span>(11) 99999-9999</span>
+              </div>
+            </div>
+            <div class="contact-method">
+              <div class="contact-method-icon">📍</div>
+              <div>
+                <strong>Localização</strong>
+                <span>São Paulo, SP - Brasil</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-container">
+          <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label for="name">Nome</label>
+              <input type="text" id="name" name="name" placeholder="Seu nome completo" required>
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="subject">Assunto</label>
+              <select id="subject" name="subject" required>
+                <option value="">Selecione...</option>
+                <option value="duvida">Dúvida</option>
+                <option value="suporte">Suporte técnico</option>
+                <option value="parceria">Parceria</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Mensagem</label>
+              <textarea id="message" name="message" rows="4" placeholder="Escreva sua mensagem..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">ENVIAR MENSAGEM</button>
+          </form>
+          <div id="form-success" class="form-success" style="display:none;">
+            <div class="success-icon">✅</div>
+            <h3>Mensagem enviada!</h3>
+            <p>Responderemos em até 24 horas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Final -->
   <section class="cta-final">
     <div class="container">
@@ -351,5 +418,15 @@
     </svg>
     <span class="whatsapp-tooltip">Fale conosco</span>
   </a>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.querySelector('.contact-form');
+      const success = document.getElementById('form-success');
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
