@@ -385,19 +385,33 @@ h1, h2, h3 {
     var(--bg-alt);
 }
 
+.plans-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: -40px;
+  margin-bottom: 60px;
+}
+
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  align-items: start;
 }
 
 .plan-card {
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
-  padding: 40px;
-  border-radius: 16px;
+  padding: 40px 32px;
+  border-radius: 20px;
   border: 1px solid var(--border);
   text-align: center;
   position: relative;
+  transition: all 0.3s;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .plan-card.popular {
@@ -406,52 +420,152 @@ h1, h2, h3 {
   box-shadow: 0 20px 60px rgba(204, 255, 0, 0.1);
 }
 
+.plan-card.popular:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
 .popular-badge {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, #B8E600 100%);
   color: var(--bg);
-  padding: 4px 16px;
+  padding: 6px 20px;
   border-radius: 20px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 1px;
   box-shadow: 0 4px 16px rgba(204, 255, 0, 0.4);
+  white-space: nowrap;
 }
 
-.plan-card h3 {
-  font-size: 20px;
-  margin-bottom: 16px;
+.plan-badge-premium {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFD600 0%, #FFA000 100%);
+  color: var(--bg);
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(255, 214, 0, 0.4);
+  white-space: nowrap;
+}
+
+.plan-header h3 {
+  font-size: 22px;
+  margin-bottom: 4px;
   color: var(--text);
 }
 
-.price {
+.plan-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.plan-price .currency {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.plan-price .amount {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  font-size: 48px;
-  margin-bottom: 24px;
+  font-size: 56px;
   color: var(--text);
+  line-height: 1;
 }
 
-.price span {
-  font-size: 16px;
-  font-weight: 400;
+.plan-price .period {
+  font-size: 14px;
   color: var(--text-muted);
+  margin-left: 4px;
 }
 
-.plan-card ul {
+.plan-features {
   list-style: none;
   margin-bottom: 32px;
   text-align: left;
 }
 
-.plan-card li {
-  padding: 8px 0;
+.plan-features li {
+  padding: 10px 0;
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.plan-features li:last-child {
+  border-bottom: none;
+}
+
+.plan-features li .check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.plan-features li.disabled {
+  opacity: 0.4;
+}
+
+.plan-features li.disabled .check {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.plan-btn {
+  width: 100%;
+  text-align: center;
+}
+
+.plans-guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 48px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.plans-guarantee span {
+  font-size: 24px;
+}
+
+.plans-guarantee p {
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
 /* Download */
@@ -849,8 +963,19 @@ h1, h2, h3 {
     justify-content: center;
   }
 
-  .features-grid, .plans-grid {
+  .plans-grid {
     grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .plan-card.popular {
+    transform: none;
+    order: -1;
+  }
+
+  .plan-card.popular:hover {
+    transform: translateY(-4px);
   }
 
   .steps {
