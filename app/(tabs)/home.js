@@ -117,13 +117,15 @@ export default function HomeScreen() {
         ))}
 
         <Text style={typography.label}>SEU DESEMPENHO</Text>
-        <View style={styles.statsRow}>
+        <TouchableOpacity style={styles.statsRow} onPress={() => router.push('/analytics')}>
           <View style={styles.statItem}><Ionicons name="flame" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.streak}</Text><Text style={typography.labelSmall}>STREAK</Text></View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}><Ionicons name="barbell" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.completed}</Text><Text style={typography.labelSmall}>TREINOS</Text></View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}><Ionicons name="time" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.hours}h</Text><Text style={typography.labelSmall}>TOTAL</Text></View>
-        </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}><Ionicons name="bar-chart" size={24} color={COLORS.primary} /><Text style={typography.price}>→</Text><Text style={typography.labelSmall}>VER MAIS</Text></View>
+        </TouchableOpacity>
 
         <View style={{ height: 100 }} />
       </ScrollView>
