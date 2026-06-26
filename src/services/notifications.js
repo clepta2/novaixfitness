@@ -194,6 +194,35 @@ export async function sendMotivationalNotification() {
 // GERENCIAMENTO
 // ========================================
 
+export async function saveNotificationToDB(userId, type, title, body, data = {}) {
+  if (!userId) return;
+  try {
+    await supabase.from('notifications').insert({
+      user_id: userId,
+      type,
+      title,
+      body,
+      data,
+    });
+  } catch (err) {
+    console.error('Erro ao salvar notificacao:', err);
+  }
+}
+
+export async function getUnreadCount(userId) {
+  if (!userId) return 0;
+  try {
+    const { count } = await supabase
+      .from('notifications')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('read', false);
+    return count || 0;
+  } catch (err) {
+    return 0;
+  }
+}
+
 export async function clearAllNotifications() {
   await Notifications.cancelAllScheduledNotificationsAsync();
   await Notifications.dismissAllNotificationsAsync();

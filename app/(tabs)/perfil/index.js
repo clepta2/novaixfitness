@@ -96,9 +96,14 @@ export default function ProfileScreen() {
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
       <View style={layout.header}>
         <Text style={typography.h2}>Meu Perfil</Text>
-        <TouchableOpacity onPress={handleEditName}>
-          <Ionicons name="create-outline" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', gap: SPACING.sm }}>
+          <TouchableOpacity onPress={() => router.push('/notifications')} style={layout.headerBtn}>
+            <Ionicons name="notifications-outline" size={22} color={COLORS.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleEditName}>
+            <Ionicons name="create-outline" size={24} color={COLORS.primary} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ProfileHeader name={userName} email={userEmail} memberSince={memberSince} uri={profile?.avatar_url} onPressAvatar={handleUpdateAvatar} />

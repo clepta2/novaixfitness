@@ -435,3 +435,29 @@ ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Ver FAQs ativos" ON faqs FOR SELECT USING (active = true);
 
 CREATE INDEX IF NOT EXISTS idx_faqs_active ON faqs(active, sort_order);
+
+-- =============================================
+-- TABELA DE NOTIFICACOES IN-APP
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  data JSONB,
+  read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Ver minhas notificacoes" ON notifications FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Criar notificacao" ON notifications FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Atualizar notificacao" ON notifications FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Deletar notificacao" ON notifications FOR DELETE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read, created_at DESC);
+
+-- Coluna de configuracoes de notificacao
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS notification_settings JSONB DEFAULT '{"workout_reminder": true, "weekly_plan": true, "achievements": true, "streak": true, "motivational": false, "rest_day": true}'::jsonb;
