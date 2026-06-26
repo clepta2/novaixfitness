@@ -268,7 +268,7 @@ function PaywallVariantB({ selected, setSelected }) {
         </View>
       </ScrollView>
       <View style={layout.footer}>
-        <Button title="COMEÇAR AGORA - 7 DIAS GRATIS" onPress={() => {}} loading={loading} icon="rocket" />
+        <Button title="COMEÇAR AGORA - 7 DIAS GRATIS" onPress={handleSubscribe} loading={loading} icon="rocket" />
         <TouchableOpacity onPress={handleSkip} style={styles.skip}>
           <Text style={typography.bodyMuted}>Continuar no plano gratuito</Text>
         </TouchableOpacity>

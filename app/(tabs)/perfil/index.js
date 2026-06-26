@@ -169,6 +169,7 @@ export default function ProfileScreen() {
           { icon: 'information-circle-outline', label: 'Conheca-nos', route: '/(tabs)/perfil/conheca-nos' },
           { icon: 'link-outline', label: 'Links e Redes Sociais', route: '/(tabs)/perfil/links' },
           { icon: 'document-text-outline', label: 'Termos e Politicas', route: '/(tabs)/perfil/termos' },
+          { icon: 'settings-outline', label: 'Configuracoes', route: '/settings' },
         ].map((item, i) => (
           <TouchableOpacity key={i} style={styles.menuItem} onPress={() => router.push(item.route)}>
             <Ionicons name={item.icon} size={22} color={COLORS.textMuted} />
