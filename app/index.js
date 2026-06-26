@@ -1,99 +1,100 @@
 // app/index.js
-// Tela de Login/Cadastro - NOVAIX FITNESS
+// Tela de Login - NOVAIX FITNESS
 
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-} from 'react-native';
+import { useState, useCallback } from 'react';
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { COLORS } from '../src/constants/colors';
+import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { Button, AuthInput, SocialButton } from '../src/components';
+import { useAuth } from '../src/context/AuthContext';
+import { layout, typography } from '../src/styles';
 
 export default function LoginScreen() {
+  const router = useRouter();
+  const { signInWithEmail, signInWithGoogle, signInWithApple } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = useCallback(async () => {
+    if (!email.trim() || !email.includes('@')) return Alert.alert('Erro', 'Insira um e-mail válido');
+    if (!password.trim() || password.length < 6) return Alert.alert('Erro', 'Mínimo 6 caracteres');
+    setLoading(true);
+    try { await signInWithEmail(email, password); }
+    catch (e) { Alert.alert('Erro', e.message || 'Falha ao fazer login'); }
+    finally { setLoading(false); }
+  }, [email, password, signInWithEmail]);
+
+  const handleGoogle = useCallback(async () => {
+    try { await signInWithGoogle(); } catch (e) { Alert.alert('Erro', e.message); }
+  }, [signInWithGoogle]);
+
+  const handleApple = useCallback(async () => {
+    try { await signInWithApple(); } catch (e) { Alert.alert('Erro', e.message); }
+  }, [signInWithApple]);
+
+  const handleBiometrics = useCallback(async () => {
+    try {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+      if (!hasHardware || !isEnrolled) {
+        return Alert.alert('Aviso', 'Autenticação biométrica não configurada no dispositivo.');
+      }
+
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Login Rápido - NOVAIX FITNESS',
+        fallbackLabel: 'Usar Senha',
+      });
+
+      if (result.success) {
+        router.replace('/(tabs)/home');
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Falha na autenticação biométrica.');
+    }
+  }, [router]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Logo */}
+    <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
-          <Text style={styles.logoText}>Nix</Text>
-          <Text style={styles.brandName}>NOVAIX FITNESS</Text>
-          <Text style={styles.tagline}>Sua Nova Evolução no Treino</Text>
+          <View style={styles.logoMark}>
+            <Text style={typography.brand}>N</Text>
+            <View style={styles.arrows}><Ionicons name="arrow-up" size={16} color={COLORS.primary} /><Ionicons name="arrow-down" size={16} color={COLORS.primary} /></View>
+          </View>
+          <Text style={[typography.h3, { marginTop: 16 }]}>ix</Text>
         </View>
 
-        {/* Formulário */}
-        <View style={styles.formContainer}>
-          {!isLogin && (
-            <TextInput
-              style={styles.input}
-              placeholder="Nome completo"
-              placeholderTextColor={COLORS.textMuted}
-              value={email}
-              onChangeText={setEmail}
-            />
-          )}
-          
-          <TextInput
-            style={styles.input}
-            placeholder="E-mail ou CPF"
-            placeholderTextColor={COLORS.textMuted}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            placeholderTextColor={COLORS.textMuted}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+        <View style={styles.brand}>
+          <Text style={typography.brand}>NOVAIX FITNESS</Text>
+          <Text style={typography.h5}>Sua Nova Evolução no Treino</Text>
+        </View>
 
-          {/* Botão Principal */}
-          <TouchableOpacity style={styles.buttonPrimary}>
-            <Text style={styles.buttonPrimaryText}>
-              {isLogin ? 'ENTRAR' : 'CRIAR CONTA'}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Botões Sociais */}
-          <TouchableOpacity style={styles.buttonGoogle}>
-            <Ionicons name="logo-google" size={20} color="#000" />
-            <Text style={styles.buttonSocialText}>Entrar com Google</Text>
-          </TouchableOpacity>
-
-          {Platform.OS === 'ios' && (
-            <TouchableOpacity style={styles.buttonApple}>
-              <Ionicons name="logo-apple" size={20} color="#000" />
-              <Text style={styles.buttonSocialText}>Entrar com Apple</Text>
+        <View>
+          <AuthInput placeholder="E-mail ou CPF" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" />
+          <AuthInput placeholder="Senha" value={password} onChangeText={setPassword} secureTextEntry icon="lock-closed-outline" />
+          <TouchableOpacity onPress={() => router.push('/forgot-password')}><Text style={typography.bodySmall}>Esqueceu a senha?</Text></TouchableOpacity>
+          <View style={{ height: SPACING.lg }} />
+          <View style={styles.actionRow}>
+            <View style={{ flex: 1 }}>
+              <Button title="ENTRAR" onPress={handleLogin} loading={loading} />
+            </View>
+            <TouchableOpacity style={styles.bioBtn} onPress={handleBiometrics}>
+              <Ionicons name="finger-print-outline" size={24} color={COLORS.primary} />
             </TouchableOpacity>
-          )}
+          </View>
+          <View style={layout.divider}><View style={layout.dividerLine} /><Text style={layout.dividerText}>ou</Text><View style={layout.dividerLine} /></View>
+          <SocialButton icon="logo-google" iconColor="#4285F4" label="Entrar com Google" onPress={handleGoogle} />
+          <SocialButton icon="logo-apple" iconColor="#FFF" label="Entrar com Apple" onPress={handleApple} />
+        </View>
 
-          {/* Links */}
-          <TouchableOpacity>
-            <Text style={styles.link}>Esqueceu a senha?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
-            <Text style={styles.link}>
-              {isLogin ? 'Ainda não tem conta? Cadastre-se' : 'Já tem conta? Entrar'}
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.footer}>
+          <Text style={typography.bodyMuted}>Ainda não tem conta? </Text>
+          <TouchableOpacity onPress={() => router.push('/register')}><Text style={typography.h4}>Cadastre-se</Text></TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -101,104 +102,12 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  logoText: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 64,
-    color: COLORS.primary,
-    marginBottom: 8,
-  },
-  brandName: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 28,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    letterSpacing: 2,
-  },
-  tagline: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    marginTop: 4,
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 350,
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: 16,
-    color: COLORS.textTitle,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  buttonPrimary: {
-    width: '100%',
-    height: 50,
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonPrimaryText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.background,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  buttonGoogle: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 12,
-    gap: 8,
-  },
-  buttonApple: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 12,
-    gap: 8,
-  },
-  buttonSocialText: {
-    fontFamily: 'Inter_500Medium',
-    fontSize: 14,
-    color: '#000000',
-  },
-  link: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    textAlign: 'center',
-    marginTop: 16,
-  },
+  scroll: { flexGrow: 1, justifyContent: 'center', padding: SPACING.xl, paddingTop: 80, paddingBottom: 40 },
+  logoContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.lg },
+  logoMark: { flexDirection: 'row', alignItems: 'center' },
+  arrows: { marginLeft: -4 },
+  brand: { alignItems: 'center', marginBottom: SPACING.massive },
+  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SPACING.xl },
+  actionRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
+  bioBtn: { width: 50, height: 50, borderRadius: BORDER_RADIUS.md, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
 });

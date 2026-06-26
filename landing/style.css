@@ -712,6 +712,15 @@ h1, h2, h3 {
   color: var(--text-muted);
 }
 
+.testimonial-loading,
+.testimonials-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
 /* FAQ */
 .faq {
   padding: 100px 0;

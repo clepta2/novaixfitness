@@ -218,39 +218,9 @@
   <section class="testimonials">
     <div class="container">
       <h2>O que dizem nossos <span class="highlight">atletas</span></h2>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p>"Mudei minha rotina de treinos completamente. O Coach IA é incrível e a gamificação me mantém motivado todos os dias!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">JS</div>
-            <div>
-              <strong>João Silva</strong>
-              <span>Aluno há 3 meses</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p>"Finalmente um app que entende meu objetivo. Os treinos são perfeitos para minha rotina e o cronômetro é muito útil."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">MR</div>
-            <div>
-              <strong>Maria Santos</strong>
-              <span>Aluna há 2 meses</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p>"Já testei vários apps de fitness. O NOVAIX é o único que conseguiu me manter consistente. Recomendo demais!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">PL</div>
-            <div>
-              <strong>Pedro Lima</strong>
-              <span>Aluno há 6 meses</span>
-            </div>
-          </div>
+      <div class="testimonials-grid" id="testimonials-container">
+        <div class="testimonial-loading">
+          <p>Carregando depoimentos...</p>
         </div>
       </div>
     </div>
@@ -460,6 +430,41 @@
       form.style.display = 'none';
       success.style.display = 'block';
     }
+
+    const API_BASE = 'https://novaix-api.onrender.com';
+
+    async function loadTestimonials() {
+      const container = document.getElementById('testimonials-container');
+      try {
+        const response = await fetch(`${API_BASE}/api/testimonials?limit=6`);
+        if (!response.ok) throw new Error('Erro ao carregar');
+        const testimonials = await response.json();
+
+        if (testimonials.length === 0) {
+          container.innerHTML = '<p class="testimonials-empty">Seja o primeiro a deixar um depoimento!</p>';
+          return;
+        }
+
+        container.innerHTML = testimonials.map(t => `
+          <div class="testimonial-card">
+            <div class="testimonial-stars">${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}</div>
+            <p>"${t.content}"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">${t.initials || t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}</div>
+              <div>
+                <strong>${t.name}</strong>
+                <span>${t.role || 'Aluno'}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Erro ao carregar depoimentos:', err);
+        container.innerHTML = '<p class="testimonials-empty">Depoimentos em breve.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTestimonials);
   </script>
 </body>
 </html>

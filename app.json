@@ -8,7 +8,7 @@
     "userInterfaceStyle": "dark",
     "scheme": "novaix",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#12161A"
     },
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundColor": "#12161A"
       },
       "package": "com.novaix.fitness"
@@ -29,7 +29,21 @@
     },
     "plugins": [
       "expo-router",
-      "expo-status-bar"
-    ]
+      "expo-status-bar",
+      "expo-secure-store",
+      [
+        "expo-apple-authentication",
+        {
+          "faciaIDPermission": "Permitir autenticação com Face ID"
+        }
+      ],
+      "expo-sharing"
+    ],
+    "extra": {
+      "supabaseUrl": "https://jkoteibpvwlmsilntpof.supabase.co",
+      "eas": {
+        "projectId": "novaix-fitness"
+      }
+    }
   }
 }

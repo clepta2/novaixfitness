@@ -1,164 +1,152 @@
 // app/(tabs)/home.js
-// Tela Principal - NOVAIX FITNESS (ATUALIZADA)
+// Tela Principal - Home - NOVAIX FITNESS
 
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { useState, useEffect, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
+import { SPACING } from '../../src/constants/spacing';
+import { DailyWorkoutCard, WaterLogger, GamificationBar, WeeklyProgress } from '../../src/components';
+import { useAuth } from '../../src/context/AuthContext';
+import { supabase } from '../../src/config/supabase';
+import { getGamificationData } from '../../src/services/gamification';
+import { layout, typography } from '../../src/styles';
 
-const todayWorkouts = [
-  { id: '1', time: '06:00', name: 'Cardio HIIT 30\'', duration: '30 min', intensity: 'Alta', completed: true, favorited: false },
-  { id: '2', time: '08:00', name: 'Musculação Peito/Tríceps', duration: '45 min', intensity: 'Média', completed: true, favorited: true },
-  { id: '3', time: '10:00', name: 'Calistenia Iniciante', duration: '30 min', intensity: 'Baixa', completed: true, favorited: false },
-];
-
-const categories = [
-  { id: 'inferiores', label: 'Inferiores', icon: 'walk', count: 6 },
-  { id: 'superiores', label: 'Superiores', icon: 'barbell', count: 6 },
-  { id: 'coracao', label: 'Coração', icon: 'heart', count: 4 },
-];
+const fallbackDaily = { name: 'QUEIMA SUPERIORES', type: 'HIIT/CALISTENIA', videoId: 'dQw4w9WgXcQ', timer: '00:30:15' };
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [favorites, setFavorites] = useState(['2']);
+  const { user, signOut } = useAuth();
+  const [refreshing, setRefreshing] = useState(false);
+  const [dailyWorkout, setDailyWorkout] = useState(fallbackDaily);
+  const [workouts, setWorkouts] = useState([]);
+  const [stats, setStats] = useState({ streak: 0, completed: 0, hours: 0 });
+  const [gamification, setGamification] = useState(null);
 
-  const toggleFavorite = (id) => {
-    setFavorites(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    );
-  };
+  const fetchData = useCallback(async () => {
+    try {
+      const [workoutsRes, userWorkoutsRes] = await Promise.all([
+        supabase.from('workouts').select('*').order('created_at', { ascending: false }).limit(5),
+        user?.id ? supabase.from('user_workouts').select('*').eq('user_id', user.id) : { data: [] },
+      ]);
+
+      const wData = workoutsRes.data || [];
+      const uwData = userWorkoutsRes.data || [];
+
+      setWorkouts(wData.length > 0 ? wData : [
+        { id: '1', name: 'Inferiores Força', category: 'Musculação', duration: 45 },
+        { id: '2', name: 'Cardio HIIT', category: 'Cardio', duration: 30 },
+        { id: '3', name: 'Peito e Tríceps', category: 'Musculação', duration: 50 },
+      ]);
+
+      if (wData.length > 0) {
+        const dw = wData[0];
+        setDailyWorkout({ 
+          id: dw.id,
+          name: dw.title || dw.name, 
+          type: dw.category || 'Treino', 
+          videoId: dw.video_id || 'dQw4w9WgXcQ', 
+          timer: `00:${(dw.duration_minutes || dw.duration || 30).toString().padStart(2, '0')}:00` 
+        });
+      }
+
+      const completed = uwData.filter(w => w.completed).length;
+      const totalMin = uwData.reduce((s, w) => s + (w.duration || 0), 0);
+      setStats({ streak: calculateStreak(uwData), completed, hours: Math.round(totalMin / 60) });
+
+      const gamData = await getGamificationData(user?.id);
+      setGamification(gamData);
+    } catch (err) {
+      console.error('Erro ao carregar home:', err);
+    }
+  }, [user?.id]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Atleta';
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+  }, [fetchData]);
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
+    <View style={layout.screen}>
+      <ScrollView contentContainerStyle={layout.scroll} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />} showsVerticalScrollIndicator={false}>
+        <View style={layout.header}>
           <View>
-            <Text style={styles.greeting}>BEM-VINDO!</Text>
-            <Text style={styles.date}>HOJE</Text>
+            <Text style={typography.bodyMuted}>BEM-VINDO,</Text>
+            <Text style={typography.h2}>{userName.toUpperCase()}!</Text>
           </View>
-          <TouchableOpacity>
-            <Ionicons name="notifications-outline" size={24} color={COLORS.textTitle} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Stats */}
-        <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Ionicons name="flame" size={24} color={COLORS.primary} />
-            <Text style={styles.statValue}>15</Text>
-            <Text style={styles.statLabel}>Streak</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Ionicons name="trophy" size={24} color={COLORS.primary} />
-            <Text style={styles.statValue}>Nv.3</Text>
-            <Text style={styles.statLabel}>Nível</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Ionicons name="star" size={24} color={COLORS.primary} />
-            <Text style={styles.statValue}>2.450</Text>
-            <Text style={styles.statLabel}>XP</Text>
-          </View>
-        </View>
-
-        {/* Treinos */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>TREINOS HOJE</Text>
-          {todayWorkouts.map((workout) => (
-            <TouchableOpacity
-              key={workout.id}
-              style={styles.workoutCard}
-              onPress={() => router.push('/player')}
-            >
-              <View style={styles.workoutTime}>
-                <Text style={styles.workoutTimeText}>{workout.time}</Text>
-              </View>
-              <View style={styles.workoutInfo}>
-                <Text style={styles.workoutName}>{workout.name}</Text>
-                <Text style={styles.workoutDetails}>{workout.duration} | {workout.intensity}</Text>
-              </View>
-              <TouchableOpacity onPress={() => toggleFavorite(workout.id)}>
-                <Ionicons 
-                  name={favorites.includes(workout.id) ? "heart" : "heart-outline"} 
-                  size={24} 
-                  color={favorites.includes(workout.id) ? COLORS.error : COLORS.textMuted} 
-                />
-              </TouchableOpacity>
+          <View style={{ flexDirection: 'row', gap: SPACING.sm }}>
+            <TouchableOpacity onPress={() => router.push('/chat-coach')} style={layout.headerBtn}>
+              <Ionicons name="chatbubbles-outline" size={20} color={COLORS.primary} />
             </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Categorias */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>CATEGORIAS</Text>
-          <View style={styles.categoriesGrid}>
-            {categories.map((category) => (
-              <TouchableOpacity key={category.id} style={styles.categoryCard}>
-                <Ionicons name={category.icon} size={32} color={COLORS.primary} />
-                <Text style={styles.categoryLabel}>{category.label}</Text>
-                <Text style={styles.categoryCount}>{category.count} treinos</Text>
-              </TouchableOpacity>
-            ))}
+            <TouchableOpacity onPress={signOut} style={layout.headerBtn}>
+              <Ionicons name="log-out-outline" size={20} color={COLORS.textMuted} />
+            </TouchableOpacity>
           </View>
         </View>
 
-        {/* Compartilhar */}
-        <TouchableOpacity style={styles.shareButton}>
-          <Ionicons name="share-social" size={20} color={COLORS.primary} />
-          <Text style={styles.shareButtonText}>COMPARTILHAR MEU PROGRESSO</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        <Text style={typography.label}>SEU PLANO DE HOJE:</Text>
+        <DailyWorkoutCard
+          workout={dailyWorkout}
+          onStart={() => router.push({ pathname: '/player', params: { id: dailyWorkout.id } })}
+        />
 
-      {/* Tab Bar */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="barbell" size={24} color={COLORS.primary} />
-          <Text style={styles.tabLabel}>Treinos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="people" size={24} color={COLORS.textMuted} />
-          <Text style={styles.tabLabel}>Comunidade</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="person" size={24} color={COLORS.textMuted} />
-          <Text style={styles.tabLabel}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
+        {gamification && (
+          <GamificationBar xp={gamification.totalXP} />
+        )}
+
+        <WeeklyProgress />
+
+        <WaterLogger />
+
+        <Text style={typography.label}>TREINOS POPULARES</Text>
+        {workouts.slice(0, 3).map((w) => (
+          <TouchableOpacity key={w.id} style={styles.workoutItem} onPress={() => router.push({ pathname: '/workout-detail', params: { id: w.id } })}>
+            <View style={styles.workoutIcon}><Ionicons name="barbell" size={20} color={COLORS.primary} /></View>
+            <View style={styles.workoutInfo}>
+              <Text style={typography.h5}>{w.title || w.name}</Text>
+              <Text style={typography.caption}>{w.category || 'Treino'} • {w.duration_minutes || w.duration || 45} min</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={COLORS.textMuted} />
+          </TouchableOpacity>
+        ))}
+
+        <Text style={typography.label}>SEU DESEMPENHO</Text>
+        <View style={styles.statsRow}>
+          <View style={styles.statItem}><Ionicons name="flame" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.streak}</Text><Text style={typography.labelSmall}>STREAK</Text></View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}><Ionicons name="barbell" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.completed}</Text><Text style={typography.labelSmall}>TREINOS</Text></View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}><Ionicons name="time" size={24} color={COLORS.primary} /><Text style={typography.price}>{stats.hours}h</Text><Text style={typography.labelSmall}>TOTAL</Text></View>
+        </View>
+
+        <View style={{ height: 100 }} />
+      </ScrollView>
     </View>
   );
 }
 
+function calculateStreak(workouts) {
+  const dates = [...new Set(workouts.filter(w => w.completed && w.completed_at).map(w => new Date(w.completed_at).toDateString()))].sort((a, b) => new Date(b) - new Date(a));
+  if (!dates.length) return 0;
+  let streak = 1;
+  for (let i = 1; i < dates.length; i++) {
+    if ((new Date(dates[i - 1]) - new Date(dates[i])) / 86400000 === 1) streak++;
+    else break;
+  }
+  return streak;
+}
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { flexGrow: 1, padding: 20, paddingTop: 60, paddingBottom: 100 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  greeting: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 24, color: COLORS.textTitle },
-  date: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted },
-  statsRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
-  statCard: { flex: 1, backgroundColor: COLORS.surface, borderRadius: 12, padding: 16, alignItems: 'center' },
-  statValue: { fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.primary, marginTop: 8 },
-  statLabel: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 4 },
-  section: { marginBottom: 24 },
-  sectionTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textTitle, textTransform: 'uppercase', marginBottom: 12 },
-  workoutCard: { backgroundColor: COLORS.surface, borderRadius: 12, padding: 16, flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  workoutTime: { width: 50 },
-  workoutTimeText: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textTitle },
+  workoutItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: 12, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
+  workoutIcon: { width: 40, height: 40, borderRadius: 10, backgroundColor: COLORS.primary + '20', justifyContent: 'center', alignItems: 'center', marginRight: SPACING.md },
   workoutInfo: { flex: 1 },
-  workoutName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
-  workoutDetails: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
-  categoriesGrid: { flexDirection: 'row', gap: 12 },
-  categoryCard: { flex: 1, backgroundColor: COLORS.surface, borderRadius: 12, padding: 16, alignItems: 'center' },
-  categoryLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle, marginTop: 8 },
-  categoryCount: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 2 },
-  shareButton: { backgroundColor: COLORS.surface, borderRadius: 12, padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20 },
-  shareButtonText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.primary },
-  tabBar: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, backgroundColor: COLORS.surface, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopWidth: 1, borderTopColor: COLORS.border, paddingBottom: 20 },
-  tabItem: { alignItems: 'center' },
-  tabLabel: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 4 },
+  statsRow: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: 12, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+  statItem: { flex: 1, alignItems: 'center' },
+  statDivider: { width: 1, height: 40, backgroundColor: COLORS.border },
 });

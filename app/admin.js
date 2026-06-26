@@ -1,268 +1,104 @@
 // app/admin.js
-// Painel Administrativo - NOVAIX FITNESS (Web)
+// Painel Administrativo - NOVAIX FITNESS
 
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
+import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { StudentCard, FinanceStats } from '../src/components';
+import { supabase } from '../src/config/supabase';
+import { layout, typography } from '../src/styles';
 
-const mockStudents = [
-  { id: '1', name: 'Carlos Silva', email: 'carlos@email.com', status: 'active', plan: 'Premium' },
-  { id: '2', name: 'Maria Santos', email: 'maria@email.com', status: 'active', plan: 'Intermediário' },
-  { id: '3', name: 'Pedro Lima', email: 'pedro@email.com', status: 'inactive', plan: 'Básico' },
-];
+const tabs = [{ id: 'students', label: 'Alunos' }, { id: 'finance', label: 'Financeiro' }, { id: 'content', label: 'Conteúdo' }];
 
 export default function AdminScreen() {
   const [activeTab, setActiveTab] = useState('students');
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStudents() {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, name, email, subscription_status, subscription_plan')
+          .order('name', { ascending: true });
+
+        if (data && !error) {
+          const mapped = data.map((s) => ({
+            id: s.id,
+            name: s.name || 'Sem nome',
+            email: s.email || '',
+            status: s.subscription_status === 'premium' ? 'active' : 'inactive',
+            plan: s.subscription_plan === 'basic' ? 'Básico' : s.subscription_plan === 'premium' ? 'Premium' : 'Intermediário',
+          }));
+          setStudents(mapped);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar alunos:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchStudents();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>PAINEL ADMIN</Text>
-          <Text style={styles.subtitle}>NOVAIX FITNESS</Text>
-        </View>
+    <ScrollView style={layout.screen} contentContainerStyle={layout.scroll}>
+      <View style={layout.header}>
+        <Text style={typography.h3}>PAINEL ADMIN</Text>
+        <Text style={typography.bodySmall}>PAINEL DE CONTROLE</Text>
+      </View>
 
-        {/* Tabs */}
-        <View style={styles.tabsContainer}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'students' && styles.tabActive]}
-            onPress={() => setActiveTab('students')}
-          >
-            <Text style={[styles.tabText, activeTab === 'students' && styles.tabTextActive]}>
-              Alunos
-            </Text>
+      <View style={styles.tabs}>
+        {tabs.map((tab) => (
+          <TouchableOpacity key={tab.id} style={[styles.tab, activeTab === tab.id && styles.tabActive]} onPress={() => setActiveTab(tab.id)}>
+            <Text style={[typography.label, activeTab === tab.id && styles.tabTextActive]}>{tab.label}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'finance' && styles.tabActive]}
-            onPress={() => setActiveTab('finance')}
-          >
-            <Text style={[styles.tabText, activeTab === 'finance' && styles.tabTextActive]}>
-              Financeiro
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'content' && styles.tabActive]}
-            onPress={() => setActiveTab('content')}
-          >
-            <Text style={[styles.tabText, activeTab === 'content' && styles.tabTextActive]}>
-              Conteúdo
-            </Text>
-          </TouchableOpacity>
-        </View>
+        ))}
+      </View>
 
-        {/* Conteúdo */}
+      <View style={layout.section}>
         {activeTab === 'students' && (
-          <View style={styles.content}>
-            <Text style={styles.sectionTitle}>CONTROLE DE ALUNOS</Text>
-            {mockStudents.map((student) => (
-              <View key={student.id} style={styles.studentCard}>
-                <View style={styles.studentInfo}>
-                  <Text style={styles.studentName}>{student.name}</Text>
-                  <Text style={styles.studentEmail}>{student.email}</Text>
-                </View>
-                <View style={styles.studentMeta}>
-                  <Text style={[styles.studentStatus, 
-                    student.status === 'active' ? styles.statusActive : styles.statusInactive
-                  ]}>
-                    {student.status === 'active' ? 'Ativo' : 'Inativo'}
-                  </Text>
-                  <Text style={styles.studentPlan}>{student.plan}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
+          <>
+            <Text style={typography.h5}>CONTROLE DE ALUNOS</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color={COLORS.primary} style={{ marginTop: SPACING.md }} />
+            ) : students.length > 0 ? (
+              students.map((s) => <StudentCard key={s.id} student={s} />)
+            ) : (
+              <Text style={typography.bodyMuted}>Nenhum aluno cadastrado</Text>
+            )}
+          </>
         )}
-
         {activeTab === 'finance' && (
-          <View style={styles.content}>
-            <Text style={styles.sectionTitle}>PAINEL FINANCEIRO</Text>
-            <View style={styles.statsGrid}>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>MRR</Text>
-                <Text style={styles.statValue}>R$ 4.500</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>Alunos Ativos</Text>
-                <Text style={styles.statValue}>45</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>Churn</Text>
-                <Text style={styles.statValue}>5.2%</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statLabel}>Novos/Mês</Text>
-                <Text style={styles.statValue}>12</Text>
-              </View>
-            </View>
-          </View>
+          <>
+            <Text style={typography.h5}>PAINEL FINANCEIRO</Text>
+            <FinanceStats />
+          </>
         )}
-
         {activeTab === 'content' && (
-          <View style={styles.content}>
-            <Text style={styles.sectionTitle}>GERENCIAR CONTEÚDO</Text>
-            <TouchableOpacity style={styles.addButton}>
-              <Ionicons name="add-circle" size={20} color={COLORS.primary} />
-              <Text style={styles.addButtonText}>Adicionar Treino</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.addButton}>
-              <Ionicons name="add-circle" size={20} color={COLORS.primary} />
-              <Text style={styles.addButtonText}>Adicionar Exercício</Text>
-            </TouchableOpacity>
-          </View>
+          <>
+            <Text style={typography.h5}>GERENCIAR CONTEÚDO</Text>
+            {['Adicionar Treino', 'Adicionar Exercício'].map((label, i) => (
+              <TouchableOpacity key={i} style={styles.addButton}>
+                <Ionicons name="add-circle" size={20} color={COLORS.primary} />
+                <Text style={typography.h5}>{label}</Text>
+              </TouchableOpacity>
+            ))}
+          </>
         )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  title: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 24,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-  },
-  subtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.primary,
-    marginTop: 4,
-  },
-  tabsContainer: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 24,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    backgroundColor: COLORS.surface,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  tabActive: {
-    backgroundColor: COLORS.primary,
-  },
-  tabText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-  },
-  tabTextActive: {
-    color: COLORS.background,
-  },
-  content: {
-    gap: 12,
-  },
-  sectionTitle: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    marginBottom: 12,
-  },
-  studentCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  studentInfo: {
-    flex: 1,
-  },
-  studentName: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-  },
-  studentEmail: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-  },
-  studentMeta: {
-    alignItems: 'flex-end',
-  },
-  studentStatus: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  statusActive: {
-    backgroundColor: COLORS.success + '20',
-    color: COLORS.success,
-  },
-  statusInactive: {
-    backgroundColor: COLORS.error + '20',
-    color: COLORS.error,
-  },
-  studentPlan: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 10,
-    color: COLORS.textMuted,
-    marginTop: 4,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  statCard: {
-    width: '47%',
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  statLabel: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-  },
-  statValue: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 24,
-    color: COLORS.primary,
-    marginTop: 8,
-  },
-  addButton: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  addButtonText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-  },
+  tabs: { flexDirection: 'row', gap: 8, marginBottom: SPACING.xxl },
+  tab: { flex: 1, paddingVertical: 12, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center' },
+  tabActive: { backgroundColor: COLORS.primary },
+  tabTextActive: { color: COLORS.background },
+  addButton: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, flexDirection: 'row', alignItems: 'center', gap: SPACING.md, marginBottom: SPACING.sm },
 });

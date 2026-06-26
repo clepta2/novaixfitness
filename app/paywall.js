@@ -1,180 +1,276 @@
 // app/paywall.js
-// Tela de Planos e Pagamento - NOVAIX FITNESS
+// Tela de Paywall com A/B Testing - NOVAIX FITNESS
 
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { useState, useCallback, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
-
-const plans = [
-  {
-    id: 'basic',
-    name: 'Básico',
-    price: 49.90,
-    period: 'mês',
-    features: [
-      'Acesso a treinos básicos',
-      'Cronômetro integrado',
-      'Perfil e estatísticas',
-      'Suporte via WhatsApp',
-    ],
-    limitations: [
-      'Sem treinos personalizados',
-      'Sem comunidade',
-      'Sem podcast',
-    ],
-    color: COLORS.textMuted,
-    popular: false,
-  },
-  {
-    id: 'intermediate',
-    name: 'Intermediário',
-    price: 79.90,
-    period: 'mês',
-    features: [
-      'Todos os treinos',
-      'Cronômetro adaptativo',
-      'Comunidade completa',
-      'Podcast fitness',
-      'Múltiplos modelos',
-    ],
-    limitations: [
-      'Sem Coach IA',
-      'Sem Apple Watch',
-    ],
-    color: COLORS.primary,
-    popular: true,
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    price: 119.90,
-    period: 'mês',
-    features: [
-      'Tudo do Intermediário',
-      'Coach com IA',
-      'Apple Watch support',
-      'Download offline',
-      'Suporte prioritário',
-      'Treinos exclusivos',
-    ],
-    limitations: [],
-    color: '#FFD600',
-    popular: false,
-  },
-];
+import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { Button, PlanCard, CouponInput } from '../src/components';
+import { applyCoupon } from '../src/services/coupon';
+import { createCheckout, PLANS, getPaymentStatus } from '../src/services/payment';
+import { useAuth } from '../src/context/AuthContext';
+import { getVariant, trackPaywallView, trackPaywallClick, trackPaywallSkip } from '../src/services/abtest';
+import { layout, typography } from '../src/styles';
 
 export default function PaywallScreen() {
   const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState('intermediate');
+  const { user } = useAuth();
+  const [selected, setSelected] = useState('intermediate');
+  const [billingType, setBillingType] = useState('PIX');
+  const [coupon, setCoupon] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [pixData, setPixData] = useState(null);
+  const [variant, setVariant] = useState('control');
 
-  const handleSubscribe = () => {
-    const plan = plans.find((p) => p.id === selectedPlan);
-    Alert.alert(
-      'Assinar Plano',
-      `Você selecionou o plano ${plan.name} por R$ ${plan.price}/${plan.period}. Redirecionando para pagamento...`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Continuar', onPress: () => {
-          // Redirecionar para gateway de pagamento
+  useEffect(() => {
+    async function loadVariant() {
+      if (user?.id) {
+        const v = await getVariant(user.id, 'paywall');
+        setVariant(v);
+        trackPaywallView(user.id);
+      }
+    }
+    loadVariant();
+  }, [user?.id]);
+
+  const selectedPlan = PLANS[selected];
+  const finalPrice = applyCoupon(selectedPlan?.price || 0, coupon);
+  const hasDiscount = coupon?.valid && finalPrice < (selectedPlan?.price || 0);
+
+  const handleSubscribe = useCallback(async () => {
+    if (!user) {
+      Alert.alert('Erro', 'Faça login para assinar.');
+      return;
+    }
+
+    trackPaywallClick(user.id, selected);
+    setLoading(true);
+    try {
+      const result = await createCheckout(selected, billingType);
+
+      if (billingType === 'PIX' && result.pixQrCode) {
+        setPixData({
+          payload: result.pixQrCode.payload,
+          encodedImage: result.pixQrCode.encodedImage,
+          expirationDate: result.pixQrCode.expirationDate,
+          paymentId: result.paymentId,
+        });
+        return;
+      }
+
+      if (result.invoiceUrl) {
+        await Linking.openURL(result.invoiceUrl);
+        pollPaymentStatus(result.paymentId);
+        return;
+      }
+
+      Alert.alert('Pagamento', 'Redirecionando para o pagamento...');
+    } catch (err) {
+      console.error('Erro ao criar pagamento:', err);
+      Alert.alert('Erro', err.message || 'Não foi possível iniciar o pagamento.');
+    } finally {
+      setLoading(false);
+    }
+  }, [selected, billingType, user]);
+
+  const pollPaymentStatus = async (paymentId) => {
+    let attempts = 0;
+    const check = async () => {
+      try {
+        const status = await getPaymentStatus(paymentId);
+        if (status.payment?.status === 'RECEIVED') {
+          Alert.alert('Sucesso!', 'Pagamento confirmado! Bem-vindo ao NOVAIX!');
           router.replace('/(tabs)/home');
-        }},
-      ]
+          return;
+        }
+        attempts++;
+        if (attempts < 30) setTimeout(check, 5000);
+      } catch (err) {
+        console.error('Erro ao verificar pagamento:', err);
+      }
+    };
+    check();
+  };
+
+  const handleCopyPix = () => {
+    if (pixData?.payload) {
+      try {
+        const Clipboard = require('expo-clipboard');
+        Clipboard.setStringAsync(pixData.payload);
+        Alert.alert('Copiado!', 'Código PIX copiado.');
+      } catch {
+        Alert.alert('Copiar', 'Selecione e copie o código PIX.');
+      }
+    }
+  };
+
+  const handleCheckPayment = useCallback(async () => {
+    if (!pixData?.paymentId) return;
+    setLoading(true);
+    try {
+      const status = await getPaymentStatus(pixData.paymentId);
+      if (status.payment?.status === 'RECEIVED') {
+        Alert.alert('Sucesso!', 'Pagamento confirmado!', [
+          { text: 'OK', onPress: () => router.replace('/(tabs)/home') },
+        ]);
+      } else {
+        Alert.alert('Aguardando', 'Pagamento ainda não confirmado.');
+      }
+    } catch (err) {
+      Alert.alert('Erro', 'Não foi possível verificar.');
+    } finally {
+      setLoading(false);
+    }
+  }, [pixData, router]);
+
+  const handleSkip = () => {
+    if (user?.id) trackPaywallSkip(user.id);
+    router.replace('/(tabs)/home');
+  };
+
+  if (pixData) {
+    return (
+      <View style={layout.screen}>
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+          <TouchableOpacity onPress={() => setPixData(null)} style={styles.backBtn}>
+            <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
+            <Text style={typography.h5}>Voltar</Text>
+          </TouchableOpacity>
+          <View style={layout.section}>
+            <Text style={typography.h3}>PAGUE COM PIX</Text>
+            <Text style={typography.bodyMuted}>Copie o código e pague no app do banco</Text>
+          </View>
+          <View style={styles.pixPayload}>
+            <Text style={typography.label}>CÓDIGO PIX</Text>
+            <TouchableOpacity style={styles.pixCode} onPress={handleCopyPix}>
+              <Text style={[typography.bodySmall, styles.pixText]} numberOfLines={3}>{pixData.payload}</Text>
+              <Ionicons name="copy" size={20} color={COLORS.primary} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.copyBtn} onPress={handleCopyPix}>
+            <Ionicons name="copy-outline" size={20} color={COLORS.background} />
+            <Text style={typography.button}>COPIAR CÓDIGO PIX</Text>
+          </TouchableOpacity>
+          <View style={styles.timerBox}>
+            <Ionicons name="time-outline" size={20} color={COLORS.attention} />
+            <Text style={[typography.bodySmall, { color: COLORS.attention }]}>Expira em 30 minutos</Text>
+          </View>
+          <View style={{ height: 20 }} />
+          <Button title="JÁ PAGUEI" onPress={handleCheckPayment} loading={loading} icon="checkmark-circle-outline" />
+        </ScrollView>
+      </View>
     );
+  }
+
+  if (variant === 'variant_b') {
+    return <PaywallVariantB selected={selected} setSelected={setSelected} />;
+  }
+
+  return (
+    <View style={layout.screen}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <View style={layout.section}>
+          <Text style={typography.h3}>LIBERE TODO O POTENCIAL</Text>
+          <Text style={typography.bodyMuted}>Escolha o plano ideal</Text>
+          <View style={styles.badge}>
+            <Ionicons name="gift-outline" size={16} color={COLORS.background} />
+            <Text style={typography.h5}>7 DIAS GRÁTIS</Text>
+          </View>
+        </View>
+        <View style={styles.plans}>
+          {Object.values(PLANS).map((plan) => (
+            <PlanCard key={plan.id} plan={{ ...plan, priceText: hasDiscount && selected === plan.id ? `R$ ${applyCoupon(plan.price, coupon).toFixed(2).replace('.', ',')}` : plan.priceText }} isSelected={selected === plan.id} onSelect={setSelected} />
+          ))}
+        </View>
+        <View style={styles.billingToggle}>
+          <Text style={typography.label}>FORMA DE PAGAMENTO</Text>
+          <View style={styles.billingOptions}>
+            <TouchableOpacity style={[styles.billingOption, billingType === 'PIX' && styles.billingActive]} onPress={() => setBillingType('PIX')}>
+              <Ionicons name="wallet" size={20} color={billingType === 'PIX' ? COLORS.background : COLORS.textMuted} />
+              <Text style={[typography.bodySmall, billingType === 'PIX' && styles.billingTextActive]}>PIX</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.billingOption, billingType === 'CREDIT_CARD' && styles.billingActive]} onPress={() => setBillingType('CREDIT_CARD')}>
+              <Ionicons name="card" size={20} color={billingType === 'CREDIT_CARD' ? COLORS.background : COLORS.textMuted} />
+              <Text style={[typography.bodySmall, billingType === 'CREDIT_CARD' && styles.billingTextActive]}>Cartão</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <CouponInput onApply={setCoupon} />
+        {hasDiscount && (
+          <View style={styles.discountBanner}>
+            <Ionicons name="pricetag" size={16} color={COLORS.success} />
+            <Text style={[typography.bodySmall, { color: COLORS.success }]}>Cupom {coupon.code} aplicado!</Text>
+          </View>
+        )}
+        <View style={styles.guarantee}>
+          <Ionicons name="shield-checkmark-outline" size={20} color={COLORS.success} />
+          <Text style={typography.caption}>Garantia de 7 dias. Cancele quando quiser.</Text>
+        </View>
+      </ScrollView>
+      <View style={layout.footer}>
+        <Button title={hasDiscount ? `ASSINAR POR R$ ${finalPrice.toFixed(2).replace('.', ',')}` : 'LIBERAR MEU CRONOGRAMA'} onPress={handleSubscribe} loading={loading} icon="lock-open-outline" />
+        <TouchableOpacity onPress={handleSkip} style={styles.skip}>
+          <Text style={typography.bodyMuted}>Pular por agora</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+function PaywallVariantB({ selected, setSelected }) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const handleSelect = (planId) => {
+    setSelected(planId);
+    if (user?.id) trackPaywallClick(user.id, planId);
+  };
+
+  const handleSkip = () => {
+    if (user?.id) trackPaywallSkip(user.id);
+    router.replace('/(tabs)/home');
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>LIBERE TODO O POTENCIAL</Text>
-          <Text style={styles.subtitle}>Escolha o plano ideal para você</Text>
+    <View style={layout.screen}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <View style={variantBStyles.hero}>
+          <Ionicons name="flash" size={48} color={COLORS.primary} />
+          <Text style={typography.h2}>EVOLUA RAPIDO</Text>
+          <Text style={typography.bodyMuted}>Acesso ilimitado a todos os treinos e Coach IA</Text>
         </View>
 
-        {/* Cards de Planos */}
-        <View style={styles.plansContainer}>
-          {plans.map((plan) => (
-            <TouchableOpacity
-              key={plan.id}
-              style={[
-                styles.planCard,
-                selectedPlan === plan.id && styles.planCardSelected,
-                plan.popular && styles.planCardPopular,
-              ]}
-              onPress={() => setSelectedPlan(plan.id)}
-            >
-              {plan.popular && (
-                <View style={styles.popularBadge}>
-                  <Text style={styles.popularText}>MAIS POPULAR</Text>
-                </View>
-              )}
-              
-              <Text style={[styles.planName, { color: plan.color }]}>{plan.name}</Text>
-              
-              <View style={styles.priceContainer}>
-                <Text style={styles.currency}>R$</Text>
-                <Text style={styles.price}>{plan.price.toFixed(2).replace('.', ',')}</Text>
-                <Text style={styles.period}>/{plan.period}</Text>
-              </View>
+        <View style={variantBStyles.urgentBadge}>
+          <Ionicons name="time" size={16} color={COLORS.background} />
+          <Text style={typography.button}>OFERTA POR TEMPO LIMITADO</Text>
+        </View>
 
-              {/* Features */}
-              <View style={styles.featuresContainer}>
-                {plan.features.map((feature, index) => (
-                  <View key={index} style={styles.featureItem}>
-                    <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
-                    <Text style={styles.featureText}>{feature}</Text>
-                  </View>
-                ))}
-              </View>
-
-              {/* Limitações */}
-              {plan.limitations.length > 0 && (
-                <View style={styles.limitationsContainer}>
-                  {plan.limitations.map((limitation, index) => (
-                    <View key={index} style={styles.limitationItem}>
-                      <Ionicons name="close-circle" size={16} color={COLORS.textMuted} />
-                      <Text style={styles.limitationText}>{limitation}</Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-
-              {selectedPlan === plan.id && (
-                <View style={styles.checkmark}>
-                  <Ionicons name="checkmark-circle" size={24} color={COLORS.primary} />
-                </View>
-              )}
+        <View style={variantBStyles.plans}>
+          {Object.values(PLANS).map((plan) => (
+            <TouchableOpacity key={plan.id} style={[variantBStyles.planCard, selected === plan.id && variantBStyles.planActive]} onPress={() => handleSelect(plan.id)}>
+              {plan.popular && <View style={variantBStyles.popularTag}><Text style={variantBStyles.popularText}>RECOMENDADO</Text></View>}
+              <Text style={typography.h4}>{plan.name}</Text>
+              <Text style={variantBStyles.price}>{plan.priceText}<Text style={typography.bodySmall}>/mes</Text></Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        {/* Garantia */}
-        <View style={styles.guaranteeContainer}>
-          <Ionicons name="shield-checkmark" size={24} color={COLORS.success} />
-          <Text style={styles.guaranteeText}>
-            7 dias de garantia. Cancele quando quiser.
-          </Text>
+        <View style={variantBStyles.benefits}>
+          {['Treinos ilimitados', 'Coach IA personalizado', 'Cronometro inteligente', 'Comunidade ativa', 'Suporte prioritario'].map((b, i) => (
+            <View key={i} style={variantBStyles.benefitRow}>
+              <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
+              <Text style={typography.body}>{b}</Text>
+            </View>
+          ))}
         </View>
       </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.buttonPrimary} onPress={handleSubscribe}>
-          <Text style={styles.buttonPrimaryText}>ASSINAR AGORA</Text>
-          <Ionicons name="arrow-forward" size={20} color={COLORS.background} />
-        </TouchableOpacity>
-        
-        <TouchableOpacity onPress={() => router.replace('/(tabs)/home')}>
-          <Text style={styles.skipText}>Pular por agora</Text>
+      <View style={layout.footer}>
+        <Button title="COMEÇAR AGORA - 7 DIAS GRATIS" onPress={() => {}} loading={loading} icon="rocket" />
+        <TouchableOpacity onPress={handleSkip} style={styles.skip}>
+          <Text style={typography.bodyMuted}>Continuar no plano gratuito</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -182,170 +278,34 @@ export default function PaywallScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 24,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  subtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  plansContainer: {
-    gap: 16,
-  },
-  planCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    padding: 20,
-    position: 'relative',
-  },
-  planCardSelected: {
-    borderColor: COLORS.primary,
-  },
-  planCardPopular: {
-    borderColor: COLORS.primary,
-  },
-  popularBadge: {
-    position: 'absolute',
-    top: -12,
-    left: 20,
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  popularText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 10,
-    color: COLORS.background,
-    textTransform: 'uppercase',
-  },
-  planName: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 20,
-    textTransform: 'uppercase',
-    marginBottom: 12,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    marginBottom: 20,
-  },
-  currency: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
-    color: COLORS.textDescription,
-    marginRight: 4,
-  },
-  price: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 36,
-    color: COLORS.textTitle,
-  },
-  period: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    marginLeft: 4,
-  },
-  featuresContainer: {
-    gap: 8,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  featureText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textTitle,
-  },
-  limitationsContainer: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-  },
-  limitationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
-  },
-  limitationText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-  },
-  checkmark: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-  },
-  guaranteeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 24,
-    padding: 16,
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-  },
-  guaranteeText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-  },
-  footer: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  buttonPrimary: {
-    width: '100%',
-    height: 50,
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
-  },
-  buttonPrimaryText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.background,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  skipText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    textAlign: 'center',
-  },
+  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: 999, marginTop: SPACING.xl },
+  plans: { gap: SPACING.md },
+  billingToggle: { marginTop: SPACING.xl },
+  billingOptions: { flexDirection: 'row', gap: SPACING.sm, marginTop: SPACING.md },
+  billingOption: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: 8, borderWidth: 1, borderColor: COLORS.border },
+  billingActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  billingTextActive: { color: COLORS.background, fontFamily: 'Montserrat_600SemiBold' },
+  discountBanner: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.success + '15', borderRadius: 8, padding: SPACING.md, marginBottom: SPACING.xl, borderWidth: 1, borderColor: COLORS.success + '30' },
+  guarantee: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, marginTop: SPACING.xxl, marginBottom: SPACING.xl },
+  skip: { alignItems: 'center', paddingVertical: SPACING.md },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.xl },
+  pixPayload: { marginBottom: SPACING.xl },
+  pixCode: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.surface, borderRadius: 8, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border, marginTop: SPACING.sm },
+  pixText: { flex: 1, marginRight: SPACING.sm, fontFamily: 'monospace' },
+  copyBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, borderRadius: 8, paddingVertical: SPACING.md, marginBottom: SPACING.xl },
+  timerBox: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.attention + '15', borderRadius: 8, padding: SPACING.md },
+});
+
+const variantBStyles = StyleSheet.create({
+  hero: { alignItems: 'center', paddingVertical: SPACING.xxl, gap: SPACING.md },
+  urgentBadge: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error, padding: SPACING.md, borderRadius: 8, marginBottom: SPACING.xl },
+  plans: { gap: SPACING.md, marginBottom: SPACING.xl },
+  planCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 2, borderColor: COLORS.border },
+  planActive: { borderColor: COLORS.primary, backgroundColor: COLORS.primary + '08' },
+  popularTag: { position: 'absolute', top: -10, right: SPACING.lg, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.md, paddingVertical: 4, borderRadius: 999 },
+  popularText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.background, letterSpacing: 1 },
+  price: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: COLORS.primary, marginTop: SPACING.sm },
+  benefits: { gap: SPACING.md },
+  benefitRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
 });

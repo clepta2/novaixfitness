@@ -1,7 +1,5 @@
-// app/_layout.js
-// Layout raiz do app NOVAIX FITNESS
-
-import { Stack } from 'expo-router';
+import { useEffect, Suspense } from 'react';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
   Montserrat_400Regular,
@@ -9,40 +7,65 @@ import {
   Montserrat_700Bold,
   Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-} from '@expo-google-fonts/inter';
-import { View, ActivityIndicator } from 'react-native';
+import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
+import { ActivityIndicator, View } from 'react-native';
+import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { COLORS } from '../src/constants/colors';
+import { registerForPushNotifications, setupNotificationListeners } from '../src/services/notifications';
+
+function AuthRedirect() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (loading) return;
+    const inAuthGroup = segments[0] === '(tabs)';
+    if (!user && inAuthGroup) router.replace('/');
+    else if (user && !inAuthGroup) router.replace('/(tabs)/home');
+  }, [user, loading, segments]);
+
+  useEffect(() => {
+    if (user?.id) {
+      registerForPushNotifications(user.id);
+      setupNotificationListeners(router);
+    }
+  }, [user?.id]);
+
+  return null;
+}
+
+function LoadingScreen() {
+  return (
+    <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+    </View>
+  );
+}
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    Montserrat_400Regular,
-    Montserrat_600SemiBold,
-    Montserrat_700Bold,
-    Montserrat_800ExtraBold,
-    Inter_400Regular,
-    Inter_500Medium,
+    Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold,
+    Inter_400Regular, Inter_500Medium,
   });
 
-  if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
-    );
-  }
+  if (!fontsLoaded) return <LoadingScreen />;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="register" />
-      <Stack.Screen name="forgot-password" />
-      <Stack.Screen name="paywall" />
-      <Stack.Screen name="player" />
-      <Stack.Screen name="onboarding" />
-      <Stack.Screen name="(tabs)" />
-    </Stack>
+    <AuthProvider>
+      <AuthRedirect />
+      <Suspense fallback={<LoadingScreen />}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="register" lazy />
+          <Stack.Screen name="forgot-password" lazy />
+          <Stack.Screen name="paywall" lazy />
+          <Stack.Screen name="subscription" lazy />
+          <Stack.Screen name="chat-coach" lazy />
+          <Stack.Screen name="workout-detail" lazy />
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+      </Suspense>
+    </AuthProvider>
   );
 }

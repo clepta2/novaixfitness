@@ -2,16 +2,14 @@
 // Tela 5 - Disponibilidade - NOVAIX FITNESS
 
 import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
+import { SPACING } from '../../src/constants/spacing';
+import { Card, Button, ProgressBar } from '../../src/components';
+import { useAuth } from '../../src/context/AuthContext';
+import { layout, typography } from '../../src/styles';
 
 const weekDays = [
   { id: 2, label: '2 dias', description: 'Mínimo para resultados' },
@@ -29,250 +27,65 @@ const locations = [
 
 export default function AvailabilityScreen() {
   const router = useRouter();
+  const { saveOnboarding, onboarding } = useAuth();
   const [selectedDays, setSelectedDays] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!selectedDays || !selectedLocation) return;
-    // Salvar disponibilidade e ir para próxima tela
-    router.push('/onboarding/experiencia');
+    await saveOnboarding({ ...onboarding, daysPerWeek: selectedDays, location: selectedLocation });
+    router.push(selectedLocation === 'gym' ? '/onboarding/tipo-academia' : '/onboarding/experiencia');
   };
 
   return (
-    <View style={styles.container}>
+    <View style={layout.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>SUA DISPONIBILIDADE</Text>
-          <Text style={styles.subtitle}>Quantos dias e onde você vai treinar?</Text>
-          
-          {/* Progresso */}
-          <View style={styles.progressContainer}>
-            <View style={[styles.progressStep, styles.progressActive]} />
-            <View style={[styles.progressStep, styles.progressActive]} />
-            <View style={[styles.progressStep, styles.progressActive]} />
-            <View style={[styles.progressStep, styles.progressActive]} />
-            <View style={[styles.progressStep, styles.progressActive]} />
-            <View style={styles.progressStep} />
-          </View>
-          <Text style={styles.progressText}>Passo 5 de 6</Text>
+          <Text style={typography.h3}>SUA DISPONIBILIDADE</Text>
+          <Text style={typography.bodyMuted}>Quantos dias e onde você vai treinar?</Text>
+          <View style={styles.progressContainer}><ProgressBar value={5} max={7} /></View>
+          <Text style={typography.caption}>Passo 5 de 7</Text>
         </View>
 
-        {/* Dias por Semana */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>DIAS POR SEMANA</Text>
+        <View style={layout.section}>
+          <Text style={typography.h5}>DIAS POR SEMANA</Text>
           <View style={styles.optionsGrid}>
             {weekDays.map((day) => (
-              <TouchableOpacity
-                key={day.id}
-                style={[
-                  styles.optionCard,
-                  selectedDays === day.id && styles.optionCardSelected,
-                ]}
-                onPress={() => setSelectedDays(day.id)}
-              >
-                <Text style={styles.optionLabel}>{day.label}</Text>
-                <Text style={styles.optionDescription}>{day.description}</Text>
-              </TouchableOpacity>
+              <Card key={day.id} variant={selectedDays === day.id ? 'active' : 'surface'} onPress={() => setSelectedDays(day.id)} style={styles.optionCard}>
+                <Text style={typography.h4}>{day.label}</Text>
+                <Text style={typography.caption}>{day.description}</Text>
+              </Card>
             ))}
           </View>
         </View>
 
-        {/* Local de Treino */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ONDE VOCÊ VAI TREINAR?</Text>
+        <View style={layout.section}>
+          <Text style={typography.h5}>ONDE VOCÊ VAI TREINAR?</Text>
           <View style={styles.locationsGrid}>
             {locations.map((location) => (
-              <TouchableOpacity
-                key={location.id}
-                style={[
-                  styles.locationCard,
-                  selectedLocation === location.id && styles.locationCardSelected,
-                ]}
-                onPress={() => setSelectedLocation(location.id)}
-              >
+              <Card key={location.id} variant={selectedLocation === location.id ? 'active' : 'surface'} onPress={() => setSelectedLocation(location.id)} style={styles.locationCard}>
                 <Ionicons name={location.icon} size={32} color={COLORS.primary} />
-                <Text style={styles.locationLabel}>{location.label}</Text>
-              </TouchableOpacity>
+                <Text style={typography.h5}>{location.label}</Text>
+              </Card>
             ))}
           </View>
         </View>
       </ScrollView>
 
-      {/* Botões */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.buttonSecondary} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={20} color={COLORS.textTitle} />
-          <Text style={styles.buttonSecondaryText}>ANTERIOR</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.buttonPrimary, (!selectedDays || !selectedLocation) && styles.buttonDisabled]}
-          onPress={handleNext}
-          disabled={!selectedDays || !selectedLocation}
-        >
-          <Text style={styles.buttonPrimaryText}>PRÓXIMO</Text>
-          <Ionicons name="arrow-forward" size={20} color={COLORS.background} />
-        </TouchableOpacity>
+      <View style={layout.footer}>
+        <Button title="ANTERIOR" variant="secondary" icon="arrow-back" onPress={() => router.back()} />
+        <Button title="PRÓXIMO" icon="arrow-forward" onPress={handleNext} disabled={!selectedDays || !selectedLocation} />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 24,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  subtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  progressContainer: {
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: 20,
-  },
-  progressStep: {
-    width: 30,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: COLORS.border,
-  },
-  progressActive: {
-    backgroundColor: COLORS.primary,
-  },
-  progressText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    marginTop: 8,
-  },
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 16,
-  },
-  optionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  optionCard: {
-    width: '48%',
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    padding: 16,
-    alignItems: 'center',
-  },
-  optionCardSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.surface,
-  },
-  optionLabel: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 16,
-    color: COLORS.textTitle,
-  },
-  optionDescription: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    marginTop: 4,
-  },
-  locationsGrid: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  locationCard: {
-    flex: 1,
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    padding: 16,
-    alignItems: 'center',
-  },
-  locationCardSelected: {
-    borderColor: COLORS.primary,
-  },
-  locationLabel: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 12,
-    color: COLORS.textTitle,
-    marginTop: 8,
-  },
-  footer: {
-    flexDirection: 'row',
-    gap: 12,
-    padding: 20,
-    paddingBottom: 40,
-  },
-  buttonSecondary: {
-    flex: 1,
-    height: 50,
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  buttonSecondaryText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  buttonPrimary: {
-    flex: 1,
-    height: 50,
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonPrimaryText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.background,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
+  scrollContent: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  header: { alignItems: 'center', marginBottom: 30 },
+  progressContainer: { width: '100%', marginTop: SPACING.xxl },
+  optionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.md },
+  optionCard: { width: '48%', alignItems: 'center' },
+  locationsGrid: { flexDirection: 'row', gap: SPACING.md },
+  locationCard: { flex: 1, alignItems: 'center' },
 });

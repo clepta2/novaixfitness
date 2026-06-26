@@ -1,15 +1,16 @@
 // src/constants/fonts.js
 // Fontes oficiais NOVAIX FITNESS
 
+import { COLORS } from './colors';
+
 export const FONTS = {
-  // Títulos e Logo - Montserrat Extra-Bold (Impacto e Força)
   h1: {
     fontFamily: 'Montserrat_800ExtraBold',
     fontSize: 32,
     fontWeight: '800',
     textTransform: 'uppercase',
     letterSpacing: 1.5,
-    color: '#FFFFFF',
+    color: COLORS.textTitle,
   },
   h2: {
     fontFamily: 'Montserrat_700Bold',
@@ -17,47 +18,39 @@ export const FONTS = {
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 1,
-    color: '#FFFFFF',
+    color: COLORS.textTitle,
   },
   h3: {
     fontFamily: 'Montserrat_600SemiBold',
     fontSize: 18,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: COLORS.textTitle,
   },
-
-  // Corpo do App - Inter Regular (Legibilidade Mobile)
   body: {
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
-    color: '#FFFFFF',
+    color: COLORS.textTitle,
   },
   bodyMedium: {
     fontFamily: 'Inter_500Medium',
     fontSize: 16,
     fontWeight: '500',
-    color: '#FFFFFF',
+    color: COLORS.textTitle,
   },
-
-  // Legendas e Textos Pequenos
   caption: {
     fontFamily: 'Inter_400Regular',
     fontSize: 12,
     fontWeight: '400',
-    color: '#94A3B8',
+    color: COLORS.textDescription,
   },
-
-  // Timer/Cronômetros - Montserrat Bold (Destaque Técnico)
   timer: {
     fontFamily: 'Montserrat_700Bold',
     fontSize: 48,
     fontWeight: '700',
-    color: '#CCFF00',
+    color: COLORS.primary,
   },
-
-  // Botões - Montserrat Bold (Ação)
   button: {
     fontFamily: 'Montserrat_700Bold',
     fontSize: 14,
@@ -65,4 +58,17 @@ export const FONTS = {
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
+};
+
+export const FONT_SIZES = {
+  xs: 10,
+  sm: 12,
+  md: 14,
+  base: 16,
+  lg: 18,
+  xl: 20,
+  xxl: 24,
+  xxxl: 32,
+  huge: 48,
+  massive: 64,
 };
