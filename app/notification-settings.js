@@ -10,6 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { scheduleWorkoutReminder, scheduleWeeklyPlanReminder, clearAllNotifications } from '../src/services/notifications';
+import { setupWorkoutReminders, getActiveReminders } from '../src/services/workout-reminders';
 import { layout, typography } from '../src/styles';
 
 export default function NotificationSettingsScreen() {
@@ -24,6 +25,7 @@ export default function NotificationSettingsScreen() {
     rest_day: true,
   });
   const [reminderTime, setReminderTime] = useState('19:00');
+  const [activeReminders, setActiveReminders] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +40,13 @@ export default function NotificationSettingsScreen() {
 
         if (data?.notification_settings) {
           setSettings(data.notification_settings);
+          if (data.notification_settings.reminder_time) {
+            setReminderTime(data.notification_settings.reminder_time);
+          }
         }
+
+        const reminders = await getActiveReminders();
+        setActiveReminders(reminders.length);
       } catch (err) {
         console.error('Erro ao carregar configuracoes:', err);
       } finally {
@@ -49,7 +57,7 @@ export default function NotificationSettingsScreen() {
   }, [user?.id]);
 
   const handleToggle = async (key) => {
-    const newSettings = { ...settings, [key]: !settings[key] };
+    const newSettings = { ...settings, [key]: !settings[key], reminder_time: reminderTime };
     setSettings(newSettings);
 
     try {
@@ -58,14 +66,29 @@ export default function NotificationSettingsScreen() {
         .update({ notification_settings: newSettings })
         .eq('id', user.id);
 
-      if (key === 'workout_reminder' && newSettings.workout_reminder) {
-        const [hour, minute] = reminderTime.split(':').map(Number);
-        await scheduleWorkoutReminder(hour, minute);
-      } else if (key === 'weekly_plan' && newSettings.weekly_plan) {
-        await scheduleWeeklyPlanReminder();
+      if (newSettings.workout_reminder) {
+        await setupWorkoutReminders(user.id);
       }
+
+      const reminders = await getActiveReminders();
+      setActiveReminders(reminders.length);
     } catch (err) {
       console.error('Erro ao salvar:', err);
+    }
+  };
+
+  const handleTimeChange = async (time) => {
+    setReminderTime(time);
+    const newSettings = { ...settings, reminder_time: time };
+    setSettings(newSettings);
+
+    await supabase
+      .from('profiles')
+      .update({ notification_settings: newSettings })
+      .eq('id', user.id);
+
+    if (newSettings.workout_reminder) {
+      await setupWorkoutReminders(user.id);
     }
   };
 
@@ -124,11 +147,19 @@ export default function NotificationSettingsScreen() {
               <TouchableOpacity
                 key={time}
                 style={[styles.timeOption, reminderTime === time && styles.timeOptionActive]}
-                onPress={() => setReminderTime(time)}
+                onPress={() => handleTimeChange(time)}
               >
                 <Text style={[typography.bodySmall, reminderTime === time && styles.timeTextActive]}>{time}</Text>
               </TouchableOpacity>
             ))}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={typography.label}>LEMBRETES ATIVOS</Text>
+          <View style={styles.reminderStatus}>
+            <Ionicons name="alarm" size={20} color={COLORS.primary} />
+            <Text style={typography.bodySmall}>{activeReminders} lembretes agendados</Text>
           </View>
         </View>
 
@@ -152,5 +183,6 @@ const styles = StyleSheet.create({
   timeOption: { flex: 1, paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   timeOptionActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   timeTextActive: { color: COLORS.background, fontFamily: 'Montserrat_600SemiBold' },
+  reminderStatus: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: 8, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
   clearBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error + '10', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.error + '30' },
 });
