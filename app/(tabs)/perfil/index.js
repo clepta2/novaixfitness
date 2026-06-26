@@ -161,6 +161,7 @@ export default function ProfileScreen() {
           { icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' },
           { icon: 'notifications-outline', label: 'Notificacoes', route: '/notifications' },
           { icon: 'stats-chart-outline', label: 'Analytics', route: '/analytics' },
+          { icon: 'grid-outline', label: 'Dashboard', route: '/dashboard' },
           { icon: 'body-outline', label: 'Medidas Corporais', route: '/body-measures' },
           { icon: 'camera-outline', label: 'Fotos de Progresso', route: '/progress-photos' },
           { icon: 'download-outline', label: 'Exportar Dados', route: '/export-data' },

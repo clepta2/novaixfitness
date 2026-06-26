@@ -21,7 +21,12 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundColor": "#12161A"
       },
-      "package": "com.novaix.fitness"
+      "package": "com.novaix.fitness",
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "VIBRATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
