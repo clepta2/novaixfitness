@@ -2,7 +2,7 @@
 // Card de referral/convite - NOVAIX FITNESS
 
 import React, { useState, useEffect, memo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -26,6 +26,26 @@ function ReferralCard() {
 
   const handleShare = () => shareReferral(user?.id);
 
+  const handleCopy = async () => {
+    if (referralData?.referral_code) {
+      try {
+        const Clipboard = require('expo-clipboard');
+        await Clipboard.setStringAsync(referralData.referral_code);
+        if (Platform.OS === 'web') {
+          alert('Código de indicação copiado!');
+        } else {
+          Alert.alert('Copiado!', 'Código de indicação copiado para a área de transferência.');
+        }
+      } catch (err) {
+        if (Platform.OS === 'web') {
+          alert(`Código: ${referralData.referral_code}`);
+        } else {
+          Alert.alert('Código', referralData.referral_code);
+        }
+      }
+    }
+  };
+
   if (!referralData) return null;
 
   return (
@@ -43,7 +63,7 @@ function ReferralCard() {
         <Text style={styles.codeLabel}>Seu código:</Text>
         <View style={styles.codeBox}>
           <Text style={styles.code}>{referralData.referral_code}</Text>
-          <TouchableOpacity style={styles.copyBtn}>
+          <TouchableOpacity style={styles.copyBtn} onPress={handleCopy}>
             <Ionicons name="copy-outline" size={16} color={COLORS.primary} />
           </TouchableOpacity>
         </View>

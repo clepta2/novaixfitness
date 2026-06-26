@@ -28,6 +28,7 @@ export { default as WorkoutListView } from './workout/WorkoutListView';
 // Social components
 export { default as PostCard } from './social/PostCard';
 export { default as CreatePostModal } from './social/CreatePostModal';
+export { default as NotificationModal } from './social/NotificationModal';
 
 // Profile components
 export { default as ProfileHeader } from './profile/ProfileHeader';
@@ -36,7 +37,10 @@ export { default as PhysicalData } from './profile/PhysicalData';
 export { default as BadgesRow } from './profile/BadgesRow';
 export { default as GamificationBar } from './profile/GamificationBar';
 export { default as AchievementsList } from './profile/AchievementsList';
+export { default as RankingCard } from './profile/RankingCard';
+export { default as WeeklyChallenges } from './profile/WeeklyChallenges';
 export { default as WeightLogger } from './profile/WeightLogger';
+export { default as EditNameModal } from './profile/EditNameModal';
 
 // Home components
 export { default as DailyWorkoutCard } from './home/DailyWorkoutCard';

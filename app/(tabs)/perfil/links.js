@@ -1,11 +1,12 @@
 // app/(tabs)/perfil/links.js
 // Tela de Links Externos - NOVAIX FITNESS
 
-import { View, Text, ScrollView, TouchableOpacity, Linking, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Linking, StyleSheet, Modal, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import Header from '../../../src/components/ui/Header';
+import { Header, ReferralCard } from '../../../src/components';
 
 const socialLinks = [
   { icon: 'logo-youtube', label: 'YouTube', color: '#FF0000', url: 'https://youtube.com/@novaixfitness' },
@@ -20,6 +21,8 @@ const otherLinks = [
 ];
 
 export default function LinksScreen() {
+  const [showReferral, setShowReferral] = useState(false);
+
   const openLink = async (url) => {
     const canOpen = await Linking.canOpenURL(url);
     if (canOpen) {
@@ -71,7 +74,7 @@ export default function LinksScreen() {
       {/* Share */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>COMPARTILHE</Text>
-        <TouchableOpacity style={styles.shareCard} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.shareCard} activeOpacity={0.8} onPress={() => setShowReferral(true)}>
           <Ionicons name="share-social-outline" size={24} color={COLORS.primary} />
           <View style={styles.shareInfo}>
             <Text style={styles.shareLabel}>Indique um amigo</Text>
@@ -80,6 +83,25 @@ export default function LinksScreen() {
           <Ionicons name="chevron-forward" size={18} color={COLORS.textMuted} />
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={showReferral}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setShowReferral(false)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setShowReferral(false)}>
+          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>INDICAÇÃO</Text>
+              <TouchableOpacity onPress={() => setShowReferral(false)}>
+                <Ionicons name="close" size={24} color={COLORS.textTitle} />
+              </TouchableOpacity>
+            </View>
+            <ReferralCard />
+          </View>
+        </Pressable>
+      </Modal>
 
       <View style={{ height: 40 }} />
     </ScrollView>
@@ -101,4 +123,8 @@ const styles = StyleSheet.create({
   shareInfo: { flex: 1, marginLeft: SPACING.md },
   shareLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
   shareDesc: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)', justifyContent: 'center', padding: SPACING.xl },
+  modalContent: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.border },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xl },
+  modalTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.primary, letterSpacing: 1 },
 });

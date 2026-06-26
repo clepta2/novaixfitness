@@ -6,7 +6,7 @@ import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, A
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
-import { PostCard, CreatePostModal } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal } from '../../src/components';
 import { useSupabaseData } from '../../src/hooks';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
@@ -23,6 +23,7 @@ export default function FeedScreen() {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [hasNotif, setHasNotif] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     if (dbPosts) {
@@ -107,7 +108,7 @@ export default function FeedScreen() {
             <Text style={typography.h2}>Comunidade</Text>
             <Text style={typography.bodyMuted}>Veja o que seus amigos estão treinando</Text>
           </View>
-          <TouchableOpacity style={layout.headerBtn} onPress={() => { setHasNotif(false); Alert.alert('Notificações', 'Você está em dia com a comunidade! Nenhuma notificação pendente.'); }}>
+          <TouchableOpacity style={layout.headerBtn} onPress={() => { setHasNotif(false); setShowNotifications(true); }}>
             <Ionicons name="notifications-outline" size={22} color={COLORS.textMuted} />
             {hasNotif && <View style={styles.notifBadge} />}
           </TouchableOpacity>
@@ -133,6 +134,7 @@ export default function FeedScreen() {
         <Ionicons name="add" size={28} color={COLORS.background} />
       </TouchableOpacity>
       <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} />
+      <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
     </View>
   );
 }

@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import { ProfileHeader, StatsGrid, PhysicalData, BadgesRow, WeightLogger, GamificationBar, AchievementsList } from '../../../src/components';
+import { ProfileHeader, StatsGrid, PhysicalData, BadgesRow, WeightLogger, GamificationBar, AchievementsList, RankingCard, WeeklyChallenges, EditNameModal } from '../../../src/components';
 import { useAuth } from '../../../src/context/AuthContext';
 import { supabase } from '../../../src/config/supabase';
 import { getGamificationData } from '../../../src/services/gamification';
@@ -25,6 +25,7 @@ export default function ProfileScreen() {
   const [recentWorkouts, setRecentWorkouts] = useState([]);
   const [gamification, setGamification] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showEditName, setShowEditName] = useState(false);
 
   const fetchProfile = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
@@ -89,17 +90,7 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleEditName = () => {
-    if (Platform.OS === 'web') {
-      const newName = prompt('Editar Nome:', userName);
-      if (newName !== null && newName.trim() !== '') updateProfileName(newName);
-    } else {
-      Alert.prompt('Editar Nome', 'Digite seu novo nome:', [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Salvar', onPress: (newName) => newName?.trim() && updateProfileName(newName) }
-      ], 'plain-text', userName);
-    }
-  };
+  const handleEditName = () => setShowEditName(true);
 
   return (
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
@@ -120,8 +111,20 @@ export default function ProfileScreen() {
         <AchievementsList achievements={gamification?.achievements || []} totalAchievements={ACHIEVEMENTS.length} />
       </View>
 
+      {user?.id && (
+        <View style={layout.section}>
+          <WeeklyChallenges userId={user.id} />
+        </View>
+      )}
+
+      {user?.id && (
+        <View style={layout.section}>
+          <RankingCard userId={user.id} />
+        </View>
+      )}
+
       <View style={layout.section}>
-        <Text style={typography.label}>DADOS FÍSICOS</Text>
+        <Text style={typography.label}>DADOS FISICOS</Text>
         <PhysicalData data={physicalData} />
       </View>
 
@@ -162,6 +165,7 @@ export default function ProfileScreen() {
         <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
         <Text style={[typography.h5, { color: COLORS.error }]}>Sair da conta</Text>
       </TouchableOpacity>
+      <EditNameModal visible={showEditName} onClose={() => setShowEditName(false)} initialName={userName} onSave={updateProfileName} />
       <View style={{ height: 100 }} />
     </ScrollView>
   );

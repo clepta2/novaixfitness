@@ -2,7 +2,7 @@
 // Tela de Gerenciamento de Assinatura - NOVAIX FITNESS
 
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -11,14 +11,9 @@ import { Button } from '../src/components';
 import { getCurrentSubscription, cancelSubscription, getPaymentHistory, PLANS } from '../src/services/payment';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
+import { styles } from '../src/styles/subscriptionStyles';
+import { STATUS_MAP, INFO_ITEMS } from '../src/data/subscriptionData';
 
-const STATUS_MAP = {
-  active: { label: 'Ativo', color: COLORS.success, icon: 'checkmark-circle' },
-  overdue: { label: 'Atrasado', color: COLORS.attention, icon: 'warning' },
-  cancelled: { label: 'Cancelado', color: COLORS.error, icon: 'close-circle' },
-  inactive: { label: 'Inativo', color: COLORS.textMuted, icon: 'pause-circle' },
-  free: { label: 'Gratuito', color: COLORS.textMuted, icon: 'person' },
-};
 
 export default function SubscriptionScreen() {
   const router = useRouter();
@@ -45,26 +40,41 @@ export default function SubscriptionScreen() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleCancel = () => {
-    Alert.alert(
-      'Cancelar assinatura',
-      'Tem certeza que deseja cancelar? Você perderá acesso ao conteúdo premium.',
-      [
-        { text: 'Não', style: 'cancel' },
-        {
-          text: 'Sim, cancelar',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await cancelSubscription();
-              Alert.alert('Cancelado', 'Sua assinatura foi cancelada.');
-              fetchData();
-            } catch (err) {
-              Alert.alert('Erro', err.message);
-            }
+    if (Platform.OS === 'web') {
+      const confirmCancel = confirm('Tem certeza que deseja cancelar sua assinatura? Você perderá acesso ao conteúdo premium.');
+      if (confirmCancel) {
+        (async () => {
+          try {
+            await cancelSubscription();
+            alert('Sua assinatura foi cancelada.');
+            fetchData();
+          } catch (err) {
+            alert('Erro: ' + err.message);
+          }
+        })();
+      }
+    } else {
+      Alert.alert(
+        'Cancelar assinatura',
+        'Tem certeza que deseja cancelar? Você perderá acesso ao conteúdo premium.',
+        [
+          { text: 'Não', style: 'cancel' },
+          {
+            text: 'Sim, cancelar',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await cancelSubscription();
+                Alert.alert('Cancelado', 'Sua assinatura foi cancelada.');
+                fetchData();
+              } catch (err) {
+                Alert.alert('Erro', err.message);
+              }
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   };
 
   const status = STATUS_MAP[subscription?.subscription_status] || STATUS_MAP.free;
@@ -168,11 +178,7 @@ export default function SubscriptionScreen() {
 
       <View style={layout.section}>
         <Text style={typography.label}>INFORMAÇÕES</Text>
-        {[
-          { icon: 'shield-checkmark-outline', title: 'Segurança', desc: 'Pagamentos via Asaas com criptografia SSL' },
-          { icon: 'refresh-outline', title: 'Renovação', desc: 'Cobrança automática todo mês' },
-          { icon: 'card-outline', title: 'Formas de Pagamento', desc: 'PIX ou Cartão de Crédito' },
-        ].map((item, i) => (
+        {INFO_ITEMS.map((item, i) => (
           <View key={i} style={styles.infoItem}>
             <Ionicons name={item.icon} size={20} color={COLORS.primary} />
             <View>
@@ -193,18 +199,3 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('pt-BR');
 }
 
-const styles = StyleSheet.create({
-  statusCard: { flexDirection: 'row', alignItems: 'center', gap: SPACING.lg, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.xl },
-  statusInfo: { flex: 1 },
-  planCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.xl },
-  planFeatures: { gap: SPACING.sm, marginTop: SPACING.md },
-  featureRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
-  upgradeBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.md, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, marginBottom: SPACING.xl },
-  actions: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.xl },
-  actionBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
-  cancelBtn: { borderColor: COLORS.error + '30' },
-  paymentItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
-  paymentIcon: { marginRight: SPACING.md },
-  paymentInfo: { flex: 1 },
-  infoItem: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
-});

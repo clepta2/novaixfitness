@@ -1,5 +1,5 @@
 // src/constants/gamification.js
-// Sistema de gamificação - XP, Níveis, Conquistas - NOVAIX FITNESS
+// Sistema de gamificacao - XP, Niveis, Conquistas - NOVAIX FITNESS
 
 export const XP_VALUES = {
   WORKOUT_COMPLETED: 50,
@@ -11,56 +11,74 @@ export const XP_VALUES = {
   FAVORITE_ADDED: 3,
   ONBOARDING_COMPLETED: 100,
   FIRST_WORKOUT: 200,
+  DAILY_LOGIN: 5,
+  PROFILE_COMPLETED: 30,
+  SHARE_WORKOUT: 10,
+  COMPLETE_ALL_DAILY: 100,
 };
 
 export const LEVELS = [
-  { level: 1, name: 'Iniciante', xpRequired: 0, color: '#94A3B8', icon: 'seedling' },
-  { level: 2, name: 'Aquecendo', xpRequired: 200, color: '#94A3B8', icon: 'flash' },
-  { level: 3, name: 'Dedicado', xpRequired: 500, color: '#00E676', icon: 'flame' },
-  { level: 4, name: 'Focado', xpRequired: 1000, color: '#00E676', icon: 'rocket' },
-  { level: 5, name: 'Atleta', xpRequired: 2000, color: '#FFD600', icon: 'trophy' },
-  { level: 6, name: 'Guerreiro', xpRequired: 3500, color: '#FFD600', icon: 'shield' },
-  { level: 7, name: 'Mestre', xpRequired: 5000, color: '#FF6B35', icon: 'diamond' },
-  { level: 8, name: 'Lenda', xpRequired: 7500, color: '#FF6B35', icon: 'skull' },
-  { level: 9, name: 'Lendário', xpRequired: 10000, color: '#CCFF00', icon: 'flash' },
-  { level: 10, name: 'NOVAIX', xpRequired: 15000, color: '#CCFF00', icon: 'star' },
+  { level: 1, name: 'Iniciante', xpRequired: 0, color: '#94A3B8', icon: 'seedling', rewards: [] },
+  { level: 2, name: 'Aquecendo', xpRequired: 200, color: '#94A3B8', icon: 'flash', rewards: ['Acesso a dicas de treino'] },
+  { level: 3, name: 'Dedicado', xpRequired: 500, color: '#00E676', icon: 'flame', rewards: ['Badge exclusivo', 'Tema escuro premium'] },
+  { level: 4, name: 'Focado', xpRequired: 1000, color: '#00E676', icon: 'rocket', rewards: ['Avatar exclusivo', 'Estatisticas avancadas'] },
+  { level: 5, name: 'Atleta', xpRequired: 2000, color: '#FFD600', icon: 'trophy', rewards: ['Titulo especial', 'Acesso antecipado'] },
+  { level: 6, name: 'Guerreiro', xpRequired: 3500, color: '#FFD600', icon: 'shield', rewards: ['Frame de perfil', 'Destaque na comunidade'] },
+  { level: 7, name: 'Mestre', xpRequired: 5000, color: '#FF6B35', icon: 'diamond', rewards: ['Coach IA premium', 'Treinos exclusivos'] },
+  { level: 8, name: 'Lenda', xpRequired: 7500, color: '#FF6B35', icon: 'skull', rewards: ['Avatar lendario', 'Consulta nutricional'] },
+  { level: 9, name: 'Lendario', xpRequired: 10000, color: '#CCFF00', icon: 'flash', rewards: ['Badge dourado', 'Supervip'] },
+  { level: 10, name: 'NOVAIX', xpRequired: 15000, color: '#CCFF00', icon: 'star', rewards: ['Titulo supremo', 'Acesso vitalicio', 'Personal trainer virtual'] },
 ];
 
 export const ACHIEVEMENTS = [
   // Streak
-  { id: 'streak_3', name: 'Fogo Aceso', description: '3 dias seguidos treinando', icon: 'flame', color: '#FF6B35', category: 'streak', requirement: 3 },
-  { id: 'streak_7', name: 'Semana Perfeita', description: '7 dias seguidos treinando', icon: 'flame', color: '#FF6B35', category: 'streak', requirement: 7 },
-  { id: 'streak_14', name: 'Duas Semanas', description: '14 dias seguidos treinando', icon: 'flame', color: '#FFD600', category: 'streak', requirement: 14 },
-  { id: 'streak_30', name: 'Mês de Ferro', description: '30 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 30 },
-  { id: 'streak_60', name: 'Inabalável', description: '60 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 60 },
-  { id: 'streak_100', name: 'Centenário', description: '100 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 100 },
+  { id: 'streak_3', name: 'Fogo Aceso', description: '3 dias seguidos treinando', icon: 'flame', color: '#FF6B35', category: 'streak', requirement: 3, xpReward: 50 },
+  { id: 'streak_7', name: 'Semana Perfeita', description: '7 dias seguidos treinando', icon: 'flame', color: '#FF6B35', category: 'streak', requirement: 7, xpReward: 150 },
+  { id: 'streak_14', name: 'Duas Semanas', description: '14 dias seguidos treinando', icon: 'flame', color: '#FFD600', category: 'streak', requirement: 14, xpReward: 300 },
+  { id: 'streak_30', name: 'Mes de Ferro', description: '30 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 30, xpReward: 500 },
+  { id: 'streak_60', name: 'Inabalavel', description: '60 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 60, xpReward: 1000 },
+  { id: 'streak_100', name: 'Centenario', description: '100 dias seguidos treinando', icon: 'flame', color: '#CCFF00', category: 'streak', requirement: 100, xpReward: 2000 },
 
   // Treinos
-  { id: 'workout_1', name: 'Primeiro Treino', description: 'Complete seu primeiro treino', icon: 'trophy', color: '#FFD600', category: 'workout', requirement: 1 },
-  { id: 'workout_5', name: 'Aquecendo', description: 'Complete 5 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 5 },
-  { id: 'workout_10', name: 'Dez Pra Um', description: 'Complete 10 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 10 },
-  { id: 'workout_25', name: 'Quinze Mais', description: 'Complete 25 treinos', icon: 'barbell', color: '#FFD600', category: 'workout', requirement: 25 },
-  { id: 'workout_50', name: 'Meio Centenário', description: 'Complete 50 treinos', icon: 'barbell', color: '#FF6B35', category: 'workout', requirement: 50 },
-  { id: 'workout_100', name: 'Centúrião', description: 'Complete 100 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 100 },
-  { id: 'workout_250', name: 'Máquina', description: 'Complete 250 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 250 },
-  { id: 'workout_500', name: 'Lenda Viva', description: 'Complete 500 treinos', icon: 'star', color: '#CCFF00', category: 'workout', requirement: 500 },
+  { id: 'workout_1', name: 'Primeiro Treino', description: 'Complete seu primeiro treino', icon: 'trophy', color: '#FFD600', category: 'workout', requirement: 1, xpReward: 200 },
+  { id: 'workout_5', name: 'Aquecendo', description: 'Complete 5 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 5, xpReward: 100 },
+  { id: 'workout_10', name: 'Dez Pra Um', description: 'Complete 10 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 10, xpReward: 200 },
+  { id: 'workout_25', name: 'Quinze Mais', description: 'Complete 25 treinos', icon: 'barbell', color: '#FFD600', category: 'workout', requirement: 25, xpReward: 350 },
+  { id: 'workout_50', name: 'Meio Centenario', description: 'Complete 50 treinos', icon: 'barbell', color: '#FF6B35', category: 'workout', requirement: 50, xpReward: 500 },
+  { id: 'workout_100', name: 'Centuriao', description: 'Complete 100 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 100, xpReward: 1000 },
+  { id: 'workout_250', name: 'Maquina', description: 'Complete 250 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 250, xpReward: 2000 },
+  { id: 'workout_500', name: 'Lenda Viva', description: 'Complete 500 treinos', icon: 'star', color: '#CCFF00', category: 'workout', requirement: 500, xpReward: 5000 },
 
   // Tempo
-  { id: 'time_60', name: 'Primeira Hora', description: 'Acumule 60 minutos', icon: 'time', color: '#94A3B8', category: 'time', requirement: 60 },
-  { id: 'time_300', name: '5 Horas', description: 'Acumule 5 horas de treino', icon: 'time', color: '#00E676', category: 'time', requirement: 300 },
-  { id: 'time_1000', name: 'Maratona', description: 'Acumule 1000 minutos (~16h)', icon: 'time', color: '#FFD600', category: 'time', requirement: 1000 },
-  { id: 'time_5000', name: 'Ultra Atleta', description: 'Acumule 5000 minutos (~83h)', icon: 'time', color: '#FF6B35', category: 'time', requirement: 5000 },
+  { id: 'time_60', name: 'Primeira Hora', description: 'Acumule 60 minutos', icon: 'time', color: '#94A3B8', category: 'time', requirement: 60, xpReward: 50 },
+  { id: 'time_300', name: '5 Horas', description: 'Acumule 5 horas de treino', icon: 'time', color: '#00E676', category: 'time', requirement: 300, xpReward: 150 },
+  { id: 'time_1000', name: 'Maratona', description: 'Acumule 1000 minutos (~16h)', icon: 'time', color: '#FFD600', category: 'time', requirement: 1000, xpReward: 400 },
+  { id: 'time_5000', name: 'Ultra Atleta', description: 'Acumule 5000 minutos (~83h)', icon: 'time', color: '#FF6B35', category: 'time', requirement: 5000, xpReward: 1000 },
 
   // Social
-  { id: 'social_first_post', name: 'Primeira Postagem', description: 'Publique na comunidade', icon: 'chatbubble', color: '#00E676', category: 'social', requirement: 1 },
-  { id: 'social_10_posts', name: 'Influencer', description: 'Publique 10 posts', icon: 'chatbubble', color: '#FFD600', category: 'social', requirement: 10 },
-  { id: 'social_50_likes', name: 'Popular', description: 'Receba 50 curtidas', icon: 'heart', color: '#FF6B35', category: 'social', requirement: 50 },
+  { id: 'social_first_post', name: 'Primeira Postagem', description: 'Publique na comunidade', icon: 'chatbubble', color: '#00E676', category: 'social', requirement: 1, xpReward: 50 },
+  { id: 'social_10_posts', name: 'Influencer', description: 'Publique 10 posts', icon: 'chatbubble', color: '#FFD600', category: 'social', requirement: 10, xpReward: 200 },
+  { id: 'social_50_likes', name: 'Popular', description: 'Receba 50 curtidas', icon: 'heart', color: '#FF6B35', category: 'social', requirement: 50, xpReward: 300 },
+  { id: 'social_comment_25', name: 'Conversador', description: 'Deixe 25 comentarios', icon: 'chatbubbles', color: '#00E676', category: 'social', requirement: 25, xpReward: 150 },
 
-  // Nível
-  { id: 'level_3', name: 'Subindo de Nível', description: 'Alcance o nível 3', icon: 'trending-up', color: '#00E676', category: 'level', requirement: 3 },
-  { id: 'level_5', name: 'Meio Caminho', description: 'Alcance o nível 5', icon: 'trending-up', color: '#FFD600', category: 'level', requirement: 5 },
-  { id: 'level_7', name: 'Elite', description: 'Alcance o nível 7', icon: 'trending-up', color: '#FF6B35', category: 'level', requirement: 7 },
-  { id: 'level_10', name: 'NOVAIX Supremo', description: 'Alcance o nível máximo', icon: 'star', color: '#CCFF00', category: 'level', requirement: 10 },
+  // Nivel
+  { id: 'level_3', name: 'Subindo de Nivel', description: 'Alcance o nivel 3', icon: 'trending-up', color: '#00E676', category: 'level', requirement: 3, xpReward: 100 },
+  { id: 'level_5', name: 'Meio Caminho', description: 'Alcance o nivel 5', icon: 'trending-up', color: '#FFD600', category: 'level', requirement: 5, xpReward: 300 },
+  { id: 'level_7', name: 'Elite', description: 'Alcance o nivel 7', icon: 'trending-up', color: '#FF6B35', category: 'level', requirement: 7, xpReward: 500 },
+  { id: 'level_10', name: 'NOVAIX Supremo', description: 'Alcance o nivel maximo', icon: 'star', color: '#CCFF00', category: 'level', requirement: 10, xpReward: 2000 },
+
+  // Desafios Semanais
+  { id: 'weekly_3_workouts', name: 'Ativo na Semana', description: 'Complete 3 treinos na semana', icon: 'calendar', color: '#00E676', category: 'weekly', requirement: 3, xpReward: 100 },
+  { id: 'weekly_5_workouts', name: 'Semana Completa', description: 'Complete 5 treinos na semana', icon: 'calendar', color: '#FFD600', category: 'weekly', requirement: 5, xpReward: 250 },
+  { id: 'weekly_all_categories', name: 'Variado', description: 'Treine todas as categorias na semana', icon: 'grid', color: '#FF6B35', category: 'weekly', requirement: 1, xpReward: 200 },
+];
+
+export const WEEKLY_CHALLENGES = [
+  { id: 'ch_3_workouts', name: 'Complete 3 treinos', target: 3, type: 'workouts', xpReward: 100, icon: 'barbell' },
+  { id: 'ch_5_workouts', name: 'Complete 5 treinos', target: 5, type: 'workouts', xpReward: 250, icon: 'barbell' },
+  { id: 'ch_120_minutes', name: 'Treine 120 minutos', target: 120, type: 'minutes', xpReward: 150, icon: 'time' },
+  { id: 'ch_streak_7', name: 'Mantenha streak de 7', target: 7, type: 'streak', xpReward: 200, icon: 'flame' },
+  { id: 'ch_2_posts', name: 'Poste 2x na comunidade', target: 2, type: 'posts', xpReward: 100, icon: 'chatbubble' },
 ];
 
 export function getLevelForXP(xp) {

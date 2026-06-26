@@ -6,7 +6,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import Header from '../../../src/components/ui/Header';
+import { Header } from '../../../src/components';
 
 const tabs = ['Termos de Uso', 'Privacidade', 'Aviso Médico'];
 
