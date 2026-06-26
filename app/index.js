@@ -19,42 +19,44 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const showAlert = (title, msg) => {
+    if (Platform.OS === 'web') alert(`${title}: ${msg}`);
+    else Alert.alert(title, msg);
+  };
+
   const handleLogin = useCallback(async () => {
-    if (!email.trim() || !email.includes('@')) return Alert.alert('Erro', 'Insira um e-mail válido');
-    if (!password.trim() || password.length < 6) return Alert.alert('Erro', 'Mínimo 6 caracteres');
+    if (!email.trim() || !email.includes('@')) return showAlert('Erro', 'Insira um e-mail válido');
+    if (!password.trim() || password.length < 6) return showAlert('Erro', 'Mínimo 6 caracteres');
     setLoading(true);
     try { await signInWithEmail(email, password); }
-    catch (e) { Alert.alert('Erro', e.message || 'Falha ao fazer login'); }
+    catch (e) { showAlert('Erro', e.message || 'Falha ao fazer login'); }
     finally { setLoading(false); }
   }, [email, password, signInWithEmail]);
 
   const handleGoogle = useCallback(async () => {
-    try { await signInWithGoogle(); } catch (e) { Alert.alert('Erro', e.message); }
+    try { await signInWithGoogle(); } catch (e) { showAlert('Erro', e.message); }
   }, [signInWithGoogle]);
 
   const handleApple = useCallback(async () => {
-    try { await signInWithApple(); } catch (e) { Alert.alert('Erro', e.message); }
+    try { await signInWithApple(); } catch (e) { showAlert('Erro', e.message); }
   }, [signInWithApple]);
 
   const handleBiometrics = useCallback(async () => {
     try {
       const hasHardware = await LocalAuthentication.hasHardwareAsync();
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-
       if (!hasHardware || !isEnrolled) {
-        return Alert.alert('Aviso', 'Autenticação biométrica não configurada no dispositivo.');
+        return showAlert('Aviso', 'Autenticação biométrica não configurada no dispositivo.');
       }
-
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Login Rápido - NOVAIX FITNESS',
         fallbackLabel: 'Usar Senha',
       });
-
       if (result.success) {
         router.replace('/(tabs)/home');
       }
     } catch (e) {
-      Alert.alert('Erro', 'Falha na autenticação biométrica.');
+      showAlert('Erro', 'Falha na autenticação biométrica.');
     }
   }, [router]);
 

@@ -2,7 +2,7 @@
 // Biblioteca de Treinos - NOVAIX FITNESS
 
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
@@ -18,39 +18,32 @@ export default function LibraryScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
-
-  // Carregar todos os treinos do Supabase
-  const { data: dbWorkouts, loading } = useSupabaseData('workouts', {
-    select: '*',
-    orderBy: { column: 'created_at', ascending: false },
-    mockData: []
-  });
-
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
 
-  // Carregar favoritos do usuário
+  const { data: dbWorkouts } = useSupabaseData('workouts', { 
+    select: '*', 
+    orderBy: { column: 'created_at', ascending: false }, 
+    mockData: [] 
+  });
+
   useEffect(() => {
     async function loadFavorites() {
       if (!user) return;
       try {
-        const { data, error } = await supabase
-          .from('favorites')
-          .select('*, workouts(*)')
-          .eq('user_id', user.id);
-
+        const { data, error } = await supabase.from('favorites').select('*, workouts(*)').eq('user_id', user.id);
         if (data && !error) {
-          const formatted = data.map(f => ({
+          setFavorites(data.map(f => ({
             id: f.workouts?.id,
             name: f.workouts?.title || f.workouts?.name,
             category: f.workouts?.category,
             duration: f.workouts?.duration_minutes || f.workouts?.duration || 30,
-            level: f.workouts?.level || 'Intermediário',
-            favoritedAt: 'Favoritado'
-          }));
-          setFavorites(formatted);
+            level: f.workouts?.level || 'Intermediário'
+          })));
         }
       } catch (err) {
-        console.error('Erro ao carregar favoritos:', err);
+        console.error(err);
       }
     }
     loadFavorites();
@@ -59,71 +52,53 @@ export default function LibraryScreen() {
   const toggleFavorite = async (workoutId) => {
     if (!user) return;
     try {
-      const isFav = favorites.some(f => f.id === workoutId);
-      if (isFav) {
-        // Remover dos favoritos no banco
-        await supabase
-          .from('favorites')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('workout_id', workoutId);
-        
+      if (favorites.some(f => f.id === workoutId)) {
+        await supabase.from('favorites').delete().eq('user_id', user.id).eq('workout_id', workoutId);
         setFavorites(prev => prev.filter(f => f.id !== workoutId));
       } else {
-        // Adicionar aos favoritos no banco
-        const { data: inserted } = await supabase
-          .from('favorites')
-          .insert({ user_id: user.id, workout_id: workoutId })
-          .select('*, workouts(*)')
-          .single();
-
-        if (inserted) {
-          const newFav = {
-            id: inserted.workouts?.id,
-            name: inserted.workouts?.title || inserted.workouts?.name,
-            category: inserted.workouts?.category,
-            duration: inserted.workouts?.duration_minutes || inserted.workouts?.duration || 30,
-            level: inserted.workouts?.level || 'Intermediário',
-            favoritedAt: 'Agora'
-          };
-          setFavorites(prev => [...prev, newFav]);
+        const { data: ins } = await supabase.from('favorites').insert({ user_id: user.id, workout_id: workoutId }).select('*, workouts(*)').single();
+        if (ins) {
+          setFavorites(prev => [...prev, {
+            id: ins.workouts?.id,
+            name: ins.workouts?.title || ins.workouts?.name,
+            category: ins.workouts?.category,
+            duration: ins.workouts?.duration_minutes || ins.workouts?.duration || 30,
+            level: ins.workouts?.level || 'Intermediário'
+          }]);
         }
       }
     } catch (err) {
-      console.error('Erro ao favoritar/desfavoritar:', err);
+      console.error(err);
     }
   };
 
-  // Filtrar treinos populares e recentes baseado no Supabase
-  const filteredWorkouts = selectedCategory 
-    ? dbWorkouts.filter(w => w.category?.toLowerCase() === selectedCategory.label?.toLowerCase())
-    : dbWorkouts;
+  const filteredWorkouts = dbWorkouts.filter(w => {
+    const matchesCat = !selectedCategory || w.category?.toLowerCase() === selectedCategory.label?.toLowerCase();
+    const matchesQuery = !searchQuery || w.title?.toLowerCase().includes(searchQuery.toLowerCase()) || w.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCat && matchesQuery;
+  });
 
-  const popularWorkouts = filteredWorkouts.slice(0, 3).map(w => ({
-    id: w.id,
-    name: w.title || w.name,
-    category: w.category || 'Treino',
-    duration: w.duration_minutes || w.duration || 30,
-    level: w.level || 'Intermediário'
-  }));
-
-  const recentWorkouts = filteredWorkouts.slice(1, 4).map(w => ({
-    id: w.id,
-    name: w.title || w.name,
-    category: w.category || 'Treino',
-    duration: w.duration_minutes || w.duration || 30,
-    level: w.level || 'Intermediário'
-  }));
+  const popularWorkouts = filteredWorkouts.slice(0, 3).map(w => ({ id: w.id, name: w.title || w.name, category: w.category || 'Treino', duration: w.duration_minutes || w.duration || 30, level: w.level || 'Intermediário' }));
+  const recentWorkouts = filteredWorkouts.slice(1, 4).map(w => ({ id: w.id, name: w.title || w.name, category: w.category || 'Treino', duration: w.duration_minutes || w.duration || 30, level: w.level || 'Intermediário' }));
 
   return (
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
       <View style={layout.header}>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={typography.h2}>Biblioteca</Text>
           <Text style={typography.bodyMuted}>Explore todos os treinos</Text>
         </View>
-        <TouchableOpacity style={layout.headerBtn}><Ionicons name="search-outline" size={20} color={COLORS.textMuted} /></TouchableOpacity>
+        <TouchableOpacity style={layout.headerBtn} onPress={() => { setShowSearch(!showSearch); if(showSearch) setSearchQuery(''); }}>
+          <Ionicons name={showSearch ? "close-outline" : "search-outline"} size={22} color={COLORS.textMuted} />
+        </TouchableOpacity>
       </View>
+
+      {showSearch && (
+        <View style={styles.searchBar}>
+          <Ionicons name="search-outline" size={18} color={COLORS.textMuted} style={{ marginRight: SPACING.sm }} />
+          <TextInput placeholder="Buscar treino..." placeholderTextColor={COLORS.textMuted} style={styles.searchInput} value={searchQuery} onChangeText={setSearchQuery} autoCapitalize="none" />
+        </View>
+      )}
 
       {favorites.length > 0 && (
         <View style={layout.section}>
@@ -147,7 +122,7 @@ export default function LibraryScreen() {
       <View style={layout.section}>
         <View style={layout.sectionHeader}>
           <Text style={typography.label}>MAIS POPULARES</Text>
-          <TouchableOpacity><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSelectedCategory(null); setSearchQuery(''); setShowSearch(false); }}><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
         </View>
         {popularWorkouts.map((w) => <WorkoutCard key={w.id} workout={w} onPress={() => router.push({ pathname: '/workout-detail', params: { id: w.id } })} />)}
       </View>
@@ -155,7 +130,7 @@ export default function LibraryScreen() {
       <View style={layout.section}>
         <View style={layout.sectionHeader}>
           <Text style={typography.label}>USADOS RECENTEMENTE</Text>
-          <TouchableOpacity><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { setSelectedCategory(null); setSearchQuery(''); setShowSearch(false); }}><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
         </View>
         {recentWorkouts.map((w) => <WorkoutCard key={w.id} workout={w} onPress={() => router.push({ pathname: '/workout-detail', params: { id: w.id } })} />)}
       </View>
@@ -163,11 +138,9 @@ export default function LibraryScreen() {
       <View style={layout.section}>
         <Text style={typography.label}>SUAS ESTATÍSTICAS</Text>
         <View style={styles.statsCard}>
-          <View style={styles.statItem}><Text style={typography.price}>103</Text><Text style={typography.labelSmall}>Exercícios</Text></View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}><Text style={typography.price}>{favorites.length}</Text><Text style={typography.labelSmall}>Favoritos</Text></View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}><Text style={typography.price}>4</Text><Text style={typography.labelSmall}>Categorias</Text></View>
+          <View style={styles.statItem}><Text style={typography.price}>{dbWorkouts?.length || 0}</Text><Text style={typography.labelSmall}>Exercícios</Text></View>
+          <View style={styles.statDivider} /><View style={styles.statItem}><Text style={typography.price}>{favorites.length}</Text><Text style={typography.labelSmall}>Favoritos</Text></View>
+          <View style={styles.statDivider} /><View style={styles.statItem}><Text style={typography.price}>4</Text><Text style={typography.labelSmall}>Categorias</Text></View>
         </View>
       </View>
       <View style={{ height: 100 }} />
@@ -182,4 +155,6 @@ const styles = StyleSheet.create({
   statsCard: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: 12, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   statItem: { flex: 1, alignItems: 'center' },
   statDivider: { width: 1, height: 40, backgroundColor: COLORS.border },
+  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: 8, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, marginBottom: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
+  searchInput: { flex: 1, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14 },
 });

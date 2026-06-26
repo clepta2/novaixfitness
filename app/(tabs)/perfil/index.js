@@ -2,7 +2,7 @@
 // Tela de Perfil - NOVAIX FITNESS
 
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -73,19 +73,39 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleUpdateAvatar = () => {
-    Alert.alert('Foto de Perfil', 'Escolha a origem:', [
-      { text: 'Câmera', onPress: () => pickImage(true) },
-      { text: 'Galeria', onPress: () => pickImage(false) },
-      { text: 'Cancelar', style: 'cancel' }
-    ]);
+  const handleUpdateAvatar = () => Alert.alert('Foto de Perfil', 'Escolha a origem:', [{ text: 'Câmera', onPress: () => pickImage(true) }, { text: 'Galeria', onPress: () => pickImage(false) }, { text: 'Cancelar', style: 'cancel' }]);
+
+  const updateProfileName = async (newName) => {
+    try {
+      const { error } = await supabase.from('profiles').update({ name: newName }).eq('id', user.id);
+      if (!error) {
+        setProfile(prev => ({ ...prev, name: newName }));
+        if (Platform.OS === 'web') alert('Nome atualizado!');
+        else Alert.alert('Sucesso', 'Nome atualizado!');
+      } else throw error;
+    } catch (err) {
+      if (Platform.OS === 'web') alert('Erro ao atualizar nome');
+      else Alert.alert('Erro', 'Não foi possível atualizar o nome');
+    }
+  };
+
+  const handleEditName = () => {
+    if (Platform.OS === 'web') {
+      const newName = prompt('Editar Nome:', userName);
+      if (newName !== null && newName.trim() !== '') updateProfileName(newName);
+    } else {
+      Alert.prompt('Editar Nome', 'Digite seu novo nome:', [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Salvar', onPress: (newName) => newName?.trim() && updateProfileName(newName) }
+      ], 'plain-text', userName);
+    }
   };
 
   return (
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
       <View style={layout.header}>
         <Text style={typography.h2}>Meu Perfil</Text>
-        <TouchableOpacity onPress={() => Alert.alert('Editar', 'Em breve!')}>
+        <TouchableOpacity onPress={handleEditName}>
           <Ionicons name="create-outline" size={24} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
@@ -129,11 +149,7 @@ export default function ProfileScreen() {
 
       <View style={layout.section}>
         <Text style={typography.label}>CONFIGURAÇÕES</Text>
-        {[
-          { icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' }, { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' },
-          { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' }, { icon: 'information-circle-outline', label: 'Conheça-nos', route: '/(tabs)/perfil/conheca-nos' },
-          { icon: 'link-outline', label: 'Links e Redes Sociais', route: '/(tabs)/perfil/links' }, { icon: 'document-text-outline', label: 'Termos e Políticas', route: '/(tabs)/perfil/termos' },
-        ].map((item, i) => (
+        {[{ icon: 'card-outline', label: 'Minha Assinatura', route: '/subscription' }, { icon: 'shield-checkmark-outline', label: 'Privacidade (LGPD)', route: '/(tabs)/perfil/lgpd' }, { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda' }, { icon: 'information-circle-outline', label: 'Conheça-nos', route: '/(tabs)/perfil/conheca-nos' }, { icon: 'link-outline', label: 'Links e Redes Sociais', route: '/(tabs)/perfil/links' }, { icon: 'document-text-outline', label: 'Termos e Políticas', route: '/(tabs)/perfil/termos' }].map((item, i) => (
           <TouchableOpacity key={i} style={styles.menuItem} onPress={() => router.push(item.route)}>
             <Ionicons name={item.icon} size={22} color={COLORS.textMuted} />
             <Text style={[typography.h5, { flex: 1, marginLeft: SPACING.md }]}>{item.label}</Text>

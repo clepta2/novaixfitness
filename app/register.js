@@ -35,9 +35,21 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       await signUpWithEmail(email, password, { name });
-      Alert.alert('Conta criada!', 'Verifique seu e-mail.', [{ text: 'OK', onPress: () => router.replace('/') }]);
-    } catch (error) { Alert.alert('Erro', error.message || 'Falha ao criar conta'); }
-    finally { setLoading(false); }
+      if (Platform.OS === 'web') {
+        alert('Conta criada! Verifique seu e-mail para confirmar o cadastro.');
+        router.replace('/');
+      } else {
+        Alert.alert('Conta criada!', 'Verifique seu e-mail.', [{ text: 'OK', onPress: () => router.replace('/') }]);
+      }
+    } catch (error) {
+      if (Platform.OS === 'web') {
+        alert(error.message || 'Falha ao criar conta');
+      } else {
+        Alert.alert('Erro', error.message || 'Falha ao criar conta');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,12 +70,12 @@ export default function RegisterScreen() {
 
           <Button title="CADASTRAR E CONTINUAR" onPress={handleRegister} loading={loading} />
           <View style={layout.divider}><View style={layout.dividerLine} /><Text style={layout.dividerText}>ou</Text><View style={layout.dividerLine} /></View>
-          <Button title="Usar conta existente" variant="ghost" onPress={() => router.back()} />
+          <Button title="Usar conta existente" variant="ghost" onPress={() => router.canGoBack() ? router.back() : router.replace('/')} />
         </View>
-
+ 
         <View style={styles.footer}>
           <Text style={typography.bodyMuted}>Já tem uma conta? </Text>
-          <TouchableOpacity onPress={() => router.back()}><Text style={typography.h4}>Entrar</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')}><Text style={typography.h4}>Entrar</Text></TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

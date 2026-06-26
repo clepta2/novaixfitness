@@ -39,6 +39,23 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Public posts endpoint (no auth required)
+app.get('/api/posts/public', async (req, res) => {
+  try {
+    const { limit = 3 } = req.query;
+    const { data, error } = await supabase
+      .from('posts')
+      .select('id, content, likes_count, comments_count, created_at, profiles:user_id(name)')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    res.json(data || []);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);

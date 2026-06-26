@@ -16,34 +16,26 @@ const filters = ['Todos', 'Populares', 'Recentes', 'Amigos'];
 
 export default function FeedScreen() {
   const { user } = useAuth();
-  const { data: dbPosts, refetch } = useSupabaseData('posts', {
-    select: '*, profiles:user_id(name, avatar_url)',
-    orderBy: { column: 'created_at', ascending: false },
-    mockData: [],
-  });
+  const { data: dbPosts, refetch } = useSupabaseData('posts', { select: '*, profiles:user_id(name, avatar_url)', orderBy: { column: 'created_at', ascending: false }, mockData: [] });
 
   const [posts, setPosts] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('Todos');
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [hasNotif, setHasNotif] = useState(true);
 
   useEffect(() => {
     if (dbPosts) {
-      // Ajusta o formato de cada post para o PostCard
-      const formatted = dbPosts.map(p => ({
+      setPosts(dbPosts.map(p => ({
         id: p.id,
-        user: {
-          name: p.profiles?.name || 'Atleta',
-          avatar: p.profiles?.avatar_url || null,
-        },
+        user: { name: p.profiles?.name || 'Atleta', avatar: p.profiles?.avatar_url || null },
         content: p.content,
         image: p.image_url,
         createdAt: formatDate(p.created_at),
         likes: p.likes_count || 0,
         comments: p.comments_count || 0,
-        isLiked: false // Pode ser melhorado buscando as curtidas reais do usuário
-      }));
-      setPosts(formatted);
+        isLiked: false
+      })));
     }
   }, [dbPosts]);
 
@@ -56,65 +48,34 @@ export default function FeedScreen() {
   const handleLike = async (postId) => {
     if (!user) return;
     try {
-      // Verifica se o usuário já curtiu o post
-      const { data: existingLike } = await supabase
-        .from('post_likes')
-        .select('id')
-        .eq('post_id', postId)
-        .eq('user_id', user.id)
-        .single();
-
-      if (existingLike) {
-        // Remove curtida
-        await supabase
-          .from('post_likes')
-          .delete()
-          .eq('id', existingLike.id);
-
+      const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
+      if (ext) {
+        await supabase.from('post_likes').delete().eq('id', ext.id);
         setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: false, likes: Math.max(0, p.likes - 1) } : p));
       } else {
-        // Adiciona curtida
-        await supabase
-          .from('post_likes')
-          .insert({ post_id: postId, user_id: user.id });
-
+        await supabase.from('post_likes').insert({ post_id: postId, user_id: user.id });
         setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p));
       }
     } catch (err) {
-      console.error('Erro ao curtir:', err);
+      console.error(err);
     }
   };
 
   const handleNewPost = async (postData) => {
     if (!user) return;
     try {
-      const { data, error } = await supabase
-        .from('posts')
-        .insert({
-          user_id: user.id,
-          content: postData.content,
-          image_url: postData.image
-        })
-        .select('*, profiles:user_id(name, avatar_url)')
-        .single();
-
+      const { data, error } = await supabase.from('posts').insert({ user_id: user.id, content: postData.content, image_url: postData.image }).select('*, profiles:user_id(name, avatar_url)').single();
       if (error) throw error;
-      
-      const newPostFormatted = {
+      setPosts(prev => [{
         id: data.id,
-        user: {
-          name: data.profiles?.name || 'Você',
-          avatar: data.profiles?.avatar_url || null,
-        },
+        user: { name: data.profiles?.name || 'Você', avatar: data.profiles?.avatar_url || null },
         content: data.content,
         image: data.image_url,
         createdAt: 'Agora',
         likes: 0,
         comments: 0,
         isLiked: false
-      };
-
-      setPosts(prev => [newPostFormatted, ...prev]);
+      }, ...prev]);
     } catch (err) {
       Alert.alert('Erro', 'Não foi possível publicar seu post: ' + err.message);
     }
@@ -123,16 +84,8 @@ export default function FeedScreen() {
   const handleComment = async (postId, text) => {
     if (!user) return;
     try {
-      const { error } = await supabase
-        .from('post_comments')
-        .insert({
-          post_id: postId,
-          user_id: user.id,
-          content: text
-        });
-
+      const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
       if (error) throw error;
-
       setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
       Alert.alert('Sucesso', 'Comentário enviado!');
     } catch (err) {
@@ -142,13 +95,8 @@ export default function FeedScreen() {
 
   function formatDate(dateStr) {
     if (!dateStr) return 'Sem data';
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diff = Math.floor((now - date) / 86400000);
-    if (diff === 0) return 'Hoje';
-    if (diff === 1) return 'Ontem';
-    if (diff < 7) return `${diff} dias atrás`;
-    return date.toLocaleDateString('pt-BR');
+    const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
+    return diff === 0 ? 'Hoje' : diff === 1 ? 'Ontem' : diff < 7 ? `${diff} dias atrás` : new Date(dateStr).toLocaleDateString('pt-BR');
   }
 
   return (
@@ -159,9 +107,9 @@ export default function FeedScreen() {
             <Text style={typography.h2}>Comunidade</Text>
             <Text style={typography.bodyMuted}>Veja o que seus amigos estão treinando</Text>
           </View>
-          <TouchableOpacity style={layout.headerBtn}>
+          <TouchableOpacity style={layout.headerBtn} onPress={() => { setHasNotif(false); Alert.alert('Notificações', 'Você está em dia com a comunidade! Nenhuma notificação pendente.'); }}>
             <Ionicons name="notifications-outline" size={22} color={COLORS.textMuted} />
-            <View style={styles.notifBadge} />
+            {hasNotif && <View style={styles.notifBadge} />}
           </TouchableOpacity>
         </View>
 
@@ -176,12 +124,7 @@ export default function FeedScreen() {
         </ScrollView>
 
         {posts.map((post) => (
-          <PostCard 
-            key={post.id} 
-            post={post} 
-            onLike={handleLike} 
-            onComment={handleComment} 
-          />
+          <PostCard key={post.id} post={post} onLike={handleLike} onComment={handleComment} />
         ))}
         <View style={{ height: 100 }} />
       </ScrollView>

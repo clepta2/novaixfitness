@@ -247,6 +247,46 @@
     </div>
   </section>
 
+  <!-- Community -->
+  <section class="community">
+    <div class="container">
+      <div class="community-header">
+        <div>
+          <h2>Comunidade <span class="highlight">NOVAIX</span></h2>
+          <p>Conecte-se com outros atletas, compartilhe conquistas e evolua junto.</p>
+        </div>
+        <a href="#download" class="btn btn-primary">ENTRAR NA COMUNIDADE</a>
+      </div>
+      <div class="community-features">
+        <div class="community-feature">
+          <div class="community-icon">📸</div>
+          <h3>Feed de Treinos</h3>
+          <p>Compartilhe seus treinos, fotos de evolução e conquistas com a comunidade.</p>
+        </div>
+        <div class="community-feature">
+          <div class="community-icon">💬</div>
+          <h3>Comentários</h3>
+          <p>Interaja com outros atletas, tire dúvidas e motive quem está começando.</p>
+        </div>
+        <div class="community-feature">
+          <div class="community-icon">🏆</div>
+          <h3>Ranking</h3>
+          <p>Competa de forma saudável, suba no ranking e conquiste medalhas.</p>
+        </div>
+        <div class="community-feature">
+          <div class="community-icon">👥</div>
+          <h3>Grupos</h3>
+          <p>Encontre pessoas com o mesmo objetivo e treinem juntos.</p>
+        </div>
+      </div>
+      <div class="community-posts" id="community-posts">
+        <div class="community-loading">
+          <p>Carregando posts da comunidade...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Testimonials -->
   <section class="testimonials">
     <div class="container">
@@ -487,6 +527,54 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadFaqs);
+
+    async function loadCommunityPosts() {
+      const container = document.getElementById('community-posts');
+      try {
+        const response = await fetch(`${API_BASE}/api/posts/public?limit=3`);
+        if (!response.ok) throw new Error('Erro ao carregar');
+        const posts = await response.json();
+
+        if (posts.length === 0) {
+          container.innerHTML = '<p class="community-empty">Seja o primeiro a postar na comunidade!</p>';
+          return;
+        }
+
+        container.innerHTML = '<h3 class="community-posts-title">Últimos posts da comunidade</h3><div class="community-posts-grid">' +
+          posts.map(p => `
+            <div class="community-post-card">
+              <div class="post-author">
+                <div class="post-avatar">${(p.profiles?.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}</div>
+                <div>
+                  <strong>${p.profiles?.name || 'Atleta'}</strong>
+                  <span>${formatPostDate(p.created_at)}</span>
+                </div>
+              </div>
+              <p class="post-content">${p.content}</p>
+              <div class="post-stats">
+                <span>❤️ ${p.likes_count || 0}</span>
+                <span>💬 ${p.comments_count || 0}</span>
+              </div>
+            </div>
+          `).join('') +
+          '</div>';
+      } catch (err) {
+        console.error('Erro ao carregar posts:', err);
+        container.innerHTML = '<p class="community-empty">Comunidade em breve.</p>';
+      }
+    }
+
+    function formatPostDate(dateStr) {
+      const d = new Date(dateStr);
+      const now = new Date();
+      const diff = Math.floor((now - d) / 86400000);
+      if (diff === 0) return 'Hoje';
+      if (diff === 1) return 'Ontem';
+      if (diff < 7) return `${diff} dias atrás`;
+      return d.toLocaleDateString('pt-BR');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCommunityPosts);
   </script>
 </body>
 </html>

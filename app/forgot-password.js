@@ -48,7 +48,7 @@ export default function ForgotPasswordScreen() {
             <View style={{ height: SPACING.xl }} />
             <Input label="E-MAIL" placeholder="digite seu e-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" />
             <Button title="ENVIAR LINK DE RECUPERAÇÃO" onPress={handleSendResetEmail} loading={loading} />
-            <TouchableOpacity onPress={() => router.back()}><Text style={typography.bodyMuted}>Voltar para o login</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')}><Text style={typography.bodyMuted}>Voltar para o login</Text></TouchableOpacity>
           </>
         ) : (
           <>
@@ -65,7 +65,7 @@ export default function ForgotPasswordScreen() {
                 </View>
               ))}
             </View>
-            <Button title="VOLTAR AO LOGIN" onPress={() => router.back()} />
+            <Button title="VOLTAR AO LOGIN" onPress={() => router.canGoBack() ? router.back() : router.replace('/')} />
             <TouchableOpacity onPress={() => setSent(false)}><Text style={typography.bodyMuted}>Não recebeu? Reenviar e-mail</Text></TouchableOpacity>
           </>
         )}

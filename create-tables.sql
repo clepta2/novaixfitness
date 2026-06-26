@@ -411,8 +411,9 @@ CREATE TABLE IF NOT EXISTS testimonials (
 ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Ver depoimentos aprovados" ON testimonials FOR SELECT USING (approved = true);
-CREATE POLICY "Criar depoimento" ON testimonials FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Criar depoimento publico" ON testimonials FOR INSERT WITH CHECK (true);
 CREATE POLICY "Ver meus depoimentos" ON testimonials FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Deletar meus depoimentos" ON testimonials FOR DELETE USING (auth.uid() = user_id);
 
 CREATE INDEX IF NOT EXISTS idx_testimonials_approved ON testimonials(approved, featured, created_at DESC);
 
