@@ -1,8 +1,6 @@
 // src/services/progressionEngine.js
 // Motor de progressão multimodal - NOVAIX FITNESS
 
-import { supabase } from '../config/supabase';
-
 const MODALITY_CONFIG = {
   gym: {
     name: 'Academia',

@@ -8,123 +8,142 @@ export async function addXP(userId, type, amount) {
   const xpGain = amount || XP_VALUES[type] || 0;
   if (!userId || xpGain <= 0) return 0;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_xp')
-    .eq('id', userId)
-    .single();
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('total_xp')
+      .eq('id', userId)
+      .single();
 
-  const currentXP = profile?.total_xp || 0;
-  const newXP = currentXP + xpGain;
+    const currentXP = profile?.total_xp || 0;
+    const newXP = currentXP + xpGain;
 
-  await supabase
-    .from('profiles')
-    .update({ total_xp: newXP })
-    .eq('id', userId);
+    await supabase
+      .from('profiles')
+      .update({ total_xp: newXP })
+      .eq('id', userId);
 
-  return newXP;
+    return newXP;
+  } catch (err) {
+    console.error('Erro ao adicionar XP:', err);
+    return 0;
+  }
 }
 
 export async function getGamificationData(userId) {
   if (!userId) return null;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_xp, total_workouts, total_minutes, max_streak')
-    .eq('id', userId)
-    .single();
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('total_xp, total_workouts, total_minutes, max_streak')
+      .eq('id', userId)
+      .single();
 
-  const { data: userWorkouts } = await supabase
-    .from('user_workouts')
-    .select('completed, completed_at, duration')
-    .eq('user_id', userId);
+    const { data: userWorkouts } = await supabase
+      .from('user_workouts')
+      .select('completed, completed_at, duration')
+      .eq('user_id', userId);
 
-  const totalXP = profile?.total_xp || 0;
-  const totalWorkouts = profile?.total_workouts || userWorkouts?.filter(w => w.completed).length || 0;
-  const totalMinutes = profile?.total_minutes || userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) || 0;
-  const streak = calculateStreak(userWorkouts || []);
-  const maxStreak = Math.max(profile?.max_streak || 0, streak);
+    const totalXP = profile?.total_xp || 0;
+    const totalWorkouts = profile?.total_workouts || userWorkouts?.filter(w => w.completed).length || 0;
+    const totalMinutes = profile?.total_minutes || userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) || 0;
+    const streak = calculateStreak(userWorkouts || []);
+    const maxStreak = Math.max(profile?.max_streak || 0, streak);
 
-  const level = getLevelForXP(totalXP);
+    const level = getLevelForXP(totalXP);
 
-  const stats = {
-    totalXP,
-    totalWorkouts,
-    totalMinutes,
-    streak,
-    maxStreak,
-    level: level.level,
-  };
+    const stats = {
+      totalXP,
+      totalWorkouts,
+      totalMinutes,
+      streak,
+      maxStreak,
+      level: level.level,
+    };
 
-  const achievements = getUnlockedAchievements({
-    ...stats,
-    social_first_post_count: 0,
-    social_10_posts_count: 0,
-    social_50_likes_count: 0,
-  });
+    const achievements = getUnlockedAchievements({
+      ...stats,
+      social_first_post_count: 0,
+      social_10_posts_count: 0,
+      social_50_likes_count: 0,
+    });
 
-  return {
-    ...stats,
-    levelData: level,
-    achievements,
-    recentAchievements: achievements.slice(-5),
-  };
+    return {
+      ...stats,
+      levelData: level,
+      achievements,
+      recentAchievements: achievements.slice(-5),
+    };
+  } catch (err) {
+    console.error('Erro ao buscar dados de gamificação:', err);
+    return null;
+  }
 }
 
 export async function recordWorkoutCompletion(userId, workoutData, logs = [], duration = 0) {
   if (!userId) return { xpGained: 0, newAchievements: [] };
 
-  const currentData = await getGamificationData(userId);
-  const prevAchievements = currentData?.achievements || [];
+  try {
+    const currentData = await getGamificationData(userId);
+    const prevAchievements = currentData?.achievements || [];
 
-  const workoutXP = workoutData?.id?.length === 36
-    ? XP_VALUES.WORKOUT_COMPLETED
-    : Math.min(logs.length * 5 + (workoutData?.exercises?.length || 0) * 10 + Math.floor(duration / 60) * 2, 200);
+    const workoutXP = workoutData?.id?.length === 36
+      ? XP_VALUES.WORKOUT_COMPLETED
+      : Math.min(logs.length * 5 + (workoutData?.exercises?.length || 0) * 10 + Math.floor(duration / 60) * 2, 200);
 
-  await addXP(userId, 'WORKOUT_COMPLETED', workoutXP);
+    await addXP(userId, 'WORKOUT_COMPLETED', workoutXP);
 
-  let streakBonus = 0;
-  if (currentData?.streak > 0) {
-    streakBonus = XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak;
-    await addXP(userId, 'STREAK_BONUS_PER_DAY', streakBonus);
+    let streakBonus = 0;
+    if (currentData?.streak > 0) {
+      streakBonus = XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak;
+      await addXP(userId, 'STREAK_BONUS_PER_DAY', streakBonus);
+    }
+
+    const updatedData = await getGamificationData(userId);
+    const newAchievements = checkNewAchievements(updatedData, prevAchievements);
+
+    if (newAchievements.length > 0) {
+      await supabase.from('user_achievements').upsert(
+        newAchievements.map(a => ({
+          user_id: userId,
+          achievement_id: a.id,
+          unlocked_at: new Date().toISOString(),
+        })),
+        { onConflict: 'user_id,achievement_id' }
+      );
+    }
+
+    return {
+      xpGained: workoutXP + streakBonus,
+      newAchievements,
+      level: updatedData?.levelData,
+      streak: updatedData?.streak,
+    };
+  } catch (err) {
+    console.error('Erro ao registrar conclusão:', err);
+    return { xpGained: 0, newAchievements: [] };
   }
-
-  const updatedData = await getGamificationData(userId);
-  const newAchievements = checkNewAchievements(updatedData, prevAchievements);
-
-  if (newAchievements.length > 0) {
-    await supabase.from('user_achievements').upsert(
-      newAchievements.map(a => ({
-        user_id: userId,
-        achievement_id: a.id,
-        unlocked_at: new Date().toISOString(),
-      })),
-      { onConflict: 'user_id,achievement_id' }
-    );
-  }
-
-  return {
-    xpGained: workoutXP + streakBonus,
-    newAchievements,
-    level: updatedData?.levelData,
-    streak: updatedData?.streak,
-  };
 }
 
 export async function updateMaxStreak(userId) {
   if (!userId) return;
 
-  const { data: workouts } = await supabase
-    .from('user_workouts')
-    .select('completed, completed_at')
-    .eq('user_id', userId);
+  try {
+    const { data: workouts } = await supabase
+      .from('user_workouts')
+      .select('completed, completed_at')
+      .eq('user_id', userId);
 
-  const streak = calculateStreak(workouts || []);
+    const streak = calculateStreak(workouts || []);
 
-  await supabase
-    .from('profiles')
-    .update({ max_streak: streak })
-    .eq('id', userId);
+    await supabase
+      .from('profiles')
+      .update({ max_streak: streak })
+      .eq('id', userId);
+  } catch (err) {
+    console.error('Erro ao atualizar streak:', err);
+  }
 }
 
 function calculateStreak(workouts) {

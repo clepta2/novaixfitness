@@ -67,19 +67,27 @@ export async function hasCompletedTutorial(userId) {
 export async function completeTutorial(userId) {
   if (!userId) return;
 
-  await supabase
-    .from('profiles')
-    .update({ tutorial_completed: true })
-    .eq('id', userId);
+  try {
+    await supabase
+      .from('profiles')
+      .update({ tutorial_completed: true })
+      .eq('id', userId);
+  } catch (err) {
+    console.error('Erro ao completar tutorial:', err);
+  }
 }
 
 export async function markTutorialSkipped(userId) {
   if (!userId) return;
 
-  await supabase
-    .from('profiles')
-    .update({ tutorial_skipped: true })
-    .eq('id', userId);
+  try {
+    await supabase
+      .from('profiles')
+      .update({ tutorial_skipped: true })
+      .eq('id', userId);
+  } catch (err) {
+    console.error('Erro ao marcar tutorial como pulado:', err);
+  }
 }
 
 export function getTutorialSteps() {
