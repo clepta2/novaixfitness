@@ -9,21 +9,11 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
+import { APP_CONFIG } from '../src/config/app';
 import { layout, typography } from '../src/styles';
+import NotificationItem from '../src/components/notifications/NotificationItem';
 
-const NOTIFICATION_ICONS = {
-  workout_reminder: { icon: 'alarm', color: '#FFD600' },
-  workout_completed: { icon: 'checkmark-circle', color: '#00E676' },
-  streak: { icon: 'flame', color: '#FF6B35' },
-  achievement: { icon: 'trophy', color: '#FFD600' },
-  level_up: { icon: 'trending-up', color: '#CCFF00' },
-  weekly_plan: { icon: 'calendar', color: '#00E676' },
-  new_workout: { icon: 'barbell', color: '#CCFF00' },
-  weekly_summary: { icon: 'stats-chart', color: '#00E676' },
-  motivational: { icon: 'bulb', color: '#FFD600' },
-  rest_day: { icon: 'bed', color: '#94A3B8' },
-  system: { icon: 'information-circle', color: '#94A3B8' },
-};
+const NOTIFICATION_TYPES = APP_CONFIG.notifications.types;
 
 export default function NotificationsScreen() {
   const router = useRouter();
@@ -99,66 +89,11 @@ export default function NotificationsScreen() {
 
   const handleNotificationPress = (notification) => {
     markAsRead(notification.id);
-
-    switch (notification.type) {
-      case 'workout_reminder':
-      case 'workout_completed':
-      case 'new_workout':
-        router.push('/(tabs)/home');
-        break;
-      case 'achievement':
-      case 'level_up':
-      case 'streak':
-        router.push('/(tabs)/perfil');
-        break;
-      case 'weekly_plan':
-        router.push('/(tabs)/library');
-        break;
-      default:
-        break;
-    }
+    const route = NOTIFICATION_TYPES[notification.type]?.route;
+    if (route) router.push(route);
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
-
-  const formatTime = (dateStr) => {
-    const d = new Date(dateStr);
-    const now = new Date();
-    const diff = now - d;
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (minutes < 1) return 'Agora';
-    if (minutes < 60) return `${minutes}min`;
-    if (hours < 24) return `${hours}h`;
-    if (days < 7) return `${days}d`;
-    return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
-  };
-
-  const renderNotification = ({ item }) => {
-    const iconData = NOTIFICATION_ICONS[item.type] || NOTIFICATION_ICONS.system;
-
-    return (
-      <TouchableOpacity
-        style={[styles.notifItem, !item.read && styles.notifUnread]}
-        onPress={() => handleNotificationPress(item)}
-        onLongPress={() => deleteNotification(item.id)}
-      >
-        <View style={[styles.notifIcon, { backgroundColor: iconData.color + '20' }]}>
-          <Ionicons name={iconData.icon} size={20} color={iconData.color} />
-        </View>
-        <View style={styles.notifContent}>
-          <Text style={[styles.notifTitle, !item.read && styles.notifTitleUnread]} numberOfLines={1}>
-            {item.title}
-          </Text>
-          <Text style={styles.notifBody} numberOfLines={2}>{item.body}</Text>
-          <Text style={styles.notifTime}>{formatTime(item.created_at)}</Text>
-        </View>
-        {!item.read && <View style={styles.unreadDot} />}
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={layout.screen}>
@@ -198,7 +133,9 @@ export default function NotificationsScreen() {
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={renderNotification}
+          renderItem={({ item }) => (
+            <NotificationItem item={item} onPress={() => handleNotificationPress(item)} onLongPress={() => deleteNotification(item.id)} />
+          )}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
         />
@@ -211,17 +148,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   headerCenter: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
   headerBtn: { padding: SPACING.sm },
-  badge: { backgroundColor: COLORS.primary, borderRadius: 10, paddingHorizontal: 8, paddingVertical: 2 },
-  badgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.background },
+  badge: { backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.sm + 2, paddingHorizontal: SPACING.sm, paddingVertical: 2 },
+  badgeText: { ...typography.buttonSmall, color: COLORS.background },
   list: { padding: SPACING.md },
-  notifItem: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
-  notifUnread: { borderColor: COLORS.primary + '40', backgroundColor: COLORS.primary + '05' },
-  notifIcon: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: SPACING.md },
-  notifContent: { flex: 1 },
-  notifTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle, marginBottom: 2 },
-  notifTitleUnread: { color: COLORS.primary },
-  notifBody: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textSecondary, lineHeight: 18 },
-  notifTime: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 4 },
-  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.primary, marginLeft: SPACING.sm, marginTop: SPACING.sm },
   empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: SPACING.md },
 });

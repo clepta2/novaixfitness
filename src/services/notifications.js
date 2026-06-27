@@ -4,6 +4,20 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { supabase } from '../config/supabase';
+import { APP_CONFIG } from '../config/app';
+
+export {
+  sendWorkoutCompletedNotification,
+  sendStreakNotification,
+  sendAchievementNotification,
+  sendLevelUpNotification,
+  sendNewWorkoutNotification,
+  sendWeeklySummaryNotification,
+  sendRestReminder,
+  sendMotivationalNotification,
+} from './notifications-sender';
+
+const { workoutReminder, weeklyPlan, restDay, types } = APP_CONFIG.notifications;
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -14,196 +28,63 @@ Notifications.setNotificationHandler({
 });
 
 export async function requestNotificationPermission() {
+  if (Platform.OS === 'web') return false;
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
-
   if (existingStatus !== 'granted') {
     const { status } = await Notifications.requestPermissionsAsync();
     finalStatus = status;
   }
-
   return finalStatus === 'granted';
 }
 
 export async function registerForPushNotifications(userId) {
+  if (Platform.OS === 'web') return null;
   const hasPermission = await requestNotificationPermission();
   if (!hasPermission) return null;
-
-  const token = await Notifications.getExpoPushTokenAsync();
-  const pushToken = token.data;
-
-  if (userId && pushToken) {
-    await supabase
-      .from('profiles')
-      .update({ push_token: pushToken })
-      .eq('id', userId);
+  try {
+    const token = await Notifications.getExpoPushTokenAsync();
+    const pushToken = token.data;
+    if (userId && pushToken) {
+      await supabase.from('profiles').update({ push_token: pushToken }).eq('id', userId);
+    }
+    return pushToken;
+  } catch (err) {
+    console.warn('Erro ao obter token de push:', err);
+    return null;
   }
-
-  return pushToken;
 }
 
-// ========================================
-// AGENDAMENTO DE LEMBRETES
-// ========================================
-
-export async function scheduleWorkoutReminder(hour = 19, minute = 0) {
+export async function scheduleWorkoutReminder(hour, minute) {
+  const h = hour ?? workoutReminder.hour;
+  const m = minute ?? workoutReminder.minute;
   await Notifications.cancelScheduledNotificationsAsync();
-
   await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Hora de treinar!',
-      body: 'Seu streak esta em risco! Nao esqueca do treino de hoje.',
-      data: { type: 'workout_reminder' },
-    },
-    trigger: { hour, minute, repeats: true },
+    content: { title: 'Hora de treinar!', body: 'Seu streak esta em risco! Nao esqueca do treino de hoje.', data: { type: 'workout_reminder' } },
+    trigger: { hour: h, minute: m, repeats: true },
   });
 }
 
 export async function scheduleWeeklyPlanReminder() {
+  const { weekday, hour, minute } = weeklyPlan;
   await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Seu plano da semana esta pronto!',
-      body: 'Novos treinos disponiveis. Confira seu cronograma.',
-      data: { type: 'weekly_plan' },
-    },
-    trigger: { weekday: 1, hour: 8, minute: 0, repeats: true },
+    content: { title: 'Seu plano da semana esta pronto!', body: 'Novos treinos disponiveis. Confira seu cronograma.', data: { type: 'weekly_plan' } },
+    trigger: { weekday, hour, minute, repeats: true },
   });
 }
 
 export async function scheduleRestDayReminder() {
+  const { weekday, hour, minute } = restDay;
   await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Dia de descanso',
-      body: 'Recuperacao e importante! Volte amanhã com tudo.',
-      data: { type: 'rest_day' },
-    },
-    trigger: { weekday: 3, hour: 10, minute: 0, repeats: true },
+    content: { title: 'Dia de descanso', body: 'Recuperacao e importante! Volte amanha com tudo.', data: { type: 'rest_day' } },
+    trigger: { weekday, hour, minute, repeats: true },
   });
 }
-
-// ========================================
-// NOTIFICACOES IMEDIATAS
-// ========================================
-
-export async function sendWorkoutCompletedNotification(workoutName, xpGained) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Treino concluido!',
-      body: `${workoutName} finalizado. +${xpGained} XP ganho!`,
-      data: { type: 'workout_completed' },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendStreakNotification(days) {
-  const messages = {
-    3: 'Voce esta pegando fogo! 3 dias seguidos!',
-    7: 'Uma semana completa! Voce e incrivel!',
-    14: 'Duas semanas! Nada pode te parar!',
-    30: 'Um mes inteiro! Voce e uma maquina!',
-  };
-
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: `Streak de ${days} dias!`,
-      body: messages[days] || 'Continue assim! Voce esta indo muito bem.',
-      data: { type: 'streak', days },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendAchievementNotification(achievementName, xpReward) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Conquista desbloqueada!',
-      body: `${achievementName} +${xpReward} XP`,
-      data: { type: 'achievement', name: achievementName },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendLevelUpNotification(levelName, newLevel) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: `Nivel ${newLevel}!`,
-      body: `Parabens! Voce alcancou o nivel ${levelName}!`,
-      data: { type: 'level_up', level: newLevel },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendNewWorkoutNotification(workoutName) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Novo treino disponivel!',
-      body: `${workoutName} acabou de chegar. Confira agora!`,
-      data: { type: 'new_workout' },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendWeeklySummaryNotification(workoutsCompleted, minutesTrained) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Resumo da semana',
-      body: `${workoutsCompleted} treinos, ${minutesTrained} minutos. Continue firme!`,
-      data: { type: 'weekly_summary' },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendRestReminder() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Tempo de descanso!',
-      body: 'Beba agua e prepare-se para o proximo exercicio.',
-      data: { type: 'rest_reminder' },
-    },
-    trigger: null,
-  });
-}
-
-export async function sendMotivationalNotification() {
-  const tips = [
-    'Consistencia e a chave! Continue treinando.',
-    'Cada treino te aproxima do seu objetivo.',
-    'Seu corpo agradece cada gota de suor.',
-    'Disciplina e mais forte que motivacao.',
-    'Hoje e um bom dia para superar seus limites.',
-  ];
-
-  const tip = tips[Math.floor(Math.random() * tips.length)];
-
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Motivacao do dia',
-      body: tip,
-      data: { type: 'motivational' },
-    },
-    trigger: null,
-  });
-}
-
-// ========================================
-// GERENCIAMENTO
-// ========================================
 
 export async function saveNotificationToDB(userId, type, title, body, data = {}) {
   if (!userId) return;
   try {
-    await supabase.from('notifications').insert({
-      user_id: userId,
-      type,
-      title,
-      body,
-      data,
-    });
+    await supabase.from('notifications').insert({ user_id: userId, type, title, body, data });
   } catch (err) {
     console.error('Erro ao salvar notificacao:', err);
   }
@@ -212,15 +93,9 @@ export async function saveNotificationToDB(userId, type, title, body, data = {})
 export async function getUnreadCount(userId) {
   if (!userId) return 0;
   try {
-    const { count } = await supabase
-      .from('notifications')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('read', false);
+    const { count } = await supabase.from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', userId).eq('read', false);
     return count || 0;
-  } catch (err) {
-    return 0;
-  }
+  } catch { return 0; }
 }
 
 export async function clearAllNotifications() {
@@ -240,21 +115,6 @@ export function setupNotificationListeners(navigation) {
 }
 
 function handleNotificationNavigation(data, navigation) {
-  switch (data?.type) {
-    case 'workout_reminder':
-    case 'workout_completed':
-    case 'new_workout':
-      navigation?.navigate?.('(tabs)/home');
-      break;
-    case 'weekly_plan':
-      navigation?.navigate?.('(tabs)/library');
-      break;
-    case 'achievement':
-    case 'level_up':
-    case 'streak':
-      navigation?.navigate?.('(tabs)/perfil');
-      break;
-    default:
-      break;
-  }
+  const route = types[data?.type]?.route;
+  if (route) navigation?.navigate?.(route);
 }

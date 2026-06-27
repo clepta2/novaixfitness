@@ -2,24 +2,42 @@
 // Integracao com Gemini API + Historico - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { APP_CONFIG } from '../config/app';
 
-const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+const PLAN_LIMITS = {
+  free: APP_CONFIG.maxChatMessagesFree,
+  basic: APP_CONFIG.maxChatMessagesFree,
+  intermediate: APP_CONFIG.maxChatMessagesIntermediate,
+  premium: APP_CONFIG.maxChatMessagesPremium,
+  ultra: APP_CONFIG.maxChatMessagesUltra,
+};
 
 export async function askGeminiCoach(message, profileContext = {}, conversationHistory = []) {
-  const systemInstruction = `Voce e o Coach e Nutricionista de IA da NOVAIX FITNESS.
-Diga sempre a verdade de forma motivadora, direta e profissional.
-O usuario tem os seguintes dados fisicos:
-- Peso: ${profileContext.weight || 'Nao informado'} kg
-- Altura: ${profileContext.height || 'Nao informado'} cm
-- Idade: ${profileContext.age || 'Nao informada'} anos
-- Objetivo principal: ${profileContext.goal || 'Ficar em forma'}
-- Equipamento disponivel: ${profileContext.gymType || 'Geral'}
-- Nivel de experiencia: ${profileContext.level || 'Nao informado'}
+  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const plan = profileContext.subscriptionPlan || 'free';
+  const limit = PLAN_LIMITS[plan] !== undefined ? PLAN_LIMITS[plan] : 0;
 
-Responda em formato de chat curto, amigavel e com orientacoes praticas.
-Maximo 3 paragrafos. Seja objetivo.`;
+  if (profileContext.userId) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  if (!API_KEY) {
+    const { count, error } = await supabase
+      .from('coach_chat_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', profileContext.userId)
+      .eq('is_user', true)
+      .gte('created_at', today.toISOString());
+
+    if (error) {
+      console.error('Erro ao verificar limite:', error);
+    } else if (count && count > limit) {
+      throw new Error('LIMIT_EXCEEDED');
+    }
+  }
+
+  const systemInstruction = `Coach/Nutri IA NOVAIX: direto, motivador. Usuario: Peso ${profileContext.weight || '?'}kg, Altura ${profileContext.height || '?'}cm, Idade ${profileContext.age || '?'}a, Obj: ${profileContext.goal || 'Geral'}, Equip: ${profileContext.gymType || 'Geral'}, Nivel: ${profileContext.level || 'Geral'}. Responda em chat curto, max 3 paragrafos, objetivo.`;
+
+  if (!apiKey) {
     return generateFallbackResponse(message, profileContext);
   }
 
@@ -27,7 +45,7 @@ Maximo 3 paragrafos. Seja objetivo.`;
     const contents = [];
 
     if (conversationHistory.length > 0) {
-      const recentHistory = conversationHistory.slice(-10);
+      const recentHistory = conversationHistory.slice(-5);
       for (const msg of recentHistory) {
         contents.push({
           role: msg.isUser ? 'user' : 'model',
@@ -38,13 +56,14 @@ Maximo 3 paragrafos. Seja objetivo.`;
 
     contents.push({
       role: 'user',
-      parts: [{ text: `${systemInstruction}\n\nPergunta do usuario: ${message}` }],
+      parts: [{ text: `${systemInstruction}\n\nPergunta: ${message}` }],
     });
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+
       body: JSON.stringify({ contents }),
     });
 
@@ -58,6 +77,7 @@ Maximo 3 paragrafos. Seja objetivo.`;
     return generateFallbackResponse(message, profileContext);
   }
 }
+
 
 export async function saveChatMessage(userId, message, isUser) {
   if (!userId) return;

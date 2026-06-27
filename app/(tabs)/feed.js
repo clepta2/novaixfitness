@@ -7,6 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { PostCard, CreatePostModal, NotificationModal } from '../../src/components';
+import { PostSkeleton, FeedEmptyState } from '../../src/components/social/FeedSkeleton';
+import ChallengesList from '../../src/components/social/ChallengesList';
 import { useSupabaseData } from '../../src/hooks';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
@@ -14,9 +16,15 @@ import { layout, typography } from '../../src/styles';
 
 const filters = ['Todos', 'Populares', 'Recentes', 'Amigos'];
 
+function formatDate(dateStr) {
+  if (!dateStr) return 'Sem data';
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
+  return diff === 0 ? 'Hoje' : diff === 1 ? 'Ontem' : diff < 7 ? `${diff} dias atrás` : new Date(dateStr).toLocaleDateString('pt-BR');
+}
+
 export default function FeedScreen() {
   const { user } = useAuth();
-  const { data: dbPosts, refetch } = useSupabaseData('posts', { select: '*, profiles:user_id(name, avatar_url)', orderBy: { column: 'created_at', ascending: false }, mockData: [] });
+  const { data: dbPosts, refetch, loading } = useSupabaseData('posts', { select: '*, profiles:user_id(name, avatar_url)', orderBy: { column: 'created_at', ascending: false }, mockData: [] });
 
   const [posts, setPosts] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('Todos');
@@ -29,6 +37,7 @@ export default function FeedScreen() {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
         id: p.id,
+        userId: p.user_id,
         user: { name: p.profiles?.name || 'Atleta', avatar: p.profiles?.avatar_url || null },
         content: p.content,
         image: p.image_url,
@@ -69,6 +78,7 @@ export default function FeedScreen() {
       if (error) throw error;
       setPosts(prev => [{
         id: data.id,
+        userId: data.user_id,
         user: { name: data.profiles?.name || 'Você', avatar: data.profiles?.avatar_url || null },
         content: data.content,
         image: data.image_url,
@@ -88,17 +98,18 @@ export default function FeedScreen() {
       const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
       if (error) throw error;
       setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
-      Alert.alert('Sucesso', 'Comentário enviado!');
     } catch (err) {
       Alert.alert('Erro', 'Não foi possível enviar o comentário: ' + err.message);
     }
   };
 
-  function formatDate(dateStr) {
-    if (!dateStr) return 'Sem data';
-    const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
-    return diff === 0 ? 'Hoje' : diff === 1 ? 'Ontem' : diff < 7 ? `${diff} dias atrás` : new Date(dateStr).toLocaleDateString('pt-BR');
-  }
+  const filteredPosts = posts.filter(post => {
+    if (selectedFilter === 'Populares') return post.likes > 5;
+    if (selectedFilter === 'Amigos') return post.userId === user?.id;
+    return true;
+  });
+
+  const showEmpty = !loading && filteredPosts.length === 0;
 
   return (
     <View style={layout.screen}>
@@ -124,16 +135,28 @@ export default function FeedScreen() {
           </View>
         </ScrollView>
 
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} onLike={handleLike} onComment={handleComment} />
-        ))}
+        <ChallengesList userId={user?.id} />
+
+        {loading ? (
+          <View>
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+          </View>
+        ) : showEmpty ? (
+          <FeedEmptyState hasFilter={selectedFilter !== 'Todos'} />
+        ) : (
+          filteredPosts.map((post) => (
+            <PostCard key={post.id} post={post} onLike={handleLike} onComment={handleComment} currentUserId={user?.id} />
+          ))
+        )}
         <View style={{ height: 100 }} />
       </ScrollView>
 
       <TouchableOpacity style={styles.fab} onPress={() => setShowCreatePost(true)} activeOpacity={0.8}>
         <Ionicons name="add" size={28} color={COLORS.background} />
       </TouchableOpacity>
-      <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} />
+      <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} userId={user?.id} />
       <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
     </View>
   );
@@ -145,6 +168,6 @@ const styles = StyleSheet.create({
   filters: { flexDirection: 'row', gap: SPACING.sm },
   chip: { paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border },
   chipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  chipTextActive: { color: COLORS.background, fontFamily: 'Montserrat_600SemiBold' },
+  chipTextActive: typography.chipActive,
   fab: { position: 'absolute', bottom: 100, right: SPACING.xl, width: 56, height: 56, borderRadius: 28, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
 });

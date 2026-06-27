@@ -2,7 +2,7 @@
 // Servico para salvar dados do treino - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
-import { addXP, recordWorkoutCompletion } from './gamification';
+import { recordWorkoutCompletion } from './gamification';
 import { sendWorkoutCompletedNotification } from './notifications';
 
 export async function saveCompleteWorkout(userId, workout, logs, duration) {
@@ -42,12 +42,13 @@ export async function saveCompleteWorkout(userId, workout, logs, duration) {
         .eq('id', userId);
     }
 
-    const gamResult = await recordWorkoutCompletion(userId, workout);
+    const gamResult = await recordWorkoutCompletion(userId, workout, logs, duration);
 
     if (gamResult.xpGained > 0) {
       await sendWorkoutCompletedNotification(
         workout?.name || 'Treino',
-        gamResult.xpGained
+        gamResult.xpGained,
+        userId
       );
     }
 
@@ -87,14 +88,4 @@ export async function savePartialWorkout(userId, workout, logs, elapsed) {
     console.error('Erro ao salvar treino parcial:', err);
     return null;
   }
-}
-
-export function calculateXP(workout, logs, duration) {
-  let xp = 0;
-  xp += logs.length * 5;
-  xp += (workout?.exercises?.length || 0) * 10;
-  xp += Math.floor(duration / 60) * 2;
-  const targetDuration = (workout?.duration || 30) * 60;
-  if (duration >= targetDuration) xp += 50;
-  return xp;
 }

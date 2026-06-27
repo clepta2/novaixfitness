@@ -2,9 +2,9 @@
 // Tela de Ajuda / FAQ - NOVAIX FITNESS
 
 import { useState, useCallback } from 'react';
-import { View, Text, ScrollView, Linking, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Linking } from 'react-native';
 import { COLORS } from '../../src/constants/colors';
-import { SPACING } from '../../src/constants/spacing';
+import { APP_CONFIG } from '../../src/config/app';
 import { FaqItem, ContactCard } from '../../src/components';
 import { layout, typography } from '../../src/styles';
 
@@ -35,8 +35,8 @@ export default function AjudaScreen() {
 
       <View style={layout.section}>
         <Text style={typography.label}>FALE CONOSCO</Text>
-        <ContactCard icon="logo-whatsapp" iconColor="#25D366" label="WhatsApp" description="Resposta rápida em até 24h" onPress={() => Linking.openURL('https://wa.me/5500000000000')} />
-        <ContactCard icon="mail-outline" iconColor={COLORS.primary} label="E-mail" description="suporte@novaixfitness.com" onPress={() => Linking.openURL('mailto:suporte@novaixfitness.com')} />
+        <ContactCard icon="logo-whatsapp" iconColor="#25D366" label="WhatsApp" description="Resposta rápida em até 24h" onPress={() => Linking.openURL(`https://wa.me/${APP_CONFIG.whatsappNumber}`)} />
+        <ContactCard icon="mail-outline" iconColor={COLORS.primary} label="E-mail" description={APP_CONFIG.supportEmail} onPress={() => Linking.openURL(`mailto:${APP_CONFIG.supportEmail}`)} />
       </View>
     </ScrollView>
   );

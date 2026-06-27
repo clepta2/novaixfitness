@@ -7,11 +7,14 @@ import {
   Montserrat_700Bold,
   Montserrat_800ExtraBold,
 } from '@expo-google-fonts/montserrat';
-import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { COLORS } from '../src/constants/colors';
 import { registerForPushNotifications, setupNotificationListeners } from '../src/services/notifications';
+
+// Rotas que não necessitam autenticação (login/onboarding)
+const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'onboarding', 'landing'];
 
 function AuthRedirect() {
   const { user, loading } = useAuth();
@@ -20,9 +23,23 @@ function AuthRedirect() {
 
   useEffect(() => {
     if (loading) return;
-    const inAuthGroup = segments[0] === '(tabs)';
-    if (!user && inAuthGroup) router.replace('/');
-    else if (user && !inAuthGroup) router.replace('/(tabs)/home');
+
+    const inTabsGroup = segments[0] === '(tabs)';
+    const currentRoute = segments[0] || 'index';
+    const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute);
+
+    // Não autenticado tentando acessar área protegida → vai pro login
+    if (!user && inTabsGroup) {
+      router.replace('/');
+      return;
+    }
+
+    // Autenticado em rota pública (login/register) → vai pra home
+    if (user && isPublicRoute) {
+      router.replace('/(tabs)/home');
+      return;
+    }
+    // Autenticado em rota de Stack (analytics, settings, etc.) → deixa navegar normalmente
   }, [user, loading, segments]);
 
   useEffect(() => {
@@ -46,7 +63,7 @@ function LoadingScreen() {
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold,
-    Inter_400Regular, Inter_500Medium,
+    Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold,
   });
 
   if (!fontsLoaded) return <LoadingScreen />;
@@ -72,6 +89,10 @@ export default function RootLayout() {
           <Stack.Screen name="settings" lazy />
           <Stack.Screen name="dashboard" lazy />
           <Stack.Screen name="workout-detail" lazy />
+          <Stack.Screen name="player-list" lazy />
+          <Stack.Screen name="warmup" lazy />
+          <Stack.Screen name="recovery" lazy />
+          <Stack.Screen name="admin" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </Suspense>
