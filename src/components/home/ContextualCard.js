@@ -1,28 +1,52 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { useEffect, useRef } from 'react';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
 function getStreakMotivation(streak) {
-  if (streak >= 30) return { text: `${streak} dias seguidos! Lenda!`, icon: 'trophy' };
-  if (streak >= 14) return { text: `${streak} dias! Incrivel!`, icon: 'flame' };
-  if (streak >= 7) return { text: `${streak} dias! Continue assim!`, icon: 'trending-up' };
-  if (streak >= 3) return { text: `${streak} dias no flow!`, icon: 'flash' };
+  if (streak >= 30) return { text: `${streak} dias seguidos! Lenda!`, icon: 'trophy', color: '#FFD700' };
+  if (streak >= 14) return { text: `${streak} dias! Incrivel!`, icon: 'flame', color: '#FF6B35' };
+  if (streak >= 7) return { text: `${streak} dias! Continue assim!`, icon: 'trending-up', color: '#00E676' };
+  if (streak >= 3) return { text: `${streak} dias no flow!`, icon: 'flash', color: '#CCFF00' };
   return null;
 }
 
 export default function ContextualCard({ card, onAction, streak = 0 }) {
   const motivation = getStreakMotivation(streak);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
+      Animated.spring(slideAnim, { toValue: 0, tension: 50, friction: 8, useNativeDriver: true }),
+    ]).start();
+
+    if (motivation) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, { toValue: 1.05, duration: 1000, useNativeDriver: true }),
+          Animated.timing(pulseAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
+        ])
+      ).start();
+    }
+  }, [streak]);
 
   const handlePress = () => {
     try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); } catch {}
+    Animated.sequence([
+      Animated.spring(pulseAnim, { toValue: 0.95, tension: 50, friction: 3, useNativeDriver: true }),
+      Animated.spring(pulseAnim, { toValue: 1, tension: 50, friction: 3, useNativeDriver: true }),
+    ]).start();
     onAction?.();
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: COLORS.surface }]}>
+    <Animated.View style={[styles.card, { backgroundColor: COLORS.surface, opacity: fadeAnim, transform: [{ translateY: slideAnim }, { scale: pulseAnim }] }]}>
       <View style={styles.header}>
         <View style={[styles.iconWrap, { backgroundColor: card.iconColor + '20' }]}>
           <Ionicons name={card.icon} size={scale(24)} color={card.iconColor} />
@@ -34,9 +58,9 @@ export default function ContextualCard({ card, onAction, streak = 0 }) {
       </View>
 
       {motivation && (
-        <View style={styles.motivationRow}>
-          <Ionicons name={motivation.icon} size={14} color={COLORS.primary} />
-          <Text style={styles.motivationText}>{motivation.text}</Text>
+        <View style={[styles.motivationRow, { backgroundColor: motivation.color + '15' }]}>
+          <Ionicons name={motivation.icon} size={14} color={motivation.color} />
+          <Text style={[styles.motivationText, { color: motivation.color }]}>{motivation.text}</Text>
         </View>
       )}
 
@@ -46,7 +70,7 @@ export default function ContextualCard({ card, onAction, streak = 0 }) {
         <Text style={styles.actionLabel}>{card.actionLabel}</Text>
         <Ionicons name="arrow-forward" size={16} color="#12161A" />
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -115,6 +139,5 @@ const styles = StyleSheet.create({
   motivationText: {
     fontSize: 12,
     fontFamily: 'Inter-SemiBold',
-    color: COLORS.primary,
   },
 });

@@ -11,6 +11,24 @@ const SPEECH_OPTIONS = {
 
 let enabled = true;
 
+const MOTIVATIONAL_MESSAGES = [
+  'Você está indo muito bem! Continue assim!',
+  'Cada repetição conta! Não desista!',
+  'Foco na forma correta do exercício!',
+  'Respire fundo e mantenha o ritmo!',
+  'Você é mais forte do que pensa!',
+  'Última série! Dê o seu máximo!',
+];
+
+const EXERCISE_TIPS = {
+  'Supino': 'Mantenha as escápulas juntas no banco. Não trave os cotovelos.',
+  'Agachamento': 'Joelhos na direção dos pés. Costas retas.',
+  'Remada': 'Puxe com as costas, não com os braços.',
+  'Desenvolvimento': 'Não trave os cotovelos no topo.',
+  'Leg Press': 'Não trave os joelhos. Desça até 90 graus.',
+  'Prancha': 'Mantenha o corpo reto como uma prancha.',
+};
+
 export function setVoiceCoachEnabled(value) {
   enabled = value;
 }
@@ -75,4 +93,26 @@ export function speakHalfway() {
 export function speakWorkoutComplete(workoutName) {
   const text = `Treino concluído! Excelente trabalho no treino de ${workoutName || 'hoje'}. Você superou seus limites!`;
   speak(text);
+}
+
+export function speakMotivation() {
+  const msg = MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
+  speak(msg);
+}
+
+export function speakExerciseTip(exerciseName) {
+  const tip = Object.entries(EXERCISE_TIPS).find(([key]) => exerciseName?.includes(key));
+  if (tip) {
+    speak(`Dica para ${tip[0]}: ${tip[1]}`);
+  }
+}
+
+export function speakCaloriesBurned(calories) {
+  speak(`Você já queimou ${calories} calorias! Continue queimando!`);
+}
+
+export function speakHeartRateWarning(bpm) {
+  if (bpm > 160) {
+    speak(`Atenção! Seu batimento cardíaco está alto: ${bpm}. Reduza a intensidade.`);
+  }
 }
