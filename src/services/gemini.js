@@ -51,7 +51,7 @@ export async function askGeminiCoach(message, profileContext = {}, conversationH
       parts: [{ text: `${systemInstruction}\n\nPergunta: ${message}` }],
     });
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -128,7 +128,7 @@ export async function analyzeMealText(mealText) {
   }
   try {
     const prompt = `Analise a refeicao: "${mealText}". Retorne APENAS um objeto JSON valido com as chaves: calories, protein, carbs, fat. Sem markdown ou explicacoes. Exemplo: {"calories": 300, "protein": 20, "carbs": 30, "fat": 10}`;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

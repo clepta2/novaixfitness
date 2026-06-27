@@ -38,7 +38,7 @@ Varie os alimentos. Use alimentos brasileiros. Inclua quantidades aproximadas.`;
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -98,7 +98,7 @@ Inclua exercícios para iniciante se nível for "iniciante". Use exercícios bá
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

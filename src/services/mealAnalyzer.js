@@ -2,6 +2,7 @@
 // Analise de refeicoes por IA - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { APP_CONFIG } from '../config/app';
 
 export async function analyzeMealText(mealText, profileContext = {}) {
   const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
@@ -25,7 +26,7 @@ Usuario: ${weight}kg. Seja preciso nas estimativas. Se nao conseguir analisar, r
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

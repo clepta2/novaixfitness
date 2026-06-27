@@ -113,4 +113,9 @@ export const APP_CONFIG = {
     terms: 'https://novaixfitness.com/termos',
     privacy: 'https://novaixfitness.com/privacidade',
   },
+
+  // APIs
+  apis: {
+    geminiBaseUrl: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+  },
 };

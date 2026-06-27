@@ -1,7 +1,7 @@
 // src/services/recipeGenerator.js
 // Gerador de receitas por IA - NOVAIX FITNESS
 
-import { supabase } from '../config/supabase';
+import { APP_CONFIG } from '../config/app';
 
 export async function generateRecipe(ingredients = [], goal = 'manter') {
   const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
@@ -32,7 +32,7 @@ Objetivo: ${goal}. Use técnicas de culinária saudável. Inclua tempo de prepar
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

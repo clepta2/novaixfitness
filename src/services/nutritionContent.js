@@ -2,6 +2,7 @@
 // Geração de conteúdo nutricional via IA - NOVAIX FITNESS
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { APP_CONFIG } from '../config/app';
 
 const CACHE_KEY = '@novaix:nutrition_content';
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 dias
@@ -63,7 +64,7 @@ async function fetchFromGemini(prompt) {
   if (!apiKey) return null;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `${APP_CONFIG.apis.geminiBaseUrl}?key=${apiKey}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
