@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
-import { Button } from '../../components';
+import { Button } from '../ui/Button';
 import { layout, typography } from '../../styles';
 
 export default function PixPaymentScreen({ pixData, onBack, onCopyPix, onCheckPayment, loading }) {

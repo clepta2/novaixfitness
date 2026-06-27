@@ -4,7 +4,7 @@
 import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { YoutubeIframe } from 'react-native-youtube-iframe';
+import YoutubeIframe from 'react-native-youtube-iframe';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';

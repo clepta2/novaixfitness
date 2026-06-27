@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { Button } from '../../components';
+import { Button } from '../ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { PLANS } from '../../services/payment';
 import { trackPaywallClick, trackPaywallSkip } from '../../services/abtest';

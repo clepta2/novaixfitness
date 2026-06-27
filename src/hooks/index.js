@@ -6,3 +6,4 @@ export { useSupabaseData } from './useSupabaseData';
 export { useWorkoutTimer } from './useWorkoutTimer';
 export { useNetworkStatus } from './useNetworkStatus';
 export { useWorkoutTags } from './useWorkoutTags';
+export { useLibraryData } from './useLibraryData';

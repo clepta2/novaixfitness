@@ -1,8 +1,8 @@
 // src/components/profile/RankingCard.js
 // Card de ranking global - NOVAIX FITNESS
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, FlatList, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -11,6 +11,11 @@ import { supabase } from '../../config/supabase';
 export default function RankingCard({ userId }) {
   const [rankings, setRankings] = useState([]);
   const [userRank, setUserRank] = useState(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, []);
 
   useEffect(() => {
     async function loadRanking() {
@@ -46,7 +51,7 @@ export default function RankingCard({ userId }) {
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
         <Ionicons name="trophy" size={20} color={COLORS.primary} />
         <Text style={styles.title}>RANKING GLOBAL</Text>
@@ -81,7 +86,7 @@ export default function RankingCard({ userId }) {
           </View>
         )}
       />
-    </View>
+    </Animated.View>
   );
 }
 

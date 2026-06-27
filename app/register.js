@@ -83,7 +83,7 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, justifyContent: 'center', padding: SPACING.xl, paddingTop: 80, paddingBottom: 40 },
+  scroll: { flexGrow: 1, justifyContent: 'center', padding: SPACING.xl, paddingTop: layout.scroll.paddingTop, paddingBottom: 40 },
   header: { alignItems: 'center', marginBottom: SPACING.massive },
   footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: SPACING.xl },
 });

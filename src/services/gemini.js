@@ -128,6 +128,30 @@ export async function clearChatHistory(userId) {
   }
 }
 
+export async function analyzeMealText(mealText) {
+  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  if (!apiKey) {
+    const calories = mealText.includes('ovo') ? 140 : mealText.includes('pão') ? 150 : 250;
+    return { calories, protein: Math.round(calories * 0.06), carbs: Math.round(calories * 0.08), fat: Math.round(calories * 0.03) };
+  }
+  try {
+    const prompt = `Analise a refeicao: "${mealText}". Retorne APENAS um objeto JSON valido com as chaves: calories, protein, carbs, fat. Sem markdown ou explicacoes. Exemplo: {"calories": 300, "protein": 20, "carbs": 30, "fat": 10}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
+    });
+    const result = await response.json();
+    const txt = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const clean = txt.replace(/```json/g, '').replace(/```/g, '').trim();
+    return JSON.parse(clean);
+  } catch (err) {
+    console.error('Erro Gemini meal tracker:', err);
+    return { calories: 200, protein: 12, carbs: 25, fat: 6 };
+  }
+}
+
 function generateFallbackResponse(message, context) {
   const msgLower = message.toLowerCase();
   const goal = context.goal?.toLowerCase() || '';

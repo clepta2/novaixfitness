@@ -6,7 +6,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet 
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { Card } from '../index';
+import { Card } from '../ui/Card';
 import { supabase } from '../../config/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { typography } from '../../styles';

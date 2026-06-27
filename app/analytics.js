@@ -6,7 +6,7 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { getWorkoutAnalytics, getWorkoutFrequency, getMonthlyComparison } from '../src/services/analytics';
-import PeriodSelector from '../src/components/analytics/PeriodSelector';
+import { FilterBar } from '../src/components';
 import ComparisonCard from '../src/components/analytics/ComparisonCard';
 import StatsGrid from '../src/components/analytics/StatsGrid';
 import InsightsRow from '../src/components/analytics/InsightsRow';
@@ -55,7 +55,7 @@ export default function AnalyticsScreen() {
           <View style={{ width: 24 }} />
         </View>
 
-        <PeriodSelector selected={period} onSelect={setPeriod} />
+        <FilterBar selected={period} onSelect={setPeriod} style={{ marginBottom: SPACING.md }} />
         <ComparisonCard comparison={analytics?.comparison} />
         <StatsGrid analytics={analytics} />
         <InsightsRow bestDay={analytics?.bestDay} bestHour={analytics?.bestHour} />
@@ -71,5 +71,5 @@ export default function AnalyticsScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
 });

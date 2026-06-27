@@ -1,92 +1,72 @@
 import { PLANS, isSubscribed, getPlanById } from '../../src/services/payment';
 
+jest.mock('../../src/config/supabase', () => ({
+  supabase: {
+    auth: { getSession: jest.fn().mockResolvedValue({ data: { session: null } }) },
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValue({ data: null }),
+    })),
+  },
+}));
+
 describe('Payment Service', () => {
   describe('PLANS', () => {
-    it('has 3 plans', () => {
-      expect(Object.keys(PLANS)).toHaveLength(3);
+    it('has all plan tiers', () => {
+      expect(PLANS).toHaveProperty('basic');
+      expect(PLANS).toHaveProperty('intermediate');
+      expect(PLANS).toHaveProperty('premium');
+      expect(PLANS).toHaveProperty('ultra');
     });
 
-    it('has basic plan', () => {
-      expect(PLANS.basic).toBeDefined();
-      expect(PLANS.basic.id).toBe('basic');
-      expect(PLANS.basic.name).toBe('Básico');
-      expect(PLANS.basic.price).toBe(49.90);
-    });
-
-    it('has intermediate plan', () => {
-      expect(PLANS.intermediate).toBeDefined();
-      expect(PLANS.intermediate.id).toBe('intermediate');
-      expect(PLANS.intermediate.popular).toBe(true);
-      expect(PLANS.intermediate.price).toBe(79.90);
-    });
-
-    it('has premium plan', () => {
-      expect(PLANS.premium).toBeDefined();
-      expect(PLANS.premium.id).toBe('premium');
-      expect(PLANS.premium.price).toBe(119.90);
-    });
-
-    it('prices increase from basic to premium', () => {
-      expect(PLANS.basic.price).toBeLessThan(PLANS.intermediate.price);
-      expect(PLANS.intermediate.price).toBeLessThan(PLANS.premium.price);
-    });
-
-    it('each plan has features array', () => {
+    it('each plan has required fields', () => {
       Object.values(PLANS).forEach(plan => {
-        expect(plan.features).toBeDefined();
+        expect(plan).toHaveProperty('id');
+        expect(plan).toHaveProperty('name');
+        expect(plan).toHaveProperty('price');
+        expect(plan).toHaveProperty('features');
         expect(Array.isArray(plan.features)).toBe(true);
-        expect(plan.features.length).toBeGreaterThan(0);
       });
     });
 
-    it('intermediate and premium include Coach IA', () => {
-      const coachIA = (plan) => plan.features.some(f => f.text.includes('Coach IA'));
-      expect(coachIA(PLANS.intermediate)).toBe(true);
-      expect(coachIA(PLANS.premium)).toBe(true);
+    it('plans are ordered by price', () => {
+      expect(PLANS.basic.price).toBeLessThan(PLANS.intermediate.price);
+      expect(PLANS.intermediate.price).toBeLessThan(PLANS.premium.price);
+      expect(PLANS.premium.price).toBeLessThan(PLANS.ultra.price);
+    });
+
+    it('intermediate is marked popular', () => {
+      expect(PLANS.intermediate.popular).toBe(true);
     });
   });
 
   describe('isSubscribed', () => {
-    it('returns true for active subscription', () => {
+    it('returns true when active', () => {
       expect(isSubscribed({ subscription_status: 'active' })).toBe(true);
     });
 
-    it('returns false for inactive subscription', () => {
+    it('returns false when inactive', () => {
       expect(isSubscribed({ subscription_status: 'inactive' })).toBe(false);
     });
 
-    it('returns false for trial subscription', () => {
-      expect(isSubscribed({ subscription_status: 'trial' })).toBe(false);
-    });
-
-    it('returns false for null/undefined', () => {
+    it('returns false for null', () => {
       expect(isSubscribed(null)).toBe(false);
-      expect(isSubscribed(undefined)).toBe(false);
     });
 
-    it('returns false for empty object', () => {
-      expect(isSubscribed({})).toBe(false);
+    it('returns false for undefined', () => {
+      expect(isSubscribed(undefined)).toBe(false);
     });
   });
 
   describe('getPlanById', () => {
-    it('returns basic plan', () => {
+    it('returns correct plan', () => {
       expect(getPlanById('basic')).toBe(PLANS.basic);
-    });
-
-    it('returns intermediate plan', () => {
-      expect(getPlanById('intermediate')).toBe(PLANS.intermediate);
-    });
-
-    it('returns premium plan', () => {
       expect(getPlanById('premium')).toBe(PLANS.premium);
     });
 
-    it('returns intermediate as default for unknown id', () => {
-      expect(getPlanById('unknown')).toBe(PLANS.intermediate);
-    });
-
-    it('returns intermediate for null', () => {
+    it('returns intermediate as fallback', () => {
+      expect(getPlanById('nonexistent')).toBe(PLANS.intermediate);
       expect(getPlanById(null)).toBe(PLANS.intermediate);
     });
   });

@@ -12,6 +12,17 @@ export function AuthProvider({ children }) {
   const [onboarding, setOnboarding] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const loadOnboarding = async (userId) => {
+    if (userId) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('onboarding')
+        .eq('id', userId)
+        .single();
+      if (data?.onboarding) setOnboarding(data.onboarding);
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -99,16 +110,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const loadOnboarding = async (userId) => {
-    if (userId) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('onboarding')
-        .eq('id', userId)
-        .single();
-      if (data?.onboarding) setOnboarding(data.onboarding);
-    }
-  };
+
 
   const updateProfile = async (updates) => {
     if (!user?.id) return;

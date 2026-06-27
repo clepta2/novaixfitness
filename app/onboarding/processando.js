@@ -11,6 +11,8 @@ import { ProgressBar } from '../../src/components';
 import { ROUTES } from '../../src/helpers/navigation';
 import { layout, typography } from '../../src/styles';
 import { useAuth } from '../../src/context/AuthContext';
+import { generateWorkoutPlan, saveWorkoutPlan, generateMealPlan } from '../../src/services/planGenerator';
+import { supabase } from '../../src/config/supabase';
 
 const steps = [
   { icon: 'analytics', label: 'ANALISANDO DADOS CORPORAIS...' },
@@ -21,10 +23,10 @@ const steps = [
 
 export default function ProcessingScreen() {
   const router = useRouter();
-  const { onboarding, updateProfile } = useAuth();
+  const { user, onboarding, updateProfile } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const spinValue = new Animated.Value(0);
+  const [spinValue] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     const spin = Animated.loop(
@@ -32,7 +34,7 @@ export default function ProcessingScreen() {
     );
     spin.start();
     return () => spin.stop();
-  }, []);
+  }, [spinValue]);
 
   useEffect(() => {
     const timer = setInterval(() => setElapsedTime((prev) => prev + 1), 1000);
@@ -48,17 +50,42 @@ export default function ProcessingScreen() {
             weight: onboarding.weight || null,
             height: onboarding.height || null,
           };
-          await updateProfile({
-            onboarding,
-            physical_data: physicalData,
-          });
+          await updateProfile({ onboarding, physical_data: physicalData });
+
+          const planContext = {
+            weight: onboarding.weight || 70,
+            goal: onboarding.goal || 'manter',
+            level: onboarding.level || 'intermediario',
+            gymType: onboarding.gymType || 'academia',
+            availableDays: onboarding.availableDays || 4,
+            sessionDuration: onboarding.sessionDuration || 60,
+          };
+          const plan = await generateWorkoutPlan(planContext);
+          if (plan && user?.id) await saveWorkoutPlan(user.id, plan);
+
+          const mealContext = {
+            weight: onboarding.weight || 70,
+            height: onboarding.height || 170,
+            age: onboarding.age || 25,
+            goal: onboarding.goal || 'manter',
+            allergies: onboarding.allergies || '',
+            restrictions: onboarding.restrictions || '',
+          };
+          const mealPlan = await generateMealPlan(mealContext);
+          if (mealPlan && user?.id) {
+            await supabase.from('user_meal_plans').upsert({
+              user_id: user.id,
+              plan_data: mealPlan,
+              is_active: true,
+            }, { onConflict: 'user_id' });
+          }
         }
       } catch (error) {
         console.error('Erro ao salvar dados de onboarding:', error);
       }
     }
     persistData();
-  }, [onboarding]);
+  }, [onboarding, user?.id]);
 
   useEffect(() => {
     const stepTimer = setInterval(() => {

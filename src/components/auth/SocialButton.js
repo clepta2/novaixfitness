@@ -1,16 +1,23 @@
 // src/components/auth/SocialButton.js
-// Botão social (Google/Apple) - NOVAIX FITNESS
+// Botão social (Google/Apple) - NOVAIX FITNESS — visual premium
 
-import React, { memo } from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { memo } from 'react';
+import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
+import { scale } from '../../utils/responsive';
 
-function SocialButton({ icon, iconColor, label, onPress }) {
+function SocialButton({ icon, iconColor, label, onPress, bgColor }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.8}>
-      <Ionicons name={icon} size={20} color={iconColor} />
+    <TouchableOpacity
+      style={[styles.button, bgColor && { backgroundColor: bgColor }]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <View style={styles.iconContainer}>
+        <FontAwesome name={icon} size={ICON_SIZES.md} color={iconColor} />
+      </View>
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
   );
@@ -25,15 +32,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: SPACING.md,
     backgroundColor: COLORS.surface,
-    height: 50,
+    height: scale(54),
     borderRadius: BORDER_RADIUS.md,
     marginBottom: SPACING.md,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: COLORS.border,
+  },
+  iconContainer: {
+    width: scale(28),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 14,
+    fontSize: scale(14),
     color: COLORS.textTitle,
+    letterSpacing: 0.5,
   },
 });

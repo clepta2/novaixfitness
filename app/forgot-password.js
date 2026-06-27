@@ -76,7 +76,7 @@ export default function ForgotPasswordScreen() {
 
 const styles = StyleSheet.create({
   iconContainer: { alignItems: 'center', marginBottom: SPACING.xxl },
-  emailHighlight: { color: COLORS.primary, fontFamily: 'Inter_500Medium' },
+  emailHighlight: { color: COLORS.primary },
   instructions: { marginTop: 30, marginBottom: 30, gap: 12 },
   instructionItem: { flexDirection: 'row', alignItems: 'center', gap: 12 },
 });

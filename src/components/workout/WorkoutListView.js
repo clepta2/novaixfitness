@@ -5,7 +5,8 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';
-import { WorkoutListItem, ProgressSection } from '../index';
+import WorkoutListItem from './WorkoutListItem';
+import ProgressSection from './ProgressSection';
 import { layout, typography } from '../../styles';
 
 export default function WorkoutListView({ dailyWorkouts, activeWorkout, startWorkout }) {

@@ -61,7 +61,7 @@ export default function GenderScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollContent: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  scrollContent: { flexGrow: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
   header: { alignItems: 'center', marginBottom: 40 },
   progressContainer: { width: '100%', marginTop: SPACING.xxl },
   cardsContainer: { flex: 1, justifyContent: 'center', gap: SPACING.xl },

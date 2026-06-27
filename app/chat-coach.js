@@ -6,6 +6,7 @@ import { SPACING } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { askGeminiCoach, saveChatMessage, getChatHistory, clearChatHistory } from '../src/services/gemini';
+import { analyzeMealText, saveMealLog } from '../src/services/mealAnalyzer';
 import ChatHeader from '../src/components/chat/ChatHeader';
 import MessageBubble from '../src/components/chat/MessageBubble';
 import ChatInput from '../src/components/chat/ChatInput';
@@ -27,7 +28,28 @@ export default function ChatCoachScreen() {
       if (!user?.id) return;
       try {
         const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-        if (data) setProfile(data);
+        if (data) {
+          setProfile(data);
+          
+          const isAllowedPlan = ['intermediate', 'premium', 'ultra'].includes(data.subscription_plan);
+          const hasActiveSub = data.subscription_status === 'active';
+          
+          if (!isAllowedPlan || !hasActiveSub) {
+            Alert.alert(
+              'Acesso Restrito 🔒',
+              'O Coach IA está disponível apenas para assinantes dos planos Intermediário, Premium e Ultra Premium com assinatura ativa.',
+              [
+                { text: 'Voltar', onPress: () => router.back() },
+                { text: 'Ver Planos', onPress: () => {
+                  router.back();
+                  router.push('/paywall');
+                }}
+              ],
+              { cancelable: false }
+            );
+            return;
+          }
+        }
 
         const history = await getChatHistory(user.id);
         if (history.length > 0) {
@@ -58,26 +80,63 @@ export default function ChatCoachScreen() {
 
     await saveChatMessage(user.id, msg, true);
 
+    const isMealLog = detectMealLog(msg);
+
     try {
-      const context = {
-        weight: profile?.physical_data?.weight || profile?.onboarding?.weight,
-        height: profile?.physical_data?.height || profile?.onboarding?.height,
-        age: profile?.physical_data?.age || profile?.onboarding?.age,
-        goal: profile?.onboarding?.goal,
-        gymType: profile?.onboarding?.gymType,
-        level: profile?.onboarding?.level,
-      };
+      const pd = profile?.physical_data || {};
+      const ob = profile?.onboarding || {};
+      const context = { userId: user.id, subscriptionPlan: profile?.subscription_plan, weight: pd.weight || ob.weight, height: pd.height || ob.height, age: pd.age || ob.age, goal: ob.goal, gymType: ob.gymType, level: ob.level };
+
+      if (isMealLog) {
+        const mealData = await analyzeMealText(msg, context);
+        if (mealData) {
+          await saveMealLog(user.id, mealData);
+          const summary = formatMealSummary(mealData);
+          const coachMsg = { id: (Date.now() + 1).toString(), text: summary, isUser: false, isMealCard: true, mealData };
+          setMessages(prev => [...prev, coachMsg]);
+          await saveChatMessage(user.id, summary, false);
+          setLoading(false);
+          return;
+        }
+      }
 
       const reply = await askGeminiCoach(msg, context, messages);
       const coachMsg = { id: (Date.now() + 1).toString(), text: reply, isUser: false };
       setMessages(prev => [...prev, coachMsg]);
       await saveChatMessage(user.id, reply, false);
     } catch (err) {
-      console.error(err);
+      if (err.message === 'LIMIT_EXCEEDED') {
+        setMessages(prev => prev.filter(m => m.id !== userMsg.id));
+        try {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          await supabase
+            .from('coach_chat_messages')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('message', msg)
+            .eq('is_user', true)
+            .gte('created_at', today.toISOString());
+        } catch (dbErr) {
+          console.error('Erro ao deletar mensagem excedente:', dbErr);
+        }
+
+        Alert.alert(
+          'Limite Excedido 🔒',
+          'Você atingiu seu limite diário de mensagens do Coach IA. Faça um upgrade para enviar mais mensagens!',
+          [
+            { text: 'OK' },
+            { text: 'Ver Planos', onPress: () => { router.push('/paywall'); } },
+          ]
+        );
+      } else {
+        console.error('Erro ao enviar mensagem:', err);
+      }
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleClearChat = () => {
     Alert.alert('Limpar historico', 'Apagar todas as mensagens?', [
@@ -126,3 +185,16 @@ export default function ChatCoachScreen() {
 const styles = StyleSheet.create({
   listContent: { padding: SPACING.md, gap: SPACING.md, paddingBottom: 10 },
 });
+
+function detectMealLog(text) {
+  const lower = text.toLowerCase();
+  const mealKeywords = ['comi', 'almocoi', 'jantei', 'cafei', 'lanchei', 'refeiçao', 'refeicao', 'almoço', 'jantar', 'cafe da manha', 'cafe da manha', 'lanche', 'tomando', 'comendo', 'cafezinho', 'almorcinho', 'jantinho'];
+  const foodKeywords = ['arroz', 'feijao', 'frango', 'ovo', 'banana', 'salada', 'peixe', 'pao', 'leite', 'iogurte', 'macarra', 'batata', 'carne', 'queijo', 'presunto', 'aveia', 'whey', 'suco', 'cafe', 'cha', 'sanduiche', 'pizza', 'hamburguer', 'sushi', 'sorvete', 'chocolate', 'amendoim', 'castanha', 'atum', 'sardinha', 'tilapia', 'porco', 'lombo', 'costela', 'linguica', 'bacon', 'tomate', 'cenoura', 'brocolis', 'alface', 'couve', 'espinafre', 'abacate', 'laranja', 'maca', 'manga', 'morango', 'uva', 'melancia', 'abacaxi', 'goiaba', 'mamao'];
+  const quantityPattern = /\d+\s*(g|kg|ml|l|copo|fatia|colher|pedaco|porcao|xicara|xicara)/;
+  return mealKeywords.some(k => lower.includes(k)) || foodKeywords.some(k => lower.includes(k)) || quantityPattern.test(lower);
+}
+
+function formatMealSummary(meal) {
+  const items = meal.items?.length > 0 ? meal.items.join(', ') : 'Refeição';
+  return `🍽️ **Refeição registrada!**\n\n${meal.description || items}\n\n📊 **Macros:**\n• ${meal.calories} kcal\n• ${meal.protein}g proteína\n• ${meal.carbs}g carboidratos\n• ${meal.fat}g gordura\n• ${meal.fiber}g fibra\n\n✅ Salvo no seu diário de nutrição!`;
+}

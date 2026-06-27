@@ -9,44 +9,29 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
-import { scheduleWorkoutReminder, scheduleWeeklyPlanReminder, clearAllNotifications } from '../src/services/notifications';
-import { setupWorkoutReminders, getActiveReminders } from '../src/services/workout-reminders';
+import { scheduleWorkoutReminder, clearAllNotifications } from '../src/services/notifications';
+import { getPrefsForSettings, setNotificationPref, getNotificationPrefs } from '../src/services/notificationPrefs';
 import { layout, typography } from '../src/styles';
+
+const REMINDER_TIMES = ['07:00', '12:00', '18:00', '19:00', '20:00'];
 
 export default function NotificationSettingsScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const [settings, setSettings] = useState({
-    workout_reminder: true,
-    weekly_plan: true,
-    achievements: true,
-    streak: true,
-    motivational: false,
-    rest_day: true,
-  });
+  const [prefs, setPrefs] = useState({});
   const [reminderTime, setReminderTime] = useState('19:00');
-  const [activeReminders, setActiveReminders] = useState(0);
+  const [notifGroups, setNotifGroups] = useState(() => getPrefsForSettings());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadSettings() {
       if (!user?.id) return;
       try {
-        const { data } = await supabase
-          .from('profiles')
-          .select('notification_settings')
-          .eq('id', user.id)
-          .single();
-
-        if (data?.notification_settings) {
-          setSettings(data.notification_settings);
-          if (data.notification_settings.reminder_time) {
-            setReminderTime(data.notification_settings.reminder_time);
-          }
-        }
-
-        const reminders = await getActiveReminders();
-        setActiveReminders(reminders.length);
+        const userPrefs = await getNotificationPrefs(user.id);
+        setPrefs(userPrefs);
+        setNotifGroups(getPrefsForSettings());
+        const { data } = await supabase.from('profiles').select('notification_settings').eq('id', user.id).single();
+        if (data?.notification_settings?.reminder_time) setReminderTime(data.notification_settings.reminder_time);
       } catch (err) {
         console.error('Erro ao carregar configuracoes:', err);
       } finally {
@@ -57,39 +42,16 @@ export default function NotificationSettingsScreen() {
   }, [user?.id]);
 
   const handleToggle = async (key) => {
-    const newSettings = { ...settings, [key]: !settings[key], reminder_time: reminderTime };
-    setSettings(newSettings);
-
-    try {
-      await supabase
-        .from('profiles')
-        .update({ notification_settings: newSettings })
-        .eq('id', user.id);
-
-      if (newSettings.workout_reminder) {
-        await setupWorkoutReminders(user.id);
-      }
-
-      const reminders = await getActiveReminders();
-      setActiveReminders(reminders.length);
-    } catch (err) {
-      console.error('Erro ao salvar:', err);
-    }
+    const enabled = !prefs[key];
+    setPrefs(prev => ({ ...prev, [key]: enabled }));
+    await setNotificationPref(user.id, key, enabled);
   };
 
   const handleTimeChange = async (time) => {
     setReminderTime(time);
-    const newSettings = { ...settings, reminder_time: time };
-    setSettings(newSettings);
-
-    await supabase
-      .from('profiles')
-      .update({ notification_settings: newSettings })
-      .eq('id', user.id);
-
-    if (newSettings.workout_reminder) {
-      await setupWorkoutReminders(user.id);
-    }
+    const settings = { reminder_time: time };
+    await supabase.from('profiles').update({ notification_settings: settings }).eq('id', user.id);
+    if (prefs.workout_reminder) await scheduleWorkoutReminder(...time.split(':').map(Number));
   };
 
   const handleClearAll = async () => {
@@ -119,23 +81,28 @@ export default function NotificationSettingsScreen() {
 
         <View style={styles.section}>
           <Text style={typography.label}>TIPOS DE NOTIFICACAO</Text>
-          {notificationOptions.map((opt) => (
-            <View key={opt.key} style={styles.optionItem}>
-              <View style={styles.optionLeft}>
-                <View style={styles.optionIcon}>
-                  <Ionicons name={opt.icon} size={20} color={COLORS.primary} />
+          {notifGroups.map((group) => (
+            <View key={group.title}>
+              <Text style={[typography.caption, { marginBottom: SPACING.xs, marginTop: SPACING.md }]}>{group.title}</Text>
+              {group.items.map((opt) => (
+                <View key={opt.key} style={styles.optionItem}>
+                  <View style={styles.optionLeft}>
+                    <View style={[styles.optionIcon, { backgroundColor: opt.color + '15' }]}>
+                      <Ionicons name={opt.icon} size={20} color={opt.color} />
+                    </View>
+                    <View style={styles.optionInfo}>
+                      <Text style={typography.h5}>{opt.label}</Text>
+                      <Text style={typography.caption}>{opt.desc}</Text>
+                    </View>
+                  </View>
+                  <Switch
+                    value={prefs[opt.key] !== false}
+                    onValueChange={() => handleToggle(opt.key)}
+                    trackColor={{ false: COLORS.border, true: COLORS.primary }}
+                    thumbColor={prefs[opt.key] !== false ? COLORS.background : COLORS.textMuted}
+                  />
                 </View>
-                <View style={styles.optionInfo}>
-                  <Text style={typography.h5}>{opt.title}</Text>
-                  <Text style={typography.caption}>{opt.desc}</Text>
-                </View>
-              </View>
-              <Switch
-                value={settings[opt.key]}
-                onValueChange={() => handleToggle(opt.key)}
-                trackColor={{ false: COLORS.border, true: COLORS.primary }}
-                thumbColor={settings[opt.key] ? COLORS.background : COLORS.textMuted}
-              />
+              ))}
             </View>
           ))}
         </View>
@@ -143,7 +110,7 @@ export default function NotificationSettingsScreen() {
         <View style={styles.section}>
           <Text style={typography.label}>HORARIO DO LEMBRETE</Text>
           <View style={styles.timeOptions}>
-            {['07:00', '12:00', '18:00', '19:00', '20:00'].map((time) => (
+            {REMINDER_TIMES.map((time) => (
               <TouchableOpacity
                 key={time}
                 style={[styles.timeOption, reminderTime === time && styles.timeOptionActive]}
@@ -152,14 +119,6 @@ export default function NotificationSettingsScreen() {
                 <Text style={[typography.bodySmall, reminderTime === time && styles.timeTextActive]}>{time}</Text>
               </TouchableOpacity>
             ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={typography.label}>LEMBRETES ATIVOS</Text>
-          <View style={styles.reminderStatus}>
-            <Ionicons name="alarm" size={20} color={COLORS.primary} />
-            <Text style={typography.bodySmall}>{activeReminders} lembretes agendados</Text>
           </View>
         </View>
 
@@ -173,7 +132,7 @@ export default function NotificationSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
   section: { marginBottom: SPACING.xl },
   optionItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
   optionLeft: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, flex: 1 },
@@ -182,7 +141,7 @@ const styles = StyleSheet.create({
   timeOptions: { flexDirection: 'row', gap: SPACING.sm, marginTop: SPACING.md },
   timeOption: { flex: 1, paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   timeOptionActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  timeTextActive: { color: COLORS.background, fontFamily: 'Montserrat_600SemiBold' },
+  timeTextActive: typography.chipActive,
   reminderStatus: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: 8, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
   clearBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error + '10', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.error + '30' },
 });

@@ -1,17 +1,43 @@
 // app/(tabs)/_layout.js
 // Layout das Tabs - NOVAIX FITNESS
 
-import { Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs } from 'expo-router';
-import { Dumbbell, Users, User, HelpCircle, BookOpen } from 'lucide-react-native';
-import { ActivityIndicator, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Animated, View, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { COLORS } from '../../src/constants/colors';
+import { ICON_SIZES } from '../../src/constants/spacing';
 
-function TabLoading() {
+function AnimatedTabIcon({ name, nameOutline, focused, color }) {
+  const [scale] = useState(() => new Animated.Value(1));
+
+  useEffect(() => {
+    Animated.spring(scale, {
+      toValue: focused ? 1.2 : 1,
+      friction: 5,
+      tension: 140,
+      useNativeDriver: true,
+    }).start();
+  }, [scale, focused]);
+
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="small" color={COLORS.primary} />
-    </View>
+    <Animated.View style={{ transform: [{ scale }], alignItems: 'center' }}>
+      <Ionicons
+        name={focused ? name : nameOutline}
+        size={ICON_SIZES.md}
+        color={color}
+      />
+      {focused && (
+        <View style={{
+          width: 5,
+          height: 5,
+          borderRadius: 999,
+          backgroundColor: COLORS.primary,
+          marginTop: 3,
+        }} />
+      )}
+    </Animated.View>
   );
 }
 
@@ -21,18 +47,28 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
+        tabBarBackground: () => (
+          <BlurView
+            intensity={80}
+            tint="dark"
+            style={StyleSheet.absoluteFill}
+          />
+        ),
         tabBarStyle: {
-          backgroundColor: COLORS.surface,
-          borderTopColor: COLORS.border,
-          borderTopWidth: 1,
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          borderTopColor: COLORS.borderLight,
+          borderTopWidth: StyleSheet.hairlineWidth,
           height: 85,
           paddingBottom: 24,
           paddingTop: 8,
+          elevation: 0,
         },
         tabBarLabelStyle: {
-          fontFamily: 'Inter_400Regular',
-          fontSize: 10,
-          letterSpacing: 0.5,
+          fontFamily: 'Montserrat_600SemiBold',
+          fontSize: 11,
+          letterSpacing: 0.4,
+          marginTop: 2,
         },
         headerShown: false,
       }}
@@ -40,38 +76,68 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
+          title: 'Início',
+          tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="home" nameOutline="home-outline" focused={focused} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="library"
+        options={{
           title: 'Treinos',
-          tabBarIcon: ({ focused }) => <Dumbbell size={22} color={focused ? COLORS.primary : COLORS.textMuted} strokeWidth={focused ? 2.5 : 1.5} />,
+          tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="barbell" nameOutline="barbell-outline" focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
         name="feed"
         options={{
           title: 'Comunidade',
-          tabBarIcon: ({ focused }) => <Users size={22} color={focused ? COLORS.primary : COLORS.textMuted} strokeWidth={focused ? 2.5 : 1.5} />,
+          tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="people" nameOutline="people-outline" focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
         name="perfil"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ focused }) => <User size={22} color={focused ? COLORS.primary : COLORS.textMuted} strokeWidth={focused ? 2.5 : 1.5} />,
+          tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="person" nameOutline="person-outline" focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
         name="ajuda"
         options={{
-          title: 'Ajuda',
-          tabBarIcon: ({ focused }) => <HelpCircle size={22} color={focused ? COLORS.primary : COLORS.textMuted} strokeWidth={focused ? 2.5 : 1.5} />,
+          href: null,
         }}
       />
       <Tabs.Screen
-        name="library"
+        name="perfil/history"
         options={{
-          title: 'Biblioteca',
-          tabBarIcon: ({ focused }) => <BookOpen size={22} color={focused ? COLORS.primary : COLORS.textMuted} strokeWidth={focused ? 2.5 : 1.5} />,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil/links"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil/lgpd"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil/termos"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil/conheca-nos"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
   );
 }
+

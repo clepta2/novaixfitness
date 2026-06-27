@@ -108,9 +108,34 @@ export const workoutData = {
   },
 };
 
+export const fallbackWorkout = {
+  id: '1', name: 'Peito e Tríceps', category: 'MUSCULAÇÃO', level: 'Intermediário', duration: 50,
+  description: 'Treino focado em hipertrofia para peito e tríceps.',
+  video_id: 'dQw4w9WgXcQ', equipment: ['Barra', 'Halteres', 'Polia'],
+  exercises: [
+    { id: '1', name: 'Supino Reto Barra', sets: 4, reps: 10, rest: 60, muscle: 'Peito' },
+    { id: '2', name: 'Supino Inclinado Halteres', sets: 4, reps: 12, rest: 45, muscle: 'Peito Superior' },
+    { id: '3', name: 'Crossover Polia', sets: 3, reps: 15, rest: 30, muscle: 'Peito' },
+  ],
+};
+
 export const categories = [
   { id: 'musculacao', label: 'MUSCULAÇÃO', icon: 'barbell-outline', description: 'Hipertrofia e força', count: 42, color: '#6366F1' },
   { id: 'calistenia', label: 'CALISTENIA', icon: 'body-outline', description: 'Peso corporal', count: 28, color: '#00E676' },
   { id: 'cardio', label: 'CARDIO', icon: 'heart-outline', description: 'HIIT, Tabata, LISS', count: 18, color: '#FF6B35' },
   { id: 'flexibilidade', label: 'FLEXIBILIDADE', icon: 'leaf-outline', description: 'Alongamento e mobilidade', count: 15, color: '#8B5CF6' },
 ];
+
+export const DEMO_WORKOUT = {
+  id: 'demo',
+  name: 'Treino Full Body',
+  duration: 45,
+  videoId: 'dQw4w9WgXcQ',
+  exercises: [
+    { name: 'Supino Reto', sets: 4, reps: 10, rest: 60 },
+    { name: 'Agachamento', sets: 4, reps: 12, rest: 60 },
+    { name: 'Remada Curvada', sets: 4, reps: 10, rest: 60 },
+    { name: 'Desenvolvimento', sets: 3, reps: 12, rest: 45 },
+    { name: 'Burpee', sets: 3, reps: 15, rest: 30 },
+  ],
+};

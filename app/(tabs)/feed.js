@@ -6,9 +6,8 @@ import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, A
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
-import { PostCard, CreatePostModal, NotificationModal } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal, ChallengesList } from '../../src/components';
 import { PostSkeleton, FeedEmptyState } from '../../src/components/social/FeedSkeleton';
-import ChallengesList from '../../src/components/social/ChallengesList';
 import { useSupabaseData } from '../../src/hooks';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';

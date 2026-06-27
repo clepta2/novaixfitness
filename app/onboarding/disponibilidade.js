@@ -81,7 +81,7 @@ export default function AvailabilityScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollContent: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
+  scrollContent: { flexGrow: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
   header: { alignItems: 'center', marginBottom: 30 },
   progressContainer: { width: '100%', marginTop: SPACING.xxl },
   optionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.md },

@@ -1,178 +1,172 @@
 // src/components/common/TutorialOverlay.js
-// Overlay de tutorial interativo - NOVAIX FITNESS
-
+// Overlay de tutorial interativo premium - NOVAIX FITNESS
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const SPOTLIGHTS = {
+  contextualCard: { left: 16, top: 130, width: SCREEN_WIDTH - 32, height: 180, cardPosition: 'bottom' },
+  categories: { left: 16, top: 380, width: SCREEN_WIDTH - 32, height: 120, cardPosition: 'top' },
+  header: { left: SCREEN_WIDTH - 120, top: 50, width: 110, height: 44, cardPosition: 'bottom' },
+};
 
 export default function TutorialOverlay({ visible, steps, onComplete, onSkip }) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [scaleAnim] = useState(() => new Animated.Value(0.95));
+  const [progressAnim] = useState(() => new Animated.Value(0));
+  const [bounceAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
-    if (visible) setCurrentStep(0);
-  }, [visible]);
+    if (visible) {
+      setCurrentStep(0);
+      progressAnim.setValue(0);
+    }
+  }, [visible, progressAnim]);
+
+  useEffect(() => {
+    if (visible && steps?.length > 0) {
+      fadeAnim.setValue(0);
+      scaleAnim.setValue(0.95);
+      Animated.parallel([
+        Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
+      ]).start();
+      Animated.timing(progressAnim, {
+        toValue: (currentStep + 1) / steps.length,
+        duration: 350,
+        useNativeDriver: false,
+      }).start();
+      try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {}
+    }
+  }, [currentStep, visible, steps?.length, fadeAnim, progressAnim, scaleAnim]);
+
+  useEffect(() => {
+    bounceAnim.setValue(0);
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(bounceAnim, { toValue: 8, duration: 600, useNativeDriver: true }),
+        Animated.timing(bounceAnim, { toValue: 0, duration: 600, useNativeDriver: true }),
+      ])
+    ).start();
+  }, [currentStep, visible, bounceAnim]);
 
   if (!visible || !steps || steps.length === 0) return null;
 
   const step = steps[currentStep];
   const isLast = currentStep === steps.length - 1;
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const spotlight = step.target ? SPOTLIGHTS[step.target] : null;
+  const handleNext = () => isLast ? onComplete() : setCurrentStep(prev => prev + 1);
 
-  const handleNext = () => {
-    if (isLast) {
-      onComplete();
-    } else {
-      setCurrentStep(prev => prev + 1);
-    }
+  const renderMask = () => {
+    if (!spotlight) return <View style={styles.darkBackdrop} />;
+    const { left, top, width, height } = spotlight;
+    return (
+      <>
+        <View style={[styles.maskPanel, { left: 0, top: 0, width: SCREEN_WIDTH, height: top }]} />
+        <View style={[styles.maskPanel, { left: 0, top, width: left, height }]} />
+        <View style={[styles.maskPanel, { left: left + width, top, width: SCREEN_WIDTH - (left + width), height }]} />
+        <View style={[styles.maskPanel, { left: 0, top: top + height, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - (top + height) }]} />
+        <View style={[styles.glowBorder, { left, top, width, height }]} />
+      </>
+    );
   };
 
-  const handleSkip = () => {
-    onSkip();
+  const renderPointer = () => {
+    if (!spotlight) return null;
+    const { left, top, width, height, cardPosition } = spotlight;
+    const isTop = cardPosition === 'top';
+    const pointerTop = isTop ? top - 32 : top + height + 8;
+    const pointerLeft = left + width / 2 - 12;
+    return (
+      <Animated.View style={[styles.pointer, { top: pointerTop, left: pointerLeft, transform: [{ translateY: bounceAnim }] }]}>
+        <Ionicons name={isTop ? 'chevron-down' : 'chevron-up'} size={24} color={COLORS.primary} />
+      </Animated.View>
+    );
   };
+
+  const mainContent = (
+    <View style={StyleSheet.absoluteFill}>
+      {renderMask()}
+      {renderPointer()}
+      <Animated.View style={[styles.card, spotlight ? (spotlight.cardPosition === 'top' ? styles.cardTop : styles.cardBottom) : styles.cardCenter, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+        <View style={styles.progressBar}>
+          <Animated.View style={[styles.progressFill, { width: progressAnim.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
+        </View>
+        <View style={styles.stepCounter}>
+          <Text style={styles.stepText}>{currentStep + 1}/{steps.length}</Text>
+        </View>
+        <View style={styles.iconContainer}>
+          <Ionicons name={step.icon} size={36} color={COLORS.primary} />
+        </View>
+        <Text style={typography.h3}>{step.title}</Text>
+        <Text style={[typography.body, styles.description]}>{step.description}</Text>
+        <View style={styles.buttons}>
+          {!isLast && (
+            <TouchableOpacity style={styles.skipBtn} onPress={onSkip}>
+              <Text style={styles.skipText}>Pular tutorial</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+            <Text style={styles.nextText}>{isLast ? 'COMEÇAR!' : 'PRÓXIMO'}</Text>
+            <Ionicons name={isLast ? 'checkmark' : 'arrow-forward'} size={18} color={COLORS.background} />
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+    </View>
+  );
 
   return (
     <Modal transparent visible={visible} animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.card}>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${progress}%` }]} />
-          </View>
-
-          <View style={styles.stepCounter}>
-            <Text style={styles.stepText}>{currentStep + 1}/{steps.length}</Text>
-          </View>
-
-          <View style={styles.iconContainer}>
-            <Ionicons name={step.icon} size={48} color={COLORS.primary} />
-          </View>
-
-          <Text style={typography.h3}>{step.title}</Text>
-          <Text style={[typography.body, styles.description]}>{step.description}</Text>
-
-          <View style={styles.buttons}>
-            {!isLast && (
-              <TouchableOpacity style={styles.skipBtn} onPress={handleSkip}>
-                <Text style={styles.skipText}>Pular tutorial</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-              <Text style={styles.nextText}>{isLast ? 'COMEÇAR!' : 'PRÓXIMO'}</Text>
-              <Ionicons name={isLast ? 'checkmark' : 'arrow-forward'} size={20} color={COLORS.background} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.dots}>
-            {steps.map((_, index) => (
-              <View
-                key={index}
-                style={[styles.dot, index === currentStep && styles.dotActive]}
-              />
-            ))}
-          </View>
-        </View>
-      </View>
+      {!spotlight ? (
+        <BlurView intensity={25} tint="dark" style={StyleSheet.absoluteFill}>
+          {mainContent}
+        </BlurView>
+      ) : (
+        mainContent
+      )}
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: SPACING.xl,
+  darkBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(18, 22, 26, 0.65)' },
+  maskPanel: { position: 'absolute', backgroundColor: 'rgba(18, 22, 26, 0.65)' },
+  glowBorder: {
+    position: 'absolute', borderWidth: 2, borderColor: COLORS.primary, borderRadius: 12,
+    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 8, elevation: 4,
   },
+  pointer: { position: 'absolute', zIndex: 10, alignItems: 'center', width: 24 },
   card: {
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.xl,
-    width: SCREEN_WIDTH - SPACING.xl * 2,
-    alignItems: 'center',
+    position: 'absolute', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg, width: SCREEN_WIDTH - SPACING.lg * 2, left: SPACING.lg, alignItems: 'center',
+    borderWidth: 1.5, borderColor: COLORS.primary + '20', shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 6,
   },
-  progressBar: {
-    width: '100%',
-    height: 4,
-    backgroundColor: COLORS.border,
-    borderRadius: 2,
-    marginBottom: SPACING.lg,
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: COLORS.primary,
-    borderRadius: 2,
-  },
-  stepCounter: {
-    position: 'absolute',
-    top: SPACING.lg,
-    right: SPACING.lg,
-  },
-  stepText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textMuted,
-  },
+  cardCenter: { top: (SCREEN_HEIGHT - 280) / 2 },
+  cardTop: { top: 80 },
+  cardBottom: { bottom: 120 },
+  progressBar: { width: '100%', height: 4, backgroundColor: COLORS.border, borderRadius: 2, marginBottom: SPACING.md },
+  progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
+  stepCounter: { position: 'absolute', top: SPACING.md, right: SPACING.md },
+  stepText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted },
   iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: COLORS.primary + '15',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: SPACING.xl,
+    width: 60, height: 60, borderRadius: 30, backgroundColor: COLORS.primary + '15',
+    justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.md,
   },
-  description: {
-    color: COLORS.textDescription,
-    textAlign: 'center',
-    marginBottom: SPACING.xxl,
-    marginTop: SPACING.md,
-  },
-  buttons: {
-    width: '100%',
-    gap: SPACING.md,
-  },
-  skipBtn: {
-    paddingVertical: SPACING.md,
-    alignItems: 'center',
-  },
-  skipText: {
-    fontFamily: 'Montserrat_500Medium',
-    fontSize: 14,
-    color: COLORS.textMuted,
-  },
+  description: { color: COLORS.textDescription, textAlign: 'center', marginBottom: SPACING.lg, marginTop: SPACING.xs },
+  buttons: { width: '100%', gap: SPACING.sm },
+  skipBtn: { paddingVertical: SPACING.sm, alignItems: 'center' },
+  skipText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: COLORS.textMuted },
   nextBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: SPACING.sm,
-    backgroundColor: COLORS.primary,
-    borderRadius: 8,
-    paddingVertical: SPACING.lg,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.xs,
+    backgroundColor: COLORS.primary, borderRadius: 8, paddingVertical: SPACING.md,
   },
-  nextText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.background,
-    letterSpacing: 1,
-  },
-  dots: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-    marginTop: SPACING.xl,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: COLORS.border,
-  },
-  dotActive: {
-    backgroundColor: COLORS.primary,
-    width: 24,
-  },
+  nextText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.background, letterSpacing: 0.5 },
 });

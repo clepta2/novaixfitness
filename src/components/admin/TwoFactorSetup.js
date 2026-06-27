@@ -67,7 +67,7 @@ export default function TwoFactorSetup({ userId, onComplete }) {
 
       <View style={styles.step}>
         <Text style={typography.h5}>Passo 1: Copie a chave secreta</Text>
-        <Text style={typography.bodySmall}>Abra o Google Authenticator e escolha "Inserir chave"</Text>
+        <Text style={typography.bodySmall}>{`Abra o Google Authenticator e escolha "Inserir chave"`}</Text>
         <TouchableOpacity style={styles.secretBox} onPress={() => {
           try {
             const Clipboard = require('expo-clipboard');

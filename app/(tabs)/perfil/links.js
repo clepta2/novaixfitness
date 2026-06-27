@@ -7,18 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
 import { Header, ReferralCard } from '../../../src/components';
-
-const socialLinks = [
-  { icon: 'logo-youtube', label: 'YouTube', color: '#FF0000', url: 'https://youtube.com/@novaixfitness' },
-  { icon: 'logo-instagram', label: 'Instagram', color: '#E4405F', url: 'https://instagram.com/novaixfitness' },
-  { icon: 'logo-tiktok', label: 'TikTok', color: '#000000', url: 'https://tiktok.com/@novaixfitness' },
-];
-
-const otherLinks = [
-  { icon: 'globe-outline', label: 'Site Oficial', url: 'https://novaixfitness.com' },
-  { icon: 'document-text-outline', label: 'Termos de Uso', url: 'https://novaixfitness.com/termos' },
-  { icon: 'shield-checkmark-outline', label: 'Política de Privacidade', url: 'https://novaixfitness.com/privacidade' },
-];
+import { typography } from '../../../src/styles';
+import { socialLinks, otherLinks } from '../../../src/data/links';
 
 export default function LinksScreen() {
   const [showReferral, setShowReferral] = useState(false);
@@ -122,7 +112,7 @@ const styles = StyleSheet.create({
   shareCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.primary + '30' },
   shareInfo: { flex: 1, marginLeft: SPACING.md },
   shareLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
-  shareDesc: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
+  shareDesc: typography.cardDate,
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.75)', justifyContent: 'center', padding: SPACING.xl },
   modalContent: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.border },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xl },

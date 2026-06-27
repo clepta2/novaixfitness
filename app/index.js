@@ -90,8 +90,8 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
           <View style={layout.divider}><View style={layout.dividerLine} /><Text style={layout.dividerText}>ou</Text><View style={layout.dividerLine} /></View>
-          <SocialButton icon="logo-google" iconColor="#4285F4" label="Entrar com Google" onPress={handleGoogle} />
-          <SocialButton icon="logo-apple" iconColor="#FFF" label="Entrar com Apple" onPress={handleApple} />
+          <SocialButton icon="google" iconColor="#4285F4" label="Entrar com Google" onPress={handleGoogle} />
+          <SocialButton icon="apple" iconColor="#FFF" label="Entrar com Apple" onPress={handleApple} />
         </View>
 
         <View style={styles.footer}>
@@ -104,7 +104,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, justifyContent: 'center', padding: SPACING.xl, paddingTop: 80, paddingBottom: 40 },
+  scroll: { flexGrow: 1, justifyContent: 'center', padding: SPACING.xl, paddingTop: layout.scroll.paddingTop, paddingBottom: 40 },
   logoContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.lg },
   logoMark: { flexDirection: 'row', alignItems: 'center' },
   arrows: { marginLeft: -4 },

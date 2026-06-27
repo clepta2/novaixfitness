@@ -1,18 +1,43 @@
 // src/components/social/PostCard.js
 // Card de post no feed - NOVAIX FITNESS
 
-import React, { memo, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet } from 'react-native';
+import React, { memo, useState, useCallback, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { Avatar } from '../index';
+import { Avatar } from '../ui/Avatar';
+import { supabase } from '../../config/supabase';
 
-function PostCard({ post, onLike, onComment }) {
+function PostCard({ post, onLike, onComment, currentUserId }) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+
+  useEffect(() => {
+    if (showComments && comments.length === 0) {
+      loadComments();
+    }
+  }, [showComments]);
+
+  const loadComments = async () => {
+    setLoadingComments(true);
+    try {
+      const { data } = await supabase
+        .from('post_comments')
+        .select('*, profiles:user_id(name, avatar_url)')
+        .eq('post_id', post.id)
+        .order('created_at', { ascending: true });
+      setComments(data || []);
+    } catch (err) {
+      console.error('Erro ao carregar comentários:', err);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
 
   const handleLike = useCallback(() => {
     setIsLiked((prev) => !prev);
@@ -23,6 +48,12 @@ function PostCard({ post, onLike, onComment }) {
   const handleComment = useCallback(() => {
     if (commentText.trim()) {
       onComment?.(post.id, commentText);
+      setComments(prev => [...prev, {
+        id: Date.now(),
+        content: commentText,
+        profiles: { name: 'Você', avatar_url: null },
+        created_at: new Date().toISOString(),
+      }]);
       setCommentText('');
     }
   }, [commentText, onComment, post.id]);
@@ -30,6 +61,18 @@ function PostCard({ post, onLike, onComment }) {
   const toggleComments = useCallback(() => {
     setShowComments((prev) => !prev);
   }, []);
+
+  const handleShare = useCallback(async () => {
+    try {
+      await Share.share({
+        message: `${post.user.name}: ${post.content}`,
+      });
+    } catch (err) {
+      console.error('Erro ao compartilhar:', err);
+    }
+  }, [post]);
+
+  const isOwner = currentUserId && post.userId === currentUserId;
 
   return (
     <View style={styles.container}>
@@ -55,12 +98,34 @@ function PostCard({ post, onLike, onComment }) {
 
         <TouchableOpacity style={styles.actionBtn} onPress={toggleComments}>
           <Ionicons name="chatbubble-outline" size={20} color={COLORS.textMuted} />
-          <Text style={styles.actionText}>{post.comments}</Text>
+          <Text style={styles.actionText}>{comments.length || post.comments}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionBtn} onPress={handleShare}>
+          <Ionicons name="share-outline" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
       </View>
 
       {showComments && (
         <View style={styles.commentsSection}>
+          {loadingComments ? (
+            <Text style={styles.loadingText}>Carregando...</Text>
+          ) : comments.length > 0 ? (
+            <View style={styles.commentsList}>
+              {comments.map((comment) => (
+                <View key={comment.id} style={styles.commentItem}>
+                  <Avatar name={comment.profiles?.name || 'Anônimo'} size="sm" />
+                  <View style={styles.commentContent}>
+                    <Text style={styles.commentAuthor}>{comment.profiles?.name || 'Anônimo'}</Text>
+                    <Text style={styles.commentText}>{comment.content}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.noComments}>Nenhum comentário ainda</Text>
+          )}
+
           <View style={styles.commentInput}>
             <TextInput
               style={styles.commentField}
@@ -69,8 +134,8 @@ function PostCard({ post, onLike, onComment }) {
               value={commentText}
               onChangeText={setCommentText}
             />
-            <TouchableOpacity style={styles.commentBtn} onPress={handleComment}>
-              <Ionicons name="send" size={18} color={COLORS.primary} />
+            <TouchableOpacity style={[styles.commentBtn, !commentText.trim() && styles.commentBtnDisabled]} onPress={handleComment} disabled={!commentText.trim()}>
+              <Ionicons name="send" size={18} color={commentText.trim() ? COLORS.primary : COLORS.textMuted} />
             </TouchableOpacity>
           </View>
         </View>
@@ -94,7 +159,15 @@ const styles = StyleSheet.create({
   actionText: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted },
   actionTextActive: { color: COLORS.error },
   commentsSection: { marginTop: SPACING.md, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: COLORS.border },
+  loadingText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, textAlign: 'center', paddingVertical: SPACING.md },
+  commentsList: { gap: SPACING.md, marginBottom: SPACING.md },
+  commentItem: { flexDirection: 'row', gap: SPACING.sm },
+  commentContent: { flex: 1, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.sm },
+  commentAuthor: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle, marginBottom: 2 },
+  commentText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription },
+  noComments: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, textAlign: 'center', paddingVertical: SPACING.md },
   commentInput: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
   commentField: { flex: 1, height: 40, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, paddingHorizontal: SPACING.md, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14 },
   commentBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.primary + '20', justifyContent: 'center', alignItems: 'center' },
+  commentBtnDisabled: { backgroundColor: COLORS.surfaceOverlay },
 });

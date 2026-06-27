@@ -61,9 +61,13 @@ describe('Colors Constants', () => {
     });
 
     it('all colors are valid hex', () => {
-      const hexRegex = /^#[0-9A-F]{6}$/i;
+      const hexRegex = /^#[0-9A-F]{6}([0-9A-F]{2})?$/i;
       Object.values(COLORS).forEach(color => {
-        expect(color).toMatch(hexRegex);
+        if (Array.isArray(color)) {
+          color.forEach(c => expect(c).toMatch(hexRegex));
+        } else {
+          expect(color).toMatch(hexRegex);
+        }
       });
     });
   });

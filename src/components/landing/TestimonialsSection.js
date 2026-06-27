@@ -26,7 +26,7 @@ export default function TestimonialsSection() {
               ))}
             </View>
           </View>
-          <Text style={styles.testimonialText}>"{test.text}"</Text>
+          <Text style={styles.testimonialText}>{"\""}{test.text}{"\""}</Text>
         </View>
       ))}
     </View>

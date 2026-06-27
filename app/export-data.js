@@ -125,13 +125,13 @@ export default function ExportDataScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: 60 },
-  subtitle: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textSecondary, marginBottom: SPACING.xl, lineHeight: 20 },
+  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
+  subtitle: { ...typography.subtitle, marginBottom: SPACING.xl, lineHeight: 20 },
   optionsList: { gap: SPACING.md },
   optionCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border, gap: SPACING.md },
   optionIcon: { width: 48, height: 48, borderRadius: 12, backgroundColor: COLORS.primary + '15', justifyContent: 'center', alignItems: 'center' },
   optionInfo: { flex: 1 },
   filename: { fontFamily: 'monospace', fontSize: 11, color: COLORS.textMuted, marginTop: 4 },
   infoBox: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.sm, backgroundColor: COLORS.primary + '10', borderRadius: 8, padding: SPACING.md, marginTop: SPACING.xl, borderWidth: 1, borderColor: COLORS.primary + '30' },
-  infoText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textSecondary, flex: 1, lineHeight: 18 },
+  infoText: { ...typography.cardStatText, flex: 1, lineHeight: 18 },
 });

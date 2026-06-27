@@ -167,7 +167,7 @@ export default function SubscriptionScreen() {
               <View style={styles.paymentInfo}>
                 <Text style={typography.h5}>Plano {PLANS[p.plan_type]?.name || p.plan_type}</Text>
                 <Text style={typography.caption}>
-                  {p.billing_type === 'PIX' ? 'PIX' : 'Cartão'} • {formatDate(p.created_at)}
+                  {p.billing_type === 'PIX' ? 'PIX' : 'Cartão'} • {p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : ''}
                 </Text>
               </View>
               <Text style={typography.h5}>R$ {p.amount?.toFixed(2).replace('.', ',')}</Text>
@@ -193,9 +193,3 @@ export default function SubscriptionScreen() {
     </ScrollView>
   );
 }
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('pt-BR');
-}
-

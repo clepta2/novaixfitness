@@ -1,25 +1,34 @@
-// app/admin.js
-// Painel Administrativo com 2FA - NOVAIX FITNESS
-
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { SPACING } from '../src/constants/spacing';
 import { StudentCard, FinanceStats, TwoFactorSetup, TwoFactorPrompt } from '../src/components';
+import AdminDashboard from '../src/components/admin/AdminDashboard';
+import WorkoutManager from '../src/components/admin/WorkoutManager';
+import ExerciseManager from '../src/components/admin/ExerciseManager';
+import StudentEditModal from '../src/components/admin/StudentEditModal';
+import CampaignManager from '../src/components/admin/CampaignManager';
+import StudentExporter from '../src/components/admin/StudentExporter';
 import { supabase } from '../src/config/supabase';
 import { is2FAEnabled } from '../src/services/totp';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
 
-const tabs = [{ id: 'students', label: 'Alunos' }, { id: 'finance', label: 'Financeiro' }, { id: 'content', label: 'Conteúdo' }];
+const tabs = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'students', label: 'Alunos' },
+  { id: 'finance', label: 'Financeiro' },
+  { id: 'content', label: 'Conteúdo' },
+  { id: 'campaigns', label: 'Campanhas' },
+];
 
 export default function AdminScreen() {
   const { user } = useAuth();
   const [twoFAState, setTwoFAState] = useState('checking');
-  const [activeTab, setActiveTab] = useState('students');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingStudent, setEditingStudent] = useState(null);
 
   useEffect(() => {
     async function check2FA() {
@@ -34,55 +43,40 @@ export default function AdminScreen() {
     check2FA();
   }, [user?.id]);
 
-  useEffect(() => {
-    if (twoFAState !== 'verified') return;
-    async function fetchStudents() {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('id, name, email, subscription_status, subscription_plan')
-          .order('name', { ascending: true });
-
-        if (data && !error) {
-          setStudents(data.map((s) => ({
-            id: s.id,
-            name: s.name || 'Sem nome',
-            email: s.email || '',
-            status: s.subscription_status === 'premium' ? 'active' : 'inactive',
-            plan: s.subscription_plan === 'basic' ? 'Básico' : s.subscription_plan === 'premium' ? 'Premium' : 'Intermediário',
-          })));
-        }
-      } catch (err) {
-        console.error('Erro ao buscar alunos:', err);
-      } finally {
-        setLoading(false);
+  const fetchStudents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, name, email, subscription_status, subscription_plan')
+        .order('name', { ascending: true });
+      if (data && !error) {
+        setStudents(data.map((s) => ({
+          id: s.id,
+          name: s.name || 'Sem nome',
+          email: s.email || '',
+          status: s.subscription_status === 'premium' || s.subscription_status === 'active' ? 'active' : 'inactive',
+          plan: s.subscription_plan === 'basic' ? 'Básico' : s.subscription_plan === 'premium' ? 'Premium' : s.subscription_plan === 'ultra' ? 'Ultra' : 'Intermediário',
+        })));
       }
+    } catch (err) {
+      console.error('Erro ao buscar alunos:', err);
+    } finally {
+      setLoading(false);
     }
-    fetchStudents();
+  };
+
+  useEffect(() => {
+    if (twoFAState === 'verified') fetchStudents();
   }, [twoFAState]);
 
   if (twoFAState === 'checking') {
-    return (
-      <View style={[layout.screen, styles.center]}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
-    );
+    return <View style={[layout.screen, styles.center]}><ActivityIndicator size="large" color={COLORS.primary} /></View>;
   }
-
   if (twoFAState === 'setup') {
-    return (
-      <View style={layout.screen}>
-        <TwoFactorSetup userId={user?.id} onComplete={() => setTwoFAState('prompt')} />
-      </View>
-    );
+    return <View style={layout.screen}><TwoFactorSetup userId={user?.id} onComplete={() => setTwoFAState('prompt')} /></View>;
   }
-
   if (twoFAState === 'prompt') {
-    return (
-      <View style={layout.screen}>
-        <TwoFactorPrompt userId={user?.id} onVerified={() => setTwoFAState('verified')} />
-      </View>
-    );
+    return <View style={layout.screen}><TwoFactorPrompt userId={user?.id} onVerified={() => setTwoFAState('verified')} /></View>;
   }
 
   return (
@@ -95,22 +89,26 @@ export default function AdminScreen() {
       <View style={styles.tabs}>
         {tabs.map((tab) => (
           <TouchableOpacity key={tab.id} style={[styles.tab, activeTab === tab.id && styles.tabActive]} onPress={() => setActiveTab(tab.id)}>
-            <Text style={[typography.label, activeTab === tab.id && styles.tabTextActive]}>{tab.label}</Text>
+            <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>{tab.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <View style={layout.section}>
+        {activeTab === 'dashboard' && (
+          <AdminDashboard onNavigate={(tab) => setActiveTab(tab)} />
+        )}
         {activeTab === 'students' && (
           <>
-            <Text style={typography.h5}>CONTROLE DE ALUNOS</Text>
+            <Text style={typography.h5}>CONTROLE DE ALUNOS ({students.length})</Text>
             {loading ? (
               <ActivityIndicator size="small" color={COLORS.primary} style={{ marginTop: SPACING.md }} />
             ) : students.length > 0 ? (
-              students.map((s) => <StudentCard key={s.id} student={s} />)
+              students.map((s) => <StudentCard key={s.id} student={s} onEdit={setEditingStudent} />)
             ) : (
               <Text style={typography.bodyMuted}>Nenhum aluno cadastrado</Text>
             )}
+            <StudentExporter />
           </>
         )}
         {activeTab === 'finance' && (
@@ -122,24 +120,24 @@ export default function AdminScreen() {
         {activeTab === 'content' && (
           <>
             <Text style={typography.h5}>GERENCIAR CONTEÚDO</Text>
-            {['Adicionar Treino', 'Adicionar Exercício'].map((label, i) => (
-              <TouchableOpacity key={i} style={styles.addButton}>
-                <Ionicons name="add-circle" size={20} color={COLORS.primary} />
-                <Text style={typography.h5}>{label}</Text>
-              </TouchableOpacity>
-            ))}
+            <WorkoutManager />
+            <View style={{ height: SPACING.xl }} />
+            <ExerciseManager />
           </>
         )}
+        {activeTab === 'campaigns' && <CampaignManager />}
       </View>
+
+      <StudentEditModal visible={!!editingStudent} student={editingStudent} onClose={() => setEditingStudent(null)} onSave={fetchStudents} />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   center: { justifyContent: 'center', alignItems: 'center' },
-  tabs: { flexDirection: 'row', gap: 8, marginBottom: SPACING.xxl },
-  tab: { flex: 1, paddingVertical: 12, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center' },
-  tabActive: { backgroundColor: COLORS.primary },
+  tabs: { flexDirection: 'row', gap: 6, marginBottom: SPACING.xxl },
+  tab: { flex: 1, paddingVertical: 10, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+  tabActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  tabText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted },
   tabTextActive: { color: COLORS.background },
-  addButton: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, flexDirection: 'row', alignItems: 'center', gap: SPACING.md, marginBottom: SPACING.sm },
 });

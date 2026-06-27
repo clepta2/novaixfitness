@@ -1,3 +1,9 @@
+jest.mock('react-native', () => {
+  const rn = jest.requireActual('react-native');
+  rn.Dimensions.get = () => ({ width: 375, height: 812 });
+  return rn;
+});
+
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 
 describe('Spacing Constants', () => {

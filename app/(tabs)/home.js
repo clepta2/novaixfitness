@@ -75,10 +75,11 @@ export default function HomeScreen() {
 
   const fetchData = useCallback(async () => {
     try {
-      const [{ data }, { data: recent }, { data: catData }] = await Promise.all([
+      const [{ data }, { data: recent }, { data: catData }, gamData] = await Promise.all([
         supabase.from('workouts').select('*').order('created_at', { ascending: false }).limit(5),
         user?.id ? supabase.from('user_workouts').select('*, workouts(title, category, duration_minutes)').eq('user_id', user.id).order('completed_at', { ascending: false }).limit(3) : { data: [] },
         supabase.from('workouts').select('category'),
+        user?.id ? getGamificationData(user.id) : null,
       ]);
       const wData = data || [];
       let sorted = [...wData];
@@ -90,6 +91,7 @@ export default function HomeScreen() {
       }
       if (recent?.length > 0) setRecentWorkouts(recent.map(w => ({ id: w.id, name: w.workouts?.title || 'Treino', category: w.workouts?.category, completed: w.completed, completed_at: w.completed_at, created_at: w.created_at, duration_minutes: w.duration_minutes || w.workouts?.duration_minutes })));
       if (catData) { const c = {}; catData.forEach(w => { const k = (w.category || 'outros').toLowerCase(); c[k] = (c[k] || 0) + 1; }); setCategoryCounts(c); }
+      if (gamData?.levelData) setLevelData(gamData.levelData);
     } catch (err) { console.error('Erro ao carregar home:', err); }
   }, [userPhysicalLevel, user?.id]);
 

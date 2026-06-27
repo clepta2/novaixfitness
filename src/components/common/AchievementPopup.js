@@ -1,15 +1,15 @@
 // src/components/common/AchievementPopup.js
 // Popup de conquista desbloqueada - NOVAIX FITNESS
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 export default function AchievementPopup({ achievement, visible, onDone }) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.5)).current;
+  const [opacity] = useState(() => new Animated.Value(0));
+  const [scale] = useState(() => new Animated.Value(0.5));
 
   useEffect(() => {
     if (visible && achievement) {

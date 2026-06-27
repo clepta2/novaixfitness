@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { countdownTick, phaseChange, workoutComplete } from '../services/hapticService';
 import { playCountdownTick, playPhaseEnd, playWorkoutComplete } from '../services/audioService';
+import { speakWelcome, speakNextExercise, speakRestStart, speakHalfway, speakWorkoutComplete, stopSpeaking } from '../services/voiceCoach';
 
 export default function useWorkoutTimer(workout) {
   const [phase, setPhase] = useState('idle');
@@ -30,37 +31,28 @@ export default function useWorkoutTimer(workout) {
     setRef.current = currentSet;
   }, [phase, currentExerciseIndex, currentSet]);
 
-  useEffect(() => {
-    if (phase === 'exercising' || phase === 'resting') {
-      intervalRef.current = setInterval(() => {
-        setTimeRemaining((prev) => {
-          if (prev <= 1) {
-            handlePhaseComplete();
-            return 0;
-          }
-          if (phaseRef.current === 'resting' && prev <= 4 && prev > 1) {
-            countdownTick(prev - 1);
-          }
-          return prev - 1;
-        });
-        setElapsed((prev) => prev + 1);
-      }, 1000);
-    }
+  const completeWorkout = useCallback(async () => {
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+    await playWorkoutComplete();
+    await workoutComplete();
+    speakWorkoutComplete(workout?.name);
+    setPhase('completed');
+  }, [workout]);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [phase]);
+  const startExercise = useCallback(() => {
+    const idx = exerciseRef.current;
+    const exercises = workout?.exercises || [];
+    const exercise = exercises[idx];
+    if (!exercise) { completeWorkout(); return; }
+    const restTime = exercise.rest || 60;
+    setTimeRemaining(restTime);
+    setTotalTime(restTime);
+    setPhase('resting');
+    speakNextExercise(exercise.name, exercise.reps, exercise.weight, idx + 1, exercises.length);
+  }, [workout, completeWorkout]);
 
   const handlePhaseComplete = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     if (phaseRef.current === 'resting') {
       playPhaseEnd();
       phaseChange();
@@ -69,23 +61,7 @@ export default function useWorkoutTimer(workout) {
       playPhaseEnd();
       phaseChange();
     }
-  }, []);
-
-  const startExercise = useCallback(() => {
-    const idx = exerciseRef.current;
-    const exercises = workout?.exercises || [];
-    const exercise = exercises[idx];
-
-    if (!exercise) {
-      completeWorkout();
-      return;
-    }
-
-    const restTime = exercise.rest || 60;
-    setTimeRemaining(restTime);
-    setTotalTime(restTime);
-    setPhase('resting');
-  }, [workout]);
+  }, [startExercise]);
 
   const startWorkout = useCallback(() => {
     setCurrentExerciseIndex(0);
@@ -95,13 +71,11 @@ export default function useWorkoutTimer(workout) {
     setPhase('exercising');
     setTimeRemaining(0);
     setTotalTime(0);
-  }, []);
+    speakWelcome(workout?.name);
+  }, [workout]);
 
   const pauseWorkout = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     setPhase('paused');
   }, []);
 
@@ -119,14 +93,8 @@ export default function useWorkoutTimer(workout) {
       weight: setLog?.weight,
       timestamp: Date.now(),
     };
-
     setLogs((prev) => [...prev, log]);
-
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     const totalSets = exercise?.sets || 4;
     if (setRef.current < totalSets) {
       setCurrentSet((prev) => prev + 1);
@@ -137,6 +105,9 @@ export default function useWorkoutTimer(workout) {
     } else {
       const nextIndex = exerciseRef.current + 1;
       if (nextIndex < exercises.length) {
+        if (nextIndex === Math.floor(exercises.length / 2)) {
+          speakHalfway();
+        }
         setCurrentExerciseIndex(nextIndex);
         setCurrentSet(1);
         const nextExercise = exercises[nextIndex];
@@ -148,22 +119,15 @@ export default function useWorkoutTimer(workout) {
         completeWorkout();
       }
     }
-  }, [workout, exercises]);
+  }, [workout, exercises, completeWorkout]);
 
   const skipRest = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     startExercise();
   }, [startExercise]);
 
   const skipExercise = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     const nextIndex = exerciseRef.current + 1;
     if (nextIndex < exercises.length) {
       setCurrentExerciseIndex(nextIndex);
@@ -176,13 +140,11 @@ export default function useWorkoutTimer(workout) {
     } else {
       completeWorkout();
     }
-  }, [workout, exercises]);
+  }, [workout, exercises, completeWorkout]);
 
   const stopWorkout = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+    stopSpeaking();
     setPhase('idle');
     setCurrentExerciseIndex(0);
     setCurrentSet(1);
@@ -190,54 +152,33 @@ export default function useWorkoutTimer(workout) {
     setTotalTime(0);
   }, []);
 
-  const completeWorkout = useCallback(async () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+  useEffect(() => {
+    if (phase === 'exercising' || phase === 'resting') {
+      intervalRef.current = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) { handlePhaseComplete(); return 0; }
+          if (phaseRef.current === 'resting' && prev <= 4 && prev > 1) {
+            countdownTick(prev - 1);
+            playCountdownTick();
+          }
+          return prev - 1;
+        });
+        setElapsed((prev) => prev + 1);
+      }, 1000);
     }
-    await playWorkoutComplete();
-    await workoutComplete();
-    setPhase('completed');
-  }, []);
+    return () => {
+      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+    };
+  }, [phase, handlePhaseComplete]);
 
-  const exerciseProgress = totalExercises > 0
-    ? ((currentExerciseIndex) / totalExercises) * 100
-    : 0;
-
-  const setProgress = totalSets > 0
-    ? ((currentSet - 1) / totalSets) * 100
-    : 0;
-
-  const timerProgress = totalTime > 0
-    ? ((totalTime - timeRemaining) / totalTime) * 100
-    : 0;
-
-  const totalXP = logs.length * 5 +
-    currentExerciseIndex * 10 +
-    Math.floor(elapsed / 60) * 2;
+  const exerciseProgress = totalExercises > 0 ? (currentExerciseIndex / totalExercises) * 100 : 0;
+  const setProgress = totalSets > 0 ? ((currentSet - 1) / totalSets) * 100 : 0;
+  const timerProgress = totalTime > 0 ? ((totalTime - timeRemaining) / totalTime) * 100 : 0;
+  const totalXP = logs.length * 5 + currentExerciseIndex * 10 + Math.floor(elapsed / 60) * 2;
 
   return {
-    phase,
-    currentExercise,
-    currentExerciseIndex,
-    currentSet,
-    totalSets,
-    totalExercises,
-    timeRemaining,
-    totalTime,
-    elapsed,
-    logs,
-    exerciseProgress,
-    setProgress,
-    timerProgress,
-    totalXP,
-    startWorkout,
-    pauseWorkout,
-    resumeWorkout,
-    markSetComplete,
-    skipRest,
-    skipExercise,
-    stopWorkout,
-    completeWorkout,
+    phase, currentExercise, currentExerciseIndex, currentSet, totalSets, totalExercises,
+    timeRemaining, totalTime, elapsed, logs, exerciseProgress, setProgress, timerProgress, totalXP,
+    startWorkout, pauseWorkout, resumeWorkout, markSetComplete, skipRest, skipExercise, stopWorkout, completeWorkout,
   };
 }

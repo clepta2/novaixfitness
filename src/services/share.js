@@ -28,26 +28,6 @@ export async function shareWorkout(workout) {
   }
 }
 
-export async function shareAchievement(achievement) {
-  if (!achievement) return;
-
-  const message = `🏆 Conquista desbloqueada no NOVAIX Fitness!\n\n` +
-    `${achievement.name}\n` +
-    `${achievement.description}\n\n` +
-    `Baixe: https://novaixfitness.com`;
-
-  try {
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(message, {
-        mimeType: 'text/plain',
-        dialogTitle: 'Compartilhar conquista',
-      });
-    }
-  } catch (error) {
-    console.error('Erro ao compartilhar:', error);
-  }
-}
-
 export async function shareProgress(stats) {
   if (!stats) return;
 

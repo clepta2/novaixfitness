@@ -11,6 +11,9 @@ export function useSupabaseData(tableName, options = {}) {
   const [error, setError] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
+  const filtersKey = JSON.stringify(filters);
+  const orderByKey = JSON.stringify(orderBy);
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -47,7 +50,7 @@ export function useSupabaseData(tableName, options = {}) {
     } finally {
       setLoading(false);
     }
-  }, [tableName, select, JSON.stringify(filters), JSON.stringify(orderBy), limit]);
+  }, [tableName, select, filtersKey, orderByKey, limit]);
 
   useEffect(() => {
     fetchData();

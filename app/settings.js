@@ -10,7 +10,8 @@ import { layout, typography } from '../src/styles';
 import { shareProgress } from '../src/services/share';
 import { setVoiceCoachEnabled } from '../src/services/voiceCoach';
 import { getPrefsForSettings, setNotificationPref } from '../src/services/notificationPrefs';
-import { ProfileCard, SettingsGroup, MenuSection, OfflineSettings } from '../src/components';
+import { completeTutorial, getTutorialSteps } from '../src/services/tutorial';
+import { ProfileCard, SettingsGroup, MenuSection, OfflineSettings, TutorialOverlay } from '../src/components';
 
 const SETTINGS_GROUPS = [
   { title: 'APARENCIA', items: [
@@ -41,6 +42,7 @@ const ACCOUNT_OPTIONS = [
 
 const INFO_OPTIONS = [
   { icon: 'help-circle-outline', label: 'Ajuda', route: '/(tabs)/ajuda', color: '#6B7280' },
+  { icon: 'school-outline', label: 'Ver Tutorial', action: 'tutorial', color: '#CCFF00' },
   { icon: 'star-outline', label: 'Avaliar o App', action: 'rate', color: '#FBBF24' },
   { icon: 'share-social-outline', label: 'Compartilhar', action: 'share', color: '#3B82F6' },
   { icon: 'document-text-outline', label: 'Termos de Uso', route: '/(tabs)/perfil/termos', color: '#9CA3AF' },
@@ -57,6 +59,7 @@ export default function SettingsScreen() {
   });
   const [notifPrefs, setNotifPrefs] = useState({});
   const [notifGroups, setNotifGroups] = useState([]);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -102,7 +105,10 @@ export default function SettingsScreen() {
   };
 
   const handleAction = async (action) => {
-    if (action === 'password') {
+    if (action === 'tutorial') {
+      if (user?.id) await completeTutorial(user.id);
+      setShowTutorial(true);
+    } else if (action === 'password') {
       try {
         await supabase.auth.resetPasswordForEmail(user.email);
         Alert.alert('Email enviado', 'Verifique sua caixa de entrada para redefinir a senha.');
@@ -123,6 +129,7 @@ export default function SettingsScreen() {
 
   return (
     <View style={layout.screen}>
+      <TutorialOverlay visible={showTutorial} steps={getTutorialSteps()} onComplete={() => setShowTutorial(false)} onSkip={() => setShowTutorial(false)} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
           <TouchableOpacity onPress={() => router.back()}>

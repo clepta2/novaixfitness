@@ -1,28 +1,70 @@
 // src/components/workout/WorkoutInfo.js
 // Info do treino (stats + equipamentos) - NOVAIX FITNESS
 
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
+const STAT_CONFIG = [
+  { icon: 'time', color: COLORS.primary },
+  { icon: 'barbell', color: COLORS.success },
+  { icon: 'repeat', color: COLORS.info },
+  { icon: 'flame', color: COLORS.secondary },
+];
+
+function StatItem({ icon, value, color, delay }) {
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, { toValue: 1, tension: 30, friction: 8, delay, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 200, delay, useNativeDriver: true }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={[styles.statItem, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+      <View style={[styles.statIcon, { backgroundColor: color + '15' }]}>
+        <Ionicons name={icon} size={16} color={color} />
+      </View>
+      <Text style={styles.statValue}>{value}</Text>
+    </Animated.View>
+  );
+}
+
 export default function WorkoutInfo({ workout, totalSets, calories }) {
+  const duration = workout?.duration_minutes || workout?.duration || 45;
+  const exerciseCount = workout?.exercises?.length || 0;
+  const equipment = workout?.equipment || [];
+
+  const stats = [
+    { value: `${duration} min`, config: STAT_CONFIG[0] },
+    { value: `${exerciseCount} exercícios`, config: STAT_CONFIG[1] },
+    { value: `${totalSets || 0} séries`, config: STAT_CONFIG[2] },
+    { value: `~${calories || 0} kcal`, config: STAT_CONFIG[3] },
+  ];
+
   return (
     <View style={styles.container}>
-      <View style={styles.stats}>
-        <Stat icon="time-outline" value={`${workout.duration} min`} />
-        <Stat icon="barbell-outline" value={`${workout.exercises.length} exercícios`} />
-        <Stat icon="repeat-outline" value={`${totalSets} séries`} />
-        <Stat icon="flame-outline" value={`~${calories} kcal`} />
+      <View style={styles.statsGrid}>
+        {stats.map((stat, i) => (
+          <StatItem key={i} icon={stat.config.icon} value={stat.value} color={stat.config.color} delay={i * 50} />
+        ))}
       </View>
 
-      {workout.equipment.length > 0 && (
-        <View style={styles.equipment}>
-          <Text style={styles.equipTitle}>EQUIPAMENTOS</Text>
+      {equipment.length > 0 && (
+        <View style={styles.equipmentSection}>
+          <View style={styles.equipHeader}>
+            <Ionicons name="fitness" size={16} color={COLORS.primary} />
+            <Text style={styles.equipTitle}>EQUIPAMENTOS</Text>
+          </View>
           <View style={styles.equipRow}>
-            {workout.equipment.map((eq, i) => (
+            {equipment.map((eq, i) => (
               <View key={i} style={styles.equipChip}>
-                <Ionicons name="checkmark-circle" size={14} color={COLORS.primary} />
+                <Ionicons name="checkmark-circle" size={14} color={COLORS.success} />
                 <Text style={styles.equipText}>{eq}</Text>
               </View>
             ))}
@@ -33,23 +75,16 @@ export default function WorkoutInfo({ workout, totalSets, calories }) {
   );
 }
 
-function Stat({ icon, value }) {
-  return (
-    <View style={styles.statItem}>
-      <Ionicons name={icon} size={18} color={COLORS.primary} />
-      <Text style={styles.statValue}>{value}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: { marginBottom: SPACING.xxl },
-  stats: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
-  statItem: { alignItems: 'center', gap: SPACING.xs },
-  statValue: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },
-  equipment: { marginTop: SPACING.xxl },
-  equipTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md },
-  equipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },
-  equipChip: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.surface, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border },
+  container: { paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg },
+  statsGrid: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
+  statItem: { flex: 1, alignItems: 'center', gap: SPACING.xs },
+  statIcon: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  statValue: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textTitle },
+  equipmentSection: { marginTop: SPACING.md },
+  equipHeader: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.sm },
+  equipTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1 },
+  equipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.xs },
+  equipChip: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.surface, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border },
   equipText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textTitle },
 });

@@ -71,17 +71,22 @@ export async function getGamificationData(userId) {
   };
 }
 
-export async function recordWorkoutCompletion(userId, workoutData) {
+export async function recordWorkoutCompletion(userId, workoutData, logs = [], duration = 0) {
   if (!userId) return { xpGained: 0, newAchievements: [] };
 
   const currentData = await getGamificationData(userId);
   const prevAchievements = currentData?.achievements || [];
 
-  const xpGained = await addXP(userId, 'WORKOUT_COMPLETED');
+  const workoutXP = workoutData?.id?.length === 36
+    ? XP_VALUES.WORKOUT_COMPLETED
+    : Math.min(logs.length * 5 + (workoutData?.exercises?.length || 0) * 10 + Math.floor(duration / 60) * 2, 200);
 
-  const newXP = (currentData?.totalXP || 0) + XP_VALUES.STREAK_BONUS_PER_DAY * (currentData?.streak || 0);
+  await addXP(userId, 'WORKOUT_COMPLETED', workoutXP);
+
+  let streakBonus = 0;
   if (currentData?.streak > 0) {
-    await addXP(userId, 'STREAK_BONUS_PER_DAY', XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak);
+    streakBonus = XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak;
+    await addXP(userId, 'STREAK_BONUS_PER_DAY', streakBonus);
   }
 
   const updatedData = await getGamificationData(userId);
@@ -99,7 +104,7 @@ export async function recordWorkoutCompletion(userId, workoutData) {
   }
 
   return {
-    xpGained: xpGained + (currentData?.streak > 0 ? XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak : 0),
+    xpGained: workoutXP + streakBonus,
     newAchievements,
     level: updatedData?.levelData,
     streak: updatedData?.streak,

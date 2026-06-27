@@ -1,21 +1,43 @@
 // src/components/ui/Input.js
-// Componente de Input NOVAIX FITNESS
+// Componente de Input NOVAIX FITNESS — com foco animado e visual premium
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
+import { scale } from '../../utils/responsive';
 
-export function Input({ label, value, onChangeText, placeholder, error, icon, secureTextEntry, keyboardType, autoCapitalize, style }) {
+export function Input({
+  label, value, onChangeText, placeholder, error,
+  icon, secureTextEntry, keyboardType, autoCapitalize, style,
+}) {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+  }, []);
+
+  const borderColor = error ? COLORS.error : focused ? COLORS.primary : COLORS.border;
+  const iconColor = focused ? COLORS.primary : COLORS.textMuted;
 
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[styles.inputWrapper, focused && styles.focused, error && styles.error]}>
-        {icon && <Ionicons name={icon} size={20} color={COLORS.textMuted} style={styles.icon} />}
+      <View style={[styles.inputWrapper, { borderColor }]}>
+        {icon && (
+          <Ionicons
+            name={icon}
+            size={ICON_SIZES.sm}
+            color={iconColor}
+            style={styles.icon}
+          />
+        )}
         <TextInput
           style={styles.input}
           value={value}
@@ -25,16 +47,23 @@ export function Input({ label, value, onChangeText, placeholder, error, icon, se
           secureTextEntry={secureTextEntry && !showPassword}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
-            <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color={COLORS.textMuted} />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeButton}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+              size={ICON_SIZES.sm}
+              color={COLORS.textMuted}
+            />
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && <Text style={styles.errorText}>⚠ {error}</Text>}
     </View>
   );
 }
@@ -45,29 +74,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
+    fontSize: scale(11),
     color: COLORS.textTitle,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.2,
     marginBottom: SPACING.sm,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
+    height: scale(56),
     backgroundColor: COLORS.surface,
     borderRadius: BORDER_RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  focused: {
-    borderColor: COLORS.primary,
-  },
-  error: {
-    borderColor: COLORS.error,
+    borderWidth: 1.5,
   },
   icon: {
     marginLeft: SPACING.md,
+    marginRight: SPACING.xs,
   },
   input: {
     flex: 1,
@@ -75,14 +98,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     color: COLORS.textTitle,
     fontFamily: 'Inter_400Regular',
-    fontSize: 16,
+    fontSize: scale(15),
   },
   eyeButton: {
     paddingHorizontal: SPACING.md,
+    height: '100%',
+    justifyContent: 'center',
   },
   errorText: {
     fontFamily: 'Inter_400Regular',
-    fontSize: 12,
+    fontSize: scale(12),
     color: COLORS.error,
     marginTop: SPACING.xs,
   },

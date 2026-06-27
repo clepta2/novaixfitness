@@ -71,6 +71,20 @@ export const PLANS = {
       { text: 'Coach IA + Nutrição', included: true },
     ],
   },
+  ultra: {
+    id: 'ultra',
+    name: 'Ultra Premium',
+    price: 199.90,
+    priceText: 'R$ 199,90',
+    period: '/mês',
+    features: [
+      { text: 'Treinos personalizados', included: true },
+      { text: 'Cronômetro inteligente', included: true },
+      { text: 'Treinos ilimitados', included: true },
+      { text: 'Suporte VIP 24h', included: true },
+      { text: 'Coach IA + Nutrição + Personal', included: true },
+    ],
+  },
 };
 
 export async function createCheckout(planType, billingType, customerData = {}) {

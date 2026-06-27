@@ -69,7 +69,7 @@ export default function PhysicalDataScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { flex: 1, padding: SPACING.xl, paddingTop: 60 },
+  content: { flex: 1, padding: SPACING.xl, paddingTop: layout.scroll.paddingTop },
   header: { alignItems: 'center', marginBottom: 30 },
   progressContainer: { width: '100%', marginTop: SPACING.xxl },
   slidersContainer: { flex: 1, justifyContent: 'center', gap: SPACING.xxxl },

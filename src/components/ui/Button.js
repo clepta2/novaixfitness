@@ -1,34 +1,20 @@
 // src/components/ui/Button.js
-// Componente de Botão NOVAIX FITNESS
+// Componente de Botão NOVAIX FITNESS — responsividade e visual premium
 
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';
+import { scale } from '../../utils/responsive';
 
 export function Button({ title, onPress, variant = 'primary', icon, loading, disabled, style }) {
   const variants = {
-    primary: {
-      container: styles.primary,
-      text: styles.primaryText,
-    },
-    secondary: {
-      container: styles.secondary,
-      text: styles.secondaryText,
-    },
-    ghost: {
-      container: styles.ghost,
-      text: styles.ghostText,
-    },
-    google: {
-      container: styles.google,
-      text: styles.googleText,
-    },
-    apple: {
-      container: styles.apple,
-      text: styles.appleText,
-    },
+    primary: { container: styles.primary, text: styles.primaryText },
+    secondary: { container: styles.secondary, text: styles.secondaryText },
+    ghost: { container: styles.ghost, text: styles.ghostText },
+    google: { container: styles.google, text: styles.googleText },
+    apple: { container: styles.apple, text: styles.appleText },
   };
 
   const current = variants[variant] || variants.primary;
@@ -38,13 +24,13 @@ export function Button({ title, onPress, variant = 'primary', icon, loading, dis
       style={[styles.base, current.container, disabled && styles.disabled, style]}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.8}
+      activeOpacity={0.82}
     >
       {loading ? (
         <ActivityIndicator color={variant === 'primary' ? COLORS.background : COLORS.primary} />
       ) : (
         <>
-          {icon && <Ionicons name={icon} size={20} style={styles.icon} color={variant === 'primary' ? COLORS.background : COLORS.primary} />}
+          {icon && <Ionicons name={icon} size={ICON_SIZES.sm} style={styles.icon} color={variant === 'primary' ? COLORS.background : COLORS.primary} />}
           <Text style={[styles.text, current.text]}>{title}</Text>
         </>
       )}
@@ -54,7 +40,7 @@ export function Button({ title, onPress, variant = 'primary', icon, loading, dis
 
 const styles = StyleSheet.create({
   base: {
-    height: 50,
+    height: scale(54),
     borderRadius: BORDER_RADIUS.md,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -63,15 +49,15 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
+    fontSize: scale(14),
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   icon: {
     marginRight: SPACING.xs,
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.45,
   },
   primary: {
     backgroundColor: COLORS.primary,

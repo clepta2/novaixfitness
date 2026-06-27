@@ -1,209 +1,148 @@
 // src/components/workout/ExerciseAccordion.js
 // Accordion de exercício com passo a passo - NOVAIX FITNESS
 
-import { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import ExerciseStepCarousel from './ExerciseStepCarousel';
+import LoadHistory from './LoadHistory';
+import { getFallbackExerciseDetails } from '../../data/exercises';
 
-const { width } = Dimensions.get('window');
+export default function ExerciseAccordion({ exercise, isOpen, onToggle, index = 0 }) {
+  const heightAnim = useRef(new Animated.Value(0)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
-export default function ExerciseAccordion({ exercise, isOpen, onToggle }) {
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(heightAnim, { toValue: isOpen ? 1 : 0, tension: 30, friction: 8, useNativeDriver: false }),
+      Animated.timing(rotateAnim, { toValue: isOpen ? 1 : 0, duration: 200, useNativeDriver: true }),
+    ]).start();
+  }, [isOpen]);
+
+  const details = getFallbackExerciseDetails(exercise.name, exercise.muscle);
+  const steps = exercise.steps?.length > 0 ? exercise.steps : details.steps;
+  const tips = exercise.tips?.length > 0 ? exercise.tips : details.tips;
+  const mistakes = exercise.mistakes?.length > 0 ? exercise.mistakes : details.mistakes;
+  const alternatives = exercise.alternatives || [];
+
+  const chevronRotation = rotateAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
+
   return (
     <View style={styles.accordion}>
-      <TouchableOpacity style={styles.accordionHeader} onPress={onToggle} activeOpacity={0.8}>
-        <View style={styles.accordionLeft}>
-          <View style={styles.accordionIcon}>
-            <Ionicons name="barbell" size={20} color={COLORS.primary} />
+      <TouchableOpacity style={styles.header} onPress={onToggle} activeOpacity={0.8}>
+        <View style={styles.headerLeft}>
+          <View style={[styles.numberBadge, isOpen && styles.numberBadgeActive]}>
+            <Text style={[styles.numberText, isOpen && styles.numberTextActive]}>{(index || 0) + 1}</Text>
           </View>
-          <View>
-            <Text style={styles.accordionTitle}>{exercise.name}</Text>
-            <Text style={styles.accordionMeta}>{exercise.sets}x{exercise.reps} • {exercise.muscle}</Text>
+          <View style={styles.headerInfo}>
+            <Text style={[styles.title, isOpen && styles.titleActive]}>{exercise.name}</Text>
+            <View style={styles.metaRow}>
+              <Text style={styles.meta}>{exercise.sets}x{exercise.reps}</Text>
+              <Text style={styles.metaDot}>•</Text>
+              <Text style={styles.meta}>{exercise.muscle}</Text>
+              {exercise.rest && (
+                <>
+                  <Text style={styles.metaDot}>•</Text>
+                  <Text style={styles.meta}>{exercise.rest}s descanso</Text>
+                </>
+              )}
+            </View>
           </View>
         </View>
-        <Ionicons
-          name={isOpen ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color={COLORS.textMuted}
-        />
+        <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>
+          <Ionicons name="chevron-down" size={20} color={COLORS.textMuted} />
+        </Animated.View>
       </TouchableOpacity>
 
       {isOpen && (
-        <View style={styles.accordionContent}>
-          <TouchableOpacity style={styles.exerciseVideo}>
-            <Ionicons name="play-circle" size={48} color={COLORS.primary} />
-            <Text style={styles.exerciseVideoLabel}>Assistir execução</Text>
+        <Animated.View style={[styles.content, { opacity: heightAnim }]}>
+          <TouchableOpacity style={styles.videoBtn}>
+            <Ionicons name="play-circle" size={40} color={COLORS.primary} />
+            <Text style={styles.videoLabel}>Assistir execução</Text>
           </TouchableOpacity>
 
-          <ExerciseStepCarousel steps={exercise.steps} />
+          <ExerciseStepCarousel steps={steps} />
+          <LoadHistory exerciseName={exercise.name} />
 
-          <TipsList title="DICAS" items={exercise.tips} icon="checkmark-circle" color={COLORS.success} />
-          <TipsList title="ERROS COMUNS" items={exercise.mistakes} icon="close-circle" color={COLORS.error} />
-
-          <View style={styles.alternativesSection}>
-            <Text style={styles.tipsTitle}>SEM ESSE EQUIPAMENTO?</Text>
-            <Text style={styles.alternativesSubtitle}>Treinos alternativos para o mesmo músculo:</Text>
-            {exercise.alternatives.map((alt, i) => (
-              <View key={i} style={styles.alternativeCard}>
-                <View style={styles.alternativeIcon}>
-                  <Ionicons name="swap-horizontal" size={16} color={COLORS.primary} />
-                </View>
-                <View style={styles.alternativeInfo}>
-                  <Text style={styles.alternativeName}>{alt.name}</Text>
-                  <Text style={styles.alternativeReason}>{alt.reason}</Text>
-                </View>
+          {tips?.length > 0 && (
+            <View style={styles.tipsSection}>
+              <View style={[styles.tipsHeader, { borderLeftColor: COLORS.success }]}>
+                <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
+                <Text style={[styles.tipsTitle, { color: COLORS.success }]}>DICAS</Text>
               </View>
-            ))}
-          </View>
-        </View>
+              {tips.map((tip, i) => (
+                <View key={i} style={styles.tipItem}>
+                  <View style={[styles.tipDot, { backgroundColor: COLORS.success }]} />
+                  <Text style={styles.tipText}>{tip}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {mistakes?.length > 0 && (
+            <View style={styles.tipsSection}>
+              <View style={[styles.tipsHeader, { borderLeftColor: COLORS.error }]}>
+                <Ionicons name="close-circle" size={16} color={COLORS.error} />
+                <Text style={[styles.tipsTitle, { color: COLORS.error }]}>ERROS COMUNS</Text>
+              </View>
+              {mistakes.map((mistake, i) => (
+                <View key={i} style={styles.tipItem}>
+                  <View style={[styles.tipDot, { backgroundColor: COLORS.error }]} />
+                  <Text style={styles.tipText}>{mistake}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {alternatives.length > 0 && (
+            <View style={styles.altSection}>
+              <Text style={styles.altTitle}>SEM ESSE EQUIPAMENTO?</Text>
+              {alternatives.map((alt, i) => (
+                <View key={i} style={styles.altCard}>
+                  <Ionicons name="swap-horizontal" size={16} color={COLORS.primary} />
+                  <View style={styles.altInfo}>
+                    <Text style={styles.altName}>{alt.name}</Text>
+                    <Text style={styles.altReason}>{alt.reason}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+        </Animated.View>
       )}
     </View>
   );
 }
 
-function TipsList({ title, items, icon, color }) {
-  return (
-    <View style={styles.tipsSection}>
-      <Text style={styles.tipsTitle}>{title}</Text>
-      {items.map((item, i) => (
-        <View key={i} style={styles.tipItem}>
-          <Ionicons name={icon} size={16} color={color} />
-          <Text style={styles.tipText}>{item}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  accordion: {
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.lg,
-    marginBottom: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    overflow: 'hidden',
-  },
-  accordionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: SPACING.lg,
-  },
-  accordionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.md,
-    flex: 1,
-  },
-  accordionIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: COLORS.primary + '20',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  accordionTitle: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-  },
-  accordionMeta: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    marginTop: 2,
-  },
-  accordionContent: {
-    padding: SPACING.lg,
-    paddingTop: 0,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-  },
-  exerciseVideo: {
-    height: 120,
-    backgroundColor: COLORS.background,
-    borderRadius: BORDER_RADIUS.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: SPACING.xl,
-  },
-  exerciseVideoLabel: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    marginTop: SPACING.sm,
-  },
-  tipsSection: {
-    marginBottom: SPACING.xl,
-  },
-  tipsTitle: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    letterSpacing: 1,
-    marginBottom: SPACING.md,
-  },
-  tipItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: SPACING.sm,
-    marginBottom: SPACING.sm,
-  },
-  tipText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 13,
-    color: COLORS.textTitle,
-    flex: 1,
-    lineHeight: 18,
-  },
-  alternativesSection: {
-    backgroundColor: COLORS.primary + '10',
-    borderRadius: BORDER_RADIUS.md,
-    padding: SPACING.lg,
-    borderWidth: 1,
-    borderColor: COLORS.primary + '30',
-  },
-  alternativesSubtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textDescription,
-    marginBottom: SPACING.md,
-  },
-  alternativeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.sm,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  alternativeIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: COLORS.primary + '20',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: SPACING.md,
-  },
-  alternativeInfo: {
-    flex: 1,
-  },
-  alternativeName: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 13,
-    color: COLORS.textTitle,
-  },
-  alternativeReason: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 11,
-    color: COLORS.textMuted,
-    marginTop: 2,
-  },
+  accordion: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden' },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: SPACING.lg },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, flex: 1 },
+  numberBadge: { width: 32, height: 32, borderRadius: 16, backgroundColor: COLORS.surfaceOverlay, justifyContent: 'center', alignItems: 'center' },
+  numberBadgeActive: { backgroundColor: COLORS.primary + '20' },
+  numberText: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textMuted },
+  numberTextActive: { color: COLORS.primary },
+  headerInfo: { flex: 1 },
+  title: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
+  titleActive: { color: COLORS.primary },
+  metaRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, marginTop: 2 },
+  meta: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
+  metaDot: { color: COLORS.border },
+  content: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.lg },
+  videoBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary + '10', padding: SPACING.md, borderRadius: BORDER_RADIUS.md, marginBottom: SPACING.md },
+  videoLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.primary },
+  tipsSection: { marginBottom: SPACING.md },
+  tipsHeader: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, borderLeftWidth: 3, paddingLeft: SPACING.sm, marginBottom: SPACING.sm },
+  tipsTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 11, letterSpacing: 1 },
+  tipItem: { flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.sm, marginBottom: SPACING.xs },
+  tipDot: { width: 6, height: 6, borderRadius: 3, marginTop: 5 },
+  tipText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription, flex: 1, lineHeight: 18 },
+  altSection: { backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md },
+  altTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.primary, letterSpacing: 1, marginBottom: SPACING.sm },
+  altCard: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.xs },
+  altInfo: { flex: 1 },
+  altName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },
+  altReason: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
 });
