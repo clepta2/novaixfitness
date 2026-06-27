@@ -4,18 +4,10 @@
 import { supabase } from '../config/supabase';
 import { APP_CONFIG } from '../config/app';
 
-const PLAN_LIMITS = {
-  free: APP_CONFIG.maxChatMessagesFree,
-  basic: APP_CONFIG.maxChatMessagesFree,
-  intermediate: APP_CONFIG.maxChatMessagesIntermediate,
-  premium: APP_CONFIG.maxChatMessagesPremium,
-  ultra: APP_CONFIG.maxChatMessagesUltra,
-};
-
 export async function askGeminiCoach(message, profileContext = {}, conversationHistory = []) {
   const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
   const plan = profileContext.subscriptionPlan || 'free';
-  const limit = PLAN_LIMITS[plan] !== undefined ? PLAN_LIMITS[plan] : 0;
+  const limit = APP_CONFIG.plans[plan]?.maxMessages ?? 0;
 
   if (profileContext.userId) {
     const today = new Date();

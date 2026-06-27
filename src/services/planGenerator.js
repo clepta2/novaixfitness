@@ -2,10 +2,11 @@
 // Gerador de planos alimentares e de treino - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { APP_CONFIG } from '../config/app';
 
 export async function generateMealPlan(profileContext = {}) {
   const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
-  const { weight = 70, height = 170, age = 25, goal = 'manter', allergies = '', restrictions = '' } = profileContext;
+  const { weight = APP_CONFIG.userDefaults.weight, height = APP_CONFIG.userDefaults.height, age = APP_CONFIG.userDefaults.age, goal = 'manter', allergies = '', restrictions = '' } = profileContext;
 
   const systemPrompt = `Gere um plano alimentar semanal completo em JSON valido (sem markdown) com:
 {
@@ -64,7 +65,7 @@ Varie os alimentos. Use alimentos brasileiros. Inclua quantidades aproximadas.`;
 
 export async function generateWorkoutPlan(profileContext = {}) {
   const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
-  const { weight = 70, goal = 'manter', level = 'intermediario', gymType = 'academia', availableDays = 4, sessionDuration = 60 } = profileContext;
+  const { weight = APP_CONFIG.userDefaults.weight, goal = 'manter', level = 'intermediario', gymType = 'academia', availableDays = APP_CONFIG.userDefaults.availableDays, sessionDuration = APP_CONFIG.userDefaults.sessionDuration } = profileContext;
 
   const systemPrompt = `Gere uma rotina de treino semanal completa em JSON valido (sem markdown) com:
 {
