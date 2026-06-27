@@ -31,7 +31,7 @@ describe('Gemini Service', () => {
   let originalFetch;
 
   beforeAll(() => {
-    process.env.EXPO_PUBLIC_GEMINI_API_KEY = 'mock-api-key';
+    process.env.EXPO_PUBLIC_GOOGLE_API_KEY = 'mock-api-key';
     originalFetch = global.fetch;
   });
 

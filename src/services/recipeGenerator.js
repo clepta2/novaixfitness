@@ -4,7 +4,7 @@
 import { APP_CONFIG } from '../config/app';
 
 export async function generateRecipe(ingredients = [], goal = 'manter') {
-  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
 
   const ingredientsText = ingredients.length > 0 ? ingredients.join(', ') : 'ingredientes disponíveis';
 

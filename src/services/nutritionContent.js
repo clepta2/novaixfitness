@@ -60,7 +60,7 @@ Inclua 6 receitas brasileiras e 6 passos de meal prep.`,
 };
 
 async function fetchFromGemini(prompt) {
-  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
   if (!apiKey) return null;
 
   try {

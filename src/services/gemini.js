@@ -5,7 +5,7 @@ import { supabase } from '../config/supabase';
 import { APP_CONFIG } from '../config/app';
 
 export async function askGeminiCoach(message, profileContext = {}, conversationHistory = []) {
-  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
   const plan = profileContext.subscriptionPlan || 'free';
   const limit = APP_CONFIG.plans[plan]?.maxMessages ?? 0;
 
@@ -121,7 +121,7 @@ export async function clearChatHistory(userId) {
 }
 
 export async function analyzeMealText(mealText) {
-  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
   if (!apiKey) {
     const calories = mealText.includes('ovo') ? 140 : mealText.includes('pão') ? 150 : 250;
     return { calories, protein: Math.round(calories * 0.06), carbs: Math.round(calories * 0.08), fat: Math.round(calories * 0.03) };

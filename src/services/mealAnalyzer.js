@@ -5,7 +5,7 @@ import { supabase } from '../config/supabase';
 import { APP_CONFIG } from '../config/app';
 
 export async function analyzeMealText(mealText, profileContext = {}) {
-  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
   const weight = profileContext.weight || 70;
 
   const systemPrompt = `Analise esta refeicao e retorne APENAS um JSON valido (sem markdown, sem texto extra) com:
