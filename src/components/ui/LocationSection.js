@@ -124,6 +124,9 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
               <TextInput style={styles.searchInput} placeholder="Buscar..." placeholderTextColor={COLORS.textMuted} value={stateSearch} onChangeText={setStateSearch} accessibilityLabel="Buscar estado" />
             </View>
             <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
               data={filteredStates}
               keyExtractor={item => item.sigla}
               style={{ maxHeight: 250 }}

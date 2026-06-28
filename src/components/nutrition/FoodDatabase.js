@@ -129,6 +129,9 @@ export default function FoodDatabase() {
       <Text style={styles.resultCount}>{filtered.length} alimentos{loading ? ' (carregando...)' : ''}</Text>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={filtered}
         keyExtractor={(item, i) => `${item.name}-${i}`}
         renderItem={({ item }) => <FoodItem food={item} />}

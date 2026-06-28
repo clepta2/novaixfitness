@@ -122,6 +122,9 @@ export default function NutritionChallenges() {
       </View>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={challenges}
         renderItem={({ item, index }) => (
           <ChallengeCard item={item} index={index} joined={joined.has(index)} onJoin={handleJoin} />

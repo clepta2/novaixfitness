@@ -9,7 +9,7 @@ import { askGeminiCoach, saveChatMessage, getChatHistory, clearChatHistory } fro
 import { analyzeMealText, saveMealLog } from '../src/services/mealAnalyzer';
 import { ChatHeader, MessageBubble, ChatInput, QuickTips } from '../src/components';
 import { layout } from '../src/styles';
-import { MEAL_KEYWORDS, FOOD_KEYWORDS, QUANTITY_PATTERN } from '../src/data/nutritionKeywords';
+import { detectMealLog, formatMealSummary } from '../src/helpers/chatHelpers';
 
 export default function ChatCoachScreen() {
   const router = useRouter();
@@ -185,13 +185,3 @@ export default function ChatCoachScreen() {
 const styles = StyleSheet.create({
   listContent: { padding: SPACING.md, gap: SPACING.md, paddingBottom: 10 },
 });
-
-function detectMealLog(text) {
-  const lower = text.toLowerCase();
-  return MEAL_KEYWORDS.some(k => lower.includes(k)) || FOOD_KEYWORDS.some(k => lower.includes(k)) || QUANTITY_PATTERN.test(lower);
-}
-
-function formatMealSummary(meal) {
-  const items = meal.items?.length > 0 ? meal.items.join(', ') : 'Refeição';
-  return `🍽️ **Refeição registrada!**\n\n${meal.description || items}\n\n📊 **Macros:**\n• ${meal.calories} kcal\n• ${meal.protein}g proteína\n• ${meal.carbs}g carboidratos\n• ${meal.fat}g gordura\n• ${meal.fiber}g fibra\n\n✅ Salvo no seu diário de nutrição!`;
-}

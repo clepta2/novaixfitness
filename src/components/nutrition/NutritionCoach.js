@@ -97,6 +97,9 @@ export default function NutritionCoach({ userId, userWeight = 70, userGoal = 'ma
       </View>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         ref={flatListRef}
         data={messages}
         keyExtractor={item => item.id}

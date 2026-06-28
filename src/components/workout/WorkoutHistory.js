@@ -116,6 +116,9 @@ export default function WorkoutHistory({ userId, onSelect }) {
         </View>
       ) : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={filtered}
           keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
           renderItem={({ item, index }) => <HistoryCard item={item} index={index} onPress={() => onSelect?.(item)} />}

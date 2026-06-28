@@ -80,6 +80,9 @@ export default function NutritionAchievements({ userId }) {
       </View>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={ACHIEVEMENTS}
         keyExtractor={item => item.id}
         renderItem={({ item }) => <AchievementCard achievement={item} unlocked={unlocked.has(item.id)} />}

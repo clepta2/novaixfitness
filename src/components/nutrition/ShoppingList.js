@@ -141,6 +141,9 @@ export default function ShoppingList({ mealPlan }) {
       <Text style={styles.progress}>{checkedCount}/{items.length} itens verificados</Text>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={flatData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}

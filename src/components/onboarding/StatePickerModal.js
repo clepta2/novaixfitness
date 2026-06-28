@@ -52,6 +52,9 @@ export default function StatePickerModal({ visible, selectedState, onSelect, onC
                 )}
               </View>
               <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
                 data={filtered}
                 keyExtractor={item => item.sigla}
                 renderItem={({ item }) => (

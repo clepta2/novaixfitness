@@ -1,14 +1,13 @@
-// app/forum.js
-// Fórum de discussões - NOVAIX FITNESS
-
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { SPACING } from '../src/constants/spacing';
 import { layout, typography } from '../src/styles';
 import { ForumPost, CreateForumPostModal } from '../src/components';
+import ForumFilters from '../src/components/social/ForumFilters';
+import ForumEmptyState from '../src/components/social/ForumEmptyState';
 import { FORUM_CATEGORIES, MOCK_POSTS } from '../src/data/forumCategories';
 import { useAuth } from '../src/context/AuthContext';
 import { useSupabaseData } from '../src/hooks';
@@ -31,12 +30,10 @@ export default function ForumScreen() {
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
-        id: p.id,
-        category: p.category,
+        id: p.id, category: p.category,
         author: p.profiles?.name || p.author || 'Atleta',
         authorAvatar: p.profiles?.avatar_url || p.authorAvatar || null,
-        title: p.title,
-        content: p.content,
+        title: p.title, content: p.content,
         likes: p.likes_count ?? p.likes ?? 0,
         replies: p.replies_count ?? p.replies ?? 0,
         createdAt: p.created_at || p.createdAt,
@@ -44,25 +41,13 @@ export default function ForumScreen() {
     }
   }, [dbPosts]);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
+  const onRefresh = async () => { setRefreshing(true); await refetch(); setRefreshing(false); };
 
   const handleCreatePost = async (postData) => {
     if (!user) return;
-    const { error } = await insert({
-      user_id: user.id,
-      title: postData.title,
-      content: postData.content,
-      category: postData.category,
-    });
-    if (error) {
-      alert('Erro ao criar post: ' + error);
-    } else {
-      refetch();
-    }
+    const { error } = await insert({ user_id: user.id, title: postData.title, content: postData.content, category: postData.category });
+    if (error) alert('Erro ao criar post: ' + error);
+    else refetch();
   };
 
   const filteredPosts = posts.filter(post => {
@@ -74,7 +59,7 @@ export default function ForumScreen() {
   return (
     <View style={layout.screen}>
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: layout.scroll.paddingTop }}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing || (loading && posts.length === 0)} onRefresh={onRefresh} tintColor={COLORS.primary} />}
       >
@@ -90,122 +75,20 @@ export default function ForumScreen() {
           )}
         </View>
 
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={16} color={COLORS.textMuted} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar discussões..."
-            placeholderTextColor={COLORS.textMuted}
-            value={search}
-            onChangeText={setSearch}
-          />
-        </View>
+        <ForumFilters categories={FORUM_CATEGORIES} selected={selectedCategory} onSelect={setSelectedCategory} search={search} onSearchChange={setSearch} />
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-          <TouchableOpacity
-            style={[styles.categoryChip, selectedCategory === 'all' && styles.categoryChipActive]}
-            onPress={() => setSelectedCategory('all')}
-          >
-            <Text style={[styles.categoryText, selectedCategory === 'all' && styles.categoryTextActive]}>Todos</Text>
-          </TouchableOpacity>
-          {FORUM_CATEGORIES.map(cat => (
-            <TouchableOpacity
-              key={cat.id}
-              style={[styles.categoryChip, selectedCategory === cat.id && styles.categoryChipActive]}
-              onPress={() => setSelectedCategory(cat.id)}
-            >
-              <Text style={[styles.categoryText, selectedCategory === cat.id && styles.categoryTextActive]}>{cat.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={styles.postsContainer}>
+        <View style={{ paddingHorizontal: SPACING.lg }}>
           {filteredPosts.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="chatbubbles-outline" size={48} color={COLORS.textMuted} />
-              <Text style={styles.emptyTitle}>Nenhuma discussão</Text>
-              <Text style={styles.emptySubtitle}>Seja o primeiro a postar!</Text>
-            </View>
+            <ForumEmptyState />
           ) : (
-            filteredPosts.map(post => (
-              <ForumPost key={post.id} post={post} />
-            ))
+            filteredPosts.map(post => <ForumPost key={post.id} post={post} />)
           )}
         </View>
 
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      <CreateForumPostModal
-        visible={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSubmit={handleCreatePost}
-      />
+      <CreateForumPostModal visible={showCreateModal} onClose={() => setShowCreateModal(false)} onSubmit={handleCreatePost} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  scroll: { flexGrow: 1, paddingTop: layout.scroll.paddingTop },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.md,
-    paddingHorizontal: SPACING.md,
-    marginHorizontal: SPACING.lg,
-    marginBottom: SPACING.md,
-    height: 44,
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textTitle,
-    marginLeft: SPACING.sm,
-  },
-  categoriesScroll: {
-    paddingHorizontal: SPACING.lg,
-    marginBottom: SPACING.lg,
-  },
-  categoryChip: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: BORDER_RADIUS.full,
-    backgroundColor: COLORS.surface,
-    marginRight: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  categoryChipActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
-  },
-  categoryText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textDescription,
-  },
-  categoryTextActive: {
-    color: COLORS.background,
-  },
-  postsContainer: {
-    paddingHorizontal: SPACING.lg,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: SPACING.xl * 2,
-  },
-  emptyTitle: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 16,
-    color: COLORS.textTitle,
-    marginTop: SPACING.md,
-  },
-  emptySubtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 13,
-    color: COLORS.textMuted,
-    marginTop: SPACING.xs,
-  },
-});

@@ -8,6 +8,8 @@ import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary } from '../../src/components';
 import { PostSkeleton, FeedEmptyState } from '../../src/components/social/FeedSkeleton';
+import FeedHeader from '../../src/components/social/FeedHeader';
+import FeedFilters from '../../src/components/social/FeedFilters';
 import { useSupabaseData } from '../../src/hooks/useSupabaseData';
 import { useRealtimePosts } from '../../src/hooks/useRealtimePosts';
 import { useTutorial } from '../../src/hooks/useTutorial';
@@ -141,26 +143,8 @@ export default function FeedScreen() {
         onSkip={handleSkip}
       />
       <ScrollView contentContainerStyle={layout.scroll} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />} showsVerticalScrollIndicator={false}>
-        <View style={layout.header}>
-          <View>
-            <Text style={typography.h2}>Comunidade</Text>
-            <Text style={typography.bodyMuted}>Veja o que seus amigos estão treinando</Text>
-          </View>
-          <TouchableOpacity style={layout.headerBtn} onPress={() => { setHasNotif(false); setShowNotifications(true); }}>
-            <Ionicons name="notifications-outline" size={22} color={COLORS.textMuted} />
-            {hasNotif && <View style={styles.notifBadge} />}
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersScroll}>
-          <View style={styles.filters}>
-            {filters.map((f) => (
-              <TouchableOpacity key={f} style={[styles.chip, selectedFilter === f && styles.chipActive]} onPress={() => setSelectedFilter(f)}>
-                <Text style={[typography.bodySmall, selectedFilter === f && styles.chipTextActive]}>{f}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+        <FeedHeader hasNotif={hasNotif} onNotificationsPress={() => { setHasNotif(false); setShowNotifications(true); }} />
+        <FeedFilters filters={filters} selected={selectedFilter} onSelect={setSelectedFilter} />
 
         <ChallengesList userId={user?.id} />
 

@@ -9,6 +9,7 @@ import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { ALL_CATEGORIES } from '../../src/data/categories';
 import { Input, Button, ErrorBoundary, ExerciseSearch, ExerciseConfigurator, WorkoutPreview } from '../../src/components';
+import StepIndicator from '../../src/components/workout/StepIndicator';
 
 const STEPS = ['Info', 'Exercícios', 'Configurar', 'Preview'];
 const LEVELS = [
@@ -98,14 +99,7 @@ export default function CreateWorkoutScreen() {
             {saving ? <ActivityIndicator size="small" color={COLORS.primary} /> : <Ionicons name="checkmark" size={22} color={COLORS.primary} />}
           </TouchableOpacity>
         </View>
-        <View style={styles.stepsRow}>
-          {STEPS.map((s, i) => (
-            <View key={i} style={[styles.stepDot, i <= step && styles.stepDotActive, i < step && styles.stepDotDone]}>
-              <Text style={[styles.stepDotText, i <= step && styles.stepDotTextActive]}>{i < step ? '✓' : i + 1}</Text>
-            </View>
-          ))}
-        </View>
-        <Text style={styles.stepLabel}>{STEPS[step]}</Text>
+        <StepIndicator steps={STEPS} currentStep={step} />
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {step === 0 && (
             <View>

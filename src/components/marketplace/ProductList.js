@@ -23,6 +23,9 @@ export default function ProductList({ products, onProductPress, favorites, onTog
 
   return (
     <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
       data={products}
       numColumns={2}
       keyExtractor={(item) => item.id}

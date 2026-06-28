@@ -1,6 +1,3 @@
-// app/planner.js
-// Tela de planejamento semanal - NOVAIX FITNESS
-
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -10,7 +7,9 @@ import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
 import { WeekCalendar, AdaptationBanner, DayEditorModal } from '../src/components/planner';
-import { defaultWeekPlan, DAY_NAMES_FULL, DAY_KEYS, CATEGORY_COLORS } from '../src/data/weekPlan';
+import DayDetailView, { TodayCard } from '../src/components/planner/DayDetailView';
+import WeekOverview from '../src/components/planner/WeekOverview';
+import { defaultWeekPlan, DAY_KEYS } from '../src/data/weekPlan';
 import { loadWeeklyPlan, updateDayPlan } from '../src/services/planService';
 import { shouldAdaptPlan, getAdaptationReason } from '../src/services/planAdaptation';
 
@@ -28,7 +27,6 @@ export default function PlannerScreen() {
       if (!user?.id) return;
       const plan = await loadWeeklyPlan(user.id);
       if (plan) setWeekPlan(plan);
-
       try {
         const needsAdapt = await shouldAdaptPlan(user.id);
         if (needsAdapt) {
@@ -45,7 +43,7 @@ export default function PlannerScreen() {
   const totalWorkouts = DAY_KEYS.filter((k) => !weekPlan[k]?.isRest).length;
   const totalMinutes = DAY_KEYS.reduce((sum, k) => sum + (weekPlan[k]?.duration || 0), 0);
 
-  const handleDayPress = useCallback((key, data) => {
+  const handleDayPress = useCallback((key) => {
     setSelectedDay(key === selectedDay ? null : key);
   }, [selectedDay]);
 
@@ -70,7 +68,6 @@ export default function PlannerScreen() {
         </View>
 
         <AdaptationBanner reason={adaptReason} loading={adapting} onAdapt={() => {}} />
-
         <WeekCalendar weekPlan={weekPlan} onDayPress={handleDayPress} />
 
         <View style={styles.statsRow}>
@@ -91,82 +88,17 @@ export default function PlannerScreen() {
         </View>
 
         {selectedData && !selectedData.isRest ? (
-          <View style={styles.detailCard}>
-            <View style={styles.detailHeader}>
-              <Text style={typography.label}>{DAY_NAMES_FULL[DAY_KEYS.indexOf(selectedDay)]}</Text>
-              <TouchableOpacity onPress={() => setEditingDay(selectedDay)}>
-                <Ionicons name="create-outline" size={18} color={COLORS.primary} />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.detailName}>{selectedData.workoutName}</Text>
-            <View style={styles.detailMeta}>
-              <View style={styles.detailChip}>
-                <Ionicons name="time-outline" size={14} color={COLORS.primary} />
-                <Text style={styles.detailChipText}>{selectedData.duration} min</Text>
-              </View>
-              {selectedData.category && (
-                <View style={[styles.detailChip, { borderColor: CATEGORY_COLORS[selectedData.category] + '40' }]}>
-                  <View style={[styles.catDot, { backgroundColor: CATEGORY_COLORS[selectedData.category] }]} />
-                  <Text style={styles.detailChipText}>{selectedData.category}</Text>
-                </View>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.startBtn}
-              onPress={() => router.push({ pathname: '/workout-detail', params: { id: selectedData.workoutId } })}
-            >
-              <Ionicons name="play" size={18} color={COLORS.background} />
-              <Text style={styles.startBtnText}>INICIAR TREINO</Text>
-            </TouchableOpacity>
-          </View>
+          <DayDetailView
+            dayKey={selectedDay}
+            dayData={selectedData}
+            onEdit={() => setEditingDay(selectedDay)}
+            onStart={() => router.push({ pathname: '/workout-detail', params: { id: selectedData.workoutId } })}
+          />
         ) : (
-          <View style={styles.todayCard}>
-            <Text style={typography.label}>HOJE</Text>
-            {todayPlan && !todayPlan.isRest ? (
-              <>
-                <Text style={styles.todayWorkoutName}>{todayPlan.workoutName}</Text>
-                <View style={styles.detailMeta}>
-                  <View style={styles.detailChip}>
-                    <Ionicons name="time-outline" size={14} color={COLORS.primary} />
-                    <Text style={styles.detailChipText}>{todayPlan.duration} min</Text>
-                  </View>
-                  {todayPlan.category && (
-                    <View style={[styles.detailChip, { borderColor: CATEGORY_COLORS[todayPlan.category] + '40' }]}>
-                      <View style={[styles.catDot, { backgroundColor: CATEGORY_COLORS[todayPlan.category] }]} />
-                      <Text style={styles.detailChipText}>{todayPlan.category}</Text>
-                    </View>
-                  )}
-                </View>
-              </>
-            ) : (
-              <View style={styles.restCard}>
-                <Ionicons name="bed-outline" size={32} color={COLORS.textMuted} />
-                <Text style={styles.restText}>Dia de descanso</Text>
-                <Text style={styles.restSubtext}>Recupere-se para o próximo treino</Text>
-              </View>
-            )}
-          </View>
+          <TodayCard dayData={todayPlan} />
         )}
 
-        <View style={styles.weekOverview}>
-          <Text style={typography.label}>RESUMO DA SEMANA</Text>
-          <View style={styles.overviewGrid}>
-            {DAY_KEYS.map((key) => {
-              const day = weekPlan[key];
-              const isActive = !day?.isRest;
-              const isCurrentDay = key === todayKey;
-              return (
-                <View key={key} style={[styles.overviewDay, isCurrentDay && styles.overviewDayActive]}>
-                  <Text style={[styles.overviewDayLabel, isCurrentDay && styles.overviewDayLabelActive]}>
-                    {DAY_NAMES_FULL[DAY_KEYS.indexOf(key)].substring(0, 3).toUpperCase()}
-                  </Text>
-                  <View style={[styles.overviewDot, isActive && { backgroundColor: COLORS.success }, isCurrentDay && styles.overviewDotActive]} />
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
+        <WeekOverview weekPlan={weekPlan} todayKey={todayKey} />
         <View style={{ height: 40 }} />
       </ScrollView>
 
@@ -188,26 +120,4 @@ const styles = StyleSheet.create({
   statValue: { fontFamily: 'Montserrat_700Bold', fontSize: 20, color: COLORS.primary },
   statLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
   statDivider: { width: 1, height: 28, backgroundColor: COLORS.border },
-  detailHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  detailCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginTop: SPACING.lg, borderWidth: 1, borderColor: COLORS.primary + '30' },
-  detailName: { fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.textTitle, marginTop: SPACING.sm, marginBottom: SPACING.md },
-  detailMeta: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.lg },
-  detailChip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs, backgroundColor: COLORS.surfaceElevated, borderRadius: BORDER_RADIUS.sm, borderWidth: 1, borderColor: COLORS.border },
-  detailChipText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription },
-  catDot: { width: 6, height: 6, borderRadius: 3 },
-  startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, height: 48 },
-  startBtnText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.background, letterSpacing: 1 },
-  todayCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginTop: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
-  todayWorkoutName: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, marginTop: SPACING.sm, marginBottom: SPACING.md },
-  restCard: { alignItems: 'center', paddingVertical: SPACING.lg, gap: SPACING.xs },
-  restText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textDescription },
-  restSubtext: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted },
-  weekOverview: { marginTop: SPACING.xl },
-  overviewGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: SPACING.md },
-  overviewDay: { alignItems: 'center', gap: SPACING.xs },
-  overviewDayActive: {},
-  overviewDayLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.textMuted, letterSpacing: 0.5 },
-  overviewDayLabelActive: { color: COLORS.primary },
-  overviewDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: COLORS.border },
-  overviewDotActive: { backgroundColor: COLORS.success },
 });

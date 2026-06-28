@@ -120,6 +120,9 @@ export default function ExerciseLibrary({ onSelect }) {
       />
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={filtered}
         keyExtractor={(item, i) => `${item.name}-${i}`}
         renderItem={({ item, index }) => <ExerciseItem exercise={item} index={index} onPress={onSelect} />}

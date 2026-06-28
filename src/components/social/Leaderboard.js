@@ -133,6 +133,9 @@ export default function Leaderboard({ userId }) {
         </View>
       ) : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={leaders}
           keyExtractor={(item, i) => `${item.rank}-${i}`}
           renderItem={({ item, index }) => (

@@ -114,6 +114,9 @@ export default function MealHistory({ userId }) {
         </View>
       ) : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={filtered}
           keyExtractor={(item, index) => item.id?.toString() || `meal-${index}`}
           renderItem={({ item }) => <MealItem meal={item} />}

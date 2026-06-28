@@ -109,6 +109,9 @@ export default function PersonalRecords({ userId }) {
         </View>
       ) : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={records}
           keyExtractor={(item, i) => `${item.exercise}-${i}`}
           renderItem={({ item }) => <RecordItem record={item} />}

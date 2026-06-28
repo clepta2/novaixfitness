@@ -138,6 +138,9 @@ export default function SocialFeed({ userId }) {
         </View>
       ) : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={filtered}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <ActivityItem activity={item} />}

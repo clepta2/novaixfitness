@@ -54,6 +54,9 @@ export default function WorkoutPicker({ selectedId, onSelect }) {
       </TouchableOpacity>
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={filtered}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (

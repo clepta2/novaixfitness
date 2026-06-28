@@ -7,7 +7,12 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, ICON_SIZES } from '../../src/constants/spacing';
-import { DailyWorkoutCard, OfflineBanner, TutorialOverlay, ErrorBoundary, ContextualCard, RecentActivity } from '../../src/components';
+import { DailyWorkoutCard, OfflineBanner, TutorialOverlay, ErrorBoundary } from '../../src/components';
+import HomeHeader from '../../src/components/home/HomeHeader';
+import CategoryGrid from '../../src/components/home/CategoryGrid';
+import StoreBanner from '../../src/components/home/StoreBanner';
+import ContextualCard from '../../src/components/home/ContextualCard';
+import RecentActivity from '../../src/components/home/RecentActivity';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { useTutorial } from '../../src/hooks/useTutorial';
@@ -41,7 +46,7 @@ export default function HomeScreen() {
   const [recentWorkouts, setRecentWorkouts] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
 
-  const [anim0, anim1, anim2] = [0, 1, 2].map(useStaggeredEntry);
+  const [anim0, anim1, anim2, anim3] = [0, 1, 2, 3].map(useStaggeredEntry);
 
   useEffect(() => {
     const interval = setInterval(() => setTimeOfDay(getTimeOfDay()), 60000);
@@ -122,46 +127,17 @@ export default function HomeScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View style={[layout.header, { opacity: anim0.opacity, transform: [{ translateY: anim0.translateY }] }]}>
-          <View>
-            <Text style={typography.bodyMuted}>BEM-VINDO,</Text>
-            <Text style={typography.h2}>{userName.toUpperCase()}!</Text>
-          </View>
-          <View style={styles.headerActions}>
-            {levelData && (
-              <View style={[styles.levelBadge, { backgroundColor: levelData.color + '20' }]}>
-                <Ionicons name={levelData.icon} size={14} color={levelData.color} />
-                <Text style={[styles.levelText, { color: levelData.color }]}>Nv.{levelData.level}</Text>
-              </View>
-            )}
-            <View style={styles.streakBadge}>
-              <Ionicons name="flame" size={16} color={COLORS.primary} />
-              <Text style={styles.streakText}>{profile?.streak || 0}</Text>
-            </View>
-            <TouchableOpacity onPress={() => router.push('/chat-coach')} style={layout.headerBtn}>
-              <Ionicons name="chatbubbles-outline" size={ICON_SIZES.md} color={COLORS.primary} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/notifications')} style={layout.headerBtn}>
-              <Ionicons name="notifications-outline" size={ICON_SIZES.md} color={COLORS.textMuted} />
-            </TouchableOpacity>
-          </View>
+        <Animated.View style={{ opacity: anim0.opacity, transform: [{ translateY: anim0.translateY }] }}>
+          <HomeHeader userName={userName} levelData={levelData} streak={profile?.streak} onChatPress={() => router.push('/chat-coach')} onNotificationsPress={() => router.push('/notifications')} />
         </Animated.View>
 
         <Animated.View style={{ opacity: anim1.opacity, transform: [{ translateY: anim1.translateY }] }}>
-          <ContextualCard
-            card={CONTEXT_CARDS[timeOfDay]}
-            onAction={() => router.push(CONTEXT_CARDS[timeOfDay].actionRoute)}
-            streak={profile?.streak || 0}
-          />
+          <ContextualCard card={CONTEXT_CARDS[timeOfDay]} onAction={() => router.push(CONTEXT_CARDS[timeOfDay].actionRoute)} streak={profile?.streak || 0} />
         </Animated.View>
 
         {timeOfDay === 'afternoon' && (
-          <Animated.View style={{ opacity: anim1.opacity, transform: [{ translateY: anim1.translateY }], marginTop: SPACING.md }}>
-            <DailyWorkoutCard
-              workout={dailyWorkout}
-              onStart={() => dailyWorkout.is_premium && !isSubscribed ? showPremiumAlert() : router.push('/player-list')}
-              isOfflineCached={dailyOffline}
-            />
+          <Animated.View style={{ opacity: anim2.opacity, transform: [{ translateY: anim2.translateY }] }}>
+            <DailyWorkoutCard workout={dailyWorkout} onStart={() => dailyWorkout.is_premium && !isSubscribed ? showPremiumAlert() : router.push('/player-list')} isOfflineCached={dailyOffline} />
           </Animated.View>
         )}
 
@@ -170,28 +146,10 @@ export default function HomeScreen() {
         )}
 
         <Animated.View style={{ opacity: anim2.opacity, transform: [{ translateY: anim2.translateY }] }}>
-          <Text style={[typography.label, { marginTop: SPACING.xl, marginBottom: SPACING.md }]}>CATEGORIAS DE TREINO</Text>
-          <View style={styles.categoriesRow}>
-            {HOME_CATEGORIES.map((cat) => (
-              <TouchableOpacity key={cat.key} style={[styles.categoryCard, { backgroundColor: cat.bg }]} onPress={() => router.push({ pathname: '/library', params: { category: cat.category } })} activeOpacity={0.8}>
-                <View style={styles.categoryIconWrap}><Ionicons name={cat.icon} size={scale(28)} color={cat.color} /></View>
-                <Text style={[styles.categoryLabel, { color: cat.color }]}>{cat.label}</Text>
-                <Text style={[styles.categoryCount, { color: cat.color }]}>{categoryCounts[cat.category] || 0} TREINOS</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          <CategoryGrid categories={HOME_CATEGORIES} categoryCounts={categoryCounts} onPress={(cat) => router.push({ pathname: '/library', params: { category: cat.category } })} />
         </Animated.View>
 
-        <TouchableOpacity style={styles.storeCard} onPress={() => router.push('/marketplace')} activeOpacity={0.8}>
-          <View style={styles.storeIconWrap}>
-            <Ionicons name="storefront" size={28} color={COLORS.primary} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.storeTitle}>LOJA NOVAIX</Text>
-            <Text style={styles.storeSubtitle}>Equipamentos, roupas e suplementos</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
-        </TouchableOpacity>
+        <StoreBanner onPress={() => router.push('/marketplace')} />
 
         <View style={{ height: 100 }} />
       </ScrollView>

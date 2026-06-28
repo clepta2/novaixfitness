@@ -139,6 +139,9 @@ export default function WorkoutForm({ onSave, existingWorkout }) {
 
   return (
     <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
       data={flatData}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}

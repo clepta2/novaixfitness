@@ -65,6 +65,9 @@ export default function RankingCard({ userId }) {
       )}
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={rankings.slice(0, 10)}
         keyExtractor={(item) => item.id}
         scrollEnabled={false}

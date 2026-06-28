@@ -64,6 +64,9 @@ export default function ExerciseManager() {
 
       {loading ? <ActivityIndicator color={COLORS.primary} style={{ marginTop: SPACING.lg }} /> : (
         <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={exercises}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}

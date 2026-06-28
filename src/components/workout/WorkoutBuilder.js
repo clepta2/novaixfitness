@@ -118,6 +118,9 @@ export default function WorkoutBuilder({ onSave, existingWorkout }) {
       )}
 
       <FlatList
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={5}
         data={selectedExercises}
         renderItem={({ item, index }) => (
           <ExerciseSlot exercise={item} index={index} onRemove={removeExercise} onUpdate={updateExercise} />
