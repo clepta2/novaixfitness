@@ -58,11 +58,23 @@ jest.mock('../../src/components/planner', () => {
   return {
     WeekCalendar: ({ weekPlan, onDayPress }) => (
       <View testID="week-calendar">
-        <Text>Seg Ter Qua Qui Sex Sáb Dom</Text>
+        <Text>Seg Ter Qua Qui Sex Sab Dom</Text>
       </View>
     ),
+    AdaptationBanner: () => React.createElement(View, null),
+    DayEditorModal: () => React.createElement(View, null),
   };
 });
+
+jest.mock('../../src/services/planService', () => ({
+  loadWeeklyPlan: jest.fn().mockResolvedValue(null),
+  updateDayPlan: jest.fn().mockResolvedValue({}),
+}));
+
+jest.mock('../../src/services/planAdaptation', () => ({
+  shouldAdaptPlan: jest.fn().mockResolvedValue(false),
+  getAdaptationReason: jest.fn().mockResolvedValue(null),
+}));
 
 jest.mock('../../src/data/weekPlan', () => ({
   defaultWeekPlan: {
