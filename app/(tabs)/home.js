@@ -184,6 +184,17 @@ export default function HomeScreen() {
           </View>
         </Animated.View>
 
+        <TouchableOpacity style={styles.storeCard} onPress={() => router.push('/marketplace')} activeOpacity={0.8}>
+          <View style={styles.storeIconWrap}>
+            <Ionicons name="storefront" size={28} color={COLORS.primary} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.storeTitle}>LOJA NOVAIX</Text>
+            <Text style={styles.storeSubtitle}>Equipamentos, roupas e suplementos</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
+        </TouchableOpacity>
+
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>

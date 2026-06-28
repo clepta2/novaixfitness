@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Workouts from './pages/Workouts';
 import Payments from './pages/Payments';
+import Marketplace from './pages/Marketplace';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,6 +77,9 @@ function App() {
             )}
             {role === 'admin' && (
               <Route path="/payments" element={<Payments />} />
+            )}
+            {(role === 'admin' || role === 'manager') && (
+              <Route path="/marketplace" element={<Marketplace />} />
             )}
             <Route path="*" element={<Navigate to="/" replace />} />
           </>

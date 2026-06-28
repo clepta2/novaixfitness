@@ -39,7 +39,7 @@ export default function ProductCard({ product, onPress, isFavorited, onToggleFav
         </View>
         {product.rating > 0 && (
           <View style={styles.ratingRow}>
-            <Ionicons name="star" size={12} color="#F59E0B" />
+            <Ionicons name="star" size={12} color={COLORS.amber} />
             <Text style={styles.rating}>{product.rating?.toFixed(1)}</Text>
             <Text style={styles.reviews}>({product.review_count})</Text>
           </View>

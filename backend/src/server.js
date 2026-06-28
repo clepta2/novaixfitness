@@ -20,6 +20,7 @@ const notificationRoutes = require('./routes/notifications');
 const testimonialRoutes = require('./routes/testimonials');
 const faqRoutes = require('./routes/faqs');
 const adminRoutes = require('./routes/admin');
+const marketplaceRoutes = require('./routes/marketplace');
 
 const { 
   defaultLimiter, 
@@ -164,6 +165,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/faqs', faqRoutes);
+app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/webhooks', webhookRoutes);
 app.use('/api/admin', adminRoutes);

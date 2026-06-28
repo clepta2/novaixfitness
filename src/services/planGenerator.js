@@ -97,44 +97,58 @@ function generateFallbackMealPlan(ctx) {
 }
 
 function generateFallbackWorkoutPlan(ctx) {
-  const level = ctx?.level || 'intermediario';
-  return { week: [
-    { day: 'Segunda', name: 'Peito e Triceps', focus: 'MUSCULAÇÃO', exercises: [
-      { name: 'Supino Reto', sets: 4, reps: '10-12', rest: 90, muscle: 'Peito' },
-      { name: 'Supino Inclinado Halteres', sets: 4, reps: '10-12', rest: 75, muscle: 'Peito Superior' },
-      { name: 'Crossover Polia', sets: 3, reps: '12-15', rest: 60, muscle: 'Peito' },
-      { name: 'Triceps Pulley', sets: 3, reps: '12-15', rest: 60, muscle: 'Triceps' },
-      { name: 'Triceps Testeira', sets: 3, reps: '10-12', rest: 60, muscle: 'Triceps' },
-    ], duration: 55 },
-    { day: 'Terca', name: 'Costas e Biceps', focus: 'MUSCULAÇÃO', exercises: [
-      { name: 'Puxada Frontal', sets: 4, reps: '10-12', rest: 90, muscle: 'Costas' },
-      { name: 'Remada Curvada', sets: 4, reps: '10-12', rest: 75, muscle: 'Costas' },
-      { name: 'Remada Unilateral', sets: 3, reps: '10-12', rest: 60, muscle: 'Costas' },
-      { name: 'Rosca Direta', sets: 3, reps: '12-15', rest: 60, muscle: 'Biceps' },
-      { name: 'Rosca Martelo', sets: 3, reps: '10-12', rest: 60, muscle: 'Biceps' },
-    ], duration: 55 },
-    { day: 'Quarta', name: 'Cardio HIIT', focus: 'CARDIO', exercises: [
-      { name: 'Burpee', sets: 4, reps: '10', rest: 30, muscle: 'Corpo todo' },
-      { name: 'Mountain Climber', sets: 4, reps: '20', rest: 30, muscle: 'Core' },
-      { name: 'Agachamento com Salto', sets: 4, reps: '15', rest: 30, muscle: 'Pernas' },
-      { name: 'Prancha', sets: 3, reps: '45s', rest: 30, muscle: 'Core' },
-    ], duration: 35 },
-    { day: 'Quinta', name: 'Pernas e Gluteos', focus: 'MUSCULAÇÃO', exercises: [
-      { name: 'Agachamento Livre', sets: 4, reps: '10-12', rest: 120, muscle: 'Pernas' },
-      { name: 'Leg Press', sets: 4, reps: '10-12', rest: 90, muscle: 'Pernas' },
-      { name: 'Cadeira Extensora', sets: 3, reps: '12-15', rest: 60, muscle: 'Quadriceps' },
-      { name: 'Cadeira Flexora', sets: 3, reps: '12-15', rest: 60, muscle: 'Posterior' },
-      { name: 'Elevacao de Quadril', sets: 3, reps: '15', rest: 60, muscle: 'Gluteos' },
-      { name: 'Panturrilha em Pe', sets: 4, reps: '15-20', rest: 45, muscle: 'Panturrilha' },
-    ], duration: 60 },
-    { day: 'Sexta', name: 'Ombros e Abdomen', focus: 'MUSCULAÇÃO', exercises: [
-      { name: 'Desenvolvimento', sets: 4, reps: '10-12', rest: 90, muscle: 'Ombros' },
-      { name: 'Elevacao Lateral', sets: 3, reps: '12-15', rest: 60, muscle: 'Ombros' },
-      { name: 'Face Pull', sets: 3, reps: '15', rest: 60, muscle: 'Ombros' },
-      { name: 'Abdominal Crunch', sets: 3, reps: '20', rest: 45, muscle: 'Abdomen' },
-      { name: 'Prancha Lateral', sets: 3, reps: '30s cada', rest: 30, muscle: 'Core' },
-    ], duration: 50 },
-  ], summary: { totalWorkouts: 5, musclesWorked: ['Peito', 'Costas', 'Pernas', 'Ombros', 'Core'], tips: ['Descanse 48h entre grupos musculares', 'Beba 2.5L de agua diariamente', 'Aqueca 5-10 min antes de treinar'] } };
+  const level = ctx?.level || 'intermediate';
+  const exercises = getAvailableExercises({ level, injuries: ctx?.injuries || [], gymType: ctx?.gymType || 'gym' });
+
+  const muscleGroups = ['chest', 'back', 'legs', 'shoulders', 'arms'];
+  const daySplits = [
+    { day: 'Segunda', name: 'Peito e Triceps', focus: 'MUSCULAÇÃO', muscles: ['chest'] },
+    { day: 'Terca', name: 'Costas e Biceps', focus: 'MUSCULAÇÃO', muscles: ['back'] },
+    { day: 'Quarta', name: 'Cardio', focus: 'CARDIO', muscles: [] },
+    { day: 'Quinta', name: 'Pernas', focus: 'MUSCULAÇÃO', muscles: ['legs'] },
+    { day: 'Sexta', name: 'Ombros e Braços', focus: 'MUSCULAÇÃO', muscles: ['shoulders', 'arms'] },
+  ];
+
+  const cardioExercises = [
+    { name: 'Burpee', sets: 4, reps: '10', rest: 30, muscle: 'full_body' },
+    { name: 'Mountain Climber', sets: 4, reps: '20', rest: 30, muscle: 'core' },
+    { name: 'Agachamento com Salto', sets: 4, reps: '15', rest: 30, muscle: 'legs' },
+    { name: 'Prancha', sets: 3, reps: '45s', rest: 30, muscle: 'core' },
+  ];
+
+  const week = daySplits.map(split => {
+    if (split.muscles.length === 0) {
+      return { day: split.day, name: split.name, focus: split.focus, exercises: cardioExercises, duration: 35 };
+    }
+
+    const dayExercises = exercises
+      .filter(ex => split.muscles.some(m => ex.muscles?.includes(m) || ex.muscleGroup === m))
+      .slice(0, 5)
+      .map(ex => ({
+        name: ex.name,
+        sets: level === 'advanced' ? 4 : 3,
+        reps: level === 'beginner' ? '12-15' : '10-12',
+        rest: 60,
+        muscle: ex.muscleGroup || split.muscles[0],
+      }));
+
+    return {
+      day: split.day,
+      name: split.name,
+      focus: split.focus,
+      exercises: dayExercises.length > 0 ? dayExercises : [{ name: 'Exercicio base', sets: 3, reps: '10-12', rest: 60, muscle: split.muscles[0] }],
+      duration: 50,
+    };
+  });
+
+  return {
+    week,
+    summary: {
+      totalWorkouts: 5,
+      musclesWorked: muscleGroups,
+      tips: ['Descanse 48h entre grupos musculares', 'Beba 2.5L de agua diariamente', 'Aqueca 5-10 min antes de treinar'],
+    },
+  };
 }
 
 export async function saveWorkoutPlan(userId, plan) {

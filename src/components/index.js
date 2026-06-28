@@ -34,6 +34,9 @@ export { default as SetsTracker } from './workout/SetsTracker';
 export { default as WorkoutListView } from './workout/WorkoutListView';
 export { default as HistoryCard } from './workout/HistoryCard';
 export { default as LoadHistory } from './workout/LoadHistory';
+export { default as ExerciseSearch } from './workout/ExerciseSearch';
+export { default as ExerciseConfigurator } from './workout/ExerciseConfigurator';
+export { default as WorkoutPreview } from './workout/WorkoutPreview';
 
 export { default as PostCard } from './social/PostCard';
 export { default as ForumPost } from './social/ForumPost';

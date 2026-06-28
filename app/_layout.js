@@ -145,6 +145,7 @@ function AppContent() {
           <Stack.Screen name="marketplace-detail" lazy />
           <Stack.Screen name="waitlist" lazy />
           <Stack.Screen name="admin" lazy />
+            <Stack.Screen name="workout/create" lazy />
             <Stack.Screen name="workout/preCheckin" lazy />
             <Stack.Screen name="workout/history" lazy />
             <Stack.Screen name="onboarding/loading" lazy />

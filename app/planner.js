@@ -9,21 +9,33 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
-import { WeekCalendar } from '../src/components/planner';
+import { WeekCalendar, AdaptationBanner, DayEditorModal } from '../src/components/planner';
 import { defaultWeekPlan, DAY_NAMES_FULL, DAY_KEYS, CATEGORY_COLORS } from '../src/data/weekPlan';
-import { loadWeeklyPlan } from '../src/services/planService';
+import { loadWeeklyPlan, updateDayPlan } from '../src/services/planService';
+import { shouldAdaptPlan, getAdaptationReason } from '../src/services/planAdaptation';
 
 export default function PlannerScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [weekPlan, setWeekPlan] = useState(defaultWeekPlan);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [adaptReason, setAdaptReason] = useState(null);
+  const [adapting, setAdapting] = useState(false);
+  const [editingDay, setEditingDay] = useState(null);
 
   useEffect(() => {
     async function loadPlan() {
       if (!user?.id) return;
       const plan = await loadWeeklyPlan(user.id);
       if (plan) setWeekPlan(plan);
+
+      try {
+        const needsAdapt = await shouldAdaptPlan(user.id);
+        if (needsAdapt) {
+          const reason = await getAdaptationReason(user.id);
+          setAdaptReason(reason);
+        }
+      } catch {}
     }
     loadPlan();
   }, [user?.id]);
@@ -35,10 +47,14 @@ export default function PlannerScreen() {
 
   const handleDayPress = useCallback((key, data) => {
     setSelectedDay(key === selectedDay ? null : key);
-    if (data?.workoutId) {
-      router.push({ pathname: '/workout-detail', params: { id: data.workoutId } });
-    }
-  }, [selectedDay, router]);
+  }, [selectedDay]);
+
+  const handleEditDay = useCallback(async (dayData) => {
+    if (!editingDay || !user?.id) return;
+    await updateDayPlan(user.id, editingDay, dayData);
+    setWeekPlan(prev => ({ ...prev, [editingDay]: dayData }));
+    setEditingDay(null);
+  }, [editingDay, user?.id]);
 
   const selectedData = selectedDay ? weekPlan[selectedDay] : null;
 
@@ -52,6 +68,8 @@ export default function PlannerScreen() {
           <Text style={typography.h2}>PLANEJADOR</Text>
           <View style={{ width: 24 }} />
         </View>
+
+        <AdaptationBanner reason={adaptReason} loading={adapting} onAdapt={() => {}} />
 
         <WeekCalendar weekPlan={weekPlan} onDayPress={handleDayPress} />
 
@@ -74,7 +92,12 @@ export default function PlannerScreen() {
 
         {selectedData && !selectedData.isRest ? (
           <View style={styles.detailCard}>
-            <Text style={typography.label}>{DAY_NAMES_FULL[DAY_KEYS.indexOf(selectedDay)]}</Text>
+            <View style={styles.detailHeader}>
+              <Text style={typography.label}>{DAY_NAMES_FULL[DAY_KEYS.indexOf(selectedDay)]}</Text>
+              <TouchableOpacity onPress={() => setEditingDay(selectedDay)}>
+                <Ionicons name="create-outline" size={18} color={COLORS.primary} />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.detailName}>{selectedData.workoutName}</Text>
             <View style={styles.detailMeta}>
               <View style={styles.detailChip}>
@@ -146,6 +169,14 @@ export default function PlannerScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      <DayEditorModal
+        visible={!!editingDay}
+        dayKey={editingDay}
+        currentData={editingDay ? weekPlan[editingDay] : null}
+        onSave={handleEditDay}
+        onClose={() => setEditingDay(null)}
+      />
     </View>
   );
 }
@@ -157,6 +188,7 @@ const styles = StyleSheet.create({
   statValue: { fontFamily: 'Montserrat_700Bold', fontSize: 20, color: COLORS.primary },
   statLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
   statDivider: { width: 1, height: 28, backgroundColor: COLORS.border },
+  detailHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   detailCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginTop: SPACING.lg, borderWidth: 1, borderColor: COLORS.primary + '30' },
   detailName: { fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.textTitle, marginTop: SPACING.sm, marginBottom: SPACING.md },
   detailMeta: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.lg },
