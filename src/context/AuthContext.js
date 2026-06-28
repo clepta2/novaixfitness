@@ -29,11 +29,7 @@ export function AuthProvider({ children }) {
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (obv2) {
-        setOnboarding(obv2);
-      } else if (data?.onboarding && Object.keys(data.onboarding).length > 0) {
-        setOnboarding(data.onboarding);
-      }
+      setOnboarding(obv2 || {});
     } catch (err) {
       console.error('Erro ao carregar perfil:', err);
     }

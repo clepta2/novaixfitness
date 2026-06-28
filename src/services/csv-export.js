@@ -177,8 +177,8 @@ export async function exportProfileData(userId) {
     minutos_total: profile?.total_minutes || 0,
     melhor_streak: profile?.max_streak || 0,
     streak_atual: profile?.streak || 0,
-    objetivo: obv2?.goal || profile?.onboarding?.goal || '',
-    nivel: obv2?.level || profile?.onboarding?.level || '',
+    objetivo: obv2?.goal || '',
+    nivel: obv2?.level || '',
     membro_desde: formatDate(profile?.created_at),
   };
 

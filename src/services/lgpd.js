@@ -25,7 +25,7 @@ export async function exportUserData(userId) {
       name: profileRes.data.name,
       email: profileRes.data.email,
       created_at: profileRes.data.created_at,
-      onboarding: onboardingRes.data || profileRes.data.onboarding || {},
+      onboarding: onboardingRes.data || {},
       physical_data: profileRes.data.physical_data,
       subscription_status: profileRes.data.subscription_status,
       subscription_plan: profileRes.data.subscription_plan,

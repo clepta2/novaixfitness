@@ -22,7 +22,7 @@ export async function setupWorkoutReminders(userId) {
   if (!profile?.notification_settings?.workout_reminder) return;
 
   const settings = profile.notification_settings;
-  const workoutDays = obv2?.days_per_week || profile.onboarding?.daysPerWeek || [1, 3, 5];
+  const workoutDays = obv2?.days_per_week || [1, 3, 5];
   const reminderTime = settings.reminder_time || '19:00';
   const [hour, minute] = reminderTime.split(':').map(Number);
 
