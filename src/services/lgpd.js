@@ -8,13 +8,14 @@ import * as FileSystem from 'expo-file-system';
 export async function exportUserData(userId) {
   if (!userId) throw new Error('Usuário não autenticado');
 
-  const [profileRes, workoutsRes, favoritesRes, postsRes, achievementsRes, paymentsRes] = await Promise.all([
+  const [profileRes, workoutsRes, favoritesRes, postsRes, achievementsRes, paymentsRes, onboardingRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', userId).single(),
     supabase.from('user_workouts').select('*, workouts(title, category, level)').eq('user_id', userId),
     supabase.from('favorites').select('*, workouts(title)').eq('user_id', userId),
     supabase.from('posts').select('*').eq('user_id', userId),
     supabase.from('user_achievements').select('*').eq('user_id', userId),
     supabase.from('payments').select('*').eq('user_id', userId),
+    supabase.from('onboarding_v2').select('*').eq('user_id', userId).maybeSingle(),
   ]);
 
   const userData = {
@@ -24,7 +25,7 @@ export async function exportUserData(userId) {
       name: profileRes.data.name,
       email: profileRes.data.email,
       created_at: profileRes.data.created_at,
-      onboarding: profileRes.data.onboarding,
+      onboarding: onboardingRes.data || profileRes.data.onboarding || {},
       physical_data: profileRes.data.physical_data,
       subscription_status: profileRes.data.subscription_status,
       subscription_plan: profileRes.data.subscription_plan,
