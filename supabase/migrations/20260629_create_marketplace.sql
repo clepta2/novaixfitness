@@ -62,6 +62,7 @@ ALTER TABLE marketplace_reviews ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Anyone reads categories" ON marketplace_categories FOR SELECT USING (true);
 CREATE POLICY "Anyone reads active products" ON marketplace_products FOR SELECT USING (is_active = true);
+CREATE POLICY "Admin manages products" ON marketplace_products FOR ALL USING (auth.role() = 'service_role');
 CREATE POLICY "Users read own favorites" ON marketplace_favorites FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users add favorites" ON marketplace_favorites FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users remove favorites" ON marketplace_favorites FOR DELETE USING (auth.uid() = user_id);
@@ -75,6 +76,8 @@ CREATE INDEX IF NOT EXISTS idx_products_category ON marketplace_products(categor
 CREATE INDEX IF NOT EXISTS idx_products_brand ON marketplace_products(brand);
 CREATE INDEX IF NOT EXISTS idx_products_featured ON marketplace_products(is_active, is_featured);
 CREATE INDEX IF NOT EXISTS idx_favorites_user ON marketplace_favorites(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_product ON marketplace_reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_user ON marketplace_reviews(user_id);
 
 -- Dados iniciais das categorias
 INSERT INTO marketplace_categories (name, slug, icon, color, sort_order) VALUES

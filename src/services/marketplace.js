@@ -83,8 +83,12 @@ export async function toggleFavorite(userId, productId) {
     return false;
   }
 
-  await supabase.from('marketplace_favorites').insert({ user_id: userId, product_id: productId });
-  return true;
+  const { error } = await supabase
+    .from('marketplace_favorites')
+    .insert({ user_id: userId, product_id: productId });
+
+  if (error?.code === '23505') return true;
+  return !error;
 }
 
 export async function getFavoriteIds(userId) {

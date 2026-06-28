@@ -1,17 +1,24 @@
 // src/components/marketplace/ShareProduct.js
 // Compartilhar produto - NOVAIX FITNESS
 
-import { Share, Alert, Platform } from 'react-native';
+import { Share, Alert } from 'react-native';
 import { Linking } from 'expo-linking';
 
-export async function shareProduct(product) {
-  const message = `${product.name} - R$ ${product.price?.toFixed(2)}\n${product.affiliate_url || ''}`;
+const SAFE_URL_PATTERN = /^https?:\/\/.+/;
 
+function getShareMessage(product) {
+  if (!product) return '';
+  const price = product.price ? ` - R$ ${product.price.toFixed(2)}` : '';
+  const url = product.affiliate_url && SAFE_URL_PATTERN.test(product.affiliate_url) ? product.affiliate_url : '';
+  return `${product.name || 'Produto'}${price}${url ? '\n' + url : ''}`;
+}
+
+export async function shareProduct(product) {
+  if (!product) return false;
   try {
     const result = await Share.share({
-      message,
-      title: product.name,
-      url: product.affiliate_url,
+      message: getShareMessage(product),
+      title: product.name || 'Produto',
     });
     return result.action === Share.sharedAction;
   } catch {
@@ -20,7 +27,8 @@ export async function shareProduct(product) {
 }
 
 export async function shareToWhatsApp(product) {
-  const message = `${product.name} - R$ ${product.price?.toFixed(2)}\n${product.affiliate_url || ''}`;
+  if (!product) return;
+  const message = getShareMessage(product);
   const url = `whatsapp://send?text=${encodeURIComponent(message)}`;
   try {
     await Linking.openURL(url);
@@ -30,8 +38,8 @@ export async function shareToWhatsApp(product) {
 }
 
 export async function shareToInstagram(product) {
-  const message = `${product.name} - R$ ${product.price?.toFixed(2)}\n${product.affiliate_url || ''}`;
+  if (!product) return;
   try {
-    await Share.share({ message, title: product.name });
+    await Share.share({ message: getShareMessage(product), title: product.name || 'Produto' });
   } catch {}
 }

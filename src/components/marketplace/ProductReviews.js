@@ -2,12 +2,14 @@
 // Sistema de avaliacoes do produto - NOVAIX FITNESS
 
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../config/supabase';
+
+const MAX_COMMENT_LENGTH = 500;
 
 export default function ProductReviews({ productId }) {
   const { user } = useAuth();
@@ -36,16 +38,21 @@ export default function ProductReviews({ productId }) {
     try {
       const { data, error } = await supabase
         .from('marketplace_reviews')
-        .insert({ product_id: productId, user_id: user.id, rating, comment: comment.trim() })
+        .insert({ product_id: productId, user_id: user.id, rating, comment: comment.trim().slice(0, MAX_COMMENT_LENGTH) })
         .select('*, profiles(name)')
         .single();
-      if (!error && data) {
+      if (error) {
+        if (error.code === '23505') Alert.alert('Aviso', 'Voce ja avaliou este produto');
+        else Alert.alert('Erro', 'Nao foi possivel enviar sua avaliacao');
+        return;
+      }
+      if (data) {
         setReviews(prev => [data, ...prev]);
         setComment('');
         setRating(5);
         setShowForm(false);
       }
-    } catch {}
+    } catch { Alert.alert('Erro', 'Falha ao enviar avaliacao'); }
     setSubmitting(false);
   };
 
@@ -86,9 +93,11 @@ export default function ProductReviews({ productId }) {
                 placeholder="Deixe seu comentario..."
                 placeholderTextColor={COLORS.textMuted}
                 value={comment}
-                onChangeText={setComment}
+                onChangeText={(t) => setComment(t.slice(0, MAX_COMMENT_LENGTH))}
                 multiline
+                maxLength={MAX_COMMENT_LENGTH}
               />
+              <Text style={styles.charCount}>{comment.length}/{MAX_COMMENT_LENGTH}</Text>
               <View style={styles.formActions}>
                 <TouchableOpacity onPress={() => setShowForm(false)}>
                   <Text style={styles.cancelText}>Cancelar</Text>
@@ -131,6 +140,7 @@ const styles = StyleSheet.create({
   form: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
   stars: { flexDirection: 'row', gap: 4, marginBottom: SPACING.sm },
   input: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textTitle, backgroundColor: COLORS.surfaceElevated, borderRadius: BORDER_RADIUS.sm, padding: SPACING.sm, minHeight: 60, textAlignVertical: 'top' },
+  charCount: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, textAlign: 'right', marginTop: 2 },
   formActions: { flexDirection: 'row', justifyContent: 'flex-end', gap: SPACING.md, marginTop: SPACING.sm },
   cancelText: { fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.textMuted },
   submitBtn: { backgroundColor: COLORS.primary, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, borderRadius: BORDER_RADIUS.sm },
