@@ -165,6 +165,7 @@ function AppContent() {
             <Stack.Screen name="progress/report" lazy />
             <Stack.Screen name="ai" lazy />
             <Stack.Screen name="nutrition" lazy />
+            <Stack.Screen name="wearables" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </Suspense>

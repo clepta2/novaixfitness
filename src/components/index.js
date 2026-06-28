@@ -183,3 +183,8 @@ export { default as OnboardingNavButtons } from './onboarding/OnboardingNavButto
 export { default as DailySummaryCard } from './nutrition/DailySummaryCard';
 export { default as MealTimeline } from './nutrition/MealTimeline';
 export { default as MealLogModal } from './nutrition/MealLogModal';
+
+export { default as DeviceCard } from './wearables/DeviceCard';
+export { default as HeartRateWidget } from './wearables/HeartRateWidget';
+export { default as ActivitySummary } from './wearables/ActivitySummary';
+export { default as SyncButton } from './wearables/SyncButton';
