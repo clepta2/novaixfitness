@@ -139,8 +139,9 @@ function AppContent() {
           <Stack.Screen name="changelog" lazy />
           <Stack.Screen name="mindfulness" lazy />
           <Stack.Screen name="blog" lazy />
-          <Stack.Screen name="forum" lazy />
-          <Stack.Screen name="planner" lazy />
+            <Stack.Screen name="forum" lazy />
+            <Stack.Screen name="social" lazy />
+            <Stack.Screen name="planner" lazy />
           <Stack.Screen name="marketplace" lazy />
           <Stack.Screen name="marketplace-detail" lazy />
           <Stack.Screen name="marketplace-favorites" lazy />

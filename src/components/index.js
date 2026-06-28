@@ -44,6 +44,10 @@ export { default as CreatePostModal } from './social/CreatePostModal';
 export { default as CreateForumPostModal } from './social/CreateForumPostModal';
 export { default as NotificationModal } from './social/NotificationModal';
 export { default as ChallengesList } from './social/ChallengesList';
+export { default as SocialHub } from './social/SocialHub';
+export { default as QuickSocialActions } from './social/QuickSocialActions';
+export { default as WorkoutShareCard } from './social/WorkoutShareCard';
+export { default as InviteFriends } from './social/InviteFriends';
 
 export { default as ProfileHeader } from './profile/ProfileHeader';
 export { default as ProfileHero } from './profile/ProfileHero';
