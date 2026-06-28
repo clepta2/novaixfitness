@@ -10,7 +10,7 @@ const TABS = [
   { id: 'forum', label: 'Fórum' },
 ];
 
-function SocialHub({ children, badgeCounts = {} }) {
+function SocialHub({ children, badgeCounts = {}, refreshControl }) {
   const [activeTab, setActiveTab] = useState('feed');
   const indicatorAnim = useRef(new Animated.Value(0)).current;
   const tabWidth = `${100 / TABS.length}%`;
@@ -42,7 +42,7 @@ function SocialHub({ children, badgeCounts = {} }) {
         })}
         <Animated.View style={[styles.indicator, { width: tabWidth, transform: [{ translateX }] }]} />
       </View>
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
         {children}
       </ScrollView>
     </View>

@@ -13,10 +13,16 @@ export async function setupWorkoutReminders(userId) {
     .eq('id', userId)
     .single();
 
+  const { data: obv2 } = await supabase
+    .from('onboarding_v2')
+    .select('days_per_week')
+    .eq('user_id', userId)
+    .maybeSingle();
+
   if (!profile?.notification_settings?.workout_reminder) return;
 
   const settings = profile.notification_settings;
-  const workoutDays = profile.onboarding?.daysPerWeek || [1, 3, 5];
+  const workoutDays = obv2?.days_per_week || profile.onboarding?.daysPerWeek || [1, 3, 5];
   const reminderTime = settings.reminder_time || '19:00';
   const [hour, minute] = reminderTime.split(':').map(Number);
 

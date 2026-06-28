@@ -8,7 +8,7 @@ import { useAuth } from '../src/context/AuthContext';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { getGamificationData } from '../src/services/gamification';
-import { getLevelForXP, ACHIEVEMENTS, getUnlockedAchievements } from '../src/constants/gamification';
+import { getLevelForXP, ACHIEVEMENTS, getUnlockedAchievements, XP_VALUES } from '../src/constants/gamification';
 import { Header, ErrorBoundary } from '../src/components';
 import LevelCard from '../src/components/gamification/LevelCard';
 import AchievementGrid from '../src/components/gamification/AchievementGrid';
@@ -48,11 +48,20 @@ function GamificationContent() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  const [error, setError] = useState(null);
+
   const loadData = useCallback(async () => {
     if (!user?.id) return;
-    const result = await getGamificationData(user.id);
-    setData(result);
-    setLoading(false);
+    try {
+      const result = await getGamificationData(user.id);
+      setData(result);
+      setError(null);
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar gamificação:', err);
+      setError('Não foi possível carregar as conquistas.');
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]);
 
   useEffect(() => { loadData(); }, [loadData]);
@@ -65,9 +74,9 @@ function GamificationContent() {
 
   const unlockedIds = (data?.achievements || []).map(a => a.id);
   const xpBreakdown = {
-    workout: (data?.totalWorkouts || 0) * 50,
-    streak: (data?.maxStreak || 0) * 5,
-    social: ((data?.social_first_post_count || 0) + (data?.social_50_likes_count || 0) + (data?.social_25_comments_count || 0)) * 5,
+    workout: (data?.totalWorkouts || 0) * XP_VALUES.WORKOUT_COMPLETED,
+    streak: (data?.maxStreak || 0) * XP_VALUES.STREAK_BONUS_PER_DAY,
+    social: ((data?.social_first_post_count || 0) * XP_VALUES.POST_CREATED) + ((data?.social_50_likes_count || 0) * XP_VALUES.POST_LIKED) + ((data?.social_25_comments_count || 0) * XP_VALUES.COMMENT_MADE),
     nutrition: 0,
   };
 
@@ -76,6 +85,15 @@ function GamificationContent() {
       <View style={styles.center}>
         <Ionicons name="trophy" size={48} color={COLORS.primary} />
         <Text style={styles.loadingText}>Carregando conquistas...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Ionicons name="alert-circle-outline" size={48} color={COLORS.error} />
+        <Text style={styles.loadingText}>{error}</Text>
       </View>
     );
   }

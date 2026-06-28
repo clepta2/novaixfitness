@@ -1,4 +1,4 @@
-﻿// src/context/AuthContext.js
+// src/context/AuthContext.js
 // Context para Autenticação - COM MIDDLEWARES
 
 import { createContext, useContext, useState, useEffect } from 'react';
@@ -22,7 +22,18 @@ export function AuthProvider({ children }) {
     try {
       const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
       setProfile(data);
-      if (data?.onboarding) setOnboarding(data.onboarding);
+
+      const { data: obv2 } = await supabase
+        .from('onboarding_v2')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (obv2) {
+        setOnboarding(obv2);
+      } else if (data?.onboarding && Object.keys(data.onboarding).length > 0) {
+        setOnboarding(data.onboarding);
+      }
     } catch (err) {
       console.error('Erro ao carregar perfil:', err);
     }
@@ -126,10 +137,51 @@ export function AuthProvider({ children }) {
 
   const saveOnboarding = async (data) => {
     setOnboarding(data);
-    if (user) {
-      await supabase.from('profiles').upsert({ id: user.id, onboarding: data }, { onConflict: 'id' });
-      await loadProfile(user.id);
+    if (!user) return;
+
+    const { data: existing } = await supabase
+      .from('onboarding_v2')
+      .select('id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const row = {
+      user_id: user.id,
+      goal: data.goal || data.goal,
+      age_range: data.age_range || data.ageRange,
+      gender: data.gender,
+      weight: data.weight,
+      height: data.height,
+      cep: data.cep,
+      state: data.state,
+      city: data.city,
+      body_model: data.body_model || data.model,
+      level: data.level,
+      days_per_week: data.days_per_week || data.daysPerWeek,
+      workout_location: data.workout_location || data.location,
+      gym_type: data.gym_type || data.gymType,
+      injuries: data.injuries || [],
+      preferred_time: data.preferred_time || data.preferredTime,
+      stress_sleep: data.stress_sleep || data.stressSleep,
+      preferred_muscles: data.preferred_muscles || data.preferredMuscles || [],
+      dietary_restrictions: data.dietary_restrictions || data.dietaryRestrictions,
+      instructor_type: data.instructor_type || data.instructorType,
+      notification_channels: data.notification_channels || data.notificationChannels || [],
+      notification_types: data.notification_types || data.notificationTypes || [],
+      referral_source: data.referral_source || data.referralSource,
+      current_step: data.current_step || data.currentStep || 'completed',
+      updated_at: new Date().toISOString(),
+    };
+
+    if (existing) {
+      await supabase.from('onboarding_v2').update(row).eq('id', existing.id);
+    } else {
+      row.created_at = new Date().toISOString();
+      await supabase.from('onboarding_v2').insert(row);
     }
+
+    await supabase.from('profiles').update({ current_step: 'home' }).eq('id', user.id);
+    await loadProfile(user.id);
   };
 
   const updateProfile = async (updates) => {

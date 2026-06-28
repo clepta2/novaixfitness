@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -9,6 +9,7 @@ import { useAuth } from '../src/context/AuthContext';
 import { useSupabaseData } from '../src/hooks';
 import { useRealtimePosts } from '../src/hooks/useRealtimePosts';
 import { supabase } from '../src/config/supabase';
+import { getUnreadCount } from '../src/services/notifications';
 import { ErrorBoundary, PostCard, ChallengesList, Leaderboard, CreatePostModal, NotificationModal } from '../src/components';
 import SocialHub from '../src/components/social/SocialHub';
 import QuickSocialActions from '../src/components/social/QuickSocialActions';
@@ -27,15 +28,21 @@ export default function SocialScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [unreadCount] = useState(3);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const { data: dbPosts, refetch, loading } = useSupabaseData('posts', {
     select: '*, profiles:user_id(name, avatar_url)',
     orderBy: { column: 'created_at', ascending: false },
     mockData: [],
   });
+
+  useEffect(() => {
+    if (!user?.id) return;
+    getUnreadCount(user.id).then(setUnreadCount).catch(() => {});
+  }, [user?.id]);
 
   useEffect(() => {
     if (dbPosts) {
@@ -52,6 +59,15 @@ export default function SocialScreen() {
   const onUpdate = useCallback((u) => setPosts(prev => prev.map(p => p.id === u.id ? { ...p, likes: u.likes, comments: u.comments } : p)), []);
   const onDelete = useCallback((id) => setPosts(prev => prev.filter(p => p.id !== id)), []);
   useRealtimePosts(onInsert, onUpdate, onDelete);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    if (user?.id) {
+      getUnreadCount(user.id).then(setUnreadCount).catch(() => {});
+    }
+    setRefreshing(false);
+  }, [refetch, user?.id]);
 
   const handleLike = async (postId) => {
     if (!user) return;
@@ -116,7 +132,7 @@ export default function SocialScreen() {
             {unreadCount > 0 && <View style={styles.notifDot} />}
           </TouchableOpacity>
         </View>
-        <SocialHub badgeCounts={{ feed: 2, challenges: 1 }}>
+        <SocialHub badgeCounts={{ feed: 2, challenges: 1 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} />}>
           <QuickSocialActions onPress={handleQuickAction} />
           <View style={{ marginTop: SPACING.lg }} />
           {renderFeed()}

@@ -60,9 +60,16 @@ function AchievementGrid({ unlockedIds = [], onAchievementPress }) {
         </View>
       )}
       <View style={styles.grid}>
-        {filtered.map(a => (
-          <AchievementBadge key={a.id} achievement={a} unlocked={unlockedSet.has(a.id)} onInfo={handleInfo} />
-        ))}
+        {filtered.length === 0 ? (
+          <View style={styles.empty}>
+            <Ionicons name="ribbon-outline" size={32} color={COLORS.textMuted} />
+            <Text style={styles.emptyText}>Complete treinos para desbloquear conquistas</Text>
+          </View>
+        ) : (
+          filtered.map(a => (
+            <AchievementBadge key={a.id} achievement={a} unlocked={unlockedSet.has(a.id)} onInfo={handleInfo} />
+          ))
+        )}
       </View>
     </View>
   );
@@ -85,6 +92,8 @@ const styles = StyleSheet.create({
   infoName: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.textTitle },
   infoDesc: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },
+  empty: { width: '100%', alignItems: 'center', paddingVertical: SPACING.xl, gap: SPACING.sm },
+  emptyText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, textAlign: 'center' },
   badge: { width: '30%', alignItems: 'center', paddingVertical: SPACING.md, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border },
   badgeLocked: { opacity: 0.5 },
   iconWrap: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.xs },

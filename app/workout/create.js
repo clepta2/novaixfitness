@@ -1,5 +1,4 @@
 // app/workout/create.js
-// Criador de treinos personalizados - NOVAIX FITNESS
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +17,8 @@ const LEVELS = [
   { id: 'advanced', label: 'Avançado', icon: 'flash' },
 ];
 const LEVEL_COLORS = { beginner: COLORS.success, intermediate: COLORS.attention, advanced: COLORS.error };
+const SECONDS_PER_SET = 45;
+const DEFAULT_REST_SECONDS = 15;
 
 export default function CreateWorkoutScreen() {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function CreateWorkoutScreen() {
   const updateForm = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const addExercise = useCallback((ex) => {
     if (exercises.find(e => e.name === ex.name)) return;
-    setExercises(prev => [...prev, { ...ex, sets: 4, reps: '10-12', rest: 60, weight: '', notes: '' }]);
+    setExercises(prev => [...prev, { ...ex, sets: 4, reps: '10-12', rest: DEFAULT_REST_SECONDS, weight: '', notes: '' }]);
   }, [exercises]);
   const removeExercise = useCallback((i) => {
     setExercises(prev => prev.filter((_, idx) => idx !== i));
@@ -61,7 +62,7 @@ export default function CreateWorkoutScreen() {
     setSaving(true);
     try {
       const totalSets = exercises.reduce((s, e) => s + (e.sets || 4), 0);
-      const estimated = parseInt(form.duration) || Math.round((totalSets * 45 + exercises.reduce((s, e) => s + (e.rest || 60) * (e.sets || 4), 0)) / 60);
+      const estimated = parseInt(form.duration) || Math.round((totalSets * SECONDS_PER_SET + exercises.reduce((s, e) => s + (e.rest || DEFAULT_REST_SECONDS) * (e.sets || 4), 0)) / 60);
       const { error } = await supabase.from('user_workouts').insert({
         user_id: user.id, name: form.name.trim(), category: form.category,
         level: form.level, duration: estimated, exercises: exercises.map((e, i) => ({ ...e, order: i })),
@@ -73,11 +74,23 @@ export default function CreateWorkoutScreen() {
     finally { setSaving(false); }
   };
 
+  const handleBack = () => {
+    const hasData = form.name || form.category || exercises.length > 0;
+    if (hasData) {
+      Alert.alert('Sair sem salvar?', 'Você tem dados não salvos. Deseja sair?', [
+        { text: 'Ficar', style: 'cancel' },
+        { text: 'Sair', style: 'destructive', onPress: () => router.back() },
+      ]);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <ErrorBoundary screenName="CreateWorkout">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} accessibilityLabel="Voltar">
+          <TouchableOpacity onPress={handleBack} style={styles.backBtn} accessibilityLabel="Voltar">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>CRIAR TREINO</Text>

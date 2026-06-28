@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-const MEAL_ICONS = { cafe: 'sunny', almoco: 'restaurant', jante: 'moon', lanche: 'cafe' };
+const MEAL_ICONS = { cafe: 'sunny', almoco: 'restaurant', jantar: 'moon', lanche: 'cafe' };
 const MEAL_LABELS = { cafe: 'Café da Manhã', almoco: 'Almoço', jantar: 'Jantar', lanche: 'Lanche' };
 
 function MealItem({ meal }) {

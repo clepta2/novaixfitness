@@ -90,9 +90,9 @@ export default function ProgressScreen() {
 
           <QuickActionsGrid />
 
-          {recentPhotos.length > 0 && (
-            <View style={styles.section}>
-              <Text style={typography.label}>FOTOS RECENTES</Text>
+          <View style={styles.section}>
+            <Text style={typography.label}>FOTOS RECENTES</Text>
+            {recentPhotos.length > 0 ? (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosScroll}>
                 {recentPhotos.map((photo) => (
                   <TouchableOpacity key={photo.id} onPress={() => router.push('/progress-photos')} accessibilityLabel="Ver fotos">
@@ -100,8 +100,14 @@ export default function ProgressScreen() {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-            </View>
-          )}
+            ) : (
+              <TouchableOpacity style={styles.emptyPhotos} onPress={() => router.push('/progress-photos')} accessibilityLabel="Adicionar primeira foto">
+                <Ionicons name="camera-outline" size={32} color={COLORS.textMuted} />
+                <Text style={styles.emptyPhotosText}>Nenhuma foto ainda</Text>
+                <Text style={styles.emptyPhotosCta}>Adicione sua primeira foto de progresso</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
           <MeasurementTrends latest={latest} previous={previous} />
         </ScrollView>
@@ -115,4 +121,7 @@ const styles = StyleSheet.create({
   section: { marginBottom: SPACING.xl },
   photosScroll: { marginTop: SPACING.md },
   photoThumb: { width: PHOTO_THUMB, height: PHOTO_THUMB * 1.33, borderRadius: 8, marginRight: SPACING.sm, backgroundColor: COLORS.surfaceOverlay },
+  emptyPhotos: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border, borderStyle: 'dashed', marginTop: SPACING.md, gap: SPACING.xs },
+  emptyPhotosText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textMuted },
+  emptyPhotosCta: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription },
 });

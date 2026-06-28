@@ -15,6 +15,7 @@ jest.mock('../../src/config/supabase', () => {
     eq: jest.fn(() => chain),
     gte: jest.fn(() => chain),
     single: jest.fn().mockResolvedValue({ data: null, error: null }),
+    maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
     limit: jest.fn(() => chain),
   };
   return { supabase: { from: jest.fn(() => chain) } };

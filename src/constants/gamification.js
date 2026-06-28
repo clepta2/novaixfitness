@@ -38,7 +38,7 @@ export const ACHIEVEMENTS = [
   { id: 'workout_1', name: 'Primeiro Treino', description: 'Complete seu primeiro treino', icon: 'trophy', color: '#FFD600', category: 'workout', requirement: 1, xpReward: 200 },
   { id: 'workout_5', name: 'Aquecendo', description: 'Complete 5 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 5, xpReward: 100 },
   { id: 'workout_10', name: 'Dez Pra Um', description: 'Complete 10 treinos', icon: 'barbell', color: '#00E676', category: 'workout', requirement: 10, xpReward: 200 },
-  { id: 'workout_25', name: 'Quinze Mais', description: 'Complete 25 treinos', icon: 'barbell', color: '#FFD600', category: 'workout', requirement: 25, xpReward: 350 },
+  { id: 'workout_25', name: 'Vinte e Cinco Treinos', description: 'Complete 25 treinos', icon: 'barbell', color: '#FFD600', category: 'workout', requirement: 25, xpReward: 350 },
   { id: 'workout_50', name: 'Meio Centenario', description: 'Complete 50 treinos', icon: 'barbell', color: '#FF6B35', category: 'workout', requirement: 50, xpReward: 500 },
   { id: 'workout_100', name: 'Centuriao', description: 'Complete 100 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 100, xpReward: 1000 },
   { id: 'workout_250', name: 'Maquina', description: 'Complete 250 treinos', icon: 'trophy', color: '#CCFF00', category: 'workout', requirement: 250, xpReward: 2000 },

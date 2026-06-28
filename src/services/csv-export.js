@@ -159,6 +159,12 @@ export async function exportProfileData(userId) {
     .eq('id', userId)
     .single();
 
+  const { data: obv2 } = await supabase
+    .from('onboarding_v2')
+    .select('goal, level')
+    .eq('user_id', userId)
+    .maybeSingle();
+
   const row = {
     nome: profile?.name || '',
     email: profile?.email || '',
@@ -171,8 +177,8 @@ export async function exportProfileData(userId) {
     minutos_total: profile?.total_minutes || 0,
     melhor_streak: profile?.max_streak || 0,
     streak_atual: profile?.streak || 0,
-    objetivo: profile?.onboarding?.goal || '',
-    nivel: profile?.onboarding?.level || '',
+    objetivo: obv2?.goal || profile?.onboarding?.goal || '',
+    nivel: obv2?.level || profile?.onboarding?.level || '',
     membro_desde: formatDate(profile?.created_at),
   };
 
