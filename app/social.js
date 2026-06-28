@@ -10,9 +10,7 @@ import { useSupabaseData } from '../src/hooks';
 import { useRealtimePosts } from '../src/hooks/useRealtimePosts';
 import { supabase } from '../src/config/supabase';
 import { getUnreadCount } from '../src/services/notifications';
-import { ErrorBoundary, PostCard, ChallengesList, Leaderboard, CreatePostModal, NotificationModal } from '../src/components';
-import SocialHub from '../src/components/social/SocialHub';
-import QuickSocialActions from '../src/components/social/QuickSocialActions';
+import { ErrorBoundary, PostCard, ChallengesList, Leaderboard, CreatePostModal, NotificationModal, SocialHub, QuickSocialActions } from '../src/components';
 import { PostSkeleton, FeedEmptyState } from '../src/components/social/FeedSkeleton';
 
 function formatDate(dateStr) {

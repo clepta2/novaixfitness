@@ -5,6 +5,7 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
 
 export default function CircularProgress({ value = 0, max = 100, size = 80, strokeWidth = 6, color = COLORS.primary, label, showValue = true }) {
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -15,8 +16,6 @@ export default function CircularProgress({ value = 0, max = 100, size = 80, stro
   useEffect(() => {
     Animated.timing(progressAnim, { toValue: percentage, duration: 1000, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
   }, [percentage]);
-
-  const strokeDashoffset = circumference - (progressAnim.__getValue() / 100) * circumference;
 
   return (
     <View style={[styles.container, { width: size, height: size }]} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round(percentage) }}>

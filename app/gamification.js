@@ -9,11 +9,7 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { getGamificationData } from '../src/services/gamification';
 import { getLevelForXP, ACHIEVEMENTS, getUnlockedAchievements, XP_VALUES } from '../src/constants/gamification';
-import { Header, ErrorBoundary } from '../src/components';
-import LevelCard from '../src/components/gamification/LevelCard';
-import AchievementGrid from '../src/components/gamification/AchievementGrid';
-import WeeklyChallenges from '../src/components/gamification/WeeklyChallenges';
-import XpBreakdown from '../src/components/gamification/XpBreakdown';
+import { Header, ErrorBoundary, LevelCard, AchievementGrid, GamificationChallenges, XpBreakdown } from '../src/components';
 
 const STATS = [
   { key: 'totalXP', label: 'XP Total', icon: 'flash', color: COLORS.primary },
@@ -122,7 +118,7 @@ function GamificationContent() {
       </View>
 
       <View style={styles.section}>
-        <WeeklyChallenges progress={{ workouts: data?.totalWorkouts || 0, minutes: data?.totalMinutes || 0, posts: data?.social_first_post_count || 0, streak: data?.maxStreak || 0 }} />
+        <GamificationChallenges progress={{ workouts: data?.totalWorkouts || 0, minutes: data?.totalMinutes || 0, posts: data?.social_first_post_count || 0, streak: data?.maxStreak || 0 }} />
       </View>
 
       <View style={styles.bottomSpacer} />

@@ -48,6 +48,8 @@ export { default as SocialHub } from './social/SocialHub';
 export { default as QuickSocialActions } from './social/QuickSocialActions';
 export { default as WorkoutShareCard } from './social/WorkoutShareCard';
 export { default as InviteFriends } from './social/InviteFriends';
+export { default as Leaderboard } from './social/Leaderboard';
+export { default as WorkoutStreak } from './social/WorkoutStreak';
 
 export { default as ProfileHeader } from './profile/ProfileHeader';
 export { default as ProfileHero } from './profile/ProfileHero';
@@ -67,6 +69,11 @@ export { default as EditNameModal } from './profile/EditNameModal';
 export { default as DailyWorkoutCard } from './home/DailyWorkoutCard';
 export { default as WaterLogger } from './home/WaterLogger';
 export { default as WeeklyProgress } from './home/WeeklyProgress';
+export { default as ContextualCard } from './home/ContextualCard';
+export { default as HomeHeader } from './home/HomeHeader';
+export { default as CategoryGrid } from './home/CategoryGrid';
+export { default as RecentActivity } from './home/RecentActivity';
+export { default as StoreBanner } from './home/StoreBanner';
 
 export { default as PlanCard } from './paywall/PlanCard';
 export { default as CouponInput } from './paywall/CouponInput';
@@ -103,6 +110,10 @@ export { default as OfflineIndicator } from './common/OfflineIndicator';
 export { default as EmptyState } from './common/EmptyState';
 export { default as XPFloating } from './common/XPFloating';
 export { injectWebStyles } from './common/WebStyles';
+export { default as SearchBar } from './common/SearchBar';
+export { default as CircularProgress } from './common/CircularProgress';
+export { default as BottomSheet } from './common/BottomSheet';
+export { default as ErrorCard } from './common/ErrorCard';
 
 export { default as PeriodSelector } from './analytics/PeriodSelector';
 export { default as ComparisonCard } from './analytics/ComparisonCard';
@@ -111,6 +122,7 @@ export { default as InsightsRow } from './analytics/InsightsRow';
 export { default as DashboardStats } from './analytics/DashboardStats';
 export { default as MuscleRadarChart } from './analytics/MuscleRadarChart';
 export { FrequencyChart, CategoryChart, DayOfWeekChart, MonthlyChart, HourChart } from './analytics/ChartsSection';
+export { default as MuscleLegend } from './analytics/MuscleLegend';
 
 export { default as ChatHeader } from './chat/ChatHeader';
 export { default as MessageBubble } from './chat/MessageBubble';
@@ -170,8 +182,21 @@ export { default as DotIndicator } from './intro/DotIndicator';
 
 export { default as WeekCalendar } from './planner/WeekCalendar';
 export { default as DayWorkoutSlot } from './planner/DayWorkoutSlot';
+export { default as AdaptationBanner } from './planner/AdaptationBanner';
+export { default as DayDetailView } from './planner/DayDetailView';
+export { default as DayEditorModal } from './planner/DayEditorModal';
+export { default as WeekOverview } from './planner/WeekOverview';
+export { default as WorkoutPicker } from './planner/WorkoutPicker';
 
 export { ProductCard, ProductList, CategoryFilter, FavoriteButton, EmptyMarketplace, MarketplaceHeader } from './marketplace';
+export { default as RecommendedSection } from './marketplace/RecommendedSection';
+export { default as CompareBar } from './marketplace/CompareBar';
+export { default as ComparisonTable } from './marketplace/ComparisonTable';
+export { default as FeaturedProducts } from './marketplace/FeaturedProducts';
+export { default as RecentSearches } from './marketplace/RecentSearches';
+export { default as ImageCarousel } from './marketplace/ImageCarousel';
+export { default as PromoBanner } from './marketplace/PromoBanner';
+export { default as ProductReviews } from './marketplace/ProductReviews';
 
 export { default as MuscleStep } from './onboarding/MuscleStep';
 export { default as ExerciseStep } from './onboarding/ExerciseStep';
@@ -186,8 +211,15 @@ export { default as OnboardingNavButtons } from './onboarding/OnboardingNavButto
 export { default as DailySummaryCard } from './nutrition/DailySummaryCard';
 export { default as MealTimeline } from './nutrition/MealTimeline';
 export { default as MealLogModal } from './nutrition/MealLogModal';
+export { default as NutritionStreak } from './nutrition/NutritionStreak';
+export { default as BodyComposition } from './nutrition/BodyComposition';
+export { default as CalorieCycling } from './nutrition/CalorieCycling';
+export { default as WaterTracker } from './nutrition/WaterTracker';
 
 export { default as DeviceCard } from './wearables/DeviceCard';
 export { default as HeartRateWidget } from './wearables/HeartRateWidget';
 export { default as ActivitySummary } from './wearables/ActivitySummary';
 export { default as SyncButton } from './wearables/SyncButton';
+
+export { default as QuickAccessGrid } from './dashboard/QuickAccessGrid';
+export { default as WeeklySummary } from './dashboard/WeeklySummary';

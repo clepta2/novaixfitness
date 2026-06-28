@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, RefreshControl, Dimensions, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,11 +9,7 @@ import { getProgressPhotos } from '../src/services/progress-photos';
 import { getMeasurements, getLatestMeasurement, calculateBMI } from '../src/services/body-measurements';
 import { supabase } from '../src/config/supabase';
 import { layout, typography } from '../src/styles';
-import { ErrorBoundary } from '../src/components';
-import ProgressHero from '../src/components/progress/ProgressHero';
-import ProgressStats from '../src/components/progress/ProgressStats';
-import QuickActionsGrid from '../src/components/progress/QuickActionsGrid';
-import MeasurementTrends from '../src/components/progress/MeasurementTrends';
+import { ErrorBoundary, ProgressHero, ProgressStats, ProgressQuickActionsGrid, MeasurementTrends } from '../src/components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const PHOTO_THUMB = (SCREEN_WIDTH - SPACING.xl * 2 - SPACING.sm * 4) / 5;
@@ -28,6 +24,7 @@ export default function ProgressScreen() {
   const [latest, setLatest] = useState(null);
   const [previous, setPrevious] = useState(null);
   const [physicalData, setPhysicalData] = useState({});
+  const [now, setNow] = useState(() => Date.now());
 
   const loadData = useCallback(async () => {
     if (!user?.id) return;
@@ -60,7 +57,7 @@ export default function ProgressScreen() {
   const weightChange = latest?.weight && previous?.weight ? latest.weight - previous.weight : null;
   const firstPhoto = photos.length > 0 ? photos[photos.length - 1] : null;
   const lastPhoto = photos.length > 0 ? photos[0] : null;
-  const daysTracked = measurements.length > 0 ? Math.ceil((Date.now() - new Date(measurements[measurements.length - 1]?.recorded_at).getTime()) / 86400000) + 1 : 0;
+  const daysTracked = measurements.length > 0 ? Math.ceil((now - new Date(measurements[measurements.length - 1]?.recorded_at).getTime()) / 86400000) + 1 : 0;
   const recentPhotos = photos.slice(0, 5);
 
   return (
@@ -88,7 +85,7 @@ export default function ProgressScreen() {
             daysTracked={daysTracked}
           />
 
-          <QuickActionsGrid />
+          <ProgressQuickActionsGrid />
 
           <View style={styles.section}>
             <Text style={typography.label}>FOTOS RECENTES</Text>

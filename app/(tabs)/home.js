@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, ICON_SIZES } from '../../src/constants/spacing';
-import { DailyWorkoutCard, OfflineBanner, TutorialOverlay, ErrorBoundary } from '../../src/components';
+import { DailyWorkoutCard, OfflineBanner, TutorialOverlay, ErrorBoundary, ContextualCard, RecentActivity } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { useTutorial } from '../../src/hooks/useTutorial';
@@ -21,8 +21,6 @@ import { layout, typography } from '../../src/styles';
 import { scale } from '../../src/utils/responsive';
 import { HOME_CATEGORIES } from '../../src/data/categories';
 import { CONTEXT_CARDS, getTimeOfDay } from '../../src/data/contextCards';
-import ContextualCard from '../../src/components/home/ContextualCard';
-import RecentActivity from '../../src/components/home/RecentActivity';
 import { styles } from '../../src/styles/homeStyles';
 
 const fallbackDaily = { name: 'QUEIMA SUPERIORES', type: 'HIIT/CALISTENIA', videoId: '', timer: '00:30:15', is_premium: false };
