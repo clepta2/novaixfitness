@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import NutritionProgress from './NutritionProgress';
 
 const STREAK_BADGES = [
   { days: 3, label: 'Iniciante', icon: 'flame', color: COLORS.attention },
@@ -139,15 +140,7 @@ export default function NutritionStreak({ userId }) {
         ))}
       </View>
 
-      {nextBadge && (
-        <View style={styles.nextBadgeCard}>
-          <Text style={styles.nextLabel}>Próximo: {nextBadge.label} ({nextBadge.days} dias)</Text>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${Math.min(100, progressToNext)}%` }]} />
-          </View>
-          <Text style={styles.progressText}>{currentStreak}/{nextBadge.days} dias</Text>
-        </View>
-      )}
+      {nextBadge && <NutritionProgress streak={currentStreak} nextBadge={nextBadge} />}
     </View>
   );
 }
@@ -176,9 +169,4 @@ const styles = StyleSheet.create({
   dayDot: { width: 12, height: 12, borderRadius: 6, backgroundColor: COLORS.surfaceOverlay },
   dayDotActive: { backgroundColor: COLORS.primary },
   dayDotToday: { borderWidth: 2, borderColor: COLORS.primary },
-  nextBadgeCard: { backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.sm, padding: SPACING.md },
-  nextLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginBottom: SPACING.xs },
-  progressBar: { height: 6, backgroundColor: COLORS.surfaceOverlay, borderRadius: 3, overflow: 'hidden', marginBottom: SPACING.xs },
-  progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 3 },
-  progressText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.primary, textAlign: 'right' },
 });
