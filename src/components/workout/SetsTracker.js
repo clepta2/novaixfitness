@@ -13,6 +13,7 @@ import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import { addPendingAction, cacheExerciseLogs, getCachedExerciseLogs } from '../../services/offline';
 import { speakNextExercise, speakRestStart, speakRestHalfway, speakRestEnd, speakHalfway, speakMotivation, isVoiceCoachEnabled, setVoiceCoachEnabled } from '../../services/voiceCoach';
 import { typography } from '../../styles';
+import SetLogList from './SetLogList';
 
 export default memo(function SetsTracker({ userWorkoutId, workout }) {
   const { isConnected } = useNetworkStatus();
@@ -140,22 +141,7 @@ export default memo(function SetsTracker({ userWorkoutId, workout }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.logsList}>
-        <Text style={typography.caption}>SÉRIES REALIZADAS:</Text>
-        {loadingLogs ? (
-          <ActivityIndicator size="small" color={COLORS.primary} style={{ marginTop: SPACING.md }} />
-        ) : logs.length > 0 ? (
-          logs.map((log) => (
-            <View key={log.id} style={styles.logItem}>
-              <View style={styles.logBadge}><Text style={styles.logBadgeText}>SÉRIE {log.set_number}</Text></View>
-              <Text style={typography.h5}>{log.reps_done} REPS</Text>
-              <Text style={typography.bodyMuted}>{log.weight_kg} kg</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={[typography.caption, { marginTop: SPACING.sm }]}>Nenhuma série registrada.</Text>
-        )}
-      </View>
+      <SetLogList logs={logs} loading={loadingLogs} />
     </Card>
   );
 });
@@ -178,8 +164,4 @@ const styles = StyleSheet.create({
   inputContainer: { flex: 1 },
   input: { height: 40, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border, paddingHorizontal: SPACING.md, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14, marginTop: 4 },
   addBtn: { width: 40, height: 40, borderRadius: BORDER_RADIUS.md, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
-  logsList: { borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: SPACING.md },
-  logItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: SPACING.xs },
-  logBadge: { backgroundColor: COLORS.primary + '15', paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: 4 },
-  logBadgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.primary },
 });

@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import StreakProgress from './StreakProgress';
 
 const STREAK_LEVELS = [
   { min: 0, label: 'Iniciante', icon: 'flame-outline', color: COLORS.textMuted },
@@ -129,15 +130,7 @@ export default function WorkoutStreak({ userId }) {
         ))}
       </View>
 
-      {nextLevel && (
-        <View style={styles.nextLevel}>
-          <Text style={styles.nextLabel}>Próximo: {nextLevel.label} ({nextLevel.min} dias)</Text>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${Math.min(100, progress)}%`, backgroundColor: config.color }]} />
-          </View>
-          <Text style={styles.progressText}>{streak}/{nextLevel.min}</Text>
-        </View>
-      )}
+      {nextLevel && <StreakProgress streak={streak} nextLevel={nextLevel} config={config} />}
 
       <View style={styles.statsRow}>
         <View style={styles.statItem}>
@@ -174,11 +167,6 @@ const styles = StyleSheet.create({
   dayDot: { width: 14, height: 14, borderRadius: 7, backgroundColor: COLORS.surfaceOverlay },
   dayDotActive: { backgroundColor: COLORS.primary },
   dayDotToday: { borderWidth: 2, borderColor: COLORS.primary },
-  nextLevel: { backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.sm, padding: SPACING.md, marginBottom: SPACING.md },
-  nextLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginBottom: SPACING.xs },
-  progressBar: { height: 6, backgroundColor: COLORS.surfaceOverlay, borderRadius: 3, overflow: 'hidden', marginBottom: SPACING.xs },
-  progressFill: { height: '100%', borderRadius: 3 },
-  progressText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.primary, textAlign: 'right' },
   statsRow: { flexDirection: 'row', backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md },
   statItem: { flex: 1, alignItems: 'center' },
   statValue: { fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.textTitle },
