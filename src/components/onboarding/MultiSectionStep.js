@@ -1,9 +1,9 @@
-// src/components/onboarding/MultiSectionStep.js
-// Step multi-seção - DATA DRIVEN com validação e guias
+﻿// src/components/onboarding/MultiSectionStep.js
+// Step multi-seÃ§Ã£o - DATA DRIVEN com validaÃ§Ã£o e guias
 
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import MeasurementGuide from './MeasurementGuide';
@@ -14,9 +14,9 @@ export default function MultiSectionStep({ step, data, onUpdate }) {
   const validate = (section, value) => {
     if (!section.validation) return '';
     const { min, max, required, message } = section.validation;
-    if (required && (!value && value !== 0)) return message || 'Obrigatório';
-    if (min !== undefined && value < min) return message || `Mínimo ${min}`;
-    if (max !== undefined && value > max) return message || `Máximo ${max}`;
+    if (required && (!value && value !== 0)) return message || 'ObrigatÃ³rio';
+    if (min !== undefined && value < min) return message || `MÃ­nimo ${min}`;
+    if (max !== undefined && value > max) return message || `MÃ¡ximo ${max}`;
     return '';
   };
 
@@ -43,7 +43,7 @@ export default function MultiSectionStep({ step, data, onUpdate }) {
           <View style={styles.pillsRow}>
             {section.options.map((option) => (
               <TouchableOpacity key={option.id} style={[styles.pill, data[section.field] === option.id && styles.pillActive]} onPress={() => handleUpdate(section.field, option.id, section)}>
-                {option.icon && <Text style={styles.pillIcon}>{option.icon === 'sunny' ? '☀️' : option.icon === 'partly-sunny' ? '⛅' : option.icon === 'moon' ? '🌙' : option.icon === 'male' ? '👨' : option.icon === 'female' ? '👩' : '•'}</Text>}
+                {option.icon && <Text style={styles.pillIcon}>{option.icon === 'sunny' ? 'â˜€ï¸' : option.icon === 'partly-sunny' ? 'â›…' : option.icon === 'moon' ? 'ðŸŒ™' : option.icon === 'male' ? 'ðŸ‘¨' : option.icon === 'female' ? 'ðŸ‘©' : 'â€¢'}</Text>}
                 <Text style={[styles.pillText, data[section.field] === option.id && styles.pillTextActive]}>{option.label}</Text>
               </TouchableOpacity>
             ))}
@@ -107,4 +107,5 @@ const styles = StyleSheet.create({
   unit: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, marginLeft: SPACING.sm },
   errorText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.error, marginTop: SPACING.xs },
 });
+
 

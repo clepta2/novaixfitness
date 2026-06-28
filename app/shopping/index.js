@@ -14,7 +14,7 @@ export default function ShoppingScreen() {
   const router = useRouter();
   const { user, onboarding } = useAuth();
   const [list, setList] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => { loadList(); }, [user?.id]);
@@ -142,3 +142,4 @@ const styles = StyleSheet.create({
   tipsBox: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, margin: SPACING.lg, padding: SPACING.md, backgroundColor: COLORS.primary + '10', borderRadius: BORDER_RADIUS.md },
   tipsText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.primary, flex: 1 },
 });
+

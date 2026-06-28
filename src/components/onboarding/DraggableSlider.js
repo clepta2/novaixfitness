@@ -1,7 +1,7 @@
 // src/components/onboarding/DraggableSlider.js
 // Slider arrastavel com edicao numerica - NOVAIX FITNESS
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { View, Text, TouchableOpacity, TextInput, PanResponder, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -15,20 +15,18 @@ export default function DraggableSlider({ label, value, setValue, min, max, unit
   const pct = (value - min) / (max - min);
   const thumbLeft = `${pct * 100}%`;
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {},
-      onPanResponderMove: (_, gesture) => {
-        const width = trackWidth.current;
-        const dx = gesture.dx;
-        const ratio = Math.max(0, Math.min(1, (pct * width + dx) / width));
-        const newVal = Math.round(min + ratio * (max - min));
-        setValue(Math.max(min, Math.min(max, newVal)));
-      },
-      onPanResponderRelease: () => {},
-    })
-  ).current;
+  const panResponder = useMemo(() => PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderGrant: () => {},
+    onPanResponderMove: (_, gesture) => {
+      const width = trackWidth.current;
+      const dx = gesture.dx;
+      const ratio = Math.max(0, Math.min(1, (pct * width + dx) / width));
+      const newVal = Math.round(min + ratio * (max - min));
+      setValue(Math.max(min, Math.min(max, newVal)));
+    },
+    onPanResponderRelease: () => {},
+  }), [pct, min, max, setValue]);
 
   const commitEdit = () => {
     const cleaned = editText.replace(/\D/g, '');

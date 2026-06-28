@@ -3,7 +3,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { SPACING } from '../../constants/spacing';
 
 export default function TogglesStep({ step, data, onUpdate }) {
   return (
@@ -42,3 +42,4 @@ const styles = StyleSheet.create({
   toggleDotActive: { backgroundColor: COLORS.background, alignSelf: 'flex-end' },
   note: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: SPACING.lg, textAlign: 'center' },
 });
+

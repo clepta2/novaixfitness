@@ -1,8 +1,8 @@
-// app/onboarding/loading.js
-// Tela de loading durante geração do plano IA
+﻿// app/onboarding/loading.js
+// Tela de loading durante geraÃ§Ã£o do plano IA
 
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
@@ -13,7 +13,7 @@ import { supabase } from '../../src/config/supabase';
 
 const STEPS = [
   { icon: 'analytics', label: 'ANALISANDO SEU PERFIL...' },
-  { icon: 'barbell', label: 'SELECIONANDO EXERCÍCIOS...' },
+  { icon: 'barbell', label: 'SELECIONANDO EXERCÃCIOS...' },
   { icon: 'restaurant', label: 'CRIANDO PLANO ALIMENTAR...' },
   { icon: 'checkmark-circle', label: 'PRONTO!' },
 ];
@@ -115,3 +115,4 @@ const styles = StyleSheet.create({
   stepText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted },
   stepTextActive: { color: COLORS.primary },
 });
+

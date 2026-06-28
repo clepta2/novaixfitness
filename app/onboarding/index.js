@@ -1,4 +1,4 @@
-// app/onboarding/index.js
+﻿// app/onboarding/index.js
 // Tela principal do onboarding - 2 Fases
 
 import { useState, useCallback, useEffect } from 'react';
@@ -24,7 +24,7 @@ export default function OnboardingScreen() {
   }, [onboarding]);
 
   const currentStep = getStep(currentStepId);
-  const progress = getProgress(currentStepId);
+  
   const currentPhase = getCurrentPhase(currentStepId);
 
   const handleUpdate = useCallback((newData) => {
@@ -63,7 +63,7 @@ export default function OnboardingScreen() {
         <View style={styles.phaseBar}>
           <View style={[styles.phaseIndicator, currentPhase === 1 && styles.phaseActive]}>
             <View style={[styles.phaseDot, currentPhase === 1 && styles.phaseDotActive]} />
-            <Text style={[styles.phaseText, currentPhase === 1 && styles.phaseTextActive]}>Você</Text>
+            <Text style={[styles.phaseText, currentPhase === 1 && styles.phaseTextActive]}>VocÃª</Text>
           </View>
           <View style={styles.phaseLine} />
           <View style={[styles.phaseIndicator, currentPhase === 2 && styles.phaseActive]}>
@@ -99,3 +99,4 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1, paddingTop: SPACING.md },
   footerWrap: { borderTopWidth: 1, borderTopColor: COLORS.border },
 });
+

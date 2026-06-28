@@ -83,3 +83,4 @@ export function hasTapeMeasure() {
   return true; // Perguntar no onboarding
 }
 
+

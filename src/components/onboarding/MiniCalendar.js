@@ -9,14 +9,14 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { WEEKDAYS, MONTH_NAMES } from '../../data/states';
 
 export default function MiniCalendar({ visible, selectedDate, onSelect, onClose }) {
-  const initDate = useRef(() => {
+  const getInitialDate = () => {
     if (selectedDate && selectedDate.length === 10) {
       const [d, m, y] = selectedDate.split('/').map(Number);
       return new Date(y, m - 1, d);
     }
     return new Date(new Date().getFullYear() - 25, 5, 1);
-  });
-  const [viewDate, setViewDate] = useState(initDate.current());
+  };
+  const [viewDate, setViewDate] = useState(getInitialDate);
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();

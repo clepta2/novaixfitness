@@ -17,7 +17,7 @@ const OPTIONS = [
 ];
 
 export default function AccessibilityScreen() {
-  const router = useRouter();
+  
   const { user } = useAuth();
   const [settings, setSettings] = useState({ large_text: false, high_contrast: false, reduce_motion: false, bold_text: false });
 
@@ -71,3 +71,4 @@ const styles = StyleSheet.create({
   infoBox: { marginTop: SPACING.xl, padding: SPACING.md, backgroundColor: COLORS.primary + '10', borderRadius: BORDER_RADIUS.md },
   infoText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.primary },
 });
+

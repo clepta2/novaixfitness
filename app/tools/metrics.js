@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 
@@ -137,3 +137,4 @@ const styles = StyleSheet.create({
   resultValue: { fontFamily: 'Montserrat_700Bold', fontSize: 32, marginTop: SPACING.sm },
   resultLabel: { fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textMuted, marginTop: SPACING.xs },
 });
+

@@ -5,8 +5,8 @@ function generateId(name) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
 }
 
-function calcXP(base, multiplier) {
-  return Math.round(base * multiplier);
+// function calcXP(base, multiplier) {
+  // return Math.round(base * multiplier);
 }
 
 export const ACHIEVEMENTS = [
@@ -41,3 +41,4 @@ export function getUnlockedAchievements(stats) {
 export function getNewAchievements(stats, unlockedIds) {
   return ACHIEVEMENTS.filter(a => !unlockedIds.includes(a.id) && (stats[a.metric] || 0) >= a.target);
 }
+
