@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING } from '../../src/constants/spacing';
-import { Card, Button, ProgressBar } from '../../src/components';
+import { Card, Button, ProgressBar, OnboardingFooter } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { layout, typography } from '../../src/styles';
 
@@ -27,13 +27,14 @@ const locations = [
 
 export default function AvailabilityScreen() {
   const router = useRouter();
-  const { saveOnboarding, onboarding } = useAuth();
+  const { saveOnboarding, onboarding, updateProfile } = useAuth();
   const [selectedDays, setSelectedDays] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleNext = async () => {
     if (!selectedDays || !selectedLocation) return;
     await saveOnboarding({ ...onboarding, daysPerWeek: selectedDays, location: selectedLocation });
+    await updateProfile({ current_step: 'onboarding' });
     router.push(selectedLocation === 'gym' ? '/onboarding/tipo-academia' : '/onboarding/experiencia');
   };
 
@@ -43,8 +44,8 @@ export default function AvailabilityScreen() {
         <View style={styles.header}>
           <Text style={typography.h3}>SUA DISPONIBILIDADE</Text>
           <Text style={typography.bodyMuted}>Quantos dias e onde você vai treinar?</Text>
-          <View style={styles.progressContainer}><ProgressBar value={5} max={7} /></View>
-          <Text style={typography.caption}>Passo 5 de 7</Text>
+          <View style={styles.progressContainer}><ProgressBar value={4} max={6} /></View>
+          <Text style={typography.caption}>Passo 4 de 6</Text>
         </View>
 
         <View style={layout.section}>
@@ -72,10 +73,11 @@ export default function AvailabilityScreen() {
         </View>
       </ScrollView>
 
-      <View style={layout.footer}>
-        <Button title="ANTERIOR" variant="secondary" icon="arrow-back" onPress={() => router.back()} />
-        <Button title="PRÓXIMO" icon="arrow-forward" onPress={handleNext} disabled={!selectedDays || !selectedLocation} />
-      </View>
+      <OnboardingFooter
+        onBack={() => router.back()}
+        onNext={handleNext}
+        canProceed={!!selectedDays && !!selectedLocation}
+      />
     </View>
   );
 }

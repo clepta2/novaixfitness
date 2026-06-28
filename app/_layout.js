@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+﻿import { useEffect, Suspense } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -9,15 +9,19 @@ import {
 } from '@expo-google-fonts/montserrat';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { ActivityIndicator, View } from 'react-native';
+import { ThemeProvider as NavigationThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
+import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { COLORS } from '../src/constants/colors';
 import { registerForPushNotifications, setupNotificationListeners } from '../src/services/notifications';
+import { setupCrashHandler } from '../src/services/crashReport';
+import { injectWebStyles } from '../src/components/common/WebStyles';
 
-// Rotas que não necessitam autenticação (login/onboarding)
-const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'onboarding', 'landing'];
+// Rotas que nÃ£o necessitam autenticaÃ§Ã£o (login)
+const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'landing'];
 
 function AuthRedirect() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
@@ -25,22 +29,45 @@ function AuthRedirect() {
     if (loading) return;
 
     const inTabsGroup = segments[0] === '(tabs)';
+    const inOnboarding = segments[0] === 'onboarding';
+    const inPaywall = segments[0] === 'paywall';
     const currentRoute = segments[0] || 'index';
     const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute);
 
-    // Não autenticado tentando acessar área protegida → vai pro login
-    if (!user && inTabsGroup) {
-      router.replace('/');
+    // 1. NÃ£o autenticado tentando acessar Ã¡rea restrita â†’ envia para o login (index)
+    if (!user) {
+      if (inTabsGroup || inOnboarding || inPaywall) {
+        router.replace('/');
+      }
       return;
     }
 
-    // Autenticado em rota pública (login/register) → vai pra home
-    if (user && isPublicRoute) {
-      router.replace('/(tabs)/home');
+    // 2. Autenticado mas dados de perfil nÃ£o carregados ainda â†’ aguarda
+    if (!profile) return;
+
+    // 3. Verifica em qual etapa do cadastro/onboarding o usuÃ¡rio estÃ¡
+    const step = profile.current_step || 'onboarding';
+
+    if (step === 'onboarding') {
+      if (!inOnboarding) {
+        router.replace('/onboarding/objetivo');
+      }
       return;
     }
-    // Autenticado em rota de Stack (analytics, settings, etc.) → deixa navegar normalmente
-  }, [user, loading, segments]);
+
+    if (step === 'pagamento') {
+      if (!inPaywall) {
+        router.replace('/paywall');
+      }
+      return;
+    }
+
+    // 4. Autenticado e com todas as etapas concluÃ­das (tutorial ou home)
+    // Se ele tentar voltar para rotas pÃºblicas, onboarding ou paywall, redireciona para a home
+    if (isPublicRoute || inOnboarding || inPaywall) {
+      router.replace('/(tabs)/home');
+    }
+  }, [user, profile, loading, segments]);
 
   useEffect(() => {
     if (user?.id) {
@@ -60,17 +87,12 @@ function LoadingScreen() {
   );
 }
 
-export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
-    Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold,
-    Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold,
-  });
-
-  if (!fontsLoaded) return <LoadingScreen />;
+function AppContent() {
+  const { isDark } = useTheme();
+  const navTheme = isDark ? DarkTheme : DefaultTheme;
 
   return (
-    <AuthProvider>
-      <AuthRedirect />
+    <NavigationThemeProvider value={navTheme}>
       <Suspense fallback={<LoadingScreen />}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
@@ -92,10 +114,59 @@ export default function RootLayout() {
           <Stack.Screen name="player-list" lazy />
           <Stack.Screen name="warmup" lazy />
           <Stack.Screen name="recovery" lazy />
+          <Stack.Screen name="changelog" lazy />
+          <Stack.Screen name="mindfulness" lazy />
+          <Stack.Screen name="blog" lazy />
+          <Stack.Screen name="forum" lazy />
+          <Stack.Screen name="planner" lazy />
+          <Stack.Screen name="waitlist" lazy />
           <Stack.Screen name="admin" lazy />
+            <Stack.Screen name="workout/preCheckin" lazy />
+            <Stack.Screen name="workout/history" lazy />
+            <Stack.Screen name="onboarding/loading" lazy />
+            <Stack.Screen name="goals" lazy />
+            <Stack.Screen name="assessment" lazy />
+            <Stack.Screen name="assessment/guided" lazy />
+            <Stack.Screen name="tools/metrics" lazy />
+            <Stack.Screen name="shopping" lazy />
+            <Stack.Screen name="challenges" lazy />
+            <Stack.Screen name="settings/accessibility" lazy />
+            <Stack.Screen name="progress/initialPhoto" lazy />
+            <Stack.Screen name="progress/monthlyReview" lazy />
+            <Stack.Screen name="ai" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </Suspense>
+    </NavigationThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Montserrat_400Regular, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold,
+    Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold,
+  });
+
+  useEffect(() => { setupCrashHandler(); injectWebStyles(); }, []);
+
+  if (!fontsLoaded) return <LoadingScreen />;
+
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <AuthRedirect />
+        <AppContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }
+
+
+
+
+
+
+
+
+
+

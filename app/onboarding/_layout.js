@@ -17,9 +17,14 @@ function OnboardingLoading() {
 export default function OnboardingLayout() {
   return (
     <Suspense fallback={<OnboardingLoading />}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'slide_from_right',
+          animationDuration: 300,
+        }}
+      >
         <Stack.Screen name="objetivo" />
-        <Stack.Screen name="genero" lazy />
         <Stack.Screen name="dados-fisicos" lazy />
         <Stack.Screen name="modelo" lazy />
         <Stack.Screen name="disponibilidade" lazy />

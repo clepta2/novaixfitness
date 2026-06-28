@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING } from '../../src/constants/spacing';
-import { Card, Button, ProgressBar } from '../../src/components';
+import { Card, Button, ProgressBar, OnboardingFooter } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { layout, typography } from '../../src/styles';
 
@@ -23,12 +23,13 @@ const gymTypes = [
 
 export default function GymTypeScreen() {
   const router = useRouter();
-  const { saveOnboarding, onboarding } = useAuth();
+  const { saveOnboarding, onboarding, updateProfile } = useAuth();
   const [selectedGym, setSelectedGym] = useState(null);
 
   const handleNext = async () => {
     if (!selectedGym) return;
     await saveOnboarding({ ...onboarding, gymType: selectedGym });
+    await updateProfile({ current_step: 'onboarding' });
     router.push('/onboarding/experiencia');
   };
 
@@ -38,8 +39,8 @@ export default function GymTypeScreen() {
         <View style={styles.header}>
           <Text style={typography.h3}>QUAL TIPO DE ACADEMIA?</Text>
           <Text style={typography.bodyMuted}>Isso ajuda a personalizar seus equipamentos</Text>
-          <View style={styles.progressContainer}><ProgressBar value={5.5} max={7} /></View>
-          <Text style={typography.caption}>Passo 5b de 7</Text>
+          <View style={styles.progressContainer}><ProgressBar value={5} max={6} /></View>
+          <Text style={typography.caption}>Passo 5 de 6</Text>
         </View>
 
         <View style={styles.cardsContainer}>
@@ -60,10 +61,11 @@ export default function GymTypeScreen() {
         </View>
       </ScrollView>
 
-      <View style={layout.footer}>
-        <Button title="ANTERIOR" variant="secondary" icon="arrow-back" onPress={() => router.back()} />
-        <Button title="PRÓXIMO" icon="arrow-forward" onPress={handleNext} disabled={!selectedGym} />
-      </View>
+      <OnboardingFooter
+        onBack={() => router.back()}
+        onNext={handleNext}
+        canProceed={!!selectedGym}
+      />
     </View>
   );
 }
