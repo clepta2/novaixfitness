@@ -80,11 +80,11 @@ export default function StudentExporter() {
     <View style={styles.container}>
       <Text style={styles.label}>EXPORTAR DADOS</Text>
       <View style={styles.row}>
-        <TouchableOpacity style={styles.exportBtn} onPress={() => handleExport('basic')} disabled={exporting}>
+        <TouchableOpacity style={styles.exportBtn} onPress={() => handleExport('basic')} disabled={exporting} accessibilityLabel="Exportar alunos básico" accessibilityRole="button" accessibilityHint="Exporta lista básica de alunos em CSV">
           <Ionicons name="document-text-outline" size={18} color={COLORS.primary} />
           <Text style={styles.exportText}>Alunos (Básico)</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.exportBtn} onPress={() => handleExport('full')} disabled={exporting}>
+        <TouchableOpacity style={styles.exportBtn} onPress={() => handleExport('full')} disabled={exporting} accessibilityLabel="Exportar alunos completo" accessibilityRole="button" accessibilityHint="Exporta lista completa de alunos com dados em CSV">
           <Ionicons name="documents-outline" size={18} color={COLORS.primary} />
           <Text style={styles.exportText}>Alunos (Completo)</Text>
         </TouchableOpacity>

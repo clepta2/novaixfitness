@@ -10,14 +10,14 @@ import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
 const ACTIONS = [
-  { icon: 'stats-chart', color: '#3B82F6', label: 'Analytics', route: '/analytics', bg: '#3B82F622' },
-  { icon: 'grid', color: '#8B5CF6', label: 'Dashboard', route: '/dashboard', bg: '#8B5CF622' },
-  { icon: 'body', color: '#FF6B35', label: 'Medidas', route: '/body-measures', bg: '#FF6B3522' },
-  { icon: 'camera', color: '#00E676', label: 'Progresso', route: '/progress-photos', bg: '#00E67622' },
-  { icon: 'time', color: '#FFD600', label: 'Histórico', route: '/(tabs)/perfil/history', bg: '#FFD60022' },
+  { icon: 'stats-chart', color: COLORS.info, label: 'Analytics', route: '/analytics', bg: COLORS.info + '22' },
+  { icon: 'grid', color: COLORS.slateBlue, label: 'Dashboard', route: '/dashboard', bg: COLORS.slateBlue + '22' },
+  { icon: 'body', color: COLORS.secondary, label: 'Medidas', route: '/body-measures', bg: COLORS.secondary + '22' },
+  { icon: 'camera', color: COLORS.success, label: 'Progresso', route: '/progress-photos', bg: COLORS.success + '22' },
+  { icon: 'time', color: COLORS.attention, label: 'Histórico', route: '/(tabs)/perfil/history', bg: COLORS.attention + '22' },
   { icon: 'download', color: COLORS.primary, label: 'Exportar', route: '/export-data', bg: COLORS.primary + '22' },
-  { icon: 'card', color: '#FF1744', label: 'Assinatura', route: '/subscription', bg: '#FF174422' },
-  { icon: 'settings', color: '#94A3B8', label: 'Config.', route: '/settings', bg: '#94A3B822' },
+  { icon: 'card', color: COLORS.error, label: 'Assinatura', route: '/subscription', bg: COLORS.error + '22' },
+  { icon: 'settings', color: COLORS.textDescription, label: 'Config.', route: '/settings', bg: COLORS.textDescription + '22' },
 ];
 
 function ActionBtn({ icon, color, bg, label, onPress }) {

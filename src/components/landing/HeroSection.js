@@ -20,7 +20,7 @@ export default function HeroSection({ onPressCTA }) {
         Treine de forma inteligente. Vídeos integrados com cronômetro regressivo, 
         sistema de gamificação por níveis e feed social em uma única experiência premium.
       </Text>
-      <TouchableOpacity style={styles.ctaButton} onPress={onPressCTA}>
+      <TouchableOpacity style={styles.ctaButton} onPress={onPressCTA} accessibilityLabel="Começar desafio grátis" accessibilityRole="button">
         <Text style={styles.ctaButtonText}>Começar Desafio Grátis</Text>
         <Ionicons name="arrow-forward-outline" size={18} color={COLORS.background} />
       </TouchableOpacity>

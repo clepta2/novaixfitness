@@ -102,7 +102,7 @@ export default function CampaignManager() {
       <Text style={styles.label}>MENSAGENS RÁPIDAS</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickScroll}>
         {QUICK_MESSAGES.map((msg, i) => (
-          <TouchableOpacity key={i} style={styles.quickCard} onPress={() => applyQuickMessage(msg)}>
+          <TouchableOpacity key={i} style={styles.quickCard} onPress={() => applyQuickMessage(msg)} accessibilityLabel={`Mensagem rápida: ${msg.title}`} accessibilityRole="button" accessibilityHint="Preenche o formulário com esta mensagem">
             <Text style={styles.quickTitle}>{msg.title}</Text>
             <Text style={styles.quickBody} numberOfLines={2}>{msg.body}</Text>
           </TouchableOpacity>
@@ -110,22 +110,22 @@ export default function CampaignManager() {
       </ScrollView>
 
       <Text style={styles.label}>TÍTULO</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Título da notificação" placeholderTextColor={COLORS.textMuted} />
+      <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Título da notificação" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Título da notificação" />
 
       <Text style={styles.label}>MENSAGEM</Text>
-      <TextInput style={[styles.input, styles.inputMultiline]} value={body} onChangeText={setBody} placeholder="Texto da notificação" placeholderTextColor={COLORS.textMuted} multiline textAlignVertical="top" />
+      <TextInput style={[styles.input, styles.inputMultiline]} value={body} onChangeText={setBody} placeholder="Texto da notificação" placeholderTextColor={COLORS.textMuted} multiline textAlignVertical="top" accessibilityLabel="Texto da notificação" />
 
       <Text style={styles.label}>PÚBLICO-ALVO</Text>
       <View style={styles.audienceRow}>
         {AUDIENCE_OPTIONS.map((opt) => (
-          <TouchableOpacity key={opt.value} style={[styles.audienceBtn, audience === opt.value && styles.audienceActive]} onPress={() => setAudience(opt.value)}>
+          <TouchableOpacity key={opt.value} style={[styles.audienceBtn, audience === opt.value && styles.audienceActive]} onPress={() => setAudience(opt.value)} accessibilityLabel={`Público: ${opt.label}`} accessibilityRole="button" accessibilityState={{ selected: audience === opt.value }}>
             <Ionicons name={opt.icon} size={16} color={audience === opt.value ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.audienceLabel, audience === opt.value && styles.audienceLabelActive]}>{opt.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <TouchableOpacity style={[styles.sendBtn, sending && styles.sendBtnDisabled]} onPress={handleSend} disabled={sending}>
+      <TouchableOpacity style={[styles.sendBtn, sending && styles.sendBtnDisabled]} onPress={handleSend} disabled={sending} accessibilityLabel="Enviar campanha" accessibilityRole="button" accessibilityHint="Envia a notificação para os usuários selecionados">
         <Ionicons name="send" size={18} color={COLORS.background} />
         <Text style={styles.sendText}>{sending ? 'Enviando...' : 'ENVIAR CAMPANHA'}</Text>
       </TouchableOpacity>

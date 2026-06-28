@@ -55,6 +55,7 @@ export interface ThemeColors {
   warning: string;
   successLight: string;
   errorLight: string;
+  waterLight: string;
 
   // Gradients (arrays para LinearGradient)
   gradientPrimary: [string, string];
@@ -117,6 +118,7 @@ const darkTheme: ThemeColors = {
   warning: '#FFC107',
   successLight: '#10B981',
   errorLight: '#FF4D4D',
+  waterLight: '#00D2FF',
 
   // Gradients (arrays para LinearGradient)
   gradientPrimary: ['#CCFF00', '#A8E600'],
@@ -179,6 +181,7 @@ const lightTheme: ThemeColors = {
   warning: '#FFC107',
   successLight: '#10B981',
   errorLight: '#FF4D4D',
+  waterLight: '#00D2FF',
 
   // Gradients
   gradientPrimary: ['#CCFF00', '#A8E600'],

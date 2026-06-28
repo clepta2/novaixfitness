@@ -38,7 +38,7 @@ function ToastItem({ toast, onDismiss }) {
   }, []);
 
   return (
-    <Animated.View style={[styles.toast, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+    <Animated.View style={[styles.toast, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]} accessibilityRole="alert" accessibilityLiveRegion="polite">
       <View style={[styles.indicator, { backgroundColor: config.color }]} />
       <Ionicons name={config.icon} size={20} color={config.color} />
       <Text style={styles.message} numberOfLines={2}>{toast.message}</Text>

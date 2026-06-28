@@ -14,7 +14,11 @@ export function Timer({ seconds, total, label, isResting, style }) {
   };
 
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[styles.container, style]}
+      accessibilityRole="text"
+      accessibilityLabel={`${label || (isResting ? 'Descanso' : 'Tempo')}: ${formatTime(seconds)}${total ? ` de ${formatTime(total)}` : ''}`}
+    >
       <Text style={styles.label}>{label || (isResting ? 'DESCANSO' : 'TEMPO')}</Text>
       <View style={styles.display}>
         <Text style={[styles.time, isResting && styles.resting]}>{formatTime(seconds)}</Text>

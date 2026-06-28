@@ -10,10 +10,7 @@ import {
   getProgressPhotos, deleteProgressPhoto, PHOTO_LABELS,
 } from '../src/services/progress-photos';
 import { layout, typography } from '../src/styles';
-import CompareView from '../src/components/progress/CompareView';
-import PhotoGrid from '../src/components/progress/PhotoGrid';
-import PhotoModal from '../src/components/progress/PhotoModal';
-import PhotoPicker from '../src/components/progress/PhotoPicker';
+import { CompareView, PhotoGrid, PhotoModal, PhotoPicker } from '../src/components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

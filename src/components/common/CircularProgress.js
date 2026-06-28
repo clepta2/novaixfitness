@@ -19,7 +19,7 @@ export default function CircularProgress({ value = 0, max = 100, size = 80, stro
   const strokeDashoffset = circumference - (progressAnim.__getValue() / 100) * circumference;
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <View style={[styles.container, { width: size, height: size }]} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round(percentage) }}>
       <Svg width={size} height={size}>
         <Circle cx={size / 2} cy={size / 2} r={radius} stroke={COLORS.surfaceOverlay} strokeWidth={strokeWidth} fill="none" />
         <Circle

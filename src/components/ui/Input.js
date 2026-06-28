@@ -56,6 +56,8 @@ export function Input({
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeButton}
+            accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+            accessibilityRole="button"
           >
             <Ionicons
               name={showPassword ? 'eye-off-outline' : 'eye-outline'}

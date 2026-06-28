@@ -30,7 +30,7 @@ export default function AchievementPopup({ achievement, visible, onDone }) {
   if (!achievement) return null;
 
   return (
-    <Animated.View style={[styles.overlay, { opacity }]}>
+    <Animated.View style={[styles.overlay, { opacity }]} accessibilityRole="alert" accessibilityLiveRegion="assertive" accessible>
       <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
         <View style={[styles.icon, { backgroundColor: achievement.color + '20' }]}>
           <Ionicons name={achievement.icon} size={40} color={achievement.color} />

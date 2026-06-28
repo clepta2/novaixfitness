@@ -86,9 +86,14 @@ jest.mock('../../src/data/links', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
+  const mock = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
   return {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     ReferralCard: () => React.createElement(View, null, React.createElement(Text, null, 'ReferralCard')),
+    CompareView: mock('CompareView'),
+    PhotoGrid: mock('PhotoGrid'),
+    PhotoModal: mock('PhotoModal'),
+    PhotoPicker: mock('PhotoPicker'),
   };
 });
 

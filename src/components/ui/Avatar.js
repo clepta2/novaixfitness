@@ -29,6 +29,7 @@ export function Avatar({ uri, name, size = 'md', style }) {
       <Image
         source={{ uri }}
         style={[styles.image, { width: sizeValue, height: sizeValue, borderRadius: sizeValue / 2 }, style]}
+        accessibilityLabel={name ? `Foto de ${name}` : 'Foto do perfil'}
       />
     );
   }

@@ -21,7 +21,7 @@ export default function RecentActivity({ workouts = [], onPress }) {
         <Text style={styles.title}>ATIVIDADE RECENTE</Text>
       </View>
       {workouts.slice(0, 3).map((w, i) => (
-        <TouchableOpacity key={w.id || i} style={styles.row} onPress={() => onPress?.(w)} activeOpacity={0.7}>
+        <TouchableOpacity key={w.id || i} style={styles.row} onPress={() => onPress?.(w)} activeOpacity={0.7} accessibilityLabel={`${w.name || w.title || 'Treino'}, ${w.completed ? 'concluído' : 'pendente'}, ${w.duration_minutes || w.duration || 30} minutos`} accessibilityRole="button">
           <View style={[styles.dot, { backgroundColor: w.completed ? COLORS.success : COLORS.primary }]} />
           <View style={styles.info}>
             <Text style={styles.name} numberOfLines={1}>{w.name || w.title || 'Treino'}</Text>

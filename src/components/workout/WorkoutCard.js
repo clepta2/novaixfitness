@@ -1,7 +1,7 @@
 // src/components/workout/WorkoutCard.js
 // Card de treino reutilizável - NOVAIX FITNESS
 
-import React, { memo, useRef, useEffect } from 'react';
+import React, { memo, useRef, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -27,13 +27,16 @@ function WorkoutCard({ workout, onPress, onFavorite, isFavorite = false, showFav
     ]).start();
   }, []);
 
+  const handlePress = useCallback(() => onPress?.(workout), [onPress, workout]);
+  const handleFavorite = useCallback(() => onFavorite?.(workout.id), [onFavorite, workout.id]);
+
   const levelConfig = LEVEL_CONFIG[workout.level] || LEVEL_CONFIG['Intermediário'];
   const duration = workout.duration || workout.duration_minutes || 30;
   const rating = workout.rating || 0;
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
-      <TouchableOpacity style={styles.card} onPress={() => onPress?.(workout)} activeOpacity={0.8} accessibilityLabel={`Treino ${workout.name}, ${duration} minutos, nivel ${workout.level || 'intermediario'}`} accessibilityRole="button">
+      <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.8} accessibilityLabel={`Treino ${workout.name}, ${duration} minutos, nivel ${workout.level || 'intermediario'}`} accessibilityRole="button">
         <View style={styles.cardLeft}>
           <View style={[styles.iconContainer, { backgroundColor: levelConfig.color + '15' }]}>
             <Ionicons name="play" size={20} color={levelConfig.color} />
@@ -82,7 +85,7 @@ function WorkoutCard({ workout, onPress, onFavorite, isFavorite = false, showFav
         {showFavorite && (
           <TouchableOpacity
             style={styles.favoriteBtn}
-            onPress={() => onFavorite?.(workout.id)}
+            onPress={handleFavorite}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={22} color={isFavorite ? COLORS.error : COLORS.textMuted} />

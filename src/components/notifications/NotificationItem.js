@@ -24,7 +24,7 @@ export default function NotificationItem({ item, onPress, onLongPress }) {
   const typeConfig = NOTIFICATION_TYPES[item.type] || NOTIFICATION_TYPES.system;
 
   return (
-    <TouchableOpacity style={[styles.item, !item.read && styles.unread]} onPress={onPress} onLongPress={onLongPress}>
+    <TouchableOpacity style={[styles.item, !item.read && styles.unread]} onPress={onPress} onLongPress={onLongPress} accessibilityLabel={`${item.title}. ${item.body}`} accessibilityRole="button" accessibilityHint={item.read ? 'Notificação lida' : 'Notificação não lida'}>
       <View style={[styles.icon, { backgroundColor: typeConfig.color + '20' }]}>
         <Ionicons name={typeConfig.icon} size={20} color={typeConfig.color} />
       </View>

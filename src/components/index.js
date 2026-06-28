@@ -18,6 +18,8 @@ export { default as ProgressSection } from './workout/ProgressSection';
 export { default as CategoryCard } from './workout/CategoryCard';
 export { default as WorkoutCard } from './workout/WorkoutCard';
 export { default as FavoriteWorkoutCard } from './workout/FavoriteWorkoutCard';
+export { default as WorkoutQuickStats } from './workout/WorkoutQuickStats';
+export { default as WorkoutHeaderDetail } from './workout/WorkoutHeaderDetail';
 export { default as WorkoutInfo } from './workout/WorkoutInfo';
 export { default as TagFilter } from './workout/TagFilter';
 export { default as VideoPreview } from './workout/VideoPreview';
@@ -85,10 +87,15 @@ export { default as StudentEditModal } from './admin/StudentEditModal';
 
 export { default as ReferralCard } from './referral/ReferralCard';
 
+export { default as ErrorBoundary } from './common/ErrorBoundary';
+export { default as AppErrorFallback } from './common/AppErrorFallback';
 export { default as AchievementPopup } from './common/AchievementPopup';
 export { default as TutorialOverlay } from './common/TutorialOverlay';
 export { default as OfflineBanner } from './common/OfflineBanner';
+export { default as OfflineIndicator } from './common/OfflineIndicator';
 export { default as EmptyState } from './common/EmptyState';
+export { default as XPFloating } from './common/XPFloating';
+export { injectWebStyles } from './common/WebStyles';
 
 export { default as PeriodSelector } from './analytics/PeriodSelector';
 export { default as ComparisonCard } from './analytics/ComparisonCard';
@@ -144,3 +151,13 @@ export { default as WaitlistFeature } from './waitlist/WaitlistFeature';
 
 export { default as WeekCalendar } from './planner/WeekCalendar';
 export { default as DayWorkoutSlot } from './planner/DayWorkoutSlot';
+
+export { default as MuscleStep } from './onboarding/MuscleStep';
+export { default as ExerciseStep } from './onboarding/ExerciseStep';
+export { default as IntensityStep } from './onboarding/IntensityStep';
+export { default as GoalStep } from './onboarding/GoalStep';
+export { default as PlanTypeStep } from './onboarding/PlanTypeStep';
+export { default as SubtypeStep } from './onboarding/SubtypeStep';
+export { default as DaysStep } from './onboarding/DaysStep';
+export { default as RestStep } from './onboarding/RestStep';
+export { default as OnboardingNavButtons } from './onboarding/OnboardingNavButtons';

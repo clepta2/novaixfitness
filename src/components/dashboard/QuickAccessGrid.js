@@ -9,9 +9,9 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 const ITEMS = [
   { icon: 'bar-chart', label: 'Analytics', route: '/analytics', color: COLORS.primary },
-  { icon: 'calendar', label: 'Semanal', route: '/weekly-progress', color: '#00E676' },
-  { icon: 'body', label: 'Medidas', route: '/body-measures', color: '#FF6B35' },
-  { icon: 'camera', label: 'Fotos', route: '/progress-photos', color: '#FFD600' },
+  { icon: 'calendar', label: 'Semanal', route: '/weekly-progress', color: COLORS.success },
+  { icon: 'body', label: 'Medidas', route: '/body-measures', color: COLORS.secondary },
+  { icon: 'camera', label: 'Fotos', route: '/progress-photos', color: COLORS.attention },
   { icon: 'nutrition', label: 'Nutrição', route: '/nutrition', color: COLORS.info },
   { icon: 'trophy', label: 'Conquistas', route: '/achievements', color: COLORS.attention },
 ];
@@ -22,7 +22,7 @@ export default function QuickAccessGrid({ router }) {
       <Text style={styles.title}>ACESSO RÁPIDO</Text>
       <View style={styles.grid}>
         {ITEMS.map((item) => (
-          <TouchableOpacity key={item.label} style={styles.item} onPress={() => router.push(item.route)}>
+          <TouchableOpacity key={item.label} style={styles.item} onPress={() => router.push(item.route)} accessibilityLabel={`Acesso rápido: ${item.label}`} accessibilityRole="button">
             <View style={[styles.iconContainer, { backgroundColor: item.color + '20' }]}>
               <Ionicons name={item.icon} size={22} color={item.color} />
             </View>

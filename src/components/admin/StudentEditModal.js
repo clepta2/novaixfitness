@@ -80,14 +80,14 @@ export default function StudentEditModal({ visible, student, onClose, onSave }) 
             <View style={[styles.content, isWeb && styles.contentWeb]}>
               <View style={styles.header}>
                 <Text style={typography.h4}>Editar Aluno</Text>
-                <TouchableOpacity onPress={onClose}>
+                <TouchableOpacity onPress={onClose} accessibilityLabel="Fechar modal" accessibilityRole="button">
                   <Ionicons name="close" size={24} color={COLORS.textMuted} />
                 </TouchableOpacity>
               </View>
 
               <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={styles.label}>NOME</Text>
-                <TextInput style={styles.input} value={form.name} onChangeText={(t) => setForm({ ...form, name: t })} placeholder="Nome do aluno" placeholderTextColor={COLORS.textMuted} />
+                <TextInput style={styles.input} value={form.name} onChangeText={(t) => setForm({ ...form, name: t })} placeholder="Nome do aluno" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Nome do aluno" />
 
                 <Text style={styles.label}>E-MAIL</Text>
                 <TextInput style={[styles.input, styles.inputDisabled]} value={form.email} editable={false} placeholderTextColor={COLORS.textMuted} />
@@ -95,7 +95,7 @@ export default function StudentEditModal({ visible, student, onClose, onSave }) 
                 <Text style={styles.label}>ETAPA DE CADASTRO</Text>
                 <View style={styles.optionsRow}>
                   {STEP_OPTIONS.map((step) => (
-                    <TouchableOpacity key={step.value} style={[styles.stepBtn, form.current_step === step.value && styles.stepBtnActive]} onPress={() => setForm({ ...form, current_step: step.value })}>
+                    <TouchableOpacity key={step.value} style={[styles.stepBtn, form.current_step === step.value && styles.stepBtnActive]} onPress={() => setForm({ ...form, current_step: step.value })} accessibilityLabel={`Etapa: ${step.label}`} accessibilityRole="button" accessibilityState={{ selected: form.current_step === step.value }}>
                       <Text style={[styles.stepText, form.current_step === step.value && styles.stepTextActive]}>{step.label}</Text>
                     </TouchableOpacity>
                   ))}
@@ -104,7 +104,7 @@ export default function StudentEditModal({ visible, student, onClose, onSave }) 
                 <Text style={styles.label}>PLANO</Text>
                 <View style={styles.optionsRow}>
                   {PLAN_OPTIONS.map((plan) => (
-                    <TouchableOpacity key={plan.value} style={[styles.optionBtn, form.subscription_plan === plan.value && styles.optionActive]} onPress={() => setForm({ ...form, subscription_plan: plan.value })}>
+                    <TouchableOpacity key={plan.value} style={[styles.optionBtn, form.subscription_plan === plan.value && styles.optionActive]} onPress={() => setForm({ ...form, subscription_plan: plan.value })} accessibilityLabel={`Plano ${plan.label}, ${plan.price}`} accessibilityRole="button" accessibilityState={{ selected: form.subscription_plan === plan.value }}>
                       <Text style={[styles.optionLabel, form.subscription_plan === plan.value && styles.optionLabelActive]}>{plan.label}</Text>
                       <Text style={[styles.optionPrice, form.subscription_plan === plan.value && styles.optionPriceActive]}>{plan.price}</Text>
                     </TouchableOpacity>
@@ -114,17 +114,17 @@ export default function StudentEditModal({ visible, student, onClose, onSave }) 
                 <Text style={styles.label}>STATUS</Text>
                 <View style={styles.optionsRow}>
                   {STATUS_OPTIONS.map((status) => (
-                    <TouchableOpacity key={status.value} style={[styles.statusBtn, form.subscription_status === status.value && { backgroundColor: status.color + '20', borderColor: status.color }]} onPress={() => setForm({ ...form, subscription_status: status.value })}>
+                    <TouchableOpacity key={status.value} style={[styles.statusBtn, form.subscription_status === status.value && { backgroundColor: status.color + '20', borderColor: status.color }]} onPress={() => setForm({ ...form, subscription_status: status.value })} accessibilityLabel={`Status: ${status.label}`} accessibilityRole="button" accessibilityState={{ selected: form.subscription_status === status.value }}>
                       <Text style={[styles.statusLabel, form.subscription_status === status.value && { color: status.color }]}>{status.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
 
                 <View style={styles.actions}>
-                  <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
+                  <TouchableOpacity style={styles.cancelBtn} onPress={onClose} accessibilityLabel="Cancelar edição">
                     <Text style={styles.cancelText}>Cancelar</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[styles.saveBtn, saving && styles.saveBtnDisabled]} onPress={handleSave} disabled={saving}>
+                  <TouchableOpacity style={[styles.saveBtn, saving && styles.saveBtnDisabled]} onPress={handleSave} disabled={saving} accessibilityLabel="Salvar alterações">
                     <Text style={styles.saveText}>{saving ? 'Salvando...' : 'Salvar'}</Text>
                   </TouchableOpacity>
                 </View>

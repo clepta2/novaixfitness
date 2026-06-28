@@ -73,7 +73,7 @@ export default function AdminDashboard({ onNavigate }) {
       <Text style={[typography.label, styles.sectionTitle]}>AÇÕES RÁPIDAS</Text>
       <View style={styles.actionsRow}>
         {quickActions.map((action) => (
-          <TouchableOpacity key={action.key} style={styles.actionCard} onPress={() => onNavigate?.(action.key)}>
+          <TouchableOpacity key={action.key} style={styles.actionCard} onPress={() => onNavigate?.(action.key)} accessibilityLabel={action.label} accessibilityRole="button" accessibilityHint={`Navega para a seção de ${action.label.toLowerCase()}`}>
             <View style={[styles.actionIcon, { backgroundColor: action.color + '20' }]}>
               <Ionicons name={action.icon} size={22} color={action.color} />
             </View>

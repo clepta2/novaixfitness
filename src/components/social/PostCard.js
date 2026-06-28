@@ -8,6 +8,8 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { supabase } from '../../config/supabase';
+import { useRealtimeComments } from '../../hooks/useRealtimeComments';
+import { useRealtimeLikes } from '../../hooks/useRealtimeLikes';
 
 function PostCard({ post, onLike, onComment, currentUserId }) {
   const [showComments, setShowComments] = useState(false);
@@ -28,6 +30,23 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
     }
   }, [showComments]);
 
+  useRealtimeComments(post.id, (newComment) => {
+    setComments(prev => {
+      if (prev.some(c => c.id === newComment.id)) return prev;
+      return [...prev, newComment];
+    });
+  });
+
+  useRealtimeLikes(post.id, {
+    currentUserId,
+    onLikeAdded: (postId, isOwn) => {
+      if (!isOwn) setLikes(prev => prev + 1);
+    },
+    onLikeRemoved: () => {
+      setLikes(prev => Math.max(0, prev - 1));
+    },
+  });
+
   const loadComments = async () => {
     setLoadingComments(true);
     try {
@@ -45,10 +64,12 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
   };
 
   const handleLike = useCallback(() => {
-    setIsLiked((prev) => !prev);
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLiked((prev) => {
+      setLikes((l) => (prev ? l - 1 : l + 1));
+      return !prev;
+    });
     onLike?.(post.id);
-  }, [isLiked, onLike, post.id]);
+  }, [onLike, post.id]);
 
   const handleComment = useCallback(() => {
     if (commentText.trim()) {

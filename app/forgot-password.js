@@ -57,7 +57,7 @@ export default function ForgotPasswordScreen() {
                 <View style={styles.iconContainer}>
                   <Ionicons name="lock-closed-outline" size={64} color={COLORS.primary} />
                 </View>
-                <Text style={[typography.h3, { color: isDark ? '#FFFFFF' : '#0F172A', textAlign: 'center' }]}>ESQUECEU A SENHA?</Text>
+                <Text style={[typography.h3, { color: COLORS.textTitle, textAlign: 'center' }]}>ESQUECEU A SENHA?</Text>
                 <Text style={[typography.bodyMuted, { textAlign: 'center', marginTop: SPACING.sm }]}>Não se preocupe! Insira seu e-mail e enviaremos um link para redefinir sua senha.</Text>
                 <View style={{ height: SPACING.xl }} />
                 <AuthInput label="E-MAIL" placeholder="digite seu e-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} />
@@ -69,13 +69,13 @@ export default function ForgotPasswordScreen() {
                 <View style={styles.iconContainer}>
                   <Ionicons name="mail-open-outline" size={64} color={COLORS.success} />
                 </View>
-                <Text style={[typography.h3, { color: isDark ? '#FFFFFF' : '#0F172A', textAlign: 'center' }]}>E-MAIL ENVIADO!</Text>
+                <Text style={[typography.h3, { color: COLORS.textTitle, textAlign: 'center' }]}>E-MAIL ENVIADO!</Text>
                 <Text style={[typography.bodyMuted, { textAlign: 'center', marginTop: SPACING.sm }]}>Enviamos um link de recuperação para{'\n'}<Text style={styles.emailHighlight}>{email}</Text></Text>
                 <View style={styles.instructions}>
                   {['Verifique sua caixa de entrada', 'Clique no link do e-mail', 'Crie uma nova senha'].map((text, i) => (
                     <View key={i} style={styles.instructionItem}>
                       <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
-                      <Text style={[typography.bodySmall, { color: isDark ? '#FFFFFF' : '#0F172A' }]}>{text}</Text>
+                      <Text style={[typography.bodySmall, { color: COLORS.textTitle }]}>{text}</Text>
                     </View>
                   ))}
                 </View>

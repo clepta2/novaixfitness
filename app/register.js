@@ -1,4 +1,4 @@
-﻿// app/register.js
+// app/register.js
 // Tela de Cadastro - COM NÚMERO DE TELEFONE
 
 import { useState, useEffect } from 'react';
@@ -121,7 +121,7 @@ export default function RegisterScreen() {
           <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
               <Text style={typography.brand}>NOVAIX</Text>
-              <Text style={[typography.label, { color: isDark ? '#FFFFFF' : '#0F172A' }]}>CRIE SUA CONTA</Text>
+              <Text style={[typography.label, { color: COLORS.textTitle }]}>CRIE SUA CONTA</Text>
             </View>
             <View>
               <AuthInput label="NOME" placeholder="digite seu nome completo" value={name} onChangeText={(v) => setName(v.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s]/g, ''))} autoCapitalize="words" icon="person-outline" translucent={true} />

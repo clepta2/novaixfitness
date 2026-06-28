@@ -1,4 +1,4 @@
-﻿// src/data/achievements.js
+// src/data/achievements.js
 // Conquistas e metas - DATA DRIVEN
 
 function generateId(name) {
@@ -6,8 +6,8 @@ function generateId(name) {
 }
 
 // function calcXP(base, multiplier) {
-  // return Math.round(base * multiplier);
-}
+//   return Math.round(base * multiplier);
+// }
 
 export const ACHIEVEMENTS = [
   { name: 'Primeiro Treino', description: 'Complete 1 treino', icon: 'trophy', metric: 'totalWorkouts', target: 1, xpBase: 10 },

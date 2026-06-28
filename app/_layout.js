@@ -1,4 +1,4 @@
-﻿import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -13,9 +13,11 @@ import { ThemeProvider as NavigationThemeProvider, DarkTheme, DefaultTheme } fro
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { COLORS } from '../src/constants/colors';
-import { registerForPushNotifications, setupNotificationListeners } from '../src/services/notifications';
+import { setupNotificationListeners } from '../src/services/notifications';
+import { registerForPushNotificationsAsync, addNotificationReceivedListener, addNotificationResponseListener } from '../src/services/pushNotifications';
 import { setupCrashHandler } from '../src/services/crashReport';
-import { injectWebStyles } from '../src/components/common/WebStyles';
+import { startAutoSync, stopAutoSync } from '../src/services/autoSync';
+import { injectWebStyles, ErrorBoundary, OfflineIndicator } from '../src/components';
 
 // Rotas que nÃ£o necessitam autenticaÃ§Ã£o (login)
 const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'landing'];
@@ -70,11 +72,24 @@ function AuthRedirect() {
   }, [user, profile, loading, segments]);
 
   useEffect(() => {
-    if (user?.id) {
-      registerForPushNotifications(user.id);
-      setupNotificationListeners(router);
-    }
-  }, [user?.id]);
+    if (!user?.id) return;
+
+    registerForPushNotificationsAsync(user.id);
+
+    const receivedSub = addNotificationReceivedListener(({ title, body }) => {
+      if (__DEV__) console.log('Push recebido em foreground:', title, body);
+    });
+
+    const responseSub = addNotificationResponseListener(router);
+
+    const tapSub = setupNotificationListeners(router);
+
+    return () => {
+      receivedSub?.remove();
+      responseSub?.remove();
+      tapSub?.remove?.();
+    };
+  }, [user?.id, router]);
 
   return null;
 }
@@ -91,10 +106,17 @@ function AppContent() {
   const { isDark } = useTheme();
   const navTheme = isDark ? DarkTheme : DefaultTheme;
 
+  useEffect(() => {
+    startAutoSync();
+    return () => stopAutoSync();
+  }, []);
+
   return (
-    <NavigationThemeProvider value={navTheme}>
-      <Suspense fallback={<LoadingScreen />}>
-        <Stack screenOptions={{ headerShown: false }}>
+    <ErrorBoundary screenName="AppRoot">
+      <NavigationThemeProvider value={navTheme}>
+        <OfflineIndicator />
+        <Suspense fallback={<LoadingScreen />}>
+          <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="register" lazy />
           <Stack.Screen name="forgot-password" lazy />
@@ -139,6 +161,7 @@ function AppContent() {
         </Stack>
       </Suspense>
     </NavigationThemeProvider>
+    </ErrorBoundary>
   );
 }
 

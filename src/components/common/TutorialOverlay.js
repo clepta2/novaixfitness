@@ -110,22 +110,22 @@ export default function TutorialOverlay({ visible, steps, onComplete, onSkip, on
         <Text style={[typography.body, styles.description]}>{step.description}</Text>
         <View style={styles.navRow}>
           {!isFirst && (
-            <TouchableOpacity style={styles.backBtn} onPress={handlePrev}>
+            <TouchableOpacity style={styles.backBtn} onPress={handlePrev} accessibilityLabel="Passo anterior" accessibilityRole="button">
               <Ionicons name="chevron-back" size={18} color={COLORS.textMuted} />
               <Text style={styles.backText}>VOLTAR</Text>
             </TouchableOpacity>
           )}
           <View style={{ flex: 1 }} />
-          <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+          <TouchableOpacity style={styles.nextBtn} onPress={handleNext} accessibilityLabel={isLast ? 'Começar' : 'Próximo passo'} accessibilityRole="button">
             <Text style={styles.nextText}>{isLast ? 'COMEÇAR!' : 'PRÓXIMO'}</Text>
             <Ionicons name={isLast ? 'checkmark' : 'arrow-forward'} size={18} color={COLORS.background} />
           </TouchableOpacity>
         </View>
         <View style={styles.bottomRow}>
           {!isLast ? (
-            <TouchableOpacity style={styles.skipBtn} onPress={onSkip}><Text style={styles.skipText}>Pular tutorial</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.skipBtn} onPress={onSkip} accessibilityLabel="Pular tutorial" accessibilityRole="button"><Text style={styles.skipText}>Pular tutorial</Text></TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.restartBtn} onPress={handleRestart}>
+            <TouchableOpacity style={styles.restartBtn} onPress={handleRestart} accessibilityLabel="Reiniciar tutorial" accessibilityRole="button">
               <Ionicons name="refresh" size={16} color={COLORS.textMuted} />
               <Text style={styles.restartText}>Reiniciar</Text>
             </TouchableOpacity>

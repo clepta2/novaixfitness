@@ -99,9 +99,10 @@ jest.mock('../../src/services/gamification', () => ({
   getGamificationData: jest.fn().mockResolvedValue({ totalXP: 100, levelData: { level: 1, name: 'Iniciante', color: '#00E676', icon: 'leaf' } }),
 }));
 
-jest.mock('../../src/hooks/useNetworkStatus', () => ({
-  useNetworkStatus: () => ({ isConnected: true, isInternetReachable: true }),
-}));
+jest.mock('../../src/hooks/useNetworkStatus', () => {
+  const hook = () => ({ isConnected: true, isInternetReachable: true, isOnline: true, isOffline: false, wasOffline: false });
+  return { __esModule: true, default: hook, useNetworkStatus: hook };
+});
 
 jest.mock('../../src/services/sync', () => ({
   syncPendingActions: jest.fn().mockResolvedValue({ synced: 0 }),
@@ -159,6 +160,8 @@ jest.mock('../../src/components', () => {
     FavoriteWorkoutCard: (props) => React.createElement(View, null),
     FilterModal: (props) => React.createElement(View, null),
     TagFilter: (props) => React.createElement(View, null),
+    ErrorBoundary: (props) => React.createElement(View, null, props.children),
+    OfflineIndicator: (props) => React.createElement(View, null),
   };
 });
 

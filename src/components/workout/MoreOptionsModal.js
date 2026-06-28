@@ -11,7 +11,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const OPTIONS = [
   { key: 'add', icon: 'calendar', color: COLORS.primary, label: 'Adicionar à Rotina', desc: 'Incluir nos seus treinos' },
   { key: 'save', icon: 'download', color: COLORS.success, label: 'Salvar Offline', desc: 'Acessar sem internet' },
-  { key: 'share', icon: 'share-social', color: '#6366F1', label: 'Compartilhar', desc: 'Enviar para amigos' },
+  { key: 'share', icon: 'share-social', color: COLORS.purple, label: 'Compartilhar', desc: 'Enviar para amigos' },
   { key: 'rate', icon: 'star', color: COLORS.attention, label: 'Avaliar Treino', desc: 'Dê sua nota' },
   { key: 'report', icon: 'flag', color: COLORS.error, label: 'Reportar Problema', desc: 'Reportar conteúdo inadequado' },
 ];

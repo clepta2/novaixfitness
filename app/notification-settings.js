@@ -11,17 +11,25 @@ import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { scheduleWorkoutReminder, clearAllNotifications } from '../src/services/notifications';
 import { getPrefsForSettings, setNotificationPref, getNotificationPrefs } from '../src/services/notificationPrefs';
+import { registerForPushNotificationsAsync } from '../src/services/pushNotifications';
 import { layout, typography } from '../src/styles';
 
 const REMINDER_TIMES = ['07:00', '12:00', '18:00', '19:00', '20:00'];
+const QUIET_HOURS_OPTIONS = [
+  { label: 'Desligado', start: null, end: null },
+  { label: '22:00 - 07:00', start: 22, end: 7 },
+  { label: '23:00 - 08:00', start: 23, end: 8 },
+  { label: '00:00 - 06:00', start: 0, end: 6 },
+];
 
 export default function NotificationSettingsScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [prefs, setPrefs] = useState({});
   const [reminderTime, setReminderTime] = useState('19:00');
+  const [pushEnabled, setPushEnabled] = useState(true);
+  const [quietHours, setQuietHours] = useState(QUIET_HOURS_OPTIONS[0]);
   const [notifGroups, setNotifGroups] = useState(() => getPrefsForSettings());
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadSettings() {
@@ -32,10 +40,13 @@ export default function NotificationSettingsScreen() {
         setNotifGroups(getPrefsForSettings());
         const { data } = await supabase.from('profiles').select('notification_settings').eq('id', user.id).single();
         if (data?.notification_settings?.reminder_time) setReminderTime(data.notification_settings.reminder_time);
+        if (data?.notification_settings?.push_enabled !== undefined) setPushEnabled(data.notification_settings.push_enabled);
+        if (data?.notification_settings?.quiet_hours) {
+          const qh = QUIET_HOURS_OPTIONS.find(o => o.start === data.notification_settings.quiet_hours.start);
+          if (qh) setQuietHours(qh);
+        }
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar configuracoes:', err);
-      } finally {
-        setLoading(false);
       }
     }
     loadSettings();
@@ -47,10 +58,14 @@ export default function NotificationSettingsScreen() {
     await setNotificationPref(user.id, key, enabled);
   };
 
+  const saveSettings = async (overrides = {}) => {
+    const settings = { reminder_time: reminderTime, push_enabled: pushEnabled, quiet_hours: quietHours.start !== null ? quietHours : null, ...overrides };
+    await supabase.from('profiles').update({ notification_settings: settings }).eq('id', user.id);
+  };
+
   const handleTimeChange = async (time) => {
     setReminderTime(time);
-    const settings = { reminder_time: time };
-    await supabase.from('profiles').update({ notification_settings: settings }).eq('id', user.id);
+    await saveSettings({ reminder_time: time });
     if (prefs.workout_reminder) await scheduleWorkoutReminder(...time.split(':').map(Number));
   };
 
@@ -59,14 +74,16 @@ export default function NotificationSettingsScreen() {
     Alert.alert('Limpo', 'Todas as notificacoes agendadas foram removidas.');
   };
 
-  const notificationOptions = [
-    { key: 'workout_reminder', icon: 'alarm-outline', title: 'Lembrete de treino', desc: 'Receba lembrete diario para treinar' },
-    { key: 'weekly_plan', icon: 'calendar-outline', title: 'Plano semanal', desc: 'Notificacao quando novos treinos estiverem disponiveis' },
-    { key: 'achievements', icon: 'trophy-outline', title: 'Conquistas', desc: 'Avise quando desbloquear uma conquista' },
-    { key: 'streak', icon: 'flame-outline', title: 'Streak', desc: 'Celebre quando manter streak de dias' },
-    { key: 'rest_day', icon: 'bed-outline', title: 'Dia de descanso', desc: 'Lembrete para descansar e recuperar' },
-    { key: 'motivational', icon: 'bulb-outline', title: 'Motivacao', desc: 'Dicas motivacionais semanais' },
-  ];
+  const handlePushToggle = async (value) => {
+    setPushEnabled(value);
+    await saveSettings({ push_enabled: value });
+    if (value) await registerForPushNotificationsAsync(user.id);
+  };
+
+  const handleQuietHoursChange = async (option) => {
+    setQuietHours(option);
+    await saveSettings({ quiet_hours: option.start !== null ? option : null });
+  };
 
   return (
     <View style={layout.screen}>
@@ -80,29 +97,64 @@ export default function NotificationSettingsScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={typography.label}>PUSH NOTIFICATIONS</Text>
+          <View style={styles.optionItem}>
+            <View style={styles.optionLeft}>
+              <View style={[styles.optionIcon, { backgroundColor: COLORS.primary + '15' }]}>
+                <Ionicons name="notifications-outline" size={20} color={COLORS.primary} />
+              </View>
+              <View style={styles.optionInfo}>
+                <Text style={typography.h5}>Notificacoes push</Text>
+                <Text style={typography.caption}>Receba avisos mesmo com o app fechado</Text>
+              </View>
+            </View>
+            <Switch
+              value={pushEnabled}
+              onValueChange={handlePushToggle}
+              trackColor={{ false: COLORS.border, true: COLORS.primary }}
+              thumbColor={pushEnabled ? COLORS.background : COLORS.textMuted}
+            />
+          </View>
+        </View>
+
+        {pushEnabled && (
+          <View style={styles.section}>
+            <Text style={typography.label}>HORARIO SILENCIOSO</Text>
+            <View style={styles.timeOptions}>
+              {QUIET_HOURS_OPTIONS.map((option) => {
+                const active = quietHours.label === option.label;
+                return (
+                  <TouchableOpacity key={option.label} style={[styles.timeOption, active && styles.timeOptionActive]} onPress={() => handleQuietHoursChange(option)}>
+                    <Text style={[typography.bodySmall, active && styles.timeTextActive]}>{option.label}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        )}
+
+        <View style={styles.section}>
           <Text style={typography.label}>TIPOS DE NOTIFICACAO</Text>
           {notifGroups.map((group) => (
             <View key={group.title}>
               <Text style={[typography.caption, { marginBottom: SPACING.xs, marginTop: SPACING.md }]}>{group.title}</Text>
-              {group.items.map((opt) => (
-                <View key={opt.key} style={styles.optionItem}>
-                  <View style={styles.optionLeft}>
-                    <View style={[styles.optionIcon, { backgroundColor: opt.color + '15' }]}>
-                      <Ionicons name={opt.icon} size={20} color={opt.color} />
+              {group.items.map((opt) => {
+                const enabled = prefs[opt.key] !== false;
+                return (
+                  <View key={opt.key} style={styles.optionItem}>
+                    <View style={styles.optionLeft}>
+                      <View style={[styles.optionIcon, { backgroundColor: opt.color + '15' }]}>
+                        <Ionicons name={opt.icon} size={20} color={opt.color} />
+                      </View>
+                      <View style={styles.optionInfo}>
+                        <Text style={typography.h5}>{opt.label}</Text>
+                        <Text style={typography.caption}>{opt.desc}</Text>
+                      </View>
                     </View>
-                    <View style={styles.optionInfo}>
-                      <Text style={typography.h5}>{opt.label}</Text>
-                      <Text style={typography.caption}>{opt.desc}</Text>
-                    </View>
+                    <Switch value={enabled} onValueChange={() => handleToggle(opt.key)} trackColor={{ false: COLORS.border, true: COLORS.primary }} thumbColor={enabled ? COLORS.background : COLORS.textMuted} />
                   </View>
-                  <Switch
-                    value={prefs[opt.key] !== false}
-                    onValueChange={() => handleToggle(opt.key)}
-                    trackColor={{ false: COLORS.border, true: COLORS.primary }}
-                    thumbColor={prefs[opt.key] !== false ? COLORS.background : COLORS.textMuted}
-                  />
-                </View>
-              ))}
+                );
+              })}
             </View>
           ))}
         </View>
@@ -142,6 +194,5 @@ const styles = StyleSheet.create({
   timeOption: { flex: 1, paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   timeOptionActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   timeTextActive: typography.chipActive,
-  reminderStatus: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: 8, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
   clearBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error + '10', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.error + '30' },
 });

@@ -18,7 +18,7 @@ function ArticleCard({ article, onPress }) {
   const catColor = CATEGORY_COLORS[article.category] || COLORS.primary;
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => onPress?.(article)} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.card} onPress={() => onPress?.(article)} activeOpacity={0.8} accessibilityLabel={article.title} accessibilityRole="button" accessibilityHint="Abre o artigo para leitura">
       <View style={[styles.categoryBadge, { backgroundColor: catColor + '20' }]}>
         <Ionicons name="pricetag" size={10} color={catColor} />
         <Text style={[styles.categoryText, { color: catColor }]}>{article.category.toUpperCase()}</Text>

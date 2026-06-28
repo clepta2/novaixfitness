@@ -56,7 +56,7 @@ export default function WorkoutManager() {
     <View>
       <View style={styles.header}>
         <Text style={typography.h5}>TREINOS ({workouts.length})</Text>
-        <TouchableOpacity style={styles.addBtn} onPress={openAdd}>
+        <TouchableOpacity style={styles.addBtn} onPress={openAdd} accessibilityLabel="Novo treino" accessibilityRole="button" accessibilityHint="Abre formulário para criar treino">
           <Ionicons name="add" size={20} color={COLORS.background} />
           <Text style={styles.addBtnText}>Novo</Text>
         </TouchableOpacity>
@@ -72,13 +72,13 @@ export default function WorkoutManager() {
               <View style={styles.cardInfo}>
                 <View style={styles.titleRow}>
                   <Text style={styles.cardTitle}>{item.title}</Text>
-                  {item.is_premium && <Ionicons name="lock-closed" size={14} color="#FFD600" style={{ marginLeft: 6 }} />}
+                  {item.is_premium && <Ionicons name="lock-closed" size={14} color={COLORS.attention} style={{ marginLeft: 6 }} />}
                 </View>
                 <Text style={styles.cardMeta}>{item.category} · {item.level} · {item.duration_minutes}min</Text>
               </View>
               <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => openEdit(item)}><Ionicons name="pencil" size={18} color={COLORS.primary} /></TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(item.id)}><Ionicons name="trash" size={18} color={COLORS.error} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => openEdit(item)} accessibilityLabel={`Editar ${item.title}`} accessibilityRole="button"><Ionicons name="pencil" size={18} color={COLORS.primary} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(item.id)} accessibilityLabel={`Excluir ${item.title}`} accessibilityRole="button"><Ionicons name="trash" size={18} color={COLORS.error} /></TouchableOpacity>
               </View>
             </View>
           )}
@@ -89,14 +89,14 @@ export default function WorkoutManager() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={typography.h4}>{editing ? 'Editar Treino' : 'Novo Treino'}</Text>
-            <TextInput style={styles.input} value={form.title} onChangeText={(t) => setForm({ ...form, title: t })} placeholder="Título do treino" placeholderTextColor={COLORS.textMuted} />
+            <TextInput style={styles.input} value={form.title} onChangeText={(t) => setForm({ ...form, title: t })} placeholder="Título do treino" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Título do treino" />
             <View style={styles.row}>
-              <TextInput style={[styles.input, { flex: 1 }]} value={form.category} onChangeText={(t) => setForm({ ...form, category: t })} placeholder="Categoria" placeholderTextColor={COLORS.textMuted} />
-              <TextInput style={[styles.input, { flex: 1 }]} value={form.level} onChangeText={(t) => setForm({ ...form, level: t })} placeholder="Nível" placeholderTextColor={COLORS.textMuted} />
+              <TextInput style={[styles.input, { flex: 1 }]} value={form.category} onChangeText={(t) => setForm({ ...form, category: t })} placeholder="Categoria" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Categoria" />
+              <TextInput style={[styles.input, { flex: 1 }]} value={form.level} onChangeText={(t) => setForm({ ...form, level: t })} placeholder="Nível" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Nível" />
             </View>
             <View style={styles.row}>
-              <TextInput style={[styles.input, { flex: 1 }]} value={String(form.duration_minutes)} onChangeText={(t) => setForm({ ...form, duration_minutes: parseInt(t) || 0 })} placeholder="Duração (min)" keyboardType="numeric" placeholderTextColor={COLORS.textMuted} />
-              <TextInput style={[styles.input, { flex: 1 }]} value={form.video_id} onChangeText={(t) => setForm({ ...form, video_id: t })} placeholder="Video ID YouTube" placeholderTextColor={COLORS.textMuted} />
+              <TextInput style={[styles.input, { flex: 1 }]} value={String(form.duration_minutes)} onChangeText={(t) => setForm({ ...form, duration_minutes: parseInt(t) || 0 })} placeholder="Duração (min)" keyboardType="numeric" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Duração em minutos" />
+              <TextInput style={[styles.input, { flex: 1 }]} value={form.video_id} onChangeText={(t) => setForm({ ...form, video_id: t })} placeholder="Video ID YouTube" placeholderTextColor={COLORS.textMuted} accessibilityLabel="ID do vídeo do YouTube" />
             </View>
             <View style={styles.switchRow}>
               <Text style={styles.switchLabel}>Treino Premium (🔒)</Text>
@@ -105,11 +105,13 @@ export default function WorkoutManager() {
                 onValueChange={(v) => setForm({ ...form, is_premium: v })}
                 trackColor={{ false: COLORS.border, true: COLORS.primary + '80' }}
                 thumbColor={form.is_premium ? COLORS.primary : COLORS.textMuted}
+                accessibilityLabel="Treino premium"
+                accessibilityHint="Ativa ou desativa o status premium do treino"
               />
             </View>
             <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalVisible(false)}><Text style={styles.cancelBtnText}>Cancelar</Text></TouchableOpacity>
-              <TouchableOpacity style={styles.saveBtn} onPress={handleSave}><Text style={styles.saveBtnText}>Salvar</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalVisible(false)} accessibilityLabel="Cancelar"><Text style={styles.cancelBtnText}>Cancelar</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.saveBtn} onPress={handleSave} accessibilityLabel="Salvar treino"><Text style={styles.saveBtnText}>Salvar</Text></TouchableOpacity>
             </View>
           </View>
         </View>

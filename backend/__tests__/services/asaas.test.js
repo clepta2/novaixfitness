@@ -40,8 +40,19 @@ describe('Asaas Service', () => {
   });
 
   describe('verifyWebhookToken', () => {
-    it('deve retornar true', () => {
+    it('deve retornar true com token correto', () => {
+      process.env.ASAAS_WEBHOOK_TOKEN = 'any-token';
       expect(asaas.verifyWebhookToken('any-token')).toBe(true);
+    });
+
+    it('deve retornar false com token incorreto', () => {
+      process.env.ASAAS_WEBHOOK_TOKEN = 'correct-token';
+      expect(asaas.verifyWebhookToken('wrong-token')).toBe(false);
+    });
+
+    it('deve retornar false sem token configurado', () => {
+      delete process.env.ASAAS_WEBHOOK_TOKEN;
+      expect(asaas.verifyWebhookToken('any-token')).toBe(false);
     });
   });
 

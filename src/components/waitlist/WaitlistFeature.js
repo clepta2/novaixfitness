@@ -17,6 +17,10 @@ export default function WaitlistFeature({ feature, isJoined, onJoin, loading }) 
         onPress={() => onJoin(feature.id)}
         disabled={isJoined || loading}
         activeOpacity={0.8}
+        accessibilityLabel={isJoined ? 'Você já está na lista de espera' : `Entrar na lista de espera: ${feature.title}`}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: isJoined || loading }}
+        accessibilityHint={isJoined ? 'Já notificado' : 'Adiciona à lista de espera e notifica quando disponível'}
       >
         <Text style={[styles.buttonText, isJoined && styles.buttonTextJoined]}>
           {isJoined ? 'NOTIFICADO' : 'ENTRAR NA LISTA'}

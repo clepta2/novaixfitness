@@ -74,7 +74,7 @@ export default function TwoFactorSetup({ userId, onComplete }) {
             Clipboard.setStringAsync(secret);
             Alert.alert('Copiado!', 'Chave copiada para a área de transferência.');
           } catch { Alert.alert('Copiar', 'Selecione e copie a chave manualmente.'); }
-        }}>
+        }} accessibilityLabel="Copiar chave secreta" accessibilityRole="button" accessibilityHint="Copia a chave 2FA para a área de transferência">
           <Text style={styles.secretText} selectable>{secret}</Text>
           <Ionicons name="copy" size={20} color={COLORS.primary} />
         </TouchableOpacity>
@@ -91,10 +91,11 @@ export default function TwoFactorSetup({ userId, onComplete }) {
           placeholderTextColor={COLORS.textMuted}
           keyboardType="number-pad"
           maxLength={6}
+          accessibilityLabel="Código de verificação 2FA"
         />
       </View>
 
-      <TouchableOpacity style={[styles.btn, loading && styles.btnDisabled]} onPress={handleConfirm} disabled={loading}>
+      <TouchableOpacity style={[styles.btn, loading && styles.btnDisabled]} onPress={handleConfirm} disabled={loading} accessibilityLabel="Confirmar e ativar 2FA" accessibilityRole="button" accessibilityHint="Verifica o código e ativa a autenticação em dois fatores">
         {loading ? (
           <ActivityIndicator size="small" color={COLORS.background} />
         ) : (

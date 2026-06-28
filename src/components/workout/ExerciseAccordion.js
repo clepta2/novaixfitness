@@ -1,7 +1,7 @@
 // src/components/workout/ExerciseAccordion.js
 // Accordion de exercício com passo a passo - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo, memo } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -10,7 +10,7 @@ import ExerciseStepCarousel from './ExerciseStepCarousel';
 import LoadHistory from './LoadHistory';
 import { getFallbackExerciseDetails } from '../../data/exercises';
 
-export default function ExerciseAccordion({ exercise, isOpen, onToggle, index = 0 }) {
+function ExerciseAccordionInner({ exercise, isOpen, onToggle, index = 0 }) {
   const heightAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
@@ -21,11 +21,15 @@ export default function ExerciseAccordion({ exercise, isOpen, onToggle, index = 
     ]).start();
   }, [isOpen]);
 
-  const details = getFallbackExerciseDetails(exercise.name, exercise.muscle);
-  const steps = exercise.steps?.length > 0 ? exercise.steps : details.steps;
-  const tips = exercise.tips?.length > 0 ? exercise.tips : details.tips;
-  const mistakes = exercise.mistakes?.length > 0 ? exercise.mistakes : details.mistakes;
-  const alternatives = exercise.alternatives || [];
+  const { steps, tips, mistakes, alternatives } = useMemo(() => {
+    const details = getFallbackExerciseDetails(exercise.name, exercise.muscle);
+    return {
+      steps: exercise.steps?.length > 0 ? exercise.steps : details.steps,
+      tips: exercise.tips?.length > 0 ? exercise.tips : details.tips,
+      mistakes: exercise.mistakes?.length > 0 ? exercise.mistakes : details.mistakes,
+      alternatives: exercise.alternatives || [],
+    };
+  }, [exercise.name, exercise.muscle, exercise.steps, exercise.tips, exercise.mistakes, exercise.alternatives]);
 
   const chevronRotation = rotateAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
@@ -146,3 +150,5 @@ const styles = StyleSheet.create({
   altName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },
   altReason: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
 });
+
+export default memo(ExerciseAccordionInner);

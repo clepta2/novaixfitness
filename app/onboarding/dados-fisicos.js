@@ -16,8 +16,8 @@ import { typography } from '../../src/styles';
 import { formatCEP } from '../../src/data/states';
 
 const genders = [
-  { id: 'male', label: 'Masculino', icon: 'male', color: '#6366F1' },
-  { id: 'female', label: 'Feminino', icon: 'female', color: '#EC4899' },
+  { id: 'male', label: 'Masculino', icon: 'male', color: COLORS.purple },
+  { id: 'female', label: 'Feminino', icon: 'female', color: COLORS.pink },
 ];
 
 const isDateValid = (ds) => {
@@ -115,7 +115,7 @@ export default function OnboardingStep2() {
           </TouchableOpacity>
         </View>
         {dob.length > 0 && (
-          <Text style={[s.helper, { color: dobValid ? '#CCFF00' : '#FF4D4D' }]}>
+          <Text style={[s.helper, { color: dobValid ? COLORS.primary : COLORS.errorLight }]}>
             {dobValid ? 'Valida' : 'Invalida (min 10 anos)'}
           </Text>
         )}

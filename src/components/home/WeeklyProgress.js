@@ -83,7 +83,7 @@ export default function WeeklyProgress() {
           <Ionicons
             name={isGoalAchieved ? 'trophy' : 'calendar-outline'}
             size={22}
-            color={isGoalAchieved ? '#FFD600' : COLORS.primary}
+            color={isGoalAchieved ? COLORS.attention : COLORS.primary}
           />
           <Text style={typography.h4}>META DA SEMANA</Text>
         </View>

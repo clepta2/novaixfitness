@@ -11,13 +11,15 @@ import { scale } from '../../utils/responsive';
 function SocialButton({ icon, iconColor, label, onPress, bgColor, translucent }) {
   const buttonBg = translucent ? 'rgba(30, 35, 42, 0.55)' : bgColor || COLORS.surface;
   const borderColor = translucent ? 'rgba(255, 255, 255, 0.12)' : COLORS.border;
-  const textColor = translucent ? '#FFFFFF' : COLORS.textTitle;
+  const textColor = COLORS.textTitle;
 
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: buttonBg, borderColor }]}
       onPress={onPress}
       activeOpacity={0.8}
+      accessibilityLabel={label}
+      accessibilityRole="button"
     >
       <View style={styles.iconContainer}>
         <FontAwesome name={icon} size={ICON_SIZES.md} color={iconColor} />

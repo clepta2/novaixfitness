@@ -1,19 +1,19 @@
 // app/workout-detail.js
 // Detalhe do Treino - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
-import { Badge, ExerciseAccordion, WorkoutInfo, VideoPreview, MoreOptionsModal, RatingModal } from '../src/components';
-import WorkoutQuickStats from '../src/components/workout/WorkoutQuickStats';
-import WorkoutHeaderDetail from '../src/components/workout/WorkoutHeaderDetail';
+import { Badge, ExerciseAccordion, WorkoutInfo, VideoPreview, MoreOptionsModal, RatingModal, WorkoutQuickStats, WorkoutHeaderDetail, ErrorBoundary } from '../src/components';
 import { supabase } from '../src/config/supabase';
 import { useAuth } from '../src/context/AuthContext';
 import { shareWorkout } from '../src/services/share';
-import { cacheWorkoutDetail, isWorkoutCached } from '../src/services/offline';
+import { cacheWorkoutDetail, getCachedWorkoutDetail, isWorkoutCached } from '../src/services/offline';
+import { queueFavoriteAction } from '../src/services/offlineManager';
+import useNetworkStatus from '../src/hooks/useNetworkStatus';
 import { layout, typography } from '../src/styles';
 import { fallbackWorkout } from '../src/data/workouts';
 import { styles } from '../src/styles/workoutDetailStyles';
@@ -50,16 +50,18 @@ export default function WorkoutDetailScreen() {
   const [showOptions, setShowOptions] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
+  const { isOnline } = useNetworkStatus();
 
   useEffect(() => {
     if (!id) return;
     supabase.from('workouts').select('*').eq('id', id).single()
       .then(({ data, error }) => {
-        const w = error || !data ? { ...fallbackWorkout, id } : data;
-        setWorkout(w);
-        cacheWorkoutDetail(w);
+        const w = error || !data ? null : data;
+        if (w) { setWorkout(w); cacheWorkoutDetail(w); }
+        else return getCachedWorkoutDetail(id);
       })
-      .catch(() => setWorkout({ ...fallbackWorkout, id }))
+      .then(cached => { if (cached && !workout) setWorkout(cached); })
+      .catch(() => getCachedWorkoutDetail(id).then(cached => cached && setWorkout(cached)))
       .finally(() => setLoading(false));
     isWorkoutCached(id).then(setIsOffline);
   }, [id]);
@@ -77,14 +79,18 @@ export default function WorkoutDetailScreen() {
   const toggleFavorite = useCallback(async () => {
     if (!user?.id || !id) return;
     try {
-      if (isFavorite) {
-        await supabase.from('favorites').delete().eq('user_id', user.id).eq('workout_id', id);
+      if (isOnline) {
+        if (isFavorite) {
+          await supabase.from('favorites').delete().eq('user_id', user.id).eq('workout_id', id);
+        } else {
+          await supabase.from('favorites').insert({ user_id: user.id, workout_id: id });
+        }
       } else {
-        await supabase.from('favorites').insert({ user_id: user.id, workout_id: id });
+        await queueFavoriteAction(user.id, id, isFavorite ? 'remove' : 'add');
       }
       setIsFavorite(!isFavorite);
     } catch { Alert.alert('Erro', 'Falha ao atualizar favorito'); }
-  }, [user?.id, id, isFavorite]);
+  }, [user?.id, id, isFavorite, isOnline]);
 
   const handleOption = useCallback(async (opt) => {
     setShowOptions(false);
@@ -123,11 +129,13 @@ export default function WorkoutDetailScreen() {
     } catch { Alert.alert('Erro', 'Falha ao salvar.'); }
   }, [user?.id, id]);
 
+  const exercises = workout?.exercises || [];
+  const totalSets = useMemo(() => exercises.reduce((sum, ex) => sum + (ex.sets || 0), 0), [exercises]);
+
   if (loading) return <LoadingSkeleton />;
 
-  const exercises = workout?.exercises || [];
-
   return (
+    <ErrorBoundary screenName="WorkoutDetail">
     <View style={layout.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <WorkoutHeaderDetail
@@ -145,13 +153,13 @@ export default function WorkoutDetailScreen() {
           duration={workout?.duration_minutes || workout?.duration || 45}
           calories={Math.round((workout?.duration_minutes || workout?.duration || 45) * 8)}
           exerciseCount={exercises.length}
-          totalSets={exercises.reduce((sum, ex) => sum + (ex.sets || 0), 0)}
+          totalSets={totalSets}
         />
 
         <View style={styles.exercisesSection}>
           <View style={styles.exercisesHeader}>
             <Text style={styles.exercisesTitle}>EXERCÍCIOS ({exercises.length})</Text>
-            <Text style={styles.exercisesSubtitle}>{exercises.reduce((s, e) => s + (e.sets || 0), 0)} séries no total</Text>
+            <Text style={styles.exercisesSubtitle}>{totalSets} séries no total</Text>
           </View>
 
           {exercises.map((ex, i) => (
@@ -178,5 +186,6 @@ export default function WorkoutDetailScreen() {
       <MoreOptionsModal visible={showOptions} onSelect={handleOption} onClose={() => setShowOptions(false)} />
       <RatingModal visible={showRating} onClose={() => setShowRating(false)} onSubmit={handleRating} />
     </View>
+    </ErrorBoundary>
   );
 }

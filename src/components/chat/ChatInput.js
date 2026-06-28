@@ -38,6 +38,7 @@ export default function ChatInput({ value, onChange, onSend, loading }) {
           placeholderTextColor={COLORS.textMuted}
           multiline
           numberOfLines={1}
+          accessibilityLabel="Campo de mensagem do chat"
         />
 
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
@@ -45,6 +46,8 @@ export default function ChatInput({ value, onChange, onSend, loading }) {
             style={[styles.sendBtn, (!value.trim() || loading) && styles.sendBtnDisabled]}
             onPress={handleSend}
             disabled={loading || !value.trim()}
+            accessibilityLabel="Enviar mensagem"
+            accessibilityRole="button"
           >
             {loading ? (
               <ActivityIndicator size="small" color={COLORS.background} />

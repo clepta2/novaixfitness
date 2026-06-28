@@ -55,9 +55,9 @@ export default function DraggableSlider({ label, value, setValue, min, max, unit
       <View style={styles.header}>
         <Text style={typography.label}>{label}</Text>
         {editing ? (
-          <TextInput style={styles.input} value={editText} onChangeText={setEditText} keyboardType="numeric" autoFocus onBlur={commitEdit} onSubmitEditing={commitEdit} />
+          <TextInput style={styles.input} value={editText} onChangeText={setEditText} keyboardType="numeric" autoFocus onBlur={commitEdit} onSubmitEditing={commitEdit} accessibilityLabel={`${label}: valor`} />
         ) : (
-          <TouchableOpacity onPress={() => { setEditText(String(value)); setEditing(true); }}>
+          <TouchableOpacity onPress={() => { setEditText(String(value)); setEditing(true); }} accessibilityLabel={`${label}: ${value} ${unit}. Toque para editar`} accessibilityRole="button">
             <Text style={[typography.h3, { textDecorationLine: 'underline', textDecorationStyle: 'dotted' }]}>{value} {unit}</Text>
           </TouchableOpacity>
         )}
@@ -68,7 +68,7 @@ export default function DraggableSlider({ label, value, setValue, min, max, unit
         style={styles.trackRow}
         onLayout={(e) => { trackWidth.current = e.nativeEvent.layout.width; }}
       >
-        <TouchableOpacity activeOpacity={1} onPress={handleTrackPress} style={styles.trackTouch}>
+        <TouchableOpacity activeOpacity={1} onPress={handleTrackPress} style={styles.trackTouch} accessibilityLabel={`${label}: ${value} ${unit}`} accessibilityRole="adjustable" accessibilityValue={{ min, max, now: value }}>
           <View style={styles.track}>
             <View style={[styles.fill, { width: `${pct * 100}%` }]} />
           </View>

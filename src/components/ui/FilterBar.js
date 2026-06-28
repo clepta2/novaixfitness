@@ -41,6 +41,9 @@ function FilterBar({ selected, onSelect, filters = PERIOD_FILTERS, style }) {
             style={[styles.chip, active && styles.chipActive]}
             onPress={() => onSelect(f.key)}
             activeOpacity={0.75}
+            accessibilityLabel={`Filtrar por ${f.label}`}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
           >
             <Text style={[styles.label, active && styles.labelActive]}>{f.label}</Text>
           </TouchableOpacity>

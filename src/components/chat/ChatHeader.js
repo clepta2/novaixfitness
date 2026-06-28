@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 export default function ChatHeader({ onBack, onClear }) {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={onBack} style={styles.backBtn} accessibilityLabel="Voltar">
+      <TouchableOpacity onPress={onBack} style={styles.backBtn} accessibilityLabel="Voltar" accessibilityRole="button">
         <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
       </TouchableOpacity>
 
@@ -31,10 +31,10 @@ export default function ChatHeader({ onBack, onClear }) {
       </View>
 
       <View style={styles.headerActions}>
-        <TouchableOpacity style={styles.actionBtn} accessibilityLabel="Informações">
+        <TouchableOpacity style={styles.actionBtn} accessibilityLabel="Informações" accessibilityRole="button">
           <Ionicons name="information-circle-outline" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionBtn} onPress={onClear} accessibilityLabel="Limpar chat">
+        <TouchableOpacity style={styles.actionBtn} onPress={onClear} accessibilityLabel="Limpar chat" accessibilityRole="button">
           <Ionicons name="trash-outline" size={18} color={COLORS.textMuted} />
         </TouchableOpacity>
       </View>

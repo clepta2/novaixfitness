@@ -11,8 +11,8 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const CATEGORY_COLORS = {
-  'Musculação': '#CCFF00', 'Cardio': '#FF6B35', 'Calistenia': '#00E676',
-  'Flexibilidade': '#FFD600', 'HIIT': '#FF1744', 'Yoga': '#3B82F6',
+  'Musculação': COLORS.primary, 'Cardio': COLORS.secondary, 'Calistenia': COLORS.success,
+  'Flexibilidade': COLORS.attention, 'HIIT': COLORS.error, 'Yoga': COLORS.info,
 };
 
 const chartConfig = {
@@ -34,7 +34,7 @@ function ChartCard({ title, subtitle, children, onPress, icon }) {
   }, []);
 
   return (
-    <TouchableOpacity style={[styles.chartCard, { opacity: fadeAnim }]} onPress={onPress} activeOpacity={onPress ? 0.8 : 1}>
+    <TouchableOpacity style={[styles.chartCard, { opacity: fadeAnim }]} onPress={onPress} activeOpacity={onPress ? 0.8 : 1} accessibilityLabel={title} accessibilityRole={onPress ? 'button' : undefined} accessibilityHint={onPress ? 'Expande o gráfico' : undefined}>
       <View style={styles.chartHeader}>
         <View style={styles.chartHeaderLeft}>
           {icon && <Ionicons name={icon} size={16} color={COLORS.primary} />}
@@ -70,7 +70,7 @@ export function CategoryChart({ data, onPress }) {
   }
   return (
     <ChartCard title="TREINOS POR CATEGORIA" icon="pie-chart" onPress={onPress}>
-      <PieChart data={Object.entries(data).map(([name, count]) => ({ name, population: count, color: CATEGORY_COLORS[name] || '#94A3B8', legendFontColor: COLORS.textMuted, legendFontSize: 11 }))} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} accessor="population" backgroundColor="transparent" paddingLeft="15" />
+      <PieChart data={Object.entries(data).map(([name, count]) => ({ name, population: count, color: CATEGORY_COLORS[name] || COLORS.textDescription, legendFontColor: COLORS.textMuted, legendFontSize: 11 }))} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} accessor="population" backgroundColor="transparent" paddingLeft="15" />
     </ChartCard>
   );
 }

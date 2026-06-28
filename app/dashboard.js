@@ -1,7 +1,7 @@
 // app/dashboard.js
 // Dashboard Unificado de Progresso - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,7 +32,7 @@ export default function DashboardScreen() {
   const [data, setData] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!user?.id) return;
     try {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
@@ -66,11 +66,25 @@ export default function DashboardScreen() {
       });
     } catch (err) { if (__DEV__) console.error('Erro ao carregar dashboard:', err); }
     finally { setRefreshing(false); }
-  };
+  }, [user?.id]);
 
-  useEffect(() => { loadData(); }, [user?.id]);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  const bmi = data?.weight && data?.height ? (data.weight / ((data.height / 100) ** 2)).toFixed(1) : null;
+  const bmi = useMemo(() => {
+    return data?.weight && data?.height ? (data.weight / ((data.height / 100) ** 2)).toFixed(1) : null;
+  }, [data?.weight, data?.height]);
+
+  const freqChartData = useMemo(() => {
+    return data?.freq?.length > 0 ? { labels: data.freq.map(f => f.week), datasets: [{ data: data.freq.map(f => f.count || 0) }] } : null;
+  }, [data?.freq]);
+
+  const monthlyChartData = useMemo(() => {
+    return data?.monthly?.length > 1 ? { labels: data.monthly.map(m => m.month), datasets: [{ data: data.monthly.map(m => m.workouts) }] } : null;
+  }, [data?.monthly]);
+
+  const weightChartData = useMemo(() => {
+    return data?.weightHistory?.length > 1 ? { labels: data.weightHistory.map(w => w.date), datasets: [{ data: data.weightHistory.map(w => w.weight) }] } : null;
+  }, [data?.weightHistory]);
 
   return (
     <View style={layout.screen}>
@@ -98,14 +112,14 @@ export default function DashboardScreen() {
           recentWorkouts={data?.recentWorkouts || []}
         />
 
-        {data?.freq?.length > 0 && (
+        {freqChartData && (
           <TouchableOpacity style={styles.chartCard} onPress={() => router.push('/analytics')}>
             <View style={styles.chartHeader}>
               <Text style={typography.h5}>Frequência Semanal</Text>
               <Ionicons name="expand-outline" size={18} color={COLORS.textMuted} />
             </View>
             <BarChart
-              data={{ labels: data.freq.map(f => f.week), datasets: [{ data: data.freq.map(f => f.count || 0) }] }}
+              data={freqChartData}
               width={SCREEN_WIDTH - 80} height={160}
               chartConfig={chartConfig} style={styles.chart} fromZero showValuesOnTopOfBars
             />
@@ -114,28 +128,28 @@ export default function DashboardScreen() {
 
         {data?.muscleBalance && <MuscleRadarChart data={data.muscleBalance} previousData={data.prevMuscleBalance} />}
 
-        {data?.monthly?.length > 1 && (
+        {monthlyChartData && (
           <TouchableOpacity style={styles.chartCard} onPress={() => router.push('/analytics')}>
             <View style={styles.chartHeader}>
               <Text style={typography.h5}>Evolução Mensal</Text>
               <Ionicons name="expand-outline" size={18} color={COLORS.textMuted} />
             </View>
             <LineChart
-              data={{ labels: data.monthly.map(m => m.month), datasets: [{ data: data.monthly.map(m => m.workouts) }] }}
+              data={monthlyChartData}
               width={SCREEN_WIDTH - 80} height={160}
               chartConfig={chartConfig} style={styles.chart} bezier fromZero
             />
           </TouchableOpacity>
         )}
 
-        {data?.weightHistory?.length > 1 && (
+        {weightChartData && (
           <TouchableOpacity style={styles.chartCard} onPress={() => router.push('/body-measures')}>
             <View style={styles.chartHeader}>
               <Text style={typography.h5}>Evolução do Peso</Text>
               <Ionicons name="expand-outline" size={18} color={COLORS.textMuted} />
             </View>
             <LineChart
-              data={{ labels: data.weightHistory.map(w => w.date), datasets: [{ data: data.weightHistory.map(w => w.weight) }] }}
+              data={weightChartData}
               width={SCREEN_WIDTH - 80} height={160}
               chartConfig={{ ...chartConfig, color: (opacity = 1) => `rgba(0, 230, 118, ${opacity})` }}
               style={styles.chart} bezier fromZero

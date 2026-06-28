@@ -4,6 +4,7 @@
 import { supabase } from '../config/supabase';
 import { recordWorkoutCompletion } from './gamification';
 import { sendWorkoutCompletedNotification } from './notifications';
+import { sendPushToUser } from './pushNotifications';
 
 export async function saveCompleteWorkout(userId, workout, logs, duration) {
   if (!userId) return null;
@@ -50,6 +51,10 @@ export async function saveCompleteWorkout(userId, workout, logs, duration) {
         gamResult.xpGained,
         userId
       );
+      await sendPushToUser(userId, 'Treino concluido!', `${workout?.name || 'Treino'} finalizado. +${gamResult.xpGained} XP!`, {
+        type: 'workout_completed',
+        workout_id: workout?.id,
+      });
     }
 
     return {

@@ -8,8 +8,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as KeepAwake from 'expo-keep-awake';
 import { COLORS } from '../src/constants/colors';
 import { ICON_SIZES } from '../src/constants/spacing';
-import { WorkoutTimer, ExerciseProgress, RestOverlay, WorkoutControls, RatingModal, TutorialOverlay } from '../src/components';
-import XPFloating from '../src/components/common/XPFloating';
+import { WorkoutTimer, ExerciseProgress, RestOverlay, WorkoutControls, RatingModal, TutorialOverlay, XPFloating, ErrorBoundary } from '../src/components';
 import { saveCompleteWorkout } from '../src/services/workoutSaver';
 import { shareWorkout } from '../src/services/share';
 import { awardActionXP } from '../src/services/gamification';
@@ -17,6 +16,8 @@ import { loadSounds, unloadSounds } from '../src/services/audioService';
 import { isVoiceCoachEnabled, setVoiceCoachEnabled } from '../src/services/voiceCoach';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
+import { queueWorkoutCompletion } from '../src/services/offlineManager';
+import useNetworkStatus from '../src/hooks/useNetworkStatus';
 import useWorkoutTimer from '../src/hooks/useWorkoutTimer';
 import { useTutorial } from '../src/hooks/useTutorial';
 import { layout, typography } from '../src/styles';
@@ -34,6 +35,7 @@ export default function PlayerScreen() {
   const [showXP, setShowXP] = useState(false);
   const [xpAmount, setXpAmount] = useState(0);
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('player', true);
+  const { isOnline } = useNetworkStatus();
   const timer = useWorkoutTimer(workout);
 
   useEffect(() => {
@@ -59,6 +61,13 @@ export default function PlayerScreen() {
 
   const gamRef = { current: null };
   const handleWorkoutComplete = async () => {
+    if (!isOnline && user?.id && workout?.id) {
+      await queueWorkoutCompletion(user.id, workout.id, timer.logs, timer.elapsed);
+      Alert.alert('Salvo offline', 'Treino sera sincronizado quando voce estiver online.');
+      timer.stopWorkout();
+      router.back();
+      return;
+    }
     gamRef.current = await saveCompleteWorkout(user?.id, workout, timer.logs, timer.elapsed);
     if (gamRef.current?.xpGained > 0) { setXpAmount(gamRef.current.xpGained); setShowXP(true); }
     setShowRating(true);
@@ -129,6 +138,7 @@ export default function PlayerScreen() {
   }
 
   return (
+    <ErrorBoundary screenName="Player">
     <View style={layout.screen}>
       <XPFloating amount={xpAmount} visible={showXP} onComplete={() => setShowXP(false)} />
       {timer.phase === 'resting' && (
@@ -157,5 +167,6 @@ export default function PlayerScreen() {
       </ScrollView>
       <RatingModal visible={showRating} onClose={() => { setShowRating(false); timer.stopWorkout(); router.back(); }} onSubmit={handleRatingSubmit} />
     </View>
+    </ErrorBoundary>
   );
 }

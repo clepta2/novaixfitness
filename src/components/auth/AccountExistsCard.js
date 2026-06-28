@@ -21,11 +21,11 @@ export default function AccountExistsCard({ type, email, onClear, onGoogleSignIn
       </View>
       <Text style={{ color: '#AAA', fontSize: 13, marginBottom: 14 }}>Essa conta já existe. Escolha uma opção:</Text>
 
-      <TouchableOpacity onPress={() => router.replace({ pathname: '/', params: { email: email?.trim() } })} style={{ backgroundColor: COLORS.primary, borderRadius: 8, paddingVertical: 12, alignItems: 'center', marginBottom: 8 }}>
+      <TouchableOpacity onPress={() => router.replace({ pathname: '/', params: { email: email?.trim() } })} style={{ backgroundColor: COLORS.primary, borderRadius: 8, paddingVertical: 12, alignItems: 'center', marginBottom: 8 }} accessibilityLabel="Fazer login com senha" accessibilityRole="button">
         <Text style={{ color: COLORS.background, fontSize: 14, fontFamily: 'Montserrat_700Bold' }}>FAÇA LOGIN COM SENHA</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push({ pathname: '/forgot-password', params: { email: email?.trim() } })} style={{ borderWidth: 1, borderColor: COLORS.primary, borderRadius: 8, paddingVertical: 12, alignItems: 'center', marginBottom: 10 }}>
+      <TouchableOpacity onPress={() => router.push({ pathname: '/forgot-password', params: { email: email?.trim() } })} style={{ borderWidth: 1, borderColor: COLORS.primary, borderRadius: 8, paddingVertical: 12, alignItems: 'center', marginBottom: 10 }} accessibilityLabel="Redefinir senha" accessibilityRole="button">
         <Text style={{ color: COLORS.primary, fontSize: 14, fontFamily: 'Montserrat_700Bold' }}>REDEFINIR SENHA</Text>
       </TouchableOpacity>
 
@@ -38,7 +38,7 @@ export default function AccountExistsCard({ type, email, onClear, onGoogleSignIn
       <SocialButton icon="google" iconColor={COLORS.googleBlue} label="Entrar com Google" onPress={onGoogleSignIn} />
       <SocialButton icon="apple" iconColor="#FFF" label="Entrar com Apple" onPress={onAppleSignIn} />
 
-      <TouchableOpacity onPress={onClear} style={{ alignItems: 'center', marginTop: 10 }}>
+      <TouchableOpacity onPress={onClear} style={{ alignItems: 'center', marginTop: 10 }} accessibilityLabel={type === 'email' ? 'Usar outro e-mail' : 'Usar outro CPF'} accessibilityRole="button">
         <Text style={{ color: COLORS.primary, fontSize: 13, textDecorationLine: 'underline' }}>
           {type === 'email' ? 'Usar outro e-mail' : 'Usar outro CPF'}
         </Text>

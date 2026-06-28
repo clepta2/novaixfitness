@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 function FaqItem({ item, isExpanded, onToggle }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.header} onPress={() => onToggle(item.id)} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.header} onPress={() => onToggle(item.id)} activeOpacity={0.8} accessibilityLabel={item.question} accessibilityRole="button" accessibilityState={{ expanded: isExpanded }} accessibilityHint={isExpanded ? 'Recolhe a resposta' : 'Expande a resposta'}>
         <Text style={styles.question}>{item.question}</Text>
         <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={20} color={COLORS.primary} />
       </TouchableOpacity>

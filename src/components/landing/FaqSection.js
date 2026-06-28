@@ -19,7 +19,7 @@ export default function FaqSection() {
       <Text style={styles.sectionTitle}>FAQ</Text>
       <View style={styles.faqList}>
         {faqs.map((faq, index) => (
-          <TouchableOpacity key={index} style={styles.faqItem} onPress={() => setActiveFaq(activeFaq === index ? null : index)} activeOpacity={0.8}>
+          <TouchableOpacity key={index} style={styles.faqItem} onPress={() => setActiveFaq(activeFaq === index ? null : index)} activeOpacity={0.8} accessibilityLabel={`${faq.q}. ${activeFaq === index ? 'Toque para fechar' : 'Toque para ver resposta'}`} accessibilityRole="button">
             <View style={styles.faqHeader}>
               <Text style={styles.faqQuestion}>{faq.q}</Text>
               <Ionicons name={activeFaq === index ? "chevron-up-outline" : "chevron-down-outline"} size={20} color={COLORS.textTitle} />

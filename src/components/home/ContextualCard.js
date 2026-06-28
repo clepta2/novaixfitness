@@ -7,10 +7,10 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
 function getStreakMotivation(streak) {
-  if (streak >= 30) return { text: `${streak} dias seguidos! Lenda!`, icon: 'trophy', color: '#FFD700' };
-  if (streak >= 14) return { text: `${streak} dias! Incrivel!`, icon: 'flame', color: '#FF6B35' };
-  if (streak >= 7) return { text: `${streak} dias! Continue assim!`, icon: 'trending-up', color: '#00E676' };
-  if (streak >= 3) return { text: `${streak} dias no flow!`, icon: 'flash', color: '#CCFF00' };
+  if (streak >= 30) return { text: `${streak} dias seguidos! Lenda!`, icon: 'trophy', color: COLORS.gold };
+  if (streak >= 14) return { text: `${streak} dias! Incrivel!`, icon: 'flame', color: COLORS.secondary };
+  if (streak >= 7) return { text: `${streak} dias! Continue assim!`, icon: 'trending-up', color: COLORS.success };
+  if (streak >= 3) return { text: `${streak} dias no flow!`, icon: 'flash', color: COLORS.primary };
   return null;
 }
 
@@ -66,9 +66,9 @@ export default function ContextualCard({ card, onAction, streak = 0 }) {
 
       <Text style={styles.description}>{card.description}</Text>
 
-      <TouchableOpacity style={[styles.actionBtn, { backgroundColor: card.iconColor }]} onPress={handlePress} activeOpacity={0.8}>
+      <TouchableOpacity style={[styles.actionBtn, { backgroundColor: card.iconColor }]} onPress={handlePress} activeOpacity={0.8} accessibilityLabel={card.actionLabel} accessibilityRole="button">
         <Text style={styles.actionLabel}>{card.actionLabel}</Text>
-        <Ionicons name="arrow-forward" size={16} color="#12161A" />
+        <Ionicons name="arrow-forward" size={16} color={COLORS.background} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   actionLabel: {
     fontSize: 13,
     fontFamily: 'Montserrat-Bold',
-    color: '#12161A',
+    color: COLORS.background,
     letterSpacing: 0.5,
   },
   motivationRow: {

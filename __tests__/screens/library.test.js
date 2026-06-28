@@ -107,13 +107,20 @@ jest.mock('../../src/hooks', () => ({
   }),
 }));
 
-jest.mock('../../src/components', () => ({
-  WorkoutCard: 'WorkoutCard',
-  FavoriteWorkoutCard: 'FavoriteWorkoutCard',
-  FilterModal: 'FilterModal',
-  TagFilter: 'TagFilter',
-  TutorialOverlay: 'TutorialOverlay',
-}));
+jest.mock('../../src/components', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  const mock = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  return {
+    WorkoutCard: 'WorkoutCard',
+    FavoriteWorkoutCard: 'FavoriteWorkoutCard',
+    FilterModal: 'FilterModal',
+    TagFilter: 'TagFilter',
+    TutorialOverlay: 'TutorialOverlay',
+    ErrorBoundary: (props) => React.createElement(View, null, props.children),
+    OfflineIndicator: mock('OfflineIndicator'),
+  };
+});
 
 jest.mock('../../src/hooks/useTutorial', () => ({
   useTutorial: () => ({

@@ -1,4 +1,4 @@
-﻿// src/components/onboarding/MeasurementGuide.js
+// src/components/onboarding/MeasurementGuide.js
 // Guia de medição - DATA DRIVEN
 
 import { View, Text, StyleSheet } from 'react-native';
@@ -24,11 +24,11 @@ export default function MeasurementGuide({ bodyPart }) {
       </View>
       <View style={styles.tipsRow}>
         <View style={[styles.tipCard, styles.tipCorrect]}>
-          <Ionicons name="checkmark-circle" size={14} color="#00E676" />
+          <Ionicons name="checkmark-circle" size={14} color={COLORS.success} />
           <Text style={styles.tipText}>{guide.correct}</Text>
         </View>
         <View style={[styles.tipCard, styles.tipIncorrect]}>
-          <Ionicons name="close-circle" size={14} color="#FF1744" />
+          <Ionicons name="close-circle" size={14} color={COLORS.error} />
           <Text style={styles.tipText}>{guide.incorrect}</Text>
         </View>
       </View>
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
   stepText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription, flex: 1 },
   tipsRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.sm },
   tipCard: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, padding: SPACING.sm, borderRadius: BORDER_RADIUS.sm },
-  tipCorrect: { backgroundColor: '#00E67610' },
-  tipIncorrect: { backgroundColor: '#FF174410' },
+  tipCorrect: { backgroundColor: COLORS.success + '10' },
+  tipIncorrect: { backgroundColor: COLORS.error + '10' },
   tipText: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textDescription, flex: 1 },
   proTip: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, padding: SPACING.sm, backgroundColor: COLORS.primary + '10', borderRadius: BORDER_RADIUS.sm },
   proTipText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.primary },

@@ -12,10 +12,7 @@ import {
   calculateBMI, getBMICategory,
 } from '../src/services/body-measurements';
 import { layout, typography } from '../src/styles';
-import MeasurementForm from '../src/components/progress/MeasurementForm';
-import BMICard from '../src/components/progress/BMICard';
-import MeasurementChart from '../src/components/progress/MeasurementChart';
-import MeasurementHistory from '../src/components/progress/MeasurementHistory';
+import { MeasurementForm, BMICard, MeasurementChart, MeasurementHistory } from '../src/components';
 
 export default function BodyMeasuresScreen() {
   const router = useRouter();

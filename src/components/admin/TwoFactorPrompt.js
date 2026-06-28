@@ -49,9 +49,10 @@ export default function TwoFactorPrompt({ userId, onVerified }) {
         keyboardType="number-pad"
         maxLength={6}
         autoFocus
+        accessibilityLabel="Código de verificação 2FA"
       />
 
-      <TouchableOpacity style={[styles.btn, loading && styles.btnDisabled]} onPress={handleVerify} disabled={loading}>
+      <TouchableOpacity style={[styles.btn, loading && styles.btnDisabled]} onPress={handleVerify} disabled={loading} accessibilityLabel="Verificar código" accessibilityRole="button" accessibilityHint="Verifica o código 2FA e libera o acesso">
         {loading ? (
           <ActivityIndicator size="small" color={COLORS.background} />
         ) : (

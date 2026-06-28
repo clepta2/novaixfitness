@@ -56,7 +56,7 @@ export default function ExerciseManager() {
     <View>
       <View style={styles.header}>
         <Text style={typography.h5}>EXERCÍCIOS ({exercises.length})</Text>
-        <TouchableOpacity style={styles.addBtn} onPress={openAdd}>
+        <TouchableOpacity style={styles.addBtn} onPress={openAdd} accessibilityLabel="Novo exercício" accessibilityRole="button" accessibilityHint="Abre formulário para criar exercício">
           <Ionicons name="add" size={20} color={COLORS.background} />
           <Text style={styles.addBtnText}>Novo</Text>
         </TouchableOpacity>
@@ -74,8 +74,8 @@ export default function ExerciseManager() {
                 <Text style={styles.cardMeta}>{item.category} · {item.muscle_group || '—'} · {item.equipment || '—'}</Text>
               </View>
               <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => openEdit(item)}><Ionicons name="pencil" size={18} color={COLORS.primary} /></TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(item.id)}><Ionicons name="trash" size={18} color={COLORS.error} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => openEdit(item)} accessibilityLabel={`Editar ${item.name}`} accessibilityRole="button"><Ionicons name="pencil" size={18} color={COLORS.primary} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(item.id)} accessibilityLabel={`Excluir ${item.name}`} accessibilityRole="button"><Ionicons name="trash" size={18} color={COLORS.error} /></TouchableOpacity>
               </View>
             </View>
           )}
@@ -86,13 +86,13 @@ export default function ExerciseManager() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={typography.h4}>{editing ? 'Editar Exercício' : 'Novo Exercício'}</Text>
-            <TextInput style={styles.input} value={form.name} onChangeText={(t) => setForm({ ...form, name: t })} placeholder="Nome do exercício" placeholderTextColor={COLORS.textMuted} />
-            <TextInput style={styles.input} value={form.category} onChangeText={(t) => setForm({ ...form, category: t })} placeholder="Categoria" placeholderTextColor={COLORS.textMuted} />
-            <TextInput style={styles.input} value={form.muscle_group} onChangeText={(t) => setForm({ ...form, muscle_group: t })} placeholder="Grupo muscular" placeholderTextColor={COLORS.textMuted} />
-            <TextInput style={styles.input} value={form.equipment} onChangeText={(t) => setForm({ ...form, equipment: t })} placeholder="Equipamento" placeholderTextColor={COLORS.textMuted} />
+            <TextInput style={styles.input} value={form.name} onChangeText={(t) => setForm({ ...form, name: t })} placeholder="Nome do exercício" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Nome do exercício" />
+            <TextInput style={styles.input} value={form.category} onChangeText={(t) => setForm({ ...form, category: t })} placeholder="Categoria" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Categoria do exercício" />
+            <TextInput style={styles.input} value={form.muscle_group} onChangeText={(t) => setForm({ ...form, muscle_group: t })} placeholder="Grupo muscular" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Grupo muscular" />
+            <TextInput style={styles.input} value={form.equipment} onChangeText={(t) => setForm({ ...form, equipment: t })} placeholder="Equipamento" placeholderTextColor={COLORS.textMuted} accessibilityLabel="Equipamento necessário" />
             <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalVisible(false)}><Text style={styles.cancelBtnText}>Cancelar</Text></TouchableOpacity>
-              <TouchableOpacity style={styles.saveBtn} onPress={handleSave}><Text style={styles.saveBtnText}>Salvar</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalVisible(false)} accessibilityLabel="Cancelar"><Text style={styles.cancelBtnText}>Cancelar</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.saveBtn} onPress={handleSave} accessibilityLabel="Salvar exercício"><Text style={styles.saveBtnText}>Salvar</Text></TouchableOpacity>
             </View>
           </View>
         </View>

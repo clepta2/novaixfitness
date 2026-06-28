@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 function ContactCard({ icon, iconColor, label, description, onPress }) {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8} accessibilityLabel={label} accessibilityRole="button" accessibilityHint={description}>
       <View style={[styles.icon, { backgroundColor: iconColor + '20' }]}>
         <Ionicons name={icon} size={24} color={iconColor} />
       </View>

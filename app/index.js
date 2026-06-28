@@ -143,7 +143,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
               </View>
               <View style={layout.divider}><View style={[layout.dividerLine, { backgroundColor: isDark ? 'rgba(255,255,255,0.12)' : COLORS.border }]} /><Text style={[layout.dividerText, { color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)' }]}>ou</Text><View style={[layout.dividerLine, { backgroundColor: isDark ? 'rgba(255,255,255,0.12)' : COLORS.border }]} /></View>
-              <SocialButton icon="google" iconColor="#4285F4" label="Entrar com Google" onPress={handleGoogle} translucent={true} />
+              <SocialButton icon="google" iconColor={COLORS.googleBlue} label="Entrar com Google" onPress={handleGoogle} translucent={true} />
               <SocialButton icon="apple" iconColor={isDark ? "#FFF" : "#000"} label="Entrar com Apple" onPress={handleApple} translucent={true} />
             </View>
 

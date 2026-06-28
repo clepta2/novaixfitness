@@ -92,7 +92,7 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
       )}
 
       <View style={styles.row}>
-        <TouchableOpacity style={styles.stateBtn} onPress={() => setShowStateModal(true)}>
+        <TouchableOpacity style={styles.stateBtn} onPress={() => setShowStateModal(true)} accessibilityLabel={`Estado: ${selectedState || 'Selecionar'}`} accessibilityRole="button" accessibilityHint="Abrir lista de estados">
           <Text style={styles.stateLabel}>ESTADO</Text>
           <View style={styles.stateBox}>
             <Text style={styles.stateText}>{selectedState || 'UF'}</Text>
@@ -104,7 +104,7 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.gpsBtn} onPress={() => {}}>
+      <TouchableOpacity style={styles.gpsBtn} onPress={() => {}} accessibilityLabel="Usar minha localização" accessibilityRole="button" accessibilityHint="Detectar localização automaticamente">
         <Ionicons name="locate" size={16} color={COLORS.primary} />
         <Text style={styles.gpsText}>Usar minha localização</Text>
       </TouchableOpacity>
@@ -115,13 +115,13 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
             <View style={styles.modalHandle} />
             <View style={styles.modalHeader}>
               <Text style={typography.h4}>Selecione seu Estado</Text>
-              <TouchableOpacity onPress={() => { setShowStateModal(false); setStateSearch(''); }}>
+              <TouchableOpacity onPress={() => { setShowStateModal(false); setStateSearch(''); }} accessibilityLabel="Fechar" accessibilityRole="button">
                 <Ionicons name="close" size={24} color={COLORS.textMuted} />
               </TouchableOpacity>
             </View>
             <View style={styles.searchBox}>
               <Ionicons name="search" size={18} color={COLORS.textMuted} />
-              <TextInput style={styles.searchInput} placeholder="Buscar..." placeholderTextColor={COLORS.textMuted} value={stateSearch} onChangeText={setStateSearch} />
+              <TextInput style={styles.searchInput} placeholder="Buscar..." placeholderTextColor={COLORS.textMuted} value={stateSearch} onChangeText={setStateSearch} accessibilityLabel="Buscar estado" />
             </View>
             <FlatList
               data={filteredStates}
@@ -131,6 +131,9 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
                 <TouchableOpacity
                   style={[styles.stateItem, selectedState === item.sigla && styles.stateItemActive]}
                   onPress={() => { setSelectedState(item.sigla); setCity(''); setStateSearch(''); setShowStateModal(false); }}
+                  accessibilityLabel={`${item.nome} (${item.sigla})`}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: selectedState === item.sigla }}
                 >
                   <Text style={[styles.stateItemText, selectedState === item.sigla && { color: COLORS.primary }]}>{item.nome} ({item.sigla})</Text>
                   {selectedState === item.sigla && <Ionicons name="checkmark" size={18} color={COLORS.primary} />}

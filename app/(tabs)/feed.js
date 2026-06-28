@@ -1,14 +1,15 @@
 // app/(tabs)/feed.js
 // Tela de Comunidade/Feed - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
-import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary } from '../../src/components';
 import { PostSkeleton, FeedEmptyState } from '../../src/components/social/FeedSkeleton';
-import { useSupabaseData } from '../../src/hooks';
+import { useSupabaseData } from '../../src/hooks/useSupabaseData';
+import { useRealtimePosts } from '../../src/hooks/useRealtimePosts';
 import { useTutorial } from '../../src/hooks/useTutorial';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
@@ -34,6 +35,23 @@ export default function FeedScreen() {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('feed', true);
+
+  const handleRealtimeInsert = useCallback((newPost) => {
+    setPosts(prev => {
+      if (prev.some(p => p.id === newPost.id)) return prev;
+      return [newPost, ...prev];
+    });
+  }, []);
+
+  const handleRealtimeUpdate = useCallback((update) => {
+    setPosts(prev => prev.map(p => p.id === update.id ? { ...p, likes: update.likes, comments: update.comments } : p));
+  }, []);
+
+  const handleRealtimeDelete = useCallback((postId) => {
+    setPosts(prev => prev.filter(p => p.id !== postId));
+  }, []);
+
+  useRealtimePosts(handleRealtimeInsert, handleRealtimeUpdate, handleRealtimeDelete);
 
   useEffect(() => {
     if (dbPosts) {
@@ -114,6 +132,7 @@ export default function FeedScreen() {
   const showEmpty = !loading && filteredPosts.length === 0;
 
   return (
+    <ErrorBoundary screenName="Feed">
     <View style={layout.screen}>
       <TutorialOverlay
         visible={tutorialVisible}
@@ -167,6 +186,7 @@ export default function FeedScreen() {
       <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} userId={user?.id} />
       <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
     </View>
+    </ErrorBoundary>
   );
 }
 

@@ -30,6 +30,9 @@ export default function PeriodSelector({ selected, onSelect }) {
             key={p.key}
             style={[styles.periodBtn, selected === p.key && styles.periodActive]}
             onPress={() => onSelect(p.key)}
+            accessibilityLabel={`Período: ${p.label}`}
+            accessibilityRole="button"
+            accessibilityState={{ selected: selected === p.key }}
           >
             <Ionicons name={p.icon} size={14} color={selected === p.key ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.periodText, selected === p.key && styles.periodTextActive]}>{p.label}</Text>

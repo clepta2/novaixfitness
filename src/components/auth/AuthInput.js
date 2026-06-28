@@ -17,7 +17,7 @@ function AuthInput({ label, placeholder, value, onChangeText, icon, secureTextEn
 
   const borderColor = error ? COLORS.error : focused ? COLORS.primary : translucent ? 'rgba(255, 255, 255, 0.12)' : COLORS.border;
   const wrapperBackground = translucent ? 'rgba(30, 35, 42, 0.55)' : COLORS.surface;
-  const textColor = translucent ? '#FFFFFF' : COLORS.textTitle;
+  const textColor = COLORS.textTitle;
   const placeholderColor = translucent ? 'rgba(255, 255, 255, 0.4)' : COLORS.textMuted;
   const labelColor = translucent ? 'rgba(255, 255, 255, 0.8)' : COLORS.textTitle;
 
@@ -44,9 +44,10 @@ function AuthInput({ label, placeholder, value, onChangeText, icon, secureTextEn
           autoCapitalize={autoCapitalize}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          accessibilityLabel={label || placeholder}
         />
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setHidden(!hidden)} style={styles.eye}>
+          <TouchableOpacity onPress={() => setHidden(!hidden)} style={styles.eye} accessibilityLabel={hidden ? 'Mostrar senha' : 'Ocultar senha'} accessibilityRole="button">
             <Ionicons name={hidden ? 'eye-off-outline' : 'eye-outline'} size={ICON_SIZES.sm} color={translucent ? 'rgba(255, 255, 255, 0.6)' : COLORS.textMuted} />
           </TouchableOpacity>
         )}

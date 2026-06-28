@@ -17,7 +17,7 @@ export default function ProgressBar({ value = 0, max = 100, label, showPercentag
   const barWidth = progressAnim.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round(percentage) }}>
       {(label || showPercentage) && (
         <View style={styles.header}>
           {label && <Text style={styles.label}>{label}</Text>}

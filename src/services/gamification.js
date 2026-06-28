@@ -3,6 +3,8 @@
 
 import { supabase } from '../config/supabase';
 import { XP_VALUES, getLevelForXP, getUnlockedAchievements, checkNewAchievements } from '../constants/gamification';
+import { sendPushToUser } from './pushNotifications';
+import { APP_CONFIG } from '../config/app';
 
 export async function addXP(userId, type, amount) {
   const xpGain = amount || XP_VALUES[type] || 0;
@@ -45,20 +47,9 @@ export async function getGamificationData(userId) {
       .select('completed, completed_at, duration')
       .eq('user_id', userId);
 
-    const { count: postsCount } = await supabase
-      .from('posts')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
-
-    const { count: likesCount } = await supabase
-      .from('post_likes')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
-
-    const { count: commentsCount } = await supabase
-      .from('post_comments')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
+    const { count: postsCount } = await supabase.from('posts').select('*', { count: 'exact', head: true }).eq('user_id', userId);
+    const { count: likesCount } = await supabase.from('post_likes').select('*', { count: 'exact', head: true }).eq('user_id', userId);
+    const { count: commentsCount } = await supabase.from('post_comments').select('*', { count: 'exact', head: true }).eq('user_id', userId);
 
     const totalXP = profile?.total_xp || 0;
     const totalWorkouts = profile?.total_workouts || userWorkouts?.filter(w => w.completed).length || 0;
@@ -117,6 +108,12 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
     const updatedData = await getGamificationData(userId);
     const newAchievements = checkNewAchievements(updatedData, prevAchievements);
 
+    const streakMilestones = Object.keys(APP_CONFIG.notifications.streakMessages).map(Number);
+    const newStreak = updatedData?.streak || 0;
+    if (streakMilestones.includes(newStreak)) {
+      await sendPushToUser(userId, `Streak de ${newStreak} dias!`, APP_CONFIG.notifications.streakMessages[newStreak], { type: 'streak', streak_days: newStreak });
+    }
+
     if (newAchievements.length > 0) {
       await supabase.from('user_achievements').upsert(
         newAchievements.map(a => ({
@@ -156,19 +153,10 @@ export async function awardActionXP(userId, action) {
 
 export async function updateMaxStreak(userId) {
   if (!userId) return;
-
   try {
-    const { data: workouts } = await supabase
-      .from('user_workouts')
-      .select('completed, completed_at')
-      .eq('user_id', userId);
-
+    const { data: workouts } = await supabase.from('user_workouts').select('completed, completed_at').eq('user_id', userId);
     const streak = calculateStreak(workouts || []);
-
-    await supabase
-      .from('profiles')
-      .update({ max_streak: streak })
-      .eq('id', userId);
+    await supabase.from('profiles').update({ max_streak: streak }).eq('id', userId);
   } catch (err) {
     console.error('Erro ao atualizar streak:', err);
   }

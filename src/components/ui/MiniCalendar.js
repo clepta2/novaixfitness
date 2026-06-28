@@ -40,11 +40,11 @@ export default function MiniCalendar({ visible, selectedDate, onSelect, onClose 
           <TouchableWithoutFeedback>
             <View style={styles.container}>
               <View style={styles.nav}>
-                <TouchableOpacity onPress={() => setViewDate(new Date(year, month - 1, 1))} style={styles.navBtn}>
+                <TouchableOpacity onPress={() => setViewDate(new Date(year, month - 1, 1))} style={styles.navBtn} accessibilityLabel="Mês anterior" accessibilityRole="button">
                   <Ionicons name="chevron-back" size={22} color={COLORS.textTitle} />
                 </TouchableOpacity>
                 <Text style={styles.monthTitle}>{MONTH_NAMES[month]} {year}</Text>
-                <TouchableOpacity onPress={() => setViewDate(new Date(year, month + 1, 1))} style={styles.navBtn}>
+                <TouchableOpacity onPress={() => setViewDate(new Date(year, month + 1, 1))} style={styles.navBtn} accessibilityLabel="Próximo mês" accessibilityRole="button">
                   <Ionicons name="chevron-forward" size={22} color={COLORS.textTitle} />
                 </TouchableOpacity>
               </View>
@@ -65,13 +65,16 @@ export default function MiniCalendar({ visible, selectedDate, onSelect, onClose 
                       style={[styles.dayCell, isToday && styles.dayToday]}
                       disabled={isFuture || isTooOld}
                       onPress={() => handleSelect(day)}
+                      accessibilityLabel={`${day} de ${MONTH_NAMES[month]}`}
+                      accessibilityRole="button"
+                      accessibilityState={{ disabled: isFuture || isTooOld, selected: false }}
                     >
                       <Text style={[styles.dayText, isToday && styles.dayTextToday]}>{day}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+              <TouchableOpacity onPress={onClose} style={styles.closeBtn} accessibilityLabel="Fechar calendário" accessibilityRole="button">
                 <Text style={styles.closeBtnText}>FECHAR</Text>
               </TouchableOpacity>
             </View>

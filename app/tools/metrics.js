@@ -1,4 +1,4 @@
-﻿// app/tools/metrics.js
+// app/tools/metrics.js
 // Calculadora de medidas corporais
 
 import { useState } from 'react';
@@ -97,10 +97,10 @@ function ResultCard({ title, value, label, color }) {
 }
 
 function getIMCClass(imc) {
-  if (imc < 18.5) return { label: 'Abaixo do peso', color: '#3B82F6' };
-  if (imc < 25) return { label: 'Normal', color: '#00E676' };
-  if (imc < 30) return { label: 'Sobrepeso', color: '#FF9800' };
-  return { label: 'Obesidade', color: '#FF5722' };
+  if (imc < 18.5) return { label: 'Abaixo do peso', color: COLORS.info };
+  if (imc < 25) return { label: 'Normal', color: COLORS.success };
+  if (imc < 30) return { label: 'Sobrepeso', color: COLORS.warning };
+  return { label: 'Obesidade', color: COLORS.rose };
 }
 
 function calculateBodyFat(waist, neck, height, gender) {

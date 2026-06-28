@@ -5,10 +5,10 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 const mockNotifications = [
-  { id: '1', icon: 'flame', color: '#FF6B35', text: 'Lucas Silva curtiu seu treino ontem.', time: '2h atrás' },
-  { id: '2', icon: 'trophy', color: '#FFD600', text: 'Você desbloqueou a conquista "Streak 5 dias"!', time: '5h atrás' },
-  { id: '3', icon: 'water', color: '#00D2FF', text: 'Parabéns! Você bateu sua meta de hidratação diária.', time: '1d atrás' },
-  { id: '4', icon: 'chatbubble-ellipses', color: '#CCFF00', text: 'O Coach IA enviou novas dicas de treino para você.', time: '2d atrás' },
+  { id: '1', icon: 'flame', color: COLORS.secondary, text: 'Lucas Silva curtiu seu treino ontem.', time: '2h atrás' },
+  { id: '2', icon: 'trophy', color: COLORS.attention, text: 'Você desbloqueou a conquista "Streak 5 dias"!', time: '5h atrás' },
+  { id: '3', icon: 'water', color: COLORS.info, text: 'Parabéns! Você bateu sua meta de hidratação diária.', time: '1d atrás' },
+  { id: '4', icon: 'chatbubble-ellipses', color: COLORS.primary, text: 'O Coach IA enviou novas dicas de treino para você.', time: '2d atrás' },
 ];
 
 export default function NotificationModal({ visible, onClose }) {

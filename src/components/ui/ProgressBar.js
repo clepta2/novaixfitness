@@ -18,7 +18,12 @@ function ProgressBar({ value = 0, max = 100, label, showValue, variant = 'defaul
   const color = variants[variant] || variants.default;
 
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[styles.container, style]}
+      accessibilityRole="progressbar"
+      accessibilityValue={{ min: 0, max: 100, now: Math.round(percentage) }}
+      accessibilityLabel={label ? `${label}: ${Math.round(percentage)}%` : `Progresso: ${Math.round(percentage)}%`}
+    >
       {(label || showValue) && (
         <View style={styles.header}>
           {label && <Text style={styles.label}>{label}</Text>}

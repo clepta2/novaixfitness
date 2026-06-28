@@ -33,7 +33,7 @@ function StudentCard({ student, onEdit }) {
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.editBtn} onPress={() => onEdit?.(student)}>
+      <TouchableOpacity style={styles.editBtn} onPress={() => onEdit?.(student)} accessibilityLabel={`Editar ${student.name}`} accessibilityRole="button">
         <Ionicons name="pencil" size={16} color={COLORS.primary} />
       </TouchableOpacity>
     </View>

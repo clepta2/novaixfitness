@@ -1,12 +1,14 @@
 // app/(tabs)/library.js
 // Tela de Biblioteca de Treinos - NOVAIX FITNESS
 
+import { useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
-import { WorkoutCard, FavoriteWorkoutCard, FilterModal, TutorialOverlay } from '../../src/components';
+import { WorkoutCard, FavoriteWorkoutCard, FilterModal, TutorialOverlay, ErrorBoundary } from '../../src/components';
 import { useLibraryData } from '../../src/hooks';
 import { useTutorial } from '../../src/hooks/useTutorial';
+import useNetworkStatus from '../../src/hooks/useNetworkStatus';
 import { layout, typography } from '../../src/styles';
 import { styles } from '../../src/styles/libraryStyles';
 
@@ -20,10 +22,11 @@ export default function LibraryScreen() {
     filteredWorkouts, popularWorkouts, recentWorkouts, activeFiltersCount,
     activePills, removePill, clearAll, userPhysicalLevel, dbWorkouts
   } = useLibraryData();
+  const { isOffline } = useNetworkStatus();
 
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('library', true);
 
-  const handleWorkoutPress = (w) => {
+  const handleWorkoutPress = useCallback((w) => {
     if (w.locked) {
       Alert.alert('Conteúdo Premium 🔒', 'Exclusivo para assinantes Premium.', [
         { text: 'Mais tarde', style: 'cancel' },
@@ -32,9 +35,14 @@ export default function LibraryScreen() {
     } else {
       router.push({ pathname: '/workout-detail', params: { id: w.id } });
     }
-  };
+  }, [router]);
+
+  const categoryCount = useMemo(() => {
+    return new Set(dbWorkouts?.map(w => w.category).filter(Boolean)).size || 0;
+  }, [dbWorkouts]);
 
   return (
+    <ErrorBoundary screenName="Library">
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
       <TutorialOverlay
         visible={tutorialVisible}
@@ -46,6 +54,7 @@ export default function LibraryScreen() {
         <View style={{ flex: 1 }}>
           <Text style={typography.h2}>Biblioteca</Text>
           <Text style={typography.bodyMuted}>{userPhysicalLevel ? `Foco: ${userPhysicalLevel}` : 'Explore todos os treinos'}</Text>
+          {isOffline && <Text style={{ color: COLORS.attention, fontSize: 11, marginTop: 4 }}>Modo offline - dados em cache</Text>}
         </View>
         {userPhysicalLevel && (
           <TouchableOpacity style={layout.headerBtn} onPress={() => setFilterByMyLevel(!filterByMyLevel)}>
@@ -125,10 +134,11 @@ export default function LibraryScreen() {
         <View style={styles.statsCard}>
           <View style={styles.statItem}><Text style={typography.price}>{dbWorkouts?.length || 0}</Text><Text style={typography.labelSmall}>Exercícios</Text></View>
           <View style={styles.statDivider} /><View style={styles.statItem}><Text style={typography.price}>{favorites.length}</Text><Text style={typography.labelSmall}>Favoritos</Text></View>
-          <View style={styles.statDivider} /><View style={styles.statItem}><Text style={typography.price}>{new Set(dbWorkouts?.map(w => w.category).filter(Boolean)).size || 0}</Text><Text style={typography.labelSmall}>Categorias</Text></View>
+          <View style={styles.statDivider} /><View style={styles.statItem}><Text style={typography.price}>{categoryCount}</Text><Text style={typography.labelSmall}>Categorias</Text></View>
         </View>
       </View>
       <View style={{ height: 100 }} />
     </ScrollView>
+    </ErrorBoundary>
   );
 }

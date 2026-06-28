@@ -2,7 +2,7 @@
 // Card de erro padronizado - NOVAIX FITNESS
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -31,13 +31,13 @@ export default function ErrorCard({ type = 'generic', message, onRetry, onReport
 
       <View style={styles.actions}>
         {onRetry && (
-          <TouchableOpacity style={styles.retryBtn} onPress={onRetry}>
+          <TouchableOpacity style={styles.retryBtn} onPress={onRetry} accessibilityLabel="Tentar novamente" accessibilityRole="button">
             <Ionicons name="refresh" size={18} color={COLORS.primary} />
             <Text style={styles.retryText}>Tentar Novamente</Text>
           </TouchableOpacity>
         )}
         {onReport && (
-          <TouchableOpacity style={styles.reportBtn} onPress={onReport}>
+          <TouchableOpacity style={styles.reportBtn} onPress={onReport} accessibilityLabel="Reportar problema" accessibilityRole="button">
             <Text style={styles.reportText}>Reportar Problema</Text>
           </TouchableOpacity>
         )}

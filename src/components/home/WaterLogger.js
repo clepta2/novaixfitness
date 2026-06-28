@@ -89,11 +89,11 @@ export default function WaterLogger() {
       <Text style={styles.targetText}>Meta: {DAILY_TARGET}ml • Faltam {Math.max(0, DAILY_TARGET - consumed)}ml</Text>
 
       <View style={styles.buttonsRow}>
-        <TouchableOpacity style={styles.waterBtn} onPress={() => addWater(250)}>
+        <TouchableOpacity style={styles.waterBtn} onPress={() => addWater(250)} accessibilityLabel="Adicionar 250 mililitros de água" accessibilityRole="button">
           <Ionicons name="add" size={18} color={COLORS.background} />
           <Text style={styles.btnText}>250ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.waterBtn, styles.waterBtnLarge]} onPress={() => addWater(500)}>
+        <TouchableOpacity style={[styles.waterBtn, styles.waterBtnLarge]} onPress={() => addWater(500)} accessibilityLabel="Adicionar 500 mililitros de água" accessibilityRole="button">
           <Ionicons name="add" size={18} color={COLORS.background} />
           <Text style={styles.btnText}>500ml</Text>
         </TouchableOpacity>

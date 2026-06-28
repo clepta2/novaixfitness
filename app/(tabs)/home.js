@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, ICON_SIZES } from '../../src/constants/spacing';
-import { DailyWorkoutCard, OfflineBanner, TutorialOverlay } from '../../src/components';
+import { DailyWorkoutCard, OfflineBanner, TutorialOverlay, ErrorBoundary } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { useTutorial } from '../../src/hooks/useTutorial';
@@ -15,6 +15,7 @@ import { getGamificationData } from '../../src/services/gamification';
 import { useNetworkStatus } from '../../src/hooks/useNetworkStatus';
 import { syncPendingActions, getPendingActionsCount } from '../../src/services/sync';
 import { isWorkoutCached } from '../../src/services/offline';
+import { cacheDailyWorkout, getCachedDailyWorkout, cacheLibrary, getCachedLibrary } from '../../src/services/offlineManager';
 import { useStaggeredEntry } from '../../src/utils/animations';
 import { layout, typography } from '../../src/styles';
 import { scale } from '../../src/utils/responsive';
@@ -69,17 +70,24 @@ export default function HomeScreen() {
         user?.id ? getGamificationData(user.id) : null,
       ]);
       const wData = data || [];
+      if (wData.length > 0) await cacheLibrary(wData);
       let sorted = [...wData];
       if (userPhysicalLevel) sorted.sort((a, b) => (a.level === userPhysicalLevel ? -1 : b.level === userPhysicalLevel ? 1 : 0));
       if (sorted.length > 0) {
         const dw = sorted[0];
-        setDailyWorkout({ id: dw.id, name: dw.title || dw.name, type: dw.category || 'Treino', videoId: dw.video_id || 'dQw4w9WgXcQ', timer: `00:${(dw.duration_minutes || dw.duration || 30).toString().padStart(2, '0')}:00`, is_premium: dw.is_premium || false });
+        const daily = { id: dw.id, name: dw.title || dw.name, type: dw.category || 'Treino', videoId: dw.video_id || 'dQw4w9WgXcQ', timer: `00:${(dw.duration_minutes || dw.duration || 30).toString().padStart(2, '0')}:00`, is_premium: dw.is_premium || false };
+        setDailyWorkout(daily);
+        cacheDailyWorkout(daily);
         isWorkoutCached(dw.id).then(setDailyOffline);
       }
       if (recent?.length > 0) setRecentWorkouts(recent.map(w => ({ id: w.id, name: w.workouts?.title || 'Treino', category: w.workouts?.category, completed: w.completed, completed_at: w.completed_at, created_at: w.created_at, duration_minutes: w.duration_minutes || w.workouts?.duration_minutes })));
       if (catData) { const c = {}; catData.forEach(w => { const k = (w.category || 'outros').toLowerCase(); c[k] = (c[k] || 0) + 1; }); setCategoryCounts(c); }
       if (gamData?.levelData) setLevelData(gamData.levelData);
-    } catch (err) { if (__DEV__) console.error('Erro ao carregar home:', err); }
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar home:', err);
+      const cached = await getCachedDailyWorkout();
+      if (cached) { setDailyWorkout(cached); setDailyOffline(true); }
+    }
   }, [userPhysicalLevel, user?.id]);
 
   useEffect(() => { if (!user || profile) fetchData(); }, [profile, user, fetchData]);
@@ -99,9 +107,10 @@ export default function HomeScreen() {
   }, [fetchData]);
 
   const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Atleta';
-  const showPremiumAlert = () => Alert.alert('Conteúdo Premium 🔒', 'Este treino é exclusivo para assinantes Premium.', [{ text: 'Mais tarde', style: 'cancel' }, { text: 'Ver Planos', onPress: () => router.push('/paywall') }]);
+  const showPremiumAlert = useCallback(() => Alert.alert('Conteúdo Premium 🔒', 'Este treino é exclusivo para assinantes Premium.', [{ text: 'Mais tarde', style: 'cancel' }, { text: 'Ver Planos', onPress: () => router.push('/paywall') }]), [router]);
 
   return (
+    <ErrorBoundary screenName="Home">
     <View style={layout.screen}>
       <TutorialOverlay
         visible={tutorialVisible}
@@ -178,5 +187,6 @@ export default function HomeScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>
+    </ErrorBoundary>
   );
 }

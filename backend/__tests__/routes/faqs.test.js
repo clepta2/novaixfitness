@@ -9,9 +9,12 @@ jest.mock('../../src/config/supabase', () => {
 jest.mock('../../src/middleware/auth', () => ({
   authenticate: (req, res, next) => {
     if (!req.headers.authorization) return res.status(401).json({ error: 'No token' });
-    req.user = { id: 'user-123' };
+    req.user = { id: 'user-123', app_metadata: { role: 'admin' } };
     next();
   }
+}));
+jest.mock('../../src/middleware/role', () => ({
+  requireRole: () => (req, res, next) => next(),
 }));
 
 const mockSupabase = require('../../src/config/supabase');

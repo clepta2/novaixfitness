@@ -86,6 +86,7 @@ jest.mock('../../src/hooks', () => ({
 
 jest.mock('../../src/services/offline', () => ({
   cacheWorkoutDetail: jest.fn(),
+  getCachedWorkoutDetail: jest.fn().mockResolvedValue(null),
   isWorkoutCached: jest.fn().mockResolvedValue(false),
 }));
 

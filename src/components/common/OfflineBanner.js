@@ -46,7 +46,7 @@ export default function OfflineBanner({ visible: forceVisible, pendingCount: pro
   if (!shouldShow) return null;
 
   return (
-    <View style={styles.banner}>
+    <View style={styles.banner} accessibilityRole="alert" accessibilityLiveRegion="polite">
       <View style={styles.content}>
         <Ionicons name="cloud-offline" size={18} color={COLORS.attention} />
         <Text style={styles.text}>Modo offline</Text>
@@ -55,7 +55,7 @@ export default function OfflineBanner({ visible: forceVisible, pendingCount: pro
         )}
       </View>
       {pendingCount > 0 && (
-        <TouchableOpacity style={styles.syncBtn} onPress={handleSync} disabled={syncing}>
+        <TouchableOpacity style={styles.syncBtn} onPress={handleSync} disabled={syncing} accessibilityLabel="Sincronizar pendências" accessibilityRole="button">
           <Ionicons name={syncing ? 'sync' : 'refresh'} size={16} color={COLORS.primary} />
         </TouchableOpacity>
       )}

@@ -8,7 +8,7 @@ export default function CtaSection({ onPressCTA }) {
     <View style={styles.ctaSection}>
       <Text style={styles.ctaTitle}>FAÇA PARTE DA EVOLUÇÃO</Text>
       <Text style={styles.ctaSubtitle}>Libere seus treinos personalizados agora mesmo.</Text>
-      <TouchableOpacity style={styles.ctaButton} onPress={onPressCTA}>
+      <TouchableOpacity style={styles.ctaButton} onPress={onPressCTA} accessibilityLabel="Começar agora" accessibilityRole="button">
         <Text style={styles.ctaButtonText}>Começar Agora</Text>
         <Ionicons name="arrow-forward-outline" size={18} color={COLORS.background} />
       </TouchableOpacity>

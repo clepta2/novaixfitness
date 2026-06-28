@@ -11,10 +11,10 @@ import { scale } from '../../utils/responsive';
 import { getXPProgress } from '../../constants/gamification';
 
 const STAT_DEFS = [
-  { key: 'streak', icon: 'flame', color: '#FF6B35', label: 'Streak', unit: 'd' },
+  { key: 'streak', icon: 'flame', color: COLORS.secondary, label: 'Streak', unit: 'd' },
   { key: 'workouts', icon: 'barbell', color: COLORS.primary, label: 'Treinos', unit: '' },
-  { key: 'time', icon: 'time-outline', color: '#3B82F6', label: 'Horas', unit: 'h' },
-  { key: 'favorites', icon: 'heart', color: '#FF1744', label: 'Favoritos', unit: '' },
+  { key: 'time', icon: 'time-outline', color: COLORS.info, label: 'Horas', unit: 'h' },
+  { key: 'favorites', icon: 'heart', color: COLORS.error, label: 'Favoritos', unit: '' },
 ];
 
 function StatChip({ icon, color, label, value, unit }) {
@@ -77,7 +77,7 @@ function ProfileHero({ name, email, memberSince, uri, onPressAvatar, onEditName,
         {STAT_DEFS.map((s) => (
           <StatChip key={s.key} icon={s.icon} color={s.color} label={s.label} value={stats?.[s.key] ?? 0} unit={s.unit} />
         ))}
-        <StatChip icon="star" color="#FFD600" label="XP Total" value={xp} unit=" pts" />
+        <StatChip icon="star" color={COLORS.attention} label="XP Total" value={xp} unit=" pts" />
       </ScrollView>
     </Animated.View>
   );

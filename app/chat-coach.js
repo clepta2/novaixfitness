@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, FlatList, KeyboardAvoidingView, Platform, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../src/constants/colors';
@@ -7,10 +7,7 @@ import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { askGeminiCoach, saveChatMessage, getChatHistory, clearChatHistory } from '../src/services/gemini';
 import { analyzeMealText, saveMealLog } from '../src/services/mealAnalyzer';
-import ChatHeader from '../src/components/chat/ChatHeader';
-import MessageBubble from '../src/components/chat/MessageBubble';
-import ChatInput from '../src/components/chat/ChatInput';
-import QuickTips from '../src/components/chat/QuickTips';
+import { ChatHeader, MessageBubble, ChatInput, QuickTips } from '../src/components';
 import { layout } from '../src/styles';
 import { MEAL_KEYWORDS, FOOD_KEYWORDS, QUANTITY_PATTERN } from '../src/data/nutritionKeywords';
 
@@ -70,7 +67,7 @@ export default function ChatCoachScreen() {
     init();
   }, [user?.id]);
 
-  const handleSend = async (text) => {
+  const handleSend = useCallback(async (text) => {
     const msg = (text || inputText).trim();
     if (!msg || loading) return;
 
@@ -136,10 +133,9 @@ export default function ChatCoachScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id, inputText, loading, profile, messages, router]);
 
-
-  const handleClearChat = () => {
+  const handleClearChat = useCallback(() => {
     Alert.alert('Limpar historico', 'Apagar todas as mensagens?', [
       { text: 'Cancelar', style: 'cancel' },
       {
@@ -153,7 +149,7 @@ export default function ChatCoachScreen() {
         },
       },
     ]);
-  };
+  }, [user?.id]);
 
   if (!historyLoaded) {
     return (
@@ -174,6 +170,9 @@ export default function ChatCoachScreen() {
         renderItem={({ item }) => <MessageBubble message={item} />}
         contentContainerStyle={styles.listContent}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        windowSize={5}
       />
 
       {messages.length <= 1 && <QuickTips onSendTip={handleSend} />}

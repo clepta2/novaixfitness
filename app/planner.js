@@ -8,10 +8,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
-import { supabase } from '../src/config/supabase';
 import { layout, typography } from '../src/styles';
 import { WeekCalendar } from '../src/components/planner';
 import { defaultWeekPlan, DAY_NAMES_FULL, DAY_KEYS, CATEGORY_COLORS } from '../src/data/weekPlan';
+import { loadWeeklyPlan } from '../src/services/planService';
 
 export default function PlannerScreen() {
   const router = useRouter();
@@ -22,16 +22,8 @@ export default function PlannerScreen() {
   useEffect(() => {
     async function loadPlan() {
       if (!user?.id) return;
-      try {
-        const { data } = await supabase
-          .from('user_week_plans')
-          .select('plan_data')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        if (data?.plan_data) setWeekPlan(data.plan_data);
-      } catch (err) { if (__DEV__) console.error('Erro ao carregar plano:', err); }
+      const plan = await loadWeeklyPlan(user.id);
+      if (plan) setWeekPlan(plan);
     }
     loadPlan();
   }, [user?.id]);

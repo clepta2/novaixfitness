@@ -37,7 +37,19 @@ jest.mock('../../src/config/supabase', () => ({
       single: jest.fn().mockResolvedValue({ data: null, error: null }),
       insert: jest.fn().mockResolvedValue({ error: null }),
     })),
+    channel: jest.fn(() => ({
+      on: jest.fn().mockReturnThis(),
+      subscribe: jest.fn().mockReturnThis(),
+    })),
   },
+}));
+
+jest.mock('../../src/hooks/useRealtimeComments', () => ({
+  useRealtimeComments: () => [],
+}));
+
+jest.mock('../../src/hooks/useRealtimeLikes', () => ({
+  useRealtimeLikes: () => ({ likes: 0, isLiked: false, toggleLike: jest.fn() }),
 }));
 
 jest.mock('../../src/components/ui/Avatar', () => {

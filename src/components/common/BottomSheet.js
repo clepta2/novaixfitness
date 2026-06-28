@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Animated, Dimensions, PanResponder } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
@@ -38,11 +39,11 @@ export default function BottomSheet({ visible, onClose, title, children, snapPoi
           style={[styles.sheet, { height: targetHeight, transform: [{ translateY: slideAnim }] }]}
           onStartShouldSetResponder={() => true}
         >
-          <TouchableOpacity style={styles.handle} onPress={onClose} />
+          <TouchableOpacity style={styles.handle} onPress={onClose} accessibilityLabel="Fechar painel" accessibilityRole="button" />
           {title && (
             <View style={styles.header}>
               <Text style={styles.title}>{title}</Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+              <TouchableOpacity onPress={onClose} style={styles.closeBtn} accessibilityLabel="Fechar" accessibilityRole="button">
                 <Ionicons name="close" size={22} color={COLORS.textMuted} />
               </TouchableOpacity>
             </View>
