@@ -8,55 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useWorkoutForm } from '../../hooks/useWorkoutForm';
 import ExerciseForm from './ExerciseForm';
-
-function ChipSelector({ options, selected, onSelect }) {
-  return (
-    <View style={styles.chipRow}>
-      {options.map(opt => (
-        <TouchableOpacity key={opt} style={[styles.chip, selected === opt && styles.chipActive]} onPress={() => onSelect(opt)}>
-          <Text style={[styles.chipText, selected === opt && styles.chipTextActive]}>{opt}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-}
-
-function BasicInfoSection({ name, setName, description, setDescription, category, setCategory, level, setLevel, duration, setDuration, isPremium, setIsPremium, CATEGORIES, LEVELS }) {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>INFORMAÇÕES BÁSICAS</Text>
-      <View style={styles.field}>
-        <Text style={styles.fieldLabel}>NOME *</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Ex: Treino A - Peito" placeholderTextColor={COLORS.textMuted} />
-      </View>
-      <View style={styles.field}>
-        <Text style={styles.fieldLabel}>DESCRIÇÃO</Text>
-        <TextInput style={[styles.input, styles.textArea]} value={description} onChangeText={setDescription} placeholder="Descreva o treino..." placeholderTextColor={COLORS.textMuted} multiline numberOfLines={3} />
-      </View>
-      <View style={styles.field}>
-        <Text style={styles.fieldLabel}>CATEGORIA *</Text>
-        <ChipSelector options={CATEGORIES} selected={category} onSelect={setCategory} />
-      </View>
-      <View style={styles.field}>
-        <Text style={styles.fieldLabel}>NÍVEL</Text>
-        <ChipSelector options={LEVELS} selected={level} onSelect={setLevel} />
-      </View>
-      <View style={styles.row}>
-        <View style={styles.halfField}>
-          <Text style={styles.fieldLabel}>DURAÇÃO (MIN)</Text>
-          <TextInput style={styles.input} value={duration} onChangeText={setDuration} keyboardType="numeric" placeholder="45" placeholderTextColor={COLORS.textMuted} />
-        </View>
-        <View style={styles.halfField}>
-          <Text style={styles.fieldLabel}>PREMIUM</Text>
-          <TouchableOpacity style={[styles.toggleBtn, isPremium && styles.toggleActive]} onPress={() => setIsPremium(!isPremium)}>
-            <Ionicons name={isPremium ? 'lock' : 'lock-open'} size={16} color={isPremium ? COLORS.background : COLORS.textMuted} />
-            <Text style={[styles.toggleText, isPremium && styles.toggleTextActive]}>{isPremium ? 'Sim' : 'Não'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-}
+import BasicInfoSection from './BasicInfoSection';
 
 function ExerciseListItem({ exercise, index, total, onMoveUp, onMoveDown, onEdit, onRemove }) {
   return (

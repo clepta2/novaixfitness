@@ -1,50 +1,10 @@
-// src/components/social/SocialFeed.js
-// Feed de atividades sociais - NOVAIX FITNESS
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
-
-const ACTIVITY_TYPES = {
-  workout: { icon: 'barbell', color: COLORS.success, label: 'Treinou' },
-  streak: { icon: 'flame', color: COLORS.primary, label: 'Sequência' },
-  achievement: { icon: 'trophy', color: COLORS.attention, label: 'Conquista' },
-  meal: { icon: 'nutrition', color: COLORS.info, label: 'Refeição' },
-};
-
-function ActivityItem({ activity }) {
-  const config = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.workout;
-
-  return (
-    <View style={styles.activityItem}>
-      <View style={[styles.activityIcon, { backgroundColor: config.color + '20' }]}>
-        <Ionicons name={config.icon} size={18} color={config.color} />
-      </View>
-
-      <View style={styles.activityInfo}>
-        <View style={styles.activityHeader}>
-          <Text style={styles.activityUser}>{activity.user?.name || 'Atleta'}</Text>
-          <Text style={styles.activityTime}>{activity.timeAgo}</Text>
-        </View>
-        <Text style={styles.activityText}>{activity.text}</Text>
-
-        {activity.xp > 0 && (
-          <View style={styles.xpBadge}>
-            <Ionicons name="star" size={10} color={COLORS.primary} />
-            <Text style={styles.xpText}>+{activity.xp} XP</Text>
-          </View>
-        )}
-      </View>
-
-      <TouchableOpacity style={styles.likeBtn}>
-        <Ionicons name="heart-outline" size={18} color={COLORS.textMuted} />
-      </TouchableOpacity>
-    </View>
-  );
-}
+import ActivityItem from './ActivityItem';
 
 function filterPosts(posts, filter) {
   if (filter === 'all') return posts;
@@ -176,14 +136,4 @@ const styles = StyleSheet.create({
   empty: { alignItems: 'center', padding: SPACING.xxl },
   emptyText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginTop: SPACING.sm },
   separator: { height: 1, backgroundColor: COLORS.border, marginVertical: SPACING.xs },
-  activityItem: { flexDirection: 'row', gap: SPACING.md, padding: SPACING.sm },
-  activityIcon: { width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
-  activityInfo: { flex: 1 },
-  activityHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 },
-  activityUser: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },
-  activityTime: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
-  activityText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription },
-  xpBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: SPACING.xs, alignSelf: 'flex-start', backgroundColor: COLORS.primary + '15', paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: BORDER_RADIUS.sm },
-  xpText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.primary },
-  likeBtn: { padding: SPACING.xs },
 });
