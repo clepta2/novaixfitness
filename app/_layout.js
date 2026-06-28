@@ -141,6 +141,8 @@ function AppContent() {
           <Stack.Screen name="blog" lazy />
           <Stack.Screen name="forum" lazy />
           <Stack.Screen name="planner" lazy />
+          <Stack.Screen name="marketplace" lazy />
+          <Stack.Screen name="marketplace-detail" lazy />
           <Stack.Screen name="waitlist" lazy />
           <Stack.Screen name="admin" lazy />
             <Stack.Screen name="workout/preCheckin" lazy />
@@ -157,6 +159,7 @@ function AppContent() {
             <Stack.Screen name="progress/monthlyReview" lazy />
             <Stack.Screen name="progress/report" lazy />
             <Stack.Screen name="ai" lazy />
+            <Stack.Screen name="nutrition" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </Suspense>

@@ -152,6 +152,8 @@ export { default as WaitlistFeature } from './waitlist/WaitlistFeature';
 export { default as WeekCalendar } from './planner/WeekCalendar';
 export { default as DayWorkoutSlot } from './planner/DayWorkoutSlot';
 
+export { ProductCard, ProductList, CategoryFilter, FavoriteButton, EmptyMarketplace, MarketplaceHeader } from './marketplace';
+
 export { default as MuscleStep } from './onboarding/MuscleStep';
 export { default as ExerciseStep } from './onboarding/ExerciseStep';
 export { default as IntensityStep } from './onboarding/IntensityStep';
@@ -161,3 +163,7 @@ export { default as SubtypeStep } from './onboarding/SubtypeStep';
 export { default as DaysStep } from './onboarding/DaysStep';
 export { default as RestStep } from './onboarding/RestStep';
 export { default as OnboardingNavButtons } from './onboarding/OnboardingNavButtons';
+
+export { default as DailySummaryCard } from './nutrition/DailySummaryCard';
+export { default as MealTimeline } from './nutrition/MealTimeline';
+export { default as MealLogModal } from './nutrition/MealLogModal';
