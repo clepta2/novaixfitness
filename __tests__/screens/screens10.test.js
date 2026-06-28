@@ -121,8 +121,8 @@ describe('Screens - Round 10', () => {
 
     it('renders day options', () => {
       const { getByText } = render(<AvailabilityScreen />);
-      expect(getByText('2 dias')).toBeTruthy();
-      expect(getByText('3 dias')).toBeTruthy();
+      expect(getByText('2x')).toBeTruthy();
+      expect(getByText('3x')).toBeTruthy();
     });
 
     it('renders location options', () => {

@@ -8,6 +8,11 @@ jest.mock('expo-font', () => ({
   useFonts: () => [true],
 }));
 
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: { Light: 'light', Medium: 'medium', Heavy: 'heavy' },
+}));
+
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');
   return {
@@ -161,6 +166,8 @@ jest.mock('../../src/components', () => {
     FilterModal: (props) => React.createElement(View, null),
     TagFilter: (props) => React.createElement(View, null),
     ErrorBoundary: (props) => React.createElement(View, null, props.children),
+    ContextualCard: (props) => React.createElement(View, null, React.createElement(Text, null, 'ContextualCard')),
+    RecentActivity: (props) => React.createElement(View, null, React.createElement(Text, null, 'RecentActivity')),
     OfflineIndicator: (props) => React.createElement(View, null),
   };
 });

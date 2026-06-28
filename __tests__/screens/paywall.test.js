@@ -119,14 +119,14 @@ describe('PaywallScreen (novo fluxo cartão + Asaas)', () => {
 
   it('mostra botao de ativar', () => {
     const { getByText } = render(<PaywallScreen />);
-    expect(getByText('ATIVAR 1 MÊS GRÁTIS')).toBeTruthy();
+    expect(getByText(/LIBERAR MEU CRONOGRAMA/)).toBeTruthy();
   });
 
   it('botao de ativar funciona', async () => {
     const { getByText } = render(<PaywallScreen />);
-    fireEvent.press(getByText('ATIVAR 1 MÊS GRÁTIS'));
+    fireEvent.press(getByText(/LIBERAR MEU CRONOGRAMA/));
     await waitFor(() => {
-      expect(getByText('ATIVAR 1 MÊS GRÁTIS')).toBeTruthy();
+      expect(getByText(/LIBERAR MEU CRONOGRAMA/)).toBeTruthy();
     });
   });
 

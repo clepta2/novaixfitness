@@ -1,142 +1,99 @@
-import { useState, useRef, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal, ActivityIndicator, Alert, Platform, Linking, TouchableWithoutFeedback } from 'react-native';
+﻿import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { Button, PlanCard, CouponInput, GuaranteeSection } from '../src/components';
-import { PLANS, createCheckout, getPaymentStatus } from '../src/services/payment';
-import { useAuth } from '../src/context/AuthContext';
+import { PLANS } from '../src/services/payment';
 import { typography } from '../src/styles';
-import { useRouter } from 'expo-router';
+import ProcessingModal from '../src/components/paywall/ProcessingModal';
+import usePaymentProcessing from '../src/hooks/usePaymentProcessing';
 
 export default function PaywallScreen() {
-  const { user, loadProfile } = useAuth();
-  const router = useRouter();
-  const [selected, setSelected] = useState('intermediate');
-  const [coupon, setCoupon] = useState(null);
-  const [processing, setProcessing] = useState(false);
-  const [processStep, setProcessStep] = useState('');
-  const [paymentId, setPaymentId] = useState(null);
-  const pollRef = useRef(null);
-  const isWeb = Platform.OS === 'web';
-
-  const handleSubscribe = async () => {
-    setProcessing(true);
-    setProcessStep('Criando cobrança...');
-
-    try {
-      const result = await createCheckout(selected, 'PIX');
-      setPaymentId(result.paymentId);
-      setProcessStep('Abrindo página de pagamento...');
-
-      if (result.invoiceUrl) {
-        await Linking.openURL(result.invoiceUrl);
-      }
-
-      setProcessStep('Aguardando confirmação do pagamento...');
-      startPolling(result.paymentId);
-    } catch (e) {
-      setProcessing(false);
-      Alert.alert('Erro', e.message || 'Não foi possível criar a cobrança. Tente novamente.');
-    }
-  };
-
-  const startPolling = (id) => {
-    let attempts = 0;
-    const maxAttempts = 60;
-
-    pollRef.current = setInterval(async () => {
-      attempts++;
-      if (attempts >= maxAttempts) {
-        clearInterval(pollRef.current);
-        setProcessing(false);
-        Alert.alert('Tempo esgotado', 'O pagamento não foi confirmado. Verifique sua caixa de entrada ou tente novamente.');
-        return;
-      }
-
-      try {
-        const status = await getPaymentStatus(id);
-        if (status?.payment?.status === 'CONFIRMED' || status?.payment?.status === 'RECEIVED') {
-          clearInterval(pollRef.current);
-          await loadProfile(user.id);
-          setProcessing(false);
-          Alert.alert('Pagamento Confirmado!', 'Seu plano foi ativado com sucesso.', [
-            { text: 'Iniciar Tutorial', onPress: () => router.replace('/(tabs)/home') }
-          ]);
-        }
-      } catch (e) {
-        // Continuar polling mesmo com erro temporário
-      }
-    }, 5000);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, []);
+  const {
+    selected, setSelected, coupon, setCoupon, processing, processStep, paymentId, isWeb,
+    handleLogout, handleSkip, getButtonTitle, handleSubscribe, cancelProcessing,
+  } = usePaymentProcessing();
 
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.accentLine} />
-          <Text style={typography.h3}>LIBERE TODO O POTENCIAL</Text>
-          <Text style={typography.bodyMuted}>Escolha o plano ideal para sua evolução</Text>
-          <View style={styles.badge}><Ionicons name="gift" size={14} color={COLORS.background} /><Text style={styles.badgeText}>1 MÊS GRÁTIS DE TASTE TEST</Text></View>
+        <View style={styles.navRow}>
+          <TouchableOpacity onPress={handleLogout} style={styles.navPill} activeOpacity={0.7}>
+            <Ionicons name="log-out-outline" size={16} color={COLORS.textMuted} />
+            <Text style={styles.navPillText}>Sair</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSkip} style={styles.navPill} activeOpacity={0.7}>
+            <Text style={styles.navPillText}>Pular</Text>
+            <Ionicons name="arrow-forward-outline" size={16} color={COLORS.textMuted} />
+          </TouchableOpacity>
         </View>
-
+        <View style={styles.hero}>
+          <View style={styles.heroBadge}>
+            <Ionicons name="gift" size={12} color={COLORS.background} />
+            <Text style={styles.heroBadgeText}>7 DIAS GRATIS</Text>
+          </View>
+          <Text style={styles.heroTitle}>LIBERE TODO SEU POTENCIAL</Text>
+          <Text style={styles.heroSubtitle}>Escolha o plano ideal para sua evolucao</Text>
+          <View style={styles.socialProof}>
+            <View style={styles.socialItem}>
+              <Text style={styles.socialNum}>12K+</Text>
+              <Text style={styles.socialLabel}>Alunos ativos</Text>
+            </View>
+            <View style={styles.socialDivider} />
+            <View style={styles.socialItem}>
+              <View style={styles.starsRow}>
+                {[1,2,3,4,5].map(i => <Ionicons key={i} name="star" size={12} color={COLORS.primary} />)}
+              </View>
+              <Text style={styles.socialLabel}>4.9 / 5.0</Text>
+            </View>
+            <View style={styles.socialDivider} />
+            <View style={styles.socialItem}>
+              <Text style={styles.socialNum}>98%</Text>
+              <Text style={styles.socialLabel}>Satisfacao</Text>
+            </View>
+          </View>
+        </View>
         <View style={styles.plans}>
           {Object.values(PLANS).map((plan) => (
             <PlanCard key={plan.id} plan={plan} isSelected={selected === plan.id} onSelect={setSelected} />
           ))}
         </View>
-
         <CouponInput onApply={setCoupon} />
         <GuaranteeSection />
       </ScrollView>
-
       <View style={styles.footer}>
-        <Button title="ATIVAR 1 MÊS GRÁTIS" onPress={handleSubscribe} disabled={processing} icon="card-outline" />
+        <Button title={getButtonTitle()} onPress={handleSubscribe} disabled={processing} icon="flash" iconPosition="left" size="lg" style={{ width: '100%' }} />
+        <Text style={styles.footerHint}>Cancele quando quiser - Sem fidelidade</Text>
       </View>
-
-      {processing && (
-        <Modal visible transparent animationType="fade">
-          <TouchableWithoutFeedback onPress={() => { if (!paymentId) { clearInterval(pollRef.current); setProcessing(false); } }}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={[styles.modalContent, isWeb && styles.modalContentWeb]}>
-                  <View style={styles.processingWrap}>
-                    <ActivityIndicator size="large" color={COLORS.primary} />
-                    <Text style={[typography.h4, { marginTop: 20 }]}>PROCESSANDO</Text>
-                    <Text style={[typography.bodyMuted, { textAlign: 'center', marginTop: 10 }]}>{processStep}</Text>
-                    {paymentId && (
-                      <TouchableOpacity onPress={() => { clearInterval(pollRef.current); setProcessing(false); }} style={{ marginTop: SPACING.lg }}>
-                        <Text style={{ color: COLORS.textMuted, fontSize: 13 }}>Cancelar</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      )}
+      <ProcessingModal
+        visible={processing}
+        step={processStep}
+        paymentId={paymentId}
+        onCancel={cancelProcessing}
+        isWeb={isWeb}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: COLORS.background },
-  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: Platform.OS === 'ios' ? 54 : 40 },
-  footer: { padding: SPACING.xl, paddingBottom: 40 },
-  header: { alignItems: 'center', marginBottom: SPACING.xxl },
-  accentLine: { width: 40, height: 4, backgroundColor: COLORS.primary, borderRadius: 2, marginBottom: SPACING.lg },
-  badge: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, marginTop: SPACING.xl },
-  badgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.background, letterSpacing: 1 },
+  scroll: { flexGrow: 1, padding: SPACING.xl, paddingTop: Platform.OS === 'ios' ? 54 : 40, paddingBottom: SPACING.xxl },
+  navRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xl },
+  navPill: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.surface, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border },
+  navPillText: { fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.textMuted },
+  hero: { alignItems: 'center', marginBottom: SPACING.xxl },
+  heroBadge: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, marginBottom: SPACING.lg },
+  heroBadgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.background, letterSpacing: 1.5 },
+  heroTitle: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: COLORS.textTitle, textAlign: 'center', lineHeight: 36, marginBottom: SPACING.sm },
+  heroSubtitle: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, textAlign: 'center', marginBottom: SPACING.xl },
+  socialProof: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border, paddingVertical: SPACING.md, paddingHorizontal: SPACING.lg, gap: SPACING.lg, width: '100%', justifyContent: 'space-around' },
+  socialItem: { alignItems: 'center', flex: 1 },
+  socialNum: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 18, color: COLORS.primary },
+  socialLabel: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 2, textAlign: 'center' },
+  starsRow: { flexDirection: 'row', gap: 2, marginBottom: 2 },
+  socialDivider: { width: 1, height: 32, backgroundColor: COLORS.border },
   plans: { gap: SPACING.md, marginBottom: SPACING.xl },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { backgroundColor: COLORS.background, borderRadius: 20, padding: SPACING.xl, width: '85%' },
-  modalContentWeb: { width: 400, maxHeight: '50%' },
-  processingWrap: { alignItems: 'center', paddingVertical: 20 },
+  footer: { padding: SPACING.xl, paddingBottom: Platform.OS === 'ios' ? 40 : SPACING.xl, borderTopWidth: 1, borderTopColor: COLORS.border, gap: SPACING.sm },
+  footerHint: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, textAlign: 'center' },
 });

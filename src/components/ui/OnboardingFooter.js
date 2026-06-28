@@ -1,47 +1,38 @@
-// src/components/ui/OnboardingFooter.js
-// Rodapé padrão das telas de onboarding — dois botões lado a lado com flex igual
+﻿// src/components/ui/OnboardingFooter.js
+// Rodape das telas de onboarding - visual premium
 
-import { View } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Button } from './Button';
-import { layout } from '../../styles';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
 
-/**
- * @param {object} props
- * @param {() => void} props.onBack - Ação do botão Anterior
- * @param {() => void} props.onNext - Ação do botão Próximo
- * @param {boolean} [props.canProceed=true] - Habilita/desabilita o botão Próximo
- * @param {string} [props.nextLabel='PRÓXIMO'] - Label do botão de avançar
- * @param {string} [props.backLabel='ANTERIOR'] - Label do botão de voltar
- * @param {boolean} [props.loading=false] - Estado de carregamento do botão Próximo
- */
 export function OnboardingFooter({
-  onBack,
-  onNext,
-  canProceed = true,
-  nextLabel = 'PRÓXIMO',
-  backLabel = 'ANTERIOR',
-  loading = false,
+  onBack, onNext, canProceed = true,
+  nextLabel = 'PROXIMO', backLabel = 'ANTERIOR', loading = false,
 }) {
   return (
-    <View style={layout.footer}>
-      <View style={{ flex: 1 }}>
-        <Button
-          title={backLabel}
-          variant="secondary"
-          icon="arrow-back"
-          onPress={onBack}
-        />
+    <View style={styles.footer}>
+      <View style={styles.backWrap}>
+        <Button title={backLabel} variant="secondary" icon="arrow-back" iconPosition="left" onPress={onBack} size="md" />
       </View>
-      <View style={{ flex: 1 }}>
-        <Button
-          title={nextLabel}
-          icon={loading ? undefined : 'arrow-forward'}
-          onPress={onNext}
-          disabled={!canProceed}
-          loading={loading}
-          style={{ opacity: canProceed ? 1 : 0.5 }}
-        />
+      <View style={styles.nextWrap}>
+        <Button title={nextLabel} icon={loading ? undefined : 'arrow-forward'} iconPosition="right" onPress={onNext} disabled={!canProceed} loading={loading} size="md" />
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  footer: {
+    flexDirection: 'row',
+    gap: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.lg,
+    paddingBottom: Platform.OS === 'ios' ? 34 : SPACING.xl,
+    backgroundColor: COLORS.background,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  backWrap: { width: 120 },
+  nextWrap: { flex: 1 },
+});
