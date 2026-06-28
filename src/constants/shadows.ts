@@ -65,3 +65,29 @@ export const SHADOWS: ShadowsTokens = {
         shadowRadius: 12,
       },
 };
+
+export function getShadows(isDark: boolean): ShadowsTokens {
+  if (isDark) return SHADOWS;
+  return {
+    sm: isAndroid
+      ? { elevation: 1 }
+      : isWeb
+      ? ({ boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.06)' } as any)
+      : { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3 },
+    md: isAndroid
+      ? { elevation: 3 }
+      : isWeb
+      ? ({ boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.08)' } as any)
+      : { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 6 },
+    lg: isAndroid
+      ? { elevation: 6 }
+      : isWeb
+      ? ({ boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' } as any)
+      : { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12 },
+    glow: isAndroid
+      ? { elevation: 8 }
+      : isWeb
+      ? ({ boxShadow: `0px 0px 16px ${COLORS.primary}44` } as any)
+      : { shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.25, shadowRadius: 16 },
+  };
+}

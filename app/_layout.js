@@ -133,6 +133,7 @@ function AppContent() {
             <Stack.Screen name="settings/accessibility" lazy />
             <Stack.Screen name="progress/initialPhoto" lazy />
             <Stack.Screen name="progress/monthlyReview" lazy />
+            <Stack.Screen name="progress/report" lazy />
             <Stack.Screen name="ai" lazy />
           <Stack.Screen name="(tabs)" />
         </Stack>
@@ -160,6 +161,7 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
+
 
 
 

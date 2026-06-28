@@ -2,58 +2,21 @@
 // Serviço de tutorial interativo - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { TUTORIALS, TUTORIAL_STORAGE_KEY } from '../data/tutorials';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TUTORIAL_STEPS = [
-  {
-    id: 'welcome',
-    title: 'BEM-VINDO AO NOVAIX!',
-    description: 'Vamos te mostrar como usar o app. Leva menos de 1 minuto!',
-    icon: 'rocket',
-    screen: 'home',
-  },
-  {
-    id: 'contextual_card',
-    title: 'SEU PLANO DO DIA',
-    description: 'O card muda conforme a hora do dia: aquecimento, treino ou recuperação.',
-    icon: 'sunny',
-    screen: 'home',
-    target: 'contextualCard',
-  },
-  {
-    id: 'categories',
-    title: 'CATEGORIAS',
-    description: 'Explore treinos por grupo muscular ou tipo de exercício.',
-    icon: 'grid',
-    screen: 'home',
-    target: 'categories',
-  },
-  {
-    id: 'voice_coach',
-    title: 'TREINADOR POR VOZ',
-    description: 'Ative nas configurações para ouvir instruções durante o treino.',
-    icon: 'mic',
-    screen: 'home',
-    target: 'header',
-  },
-  {
-    id: 'notifications',
-    title: 'NOTIFICAÇÕES',
-    description: 'Escolha quais notificações quer receber nas Configurações.',
-    icon: 'notifications',
-    screen: 'home',
-    target: 'header',
-  },
-  {
-    id: 'complete',
-    title: 'PRONTO!',
-    description: 'Você está preparado. Bons treinos!',
-    icon: 'checkmark-circle',
-    screen: 'home',
-  },
-];
-
-export async function hasCompletedTutorial(userId) {
+export async function hasCompletedTutorial(userId, screenId = 'home') {
   if (!userId) return false;
+
+  try {
+    const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
+    if (stored) {
+      const completed = JSON.parse(stored);
+      return completed[screenId] === true;
+    }
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao ler tutoriais do storage:', err);
+  }
 
   const { data } = await supabase
     .from('profiles')
@@ -64,36 +27,112 @@ export async function hasCompletedTutorial(userId) {
   return data?.tutorial_completed === true;
 }
 
-export async function completeTutorial(userId) {
+export async function completeTutorial(userId, screenId = 'home') {
   if (!userId) return;
 
   try {
-    await supabase
-      .from('profiles')
-      .update({ tutorial_completed: true })
-      .eq('id', userId);
+    const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
+    const completed = stored ? JSON.parse(stored) : {};
+    completed[screenId] = true;
+    await AsyncStorage.setItem(TUTORIAL_STORAGE_KEY, JSON.stringify(completed));
+
+    if (screenId === 'home') {
+      await supabase
+        .from('profiles')
+        .update({ tutorial_completed: true, current_step: 'home' })
+        .eq('id', userId);
+    }
   } catch (err) {
     console.error('Erro ao completar tutorial:', err);
   }
 }
 
-export async function markTutorialSkipped(userId) {
+export async function markTutorialSkipped(userId, screenId = 'home') {
   if (!userId) return;
 
   try {
-    await supabase
-      .from('profiles')
-      .update({ tutorial_skipped: true })
-      .eq('id', userId);
+    const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
+    const completed = stored ? JSON.parse(stored) : {};
+    completed[screenId] = true;
+    await AsyncStorage.setItem(TUTORIAL_STORAGE_KEY, JSON.stringify(completed));
+
+    if (screenId === 'home') {
+      await supabase
+        .from('profiles')
+        .update({ tutorial_skipped: true, current_step: 'home' })
+        .eq('id', userId);
+    }
   } catch (err) {
     console.error('Erro ao marcar tutorial como pulado:', err);
   }
 }
 
-export function getTutorialSteps() {
-  return TUTORIAL_STEPS;
+export function getTutorialSteps(screenId = 'home') {
+  const tutorial = TUTORIALS[screenId];
+  return tutorial ? tutorial.steps : [];
+}
+
+export function getAllTutorials() {
+  return TUTORIALS;
 }
 
 export function getStepForScreen(screenName) {
-  return TUTORIAL_STEPS.filter(step => step.screen === screenName);
+  const steps = [];
+  Object.values(TUTORIALS).forEach(tutorial => {
+    const screenSteps = tutorial.steps.filter(step => step.screen === screenName);
+    steps.push(...screenSteps);
+  });
+  return steps;
+}
+
+export async function hasCompletedAnyTutorial(userId) {
+  try {
+    const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
+    if (stored) {
+      const completed = JSON.parse(stored);
+      return Object.values(completed).some(v => v === true);
+    }
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao verificar tutoriais:', err);
+  }
+
+  const { data } = await supabase
+    .from('profiles')
+    .select('tutorial_completed')
+    .eq('id', userId)
+    .single();
+
+  return data?.tutorial_completed === true;
+}
+
+export async function resetAllTutorials(userId) {
+  try {
+    await AsyncStorage.removeItem(TUTORIAL_STORAGE_KEY);
+    if (userId) {
+      await supabase
+        .from('profiles')
+        .update({ tutorial_completed: false, tutorial_skipped: false })
+        .eq('id', userId);
+    }
+  } catch (err) {
+    console.error('Erro ao resetar tutoriais:', err);
+  }
+}
+
+export async function resetTutorialForScreen(userId, screenId) {
+  try {
+    const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
+    const completed = stored ? JSON.parse(stored) : {};
+    delete completed[screenId];
+    await AsyncStorage.setItem(TUTORIAL_STORAGE_KEY, JSON.stringify(completed));
+
+    if (screenId === 'home' && userId) {
+      await supabase
+        .from('profiles')
+        .update({ tutorial_completed: false, tutorial_skipped: false })
+        .eq('id', userId);
+    }
+  } catch (err) {
+    console.error('Erro ao resetar tutorial:', err);
+  }
 }

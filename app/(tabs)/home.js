@@ -10,7 +10,7 @@ import { SPACING, ICON_SIZES } from '../../src/constants/spacing';
 import { DailyWorkoutCard, OfflineBanner, TutorialOverlay } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
-import { hasCompletedTutorial, completeTutorial, markTutorialSkipped, getTutorialSteps } from '../../src/services/tutorial';
+import { useTutorial } from '../../src/hooks/useTutorial';
 import { getGamificationData } from '../../src/services/gamification';
 import { useNetworkStatus } from '../../src/hooks/useNetworkStatus';
 import { syncPendingActions, getPendingActionsCount } from '../../src/services/sync';
@@ -24,7 +24,7 @@ import ContextualCard from '../../src/components/home/ContextualCard';
 import RecentActivity from '../../src/components/home/RecentActivity';
 import { styles } from '../../src/styles/homeStyles';
 
-const fallbackDaily = { name: 'QUEIMA SUPERIORES', type: 'HIIT/CALISTENIA', videoId: 'dQw4w9WgXcQ', timer: '00:30:15', is_premium: false };
+const fallbackDaily = { name: 'QUEIMA SUPERIORES', type: 'HIIT/CALISTENIA', videoId: '', timer: '00:30:15', is_premium: false };
 const userLevelMap = { beginner: 'Iniciante', intermediate: 'Intermediário', advanced: 'Avançado' };
 
 export default function HomeScreen() {
@@ -37,7 +37,7 @@ export default function HomeScreen() {
   const [levelData, setLevelData] = useState(null);
   const { isConnected } = useNetworkStatus();
   const [dailyOffline, setDailyOffline] = useState(false);
-  const [tutorialVisible, setTutorialVisible] = useState(false);
+  const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('home', true);
   const [timeOfDay, setTimeOfDay] = useState(getTimeOfDay());
   const [recentWorkouts, setRecentWorkouts] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
@@ -48,19 +48,6 @@ export default function HomeScreen() {
     const interval = setInterval(() => setTimeOfDay(getTimeOfDay()), 60000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (!user?.id) return;
-    hasCompletedTutorial(user.id).then(c => !c && setTutorialVisible(true)).catch(console.error);
-  }, [user?.id]);
-
-  const handleTutorialEnd = async (completed) => {
-    setTutorialVisible(false);
-    if (user?.id) {
-      if (completed) await completeTutorial(user.id);
-      else await markTutorialSkipped(user.id);
-    }
-  };
 
   useEffect(() => {
     if (!user?.id) return;
@@ -92,7 +79,7 @@ export default function HomeScreen() {
       if (recent?.length > 0) setRecentWorkouts(recent.map(w => ({ id: w.id, name: w.workouts?.title || 'Treino', category: w.workouts?.category, completed: w.completed, completed_at: w.completed_at, created_at: w.created_at, duration_minutes: w.duration_minutes || w.workouts?.duration_minutes })));
       if (catData) { const c = {}; catData.forEach(w => { const k = (w.category || 'outros').toLowerCase(); c[k] = (c[k] || 0) + 1; }); setCategoryCounts(c); }
       if (gamData?.levelData) setLevelData(gamData.levelData);
-    } catch (err) { console.error('Erro ao carregar home:', err); }
+    } catch (err) { if (__DEV__) console.error('Erro ao carregar home:', err); }
   }, [userPhysicalLevel, user?.id]);
 
   useEffect(() => { if (!user || profile) fetchData(); }, [profile, user, fetchData]);
@@ -118,9 +105,9 @@ export default function HomeScreen() {
     <View style={layout.screen}>
       <TutorialOverlay
         visible={tutorialVisible}
-        steps={getTutorialSteps()}
-        onComplete={() => handleTutorialEnd(true)}
-        onSkip={() => handleTutorialEnd(false)}
+        steps={tutorialSteps}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
       />
       <OfflineBanner visible={!isConnected} pendingCount={pendingCount} onSync={handleSync} />
       <ScrollView

@@ -82,7 +82,8 @@ export default function NutritionCoach({ userId, userWeight = 70, userGoal = 'ma
       const aiMsg = { id: (Date.now() + 1).toString(), text: reply, isUser: false };
       setMessages(prev => [...prev, aiMsg]);
     } catch (err) {
-      console.error('Erro nutrition coach:', err);
+      const errorMsg = { id: (Date.now() + 1).toString(), text: 'Desculpe, não consegui processar sua pergunta. Tente novamente.', isUser: false };
+      setMessages(prev => [...prev, errorMsg]);
     } finally {
       setLoading(false);
     }

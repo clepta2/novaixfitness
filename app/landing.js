@@ -32,7 +32,7 @@ export default function LandingScreen() {
 
         setDbStats({ users: usersCount || 0, workouts: workoutsCount || 0, rating: avgRating, loading: false });
       } catch (err) {
-        console.error('Erro ao buscar estatísticas:', err);
+        if (__DEV__) console.error('Erro ao buscar estatísticas:', err);
         setDbStats(prev => ({ ...prev, loading: false }));
       }
     }

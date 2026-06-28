@@ -31,7 +31,7 @@ export default function SubscriptionScreen() {
       setSubscription(sub);
       setPayments(history || []);
     } catch (err) {
-      console.error('Erro ao carregar assinatura:', err);
+      if (__DEV__) console.error('Erro ao carregar assinatura:', err);
     } finally {
       setLoading(false);
     }

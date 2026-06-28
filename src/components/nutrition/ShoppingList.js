@@ -1,8 +1,8 @@
 // src/components/nutrition/ShoppingList.js
 // Lista de compras gerada do plano alimentar - NOVAIX FITNESS
 
-import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
@@ -46,7 +46,7 @@ function extractShoppingItems(mealPlan) {
 export default function ShoppingList({ mealPlan }) {
   const [items, setItems] = useState([]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (mealPlan) setItems(extractShoppingItems(mealPlan));
   }, [mealPlan]);
 
@@ -105,6 +105,29 @@ export default function ShoppingList({ mealPlan }) {
     );
   }
 
+  const flatData = useMemo(() => {
+    const result = [];
+    Object.entries(grouped).forEach(([category, catItems]) => {
+      result.push({ type: 'header', category, id: `header-${category}` });
+      catItems.forEach(item => {
+        result.push({ type: 'item', ...item, id: `item-${item.index}` });
+      });
+    });
+    return result;
+  }, [grouped]);
+
+  const renderItem = ({ item }) => {
+    if (item.type === 'header') {
+      return <Text style={styles.categoryTitle}>{item.category}</Text>;
+    }
+    return (
+      <TouchableOpacity style={styles.itemRow} onPress={() => toggleItem(item.index)}>
+        <Ionicons name={item.checked ? 'checkmark-circle' : 'ellipse-outline'} size={20} color={item.checked ? COLORS.success : COLORS.textMuted} />
+        <Text style={[styles.itemText, item.checked && styles.itemChecked]}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -117,19 +140,14 @@ export default function ShoppingList({ mealPlan }) {
 
       <Text style={styles.progress}>{checkedCount}/{items.length} itens verificados</Text>
 
-      <ScrollView style={styles.scroll}>
-        {Object.entries(grouped).map(([category, catItems]) => (
-          <View key={category} style={styles.categoryGroup}>
-            <Text style={styles.categoryTitle}>{category}</Text>
-            {catItems.map(item => (
-              <TouchableOpacity key={item.index} style={styles.itemRow} onPress={() => toggleItem(item.index)}>
-                <Ionicons name={item.checked ? 'checkmark-circle' : 'ellipse-outline'} size={20} color={item.checked ? COLORS.success : COLORS.textMuted} />
-                <Text style={[styles.itemText, item.checked && styles.itemChecked]}>{item.name}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        ))}
-      </ScrollView>
+      <FlatList
+        data={flatData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        style={styles.scroll}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={null}
+      />
     </View>
   );
 }

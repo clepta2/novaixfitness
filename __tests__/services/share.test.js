@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 describe('Share Service', () => {
-  let shareWorkout, shareProgress;
+  let shareWorkout, shareProgress, shareAchievement;
 
   beforeEach(async () => {
     jest.resetModules();
@@ -28,6 +28,7 @@ describe('Share Service', () => {
     const mod = require('../../src/services/share');
     shareWorkout = mod.shareWorkout;
     shareProgress = mod.shareProgress;
+    shareAchievement = mod.shareAchievement;
   });
 
   describe('shareWorkout', () => {
@@ -70,6 +71,24 @@ describe('Share Service', () => {
       const msg = Sharing.shareAsync.mock.calls[0][0];
       expect(msg).toContain('5');
       expect(msg).toContain('20');
+    });
+  });
+
+  describe('shareAchievement', () => {
+    it('does nothing when achievement is null', async () => {
+      await shareAchievement(null);
+      const Sharing = require('expo-sharing');
+      expect(Sharing.shareAsync).not.toHaveBeenCalled();
+    });
+
+    it('shares achievement with correct message', async () => {
+      await shareAchievement({ name: 'Centenario', description: 'Complete 100 treinos', icon: '💯' });
+      const Sharing = require('expo-sharing');
+      expect(Sharing.shareAsync).toHaveBeenCalled();
+      const msg = Sharing.shareAsync.mock.calls[0][0];
+      expect(msg).toContain('Centenario');
+      expect(msg).toContain('100 treinos');
+      expect(msg).toContain('💯');
     });
   });
 });

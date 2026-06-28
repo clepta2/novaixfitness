@@ -64,7 +64,7 @@ export default function DashboardScreen() {
         weekMinutes: weekData.reduce((s, w) => s + (w.duration || 0), 0),
         weekCalories: Math.round(weekData.reduce((s, w) => s + (w.duration || 0), 0) * 8),
       });
-    } catch (err) { console.error('Erro ao carregar dashboard:', err); }
+    } catch (err) { if (__DEV__) console.error('Erro ao carregar dashboard:', err); }
     finally { setRefreshing(false); }
   };
 

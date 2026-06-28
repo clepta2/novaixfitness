@@ -27,7 +27,7 @@ export default function HistoryScreen() {
         .eq('user_id', user.id)
         .order('completed_at', { ascending: false });
       if (!error && data) setWorkouts(data);
-    } catch (err) { console.error('Erro ao buscar histórico:', err); }
+    } catch (err) { if (__DEV__) console.error('Erro ao buscar histórico:', err); }
     finally { setLoading(false); setRefreshing(false); }
   }, [user?.id]);
 

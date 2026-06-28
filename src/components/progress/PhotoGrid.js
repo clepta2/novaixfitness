@@ -1,43 +1,76 @@
-import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+// src/components/progress/PhotoGrid.js
+// Grid de fotos animado - NOVAIX FITNESS
+
+import React, { useRef, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { typography } from '../../styles';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const PHOTO_SIZE = (SCREEN_WIDTH - SPACING.xl * 2 - SPACING.sm * 2) / 3;
 
-const formatDate = (dateStr) =>
-  new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}
+
+function PhotoItem({ photo, selected, onPress, onLongPress, index }) {
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, { toValue: 1, tension: 30, friction: 8, delay: index * 50, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 200, delay: index * 50, useNativeDriver: true }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity
+        style={[styles.item, selected && styles.itemSelected]}
+        onPress={() => onPress(photo)}
+        onLongPress={() => onLongPress?.(photo)}
+        activeOpacity={0.8}
+      >
+        <Image source={{ uri: photo.image_url }} style={styles.thumb} />
+        <View style={styles.dateOverlay}>
+          <Text style={styles.dateText}>{formatDate(photo.recorded_at)}</Text>
+        </View>
+        {selected && (
+          <View style={styles.checkBadge}>
+            <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
+          </View>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+}
 
 export default function PhotoGrid({ photos, selectedIds, onSelect, onLongPress, compareMode }) {
   if (photos.length === 0) {
     return (
       <View style={styles.empty}>
-        <Ionicons name="camera-outline" size={48} color={COLORS.textMuted} />
-        <Text style={typography.h5}>Nenhuma foto</Text>
-        <Text style={typography.bodyMuted}>Adicione fotos para acompanhar seu progresso</Text>
+        <View style={styles.emptyIcon}>
+          <Ionicons name="camera-outline" size={40} color={COLORS.textMuted} />
+        </View>
+        <Text style={styles.emptyTitle}>Nenhuma foto</Text>
+        <Text style={styles.emptyText}>Adicione fotos para acompanhar seu progresso</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.grid}>
-      {photos.map((photo) => (
-        <TouchableOpacity
+      {photos.map((photo, i) => (
+        <PhotoItem
           key={photo.id}
-          style={[styles.item, selectedIds?.some(p => p.id === photo.id) && styles.itemSelected]}
-          onPress={() => onSelect(photo)}
-          onLongPress={() => onLongPress?.(photo)}
-        >
-          <Image source={{ uri: photo.image_url }} style={styles.thumb} />
-          <Text style={styles.date}>{formatDate(photo.recorded_at)}</Text>
-          {selectedIds?.some(p => p.id === photo.id) && (
-            <View style={styles.check}>
-              <Ionicons name="checkmark-circle" size={20} color={COLORS.primary} />
-            </View>
-          )}
-        </TouchableOpacity>
+          photo={photo}
+          selected={selectedIds?.some(p => p.id === photo.id)}
+          onPress={onSelect}
+          onLongPress={onLongPress}
+          index={i}
+        />
       ))}
     </View>
   );
@@ -45,10 +78,14 @@ export default function PhotoGrid({ photos, selectedIds, onSelect, onLongPress, 
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },
-  empty: { alignItems: 'center', paddingVertical: SPACING.massive, gap: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border },
-  item: { width: PHOTO_SIZE, marginBottom: SPACING.sm },
-  itemSelected: { borderWidth: 2, borderColor: COLORS.primary, borderRadius: 8 },
-  thumb: { width: PHOTO_SIZE, height: PHOTO_SIZE * 1.33, borderRadius: 8, backgroundColor: COLORS.surface },
-  date: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, textAlign: 'center', marginTop: 4 },
-  check: { position: 'absolute', top: 4, right: 4 },
+  empty: { alignItems: 'center', paddingVertical: SPACING.xxxl, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border },
+  emptyIcon: { width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.surfaceOverlay, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.md },
+  emptyTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 16, color: COLORS.textTitle },
+  emptyText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginTop: SPACING.xs },
+  item: { width: PHOTO_SIZE, borderRadius: 8, overflow: 'hidden' },
+  itemSelected: { borderWidth: 2, borderColor: COLORS.primary },
+  thumb: { width: PHOTO_SIZE, height: PHOTO_SIZE * 1.33, backgroundColor: COLORS.surface },
+  dateOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.6)', paddingVertical: 4, paddingHorizontal: SPACING.xs },
+  dateText: { fontFamily: 'Inter_400Regular', fontSize: 10, color: '#fff', textAlign: 'center' },
+  checkBadge: { position: 'absolute', top: SPACING.xs, right: SPACING.xs },
 });

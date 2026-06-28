@@ -11,6 +11,7 @@ import Payments from './pages/Payments';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,10 +27,28 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) {
+  useEffect(() => {
+    async function loadProfile() {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      if (!error && data) {
+        setProfile(data);
+      }
+    }
+    loadProfile();
+  }, [user]);
+
+  if (loading || (user && !profile)) {
     return (
       <div className="min-h-screen bg-novaix-bg flex items-center justify-center">
-        <div className="text-novaix-primary text-xl">Carregando...</div>
+        <div className="text-novaix-primary text-xl font-bold">Carregando...</div>
       </div>
     );
   }
@@ -38,14 +57,29 @@ function App() {
     return <Login onLogin={setUser} />;
   }
 
+  const role = profile?.role || 'user';
+
   return (
-    <Layout user={user} onLogout={() => supabase.auth.signOut()}>
+    <Layout user={user} profile={profile} onLogout={() => supabase.auth.signOut()}>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/workouts" element={<Workouts />} />
-        <Route path="/payments" element={<Payments />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        {role === 'creator' ? (
+          <>
+            <Route path="/workouts" element={<Workouts loggedInUserRole={role} />} />
+            <Route path="*" element={<Navigate to="/workouts" replace />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<Users loggedInUserRole={role} />} />
+            {(role === 'admin' || role === 'manager') && (
+              <Route path="/workouts" element={<Workouts loggedInUserRole={role} />} />
+            )}
+            {role === 'admin' && (
+              <Route path="/payments" element={<Payments />} />
+            )}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
+        )}
       </Routes>
     </Layout>
   );

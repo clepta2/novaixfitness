@@ -3,7 +3,7 @@
 
 import { supabase } from '../config/supabase';
 
-const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.EXPO_PUBLIC_API_URL;
 
 async function apiRequest(endpoint, options = {}) {
   const { data: { session } } = await supabase.auth.getSession();
@@ -136,7 +136,8 @@ export async function getCurrentSubscription() {
 }
 
 export function isSubscribed(subscription) {
-  return subscription?.subscription_status === 'active';
+  const status = subscription?.subscription_status;
+  return status === 'active' || status === 'premium';
 }
 
 export function getPlanById(planId) {

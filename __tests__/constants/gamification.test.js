@@ -22,8 +22,8 @@ describe('Gamification Constants', () => {
   });
 
   describe('LEVELS', () => {
-    it('has 10 levels', () => {
-      expect(LEVELS).toHaveLength(10);
+    it('has 5 levels', () => {
+      expect(LEVELS).toHaveLength(5);
     });
 
     it('levels are ordered by xpRequired', () => {
@@ -36,8 +36,8 @@ describe('Gamification Constants', () => {
       expect(LEVELS[0].xpRequired).toBe(0);
     });
 
-    it('last level is 15000 XP', () => {
-      expect(LEVELS[9].xpRequired).toBe(15000);
+    it('last level is 10000 XP', () => {
+      expect(LEVELS[4].xpRequired).toBe(10000);
     });
   });
 
@@ -74,31 +74,31 @@ describe('Gamification Constants', () => {
       expect(level.level).toBe(1);
     });
 
-    it('returns level 2 for 200 XP', () => {
-      const level = getLevelForXP(200);
+    it('returns level 2 for 500 XP', () => {
+      const level = getLevelForXP(500);
       expect(level.level).toBe(2);
-      expect(level.name).toBe('Aquecendo');
+      expect(level.name).toBe('Dedicado');
     });
 
-    it('returns level 3 for 500 XP', () => {
-      const level = getLevelForXP(500);
+    it('returns level 3 for 2000 XP', () => {
+      const level = getLevelForXP(2000);
       expect(level.level).toBe(3);
     });
 
-    it('returns level 5 for 2000 XP', () => {
-      const level = getLevelForXP(2000);
+    it('returns level 5 for 10000 XP', () => {
+      const level = getLevelForXP(10000);
       expect(level.level).toBe(5);
     });
 
-    it('returns max level for 15000+ XP', () => {
-      const level = getLevelForXP(15000);
-      expect(level.level).toBe(10);
+    it('returns max level for 10000+ XP', () => {
+      const level = getLevelForXP(10000);
+      expect(level.level).toBe(5);
       expect(level.name).toBe('NOVAIX');
     });
 
     it('returns max level for 99999 XP', () => {
       const level = getLevelForXP(99999);
-      expect(level.level).toBe(10);
+      expect(level.level).toBe(5);
     });
   });
 
@@ -109,19 +109,19 @@ describe('Gamification Constants', () => {
     });
 
     it('returns null at max level', () => {
-      const next = getNextLevel(LEVELS[9]);
+      const next = getNextLevel(LEVELS[4]);
       expect(next).toBeNull();
     });
 
-    it('returns correct next level for level 5', () => {
-      const next = getNextLevel(LEVELS[4]);
-      expect(next.level).toBe(6);
+    it('returns correct next level for level 3', () => {
+      const next = getNextLevel(LEVELS[2]);
+      expect(next.level).toBe(4);
     });
   });
 
   describe('getXPProgress', () => {
     it('returns 100% progress at max level', () => {
-      const result = getXPProgress(15000);
+      const result = getXPProgress(10000);
       expect(result.progress).toBe(1);
       expect(result.next).toBeNull();
     });
@@ -133,19 +133,19 @@ describe('Gamification Constants', () => {
     });
 
     it('calculates correct progress between levels', () => {
-      const result = getXPProgress(100);
+      const result = getXPProgress(250);
       expect(result.progress).toBe(0.5);
-      expect(result.xpInLevel).toBe(100);
-      expect(result.xpNeeded).toBe(200);
+      expect(result.xpInLevel).toBe(250);
+      expect(result.xpNeeded).toBe(500);
     });
 
     it('caps progress at 1', () => {
-      const result = getXPProgress(350);
+      const result = getXPProgress(1500);
       expect(result.progress).toBeLessThanOrEqual(1);
     });
 
     it('returns current and next level objects', () => {
-      const result = getXPProgress(100);
+      const result = getXPProgress(250);
       expect(result.current).toHaveProperty('level');
       expect(result.current).toHaveProperty('name');
       expect(result.next).toHaveProperty('level');
@@ -194,14 +194,14 @@ describe('Gamification Constants', () => {
       expect(unlocked.some(a => a.id === 'time_60')).toBe(true);
     });
 
-    it('unlocks level_3 with level 3', () => {
+    it('unlocks level_2 with level 2', () => {
       const unlocked = getUnlockedAchievements({
         maxStreak: 0,
         totalWorkouts: 0,
         totalMinutes: 0,
-        level: 3,
+        level: 2,
       });
-      expect(unlocked.some(a => a.id === 'level_3')).toBe(true);
+      expect(unlocked.some(a => a.id === 'level_2')).toBe(true);
     });
 
     it('unlocks multiple achievements', () => {

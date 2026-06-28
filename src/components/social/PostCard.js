@@ -18,6 +18,11 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
   const [loadingComments, setLoadingComments] = useState(false);
 
   useEffect(() => {
+    setIsLiked(post.isLiked);
+    setLikes(post.likes);
+  }, [post.isLiked, post.likes]);
+
+  useEffect(() => {
     if (showComments && comments.length === 0) {
       loadComments();
     }

@@ -12,6 +12,7 @@ import MessageBubble from '../src/components/chat/MessageBubble';
 import ChatInput from '../src/components/chat/ChatInput';
 import QuickTips from '../src/components/chat/QuickTips';
 import { layout } from '../src/styles';
+import { MEAL_KEYWORDS, FOOD_KEYWORDS, QUANTITY_PATTERN } from '../src/data/nutritionKeywords';
 
 export default function ChatCoachScreen() {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function ChatCoachScreen() {
           await saveChatMessage(user.id, welcomeMsg.text, false);
         }
       } catch (err) {
-        console.error('Erro ao carregar chat:', err);
+        if (__DEV__) console.error('Erro ao carregar chat:', err);
       } finally {
         setHistoryLoaded(true);
       }
@@ -118,7 +119,7 @@ export default function ChatCoachScreen() {
             .eq('is_user', true)
             .gte('created_at', today.toISOString());
         } catch (dbErr) {
-          console.error('Erro ao deletar mensagem excedente:', dbErr);
+          if (__DEV__) console.error('Erro ao deletar mensagem excedente:', dbErr);
         }
 
         Alert.alert(
@@ -130,7 +131,7 @@ export default function ChatCoachScreen() {
           ]
         );
       } else {
-        console.error('Erro ao enviar mensagem:', err);
+        if (__DEV__) console.error('Erro ao enviar mensagem:', err);
       }
     } finally {
       setLoading(false);
@@ -188,10 +189,7 @@ const styles = StyleSheet.create({
 
 function detectMealLog(text) {
   const lower = text.toLowerCase();
-  const mealKeywords = ['comi', 'almocoi', 'jantei', 'cafei', 'lanchei', 'refeiçao', 'refeicao', 'almoço', 'jantar', 'cafe da manha', 'cafe da manha', 'lanche', 'tomando', 'comendo', 'cafezinho', 'almorcinho', 'jantinho'];
-  const foodKeywords = ['arroz', 'feijao', 'frango', 'ovo', 'banana', 'salada', 'peixe', 'pao', 'leite', 'iogurte', 'macarra', 'batata', 'carne', 'queijo', 'presunto', 'aveia', 'whey', 'suco', 'cafe', 'cha', 'sanduiche', 'pizza', 'hamburguer', 'sushi', 'sorvete', 'chocolate', 'amendoim', 'castanha', 'atum', 'sardinha', 'tilapia', 'porco', 'lombo', 'costela', 'linguica', 'bacon', 'tomate', 'cenoura', 'brocolis', 'alface', 'couve', 'espinafre', 'abacate', 'laranja', 'maca', 'manga', 'morango', 'uva', 'melancia', 'abacaxi', 'goiaba', 'mamao'];
-  const quantityPattern = /\d+\s*(g|kg|ml|l|copo|fatia|colher|pedaco|porcao|xicara|xicara)/;
-  return mealKeywords.some(k => lower.includes(k)) || foodKeywords.some(k => lower.includes(k)) || quantityPattern.test(lower);
+  return MEAL_KEYWORDS.some(k => lower.includes(k)) || FOOD_KEYWORDS.some(k => lower.includes(k)) || QUANTITY_PATTERN.test(lower);
 }
 
 function formatMealSummary(meal) {

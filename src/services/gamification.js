@@ -45,6 +45,21 @@ export async function getGamificationData(userId) {
       .select('completed, completed_at, duration')
       .eq('user_id', userId);
 
+    const { count: postsCount } = await supabase
+      .from('posts')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    const { count: likesCount } = await supabase
+      .from('post_likes')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    const { count: commentsCount } = await supabase
+      .from('post_comments')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
     const totalXP = profile?.total_xp || 0;
     const totalWorkouts = profile?.total_workouts || userWorkouts?.filter(w => w.completed).length || 0;
     const totalMinutes = profile?.total_minutes || userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) || 0;
@@ -60,14 +75,13 @@ export async function getGamificationData(userId) {
       streak,
       maxStreak,
       level: level.level,
+      social_first_post_count: postsCount || 0,
+      social_10_posts_count: postsCount || 0,
+      social_50_likes_count: likesCount || 0,
+      social_25_comments_count: commentsCount || 0,
     };
 
-    const achievements = getUnlockedAchievements({
-      ...stats,
-      social_first_post_count: 0,
-      social_10_posts_count: 0,
-      social_50_likes_count: 0,
-    });
+    const achievements = getUnlockedAchievements(stats);
 
     return {
       ...stats,
@@ -112,10 +126,18 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
         })),
         { onConflict: 'user_id,achievement_id' }
       );
+
+      let achievementXP = 0;
+      for (const a of newAchievements) {
+        if (a.xpReward) {
+          await addXP(userId, 'ACHIEVEMENT_UNLOCKED', a.xpReward);
+          achievementXP += a.xpReward;
+        }
+      }
     }
 
     return {
-      xpGained: workoutXP + streakBonus,
+      xpGained: workoutXP + streakBonus + (newAchievements?.reduce((sum, a) => sum + (a.xpReward || 0), 0) || 0),
       newAchievements,
       level: updatedData?.levelData,
       streak: updatedData?.streak,
@@ -124,6 +146,12 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
     console.error('Erro ao registrar conclusão:', err);
     return { xpGained: 0, newAchievements: [] };
   }
+}
+
+export async function awardActionXP(userId, action) {
+  const xpGain = XP_VALUES[action] || 0;
+  if (!userId || xpGain <= 0) return 0;
+  return addXP(userId, action, xpGain);
 }
 
 export async function updateMaxStreak(userId) {

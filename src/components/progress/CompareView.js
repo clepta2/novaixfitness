@@ -15,7 +15,7 @@ export default function CompareView({ photos, onCancel }) {
 
   return (
     <View style={styles.container}>
-      <Text style={typography.label}>COMPARACAO</Text>
+      <Text style={typography.label}>COMPARAÇÃO</Text>
       <View style={styles.row}>
         <View style={styles.item}>
           <Image source={{ uri: photos[0].image_url }} style={styles.image} />
@@ -28,7 +28,7 @@ export default function CompareView({ photos, onCancel }) {
         </View>
       </View>
       <TouchableOpacity style={styles.cancel} onPress={onCancel}>
-        <Text style={[typography.bodySmall, { color: COLORS.primary }]}>Cancelar comparacao</Text>
+        <Text style={[typography.bodySmall, { color: COLORS.primary }]}>Cancelar comparação</Text>
       </TouchableOpacity>
     </View>
   );

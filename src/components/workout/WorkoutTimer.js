@@ -1,7 +1,7 @@
 // src/components/workout/WorkoutTimer.js
 // Timer de treino com modos flexíveis - NOVAIX FITNESS
 
-import React, { memo, useEffect, useState, useRef } from 'react';
+import React, { memo, useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
@@ -62,15 +62,15 @@ function WorkoutTimer({
 
   const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
 
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const glowAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const pulseAnim = useMemo(() => new Animated.Value(1), []);
+  const glowAnim = useMemo(() => new Animated.Value(0), []);
+  const scaleAnim = useMemo(() => new Animated.Value(0.9), []);
   const prevPhaseRef = useRef(phase);
   const prevTimeRef = useRef(timeRemaining);
 
   useEffect(() => {
     Animated.spring(scaleAnim, { toValue: 1, tension: 30, friction: 8, useNativeDriver: true }).start();
-  }, []);
+  }, [scaleAnim]);
 
   useEffect(() => {
     if (phase === 'exercising' && !isPaused) {

@@ -52,11 +52,12 @@ export default function SleepTracker({ userId }) {
   const handleSave = async () => {
     if (!userId || !quality || !duration) return;
     try {
+      const today = new Date().toISOString().split('T')[0];
       await supabase.from('sleep_logs').upsert({
         user_id: userId,
         quality,
         duration_hours: duration,
-        logged_at: new Date().toISOString(),
+        logged_at: today,
       }, { onConflict: 'user_id,logged_at' });
       setSaved(true);
     } catch (err) {

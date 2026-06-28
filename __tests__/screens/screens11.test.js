@@ -71,6 +71,10 @@ jest.mock('../../src/components', () => {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     ProgressBar: (props) => React.createElement(View, null),
+    OnboardingFooter: (props) => React.createElement(View, null, 
+      React.createElement(Text, { onPress: props.onBack }, props.backLabel || 'ANTERIOR'),
+      React.createElement(Text, { onPress: props.onNext }, props.nextLabel || 'PRÓXIMO')
+    ),
   };
 });
 

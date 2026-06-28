@@ -106,6 +106,7 @@ jest.mock('../../src/components', () => {
     CategoryBars: (props) => React.createElement(View, null, React.createElement(Text, null, 'CategoryBars')),
     DayDetails: (props) => React.createElement(View, null, React.createElement(Text, null, 'DayDetails')),
     GlobalStats: (props) => React.createElement(View, null, React.createElement(Text, null, 'GlobalStats')),
+    TutorialOverlay: (props) => React.createElement(View, null),
     getDateRange: (period) => {
       const end = new Date();
       const start = new Date();
@@ -133,6 +134,10 @@ jest.mock('../../src/components/workout/HistoryCard', () => {
 
 jest.mock('../../src/constants/gamification', () => ({
   ACHIEVEMENTS: [],
+}));
+
+jest.mock('../../src/hooks/useTutorial', () => ({
+  useTutorial: () => ({ showTutorial: false, completeTutorial: jest.fn(), shouldShowTutorial: false }),
 }));
 
 import NotificationsScreen from '../../app/notifications';

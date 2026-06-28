@@ -86,6 +86,15 @@ jest.mock('../../src/services/tutorial', () => ({
   getTutorialSteps: jest.fn().mockReturnValue([]),
 }));
 
+jest.mock('../../src/hooks/useTutorial', () => ({
+  useTutorial: () => ({
+    visible: false,
+    steps: [],
+    handleComplete: jest.fn(),
+    handleSkip: jest.fn(),
+  }),
+}));
+
 jest.mock('../../src/services/gamification', () => ({
   getGamificationData: jest.fn().mockResolvedValue({ totalXP: 100, levelData: { level: 1, name: 'Iniciante', color: '#00E676', icon: 'leaf' } }),
 }));

@@ -30,7 +30,7 @@ function calculateGoals(weight, height, age, gender, goal) {
   const calories = Math.round(tdee * (multipliers[goal] || 1));
   const protein = Math.round(weight * (proteinPerKg[goal] || 1.8));
   const fat = Math.round(calories * 0.25 / 9);
-  const carbs = Math.round((calories - (protein * 4) - (fat * 9)) / 4);
+  const carbs = Math.max(0, Math.round((calories - (protein * 4) - (fat * 9)) / 4));
 
   return { calories, protein, carbs, fat, bmr: Math.round(bmr), tdee: Math.round(tdee) };
 }

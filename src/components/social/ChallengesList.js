@@ -8,6 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { getNutritionContent } from '../../services/nutritionContent';
+import * as Haptics from 'expo-haptics';
 import ChallengeModal from './ChallengeModal';
 
 const ICON_MAP = { Hidratação: 'water', Proteína: 'flash', Treino: 'barbell', Geral: 'fitness', Sono: 'moon', Nutrição: 'nutrition' };
@@ -68,7 +69,7 @@ export default function ChallengesList({ userId }) {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
 
-  useEffect(() => { loadChallenges(); }, []);
+  useEffect(() => { loadChallenges(); }, [userId]);
 
   const loadChallenges = async () => {
     setLoading(true);
@@ -97,10 +98,12 @@ export default function ChallengesList({ userId }) {
     try {
       const { data: existing } = await supabase.from('challenge_participants').select('id, progress').eq('user_id', userId).eq('challenge_id', challenge.id).maybeSingle();
       if (existing) {
-        await supabase.from('challenge_participants').update({ progress: (existing.progress || 0) + 1 }).eq('id', existing.id);
+        const newProgress = Math.min((existing.progress || 0) + 1, challenge.target || 7);
+        await supabase.from('challenge_participants').update({ progress: newProgress }).eq('id', existing.id);
       } else {
         await supabase.from('challenge_participants').insert({ user_id: userId, challenge_id: challenge.id, progress: 1, joined_at: new Date().toISOString() });
       }
+      try { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); } catch {}
       setChallenges(prev => prev.map(c => c.id === challenge.id ? { ...c, progress: Math.min((c.progress || 0) + 1, c.target) } : c));
     } catch { }
   };

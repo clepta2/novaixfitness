@@ -8,33 +8,37 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
-function AuthInput({ label, placeholder, value, onChangeText, icon, secureTextEntry, keyboardType, autoCapitalize, error }) {
+function AuthInput({ label, placeholder, value, onChangeText, icon, secureTextEntry, keyboardType, autoCapitalize, error, translucent }) {
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
 
   const handleFocus = useCallback(() => setFocused(true), []);
   const handleBlur = useCallback(() => setFocused(false), []);
 
-  const borderColor = error ? COLORS.error : focused ? COLORS.primary : COLORS.border;
+  const borderColor = error ? COLORS.error : focused ? COLORS.primary : translucent ? 'rgba(255, 255, 255, 0.12)' : COLORS.border;
+  const wrapperBackground = translucent ? 'rgba(30, 35, 42, 0.55)' : COLORS.surface;
+  const textColor = translucent ? '#FFFFFF' : COLORS.textTitle;
+  const placeholderColor = translucent ? 'rgba(255, 255, 255, 0.4)' : COLORS.textMuted;
+  const labelColor = translucent ? 'rgba(255, 255, 255, 0.8)' : COLORS.textTitle;
 
   return (
     <View style={styles.container}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
-      <View style={[styles.wrapper, { borderColor }]}>
+      {label ? <Text style={[styles.label, { color: labelColor }]}>{label}</Text> : null}
+      <View style={[styles.wrapper, { borderColor, backgroundColor: wrapperBackground }]}>
         {icon && (
           <Ionicons
             name={icon}
             size={ICON_SIZES.sm}
-            color={focused ? COLORS.primary : COLORS.textMuted}
+            color={focused ? COLORS.primary : translucent ? 'rgba(255, 255, 255, 0.6)' : COLORS.textMuted}
             style={styles.icon}
           />
         )}
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: textColor }]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={COLORS.textMuted}
+          placeholderTextColor={placeholderColor}
           secureTextEntry={secureTextEntry && hidden}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
@@ -43,7 +47,7 @@ function AuthInput({ label, placeholder, value, onChangeText, icon, secureTextEn
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setHidden(!hidden)} style={styles.eye}>
-            <Ionicons name={hidden ? 'eye-off-outline' : 'eye-outline'} size={ICON_SIZES.sm} color={COLORS.textMuted} />
+            <Ionicons name={hidden ? 'eye-off-outline' : 'eye-outline'} size={ICON_SIZES.sm} color={translucent ? 'rgba(255, 255, 255, 0.6)' : COLORS.textMuted} />
           </TouchableOpacity>
         )}
       </View>

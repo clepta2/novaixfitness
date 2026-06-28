@@ -2,7 +2,7 @@
 // Desafios semanais via IA - NOVAIX FITNESS
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -62,7 +62,7 @@ function ChallengeCard({ item, index, joined, onJoin }) {
 
 export default function NutritionChallenges() {
   const [challenges, setChallenges] = useState(FALLBACK);
-  const [joined, setJoined] = useState(new Set());
+  const [joined, setJoined] = useState(() => new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadChallenges(); }, []);
@@ -121,11 +121,15 @@ export default function NutritionChallenges() {
         </View>
       </View>
 
-      <ScrollView style={styles.scroll}>
-        {challenges.map((ch, i) => (
-          <ChallengeCard key={i} item={ch} index={i} joined={joined.has(i)} onJoin={handleJoin} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={challenges}
+        renderItem={({ item, index }) => (
+          <ChallengeCard item={item} index={index} joined={joined.has(index)} onJoin={handleJoin} />
+        )}
+        keyExtractor={(_, i) => String(i)}
+        style={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }

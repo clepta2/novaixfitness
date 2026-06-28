@@ -1,0 +1,43 @@
+# ============================================
+# NOVAIX FITNESS - Docker Ignore
+# ============================================
+
+# Dependências
+node_modules
+npm-debug.log
+
+# Testes
+__tests__
+coverage
+jest.config.js
+
+# Configurações
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scripts
+scripts
+*.sh
+
+# Documentação
+README.md
+CHANGELOG.md
+
+# Build
+dist
+build

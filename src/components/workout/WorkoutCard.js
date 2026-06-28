@@ -33,7 +33,7 @@ function WorkoutCard({ workout, onPress, onFavorite, isFavorite = false, showFav
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
-      <TouchableOpacity style={styles.card} onPress={() => onPress?.(workout)} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.card} onPress={() => onPress?.(workout)} activeOpacity={0.8} accessibilityLabel={`Treino ${workout.name}, ${duration} minutos, nivel ${workout.level || 'intermediario'}`} accessibilityRole="button">
         <View style={styles.cardLeft}>
           <View style={[styles.iconContainer, { backgroundColor: levelConfig.color + '15' }]}>
             <Ionicons name="play" size={20} color={levelConfig.color} />

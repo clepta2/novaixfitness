@@ -6,14 +6,15 @@ import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, A
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
-import { PostCard, CreatePostModal, NotificationModal, ChallengesList } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay } from '../../src/components';
 import { PostSkeleton, FeedEmptyState } from '../../src/components/social/FeedSkeleton';
 import { useSupabaseData } from '../../src/hooks';
+import { useTutorial } from '../../src/hooks/useTutorial';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { layout, typography } from '../../src/styles';
 
-const filters = ['Todos', 'Populares', 'Recentes', 'Amigos'];
+const filters = ['Todos', 'Populares', 'Recentes', 'Meus Posts'];
 
 function formatDate(dateStr) {
   if (!dateStr) return 'Sem data';
@@ -31,6 +32,8 @@ export default function FeedScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [hasNotif, setHasNotif] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('feed', true);
 
   useEffect(() => {
     if (dbPosts) {
@@ -66,7 +69,7 @@ export default function FeedScreen() {
         setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p));
       }
     } catch (err) {
-      console.error(err);
+      if (__DEV__) console.error(err);
     }
   };
 
@@ -104,7 +107,7 @@ export default function FeedScreen() {
 
   const filteredPosts = posts.filter(post => {
     if (selectedFilter === 'Populares') return post.likes > 5;
-    if (selectedFilter === 'Amigos') return post.userId === user?.id;
+    if (selectedFilter === 'Meus Posts') return post.userId === user?.id;
     return true;
   });
 
@@ -112,6 +115,12 @@ export default function FeedScreen() {
 
   return (
     <View style={layout.screen}>
+      <TutorialOverlay
+        visible={tutorialVisible}
+        steps={tutorialSteps}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
+      />
       <ScrollView contentContainerStyle={layout.scroll} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />} showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
           <View>

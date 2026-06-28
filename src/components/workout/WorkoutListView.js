@@ -1,6 +1,7 @@
 // src/components/workout/WorkoutListView.js
 // Listagem de Treinos no Player - NOVAIX FITNESS
 
+import { memo, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -9,8 +10,8 @@ import WorkoutListItem from './WorkoutListItem';
 import ProgressSection from './ProgressSection';
 import { layout, typography } from '../../styles';
 
-export default function WorkoutListView({ dailyWorkouts, activeWorkout, startWorkout }) {
-  const completedCount = dailyWorkouts.filter((w) => w.completed).length;
+export default memo(function WorkoutListView({ dailyWorkouts, activeWorkout, startWorkout }) {
+  const completedCount = useMemo(() => dailyWorkouts.filter((w) => w.completed).length, [dailyWorkouts]);
   const totalCount = dailyWorkouts.length;
 
   return (
@@ -21,7 +22,7 @@ export default function WorkoutListView({ dailyWorkouts, activeWorkout, startWor
             <Text style={typography.h2}>Daily Workouts</Text>
             <Text style={typography.bodyMuted}>Workouts Completed</Text>
           </View>
-          <Text style={typography.bodySmall}>24/06/2026</Text>
+          <Text style={typography.bodySmall}>{new Date().toLocaleDateString('pt-BR')}</Text>
         </View>
 
         <ProgressSection completed={completedCount} total={totalCount} />
@@ -51,7 +52,7 @@ export default function WorkoutListView({ dailyWorkouts, activeWorkout, startWor
       </ScrollView>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   activeCard: { backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, ...SHADOWS.glow },

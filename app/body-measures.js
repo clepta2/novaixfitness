@@ -43,7 +43,7 @@ export default function BodyMeasuresScreen() {
         setHistory(hist);
         setPhysicalData(profile.data?.physical_data || profile.data?.onboarding || {});
       } catch (err) {
-        console.error('Erro ao carregar:', err);
+        if (__DEV__) console.error('Erro ao carregar:', err);
       } finally {
         setLoading(false);
       }

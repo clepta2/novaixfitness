@@ -10,7 +10,7 @@ const variants = {
   default: { bg: COLORS.surface, text: COLORS.textTitle },
   primary: { bg: COLORS.primary, text: COLORS.background },
   success: { bg: COLORS.success, text: COLORS.background },
-  error: { bg: COLORS.error, text: '#FFFFFF' },
+  error: { bg: COLORS.error, text: COLORS.textTitle },
   attention: { bg: COLORS.attention, text: COLORS.background },
 };
 
@@ -26,7 +26,11 @@ function Badge({ value, variant = 'default', size = 'sm', style }) {
   const currentSize = sizes[size];
 
   return (
-    <View style={[styles.badge, { backgroundColor: current.bg, paddingHorizontal: currentSize.paddingH, paddingVertical: currentSize.paddingV }, style]}>
+    <View
+      style={[styles.badge, { backgroundColor: current.bg, paddingHorizontal: currentSize.paddingH, paddingVertical: currentSize.paddingV }, style]}
+      accessibilityLabel={`${value}`}
+      accessibilityRole="text"
+    >
       <Text style={[styles.text, { color: current.text, fontSize: currentSize.fontSize }]}>{value}</Text>
     </View>
   );

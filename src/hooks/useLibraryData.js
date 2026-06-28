@@ -25,7 +25,7 @@ export function useLibraryData() {
   const [equipmentFilter, setEquipmentFilter] = useState(null);
   const [muscleFilter, setMuscleFilter] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
-  const [cachedIds, setCachedIds] = useState(new Set());
+  const [cachedIds, setCachedIds] = useState(() => new Set());
 
   const { data: dbWorkouts } = useSupabaseData('workouts', {
     select: '*', orderBy: { column: 'created_at', ascending: false }, mockData: []
@@ -46,7 +46,7 @@ export function useLibraryData() {
       } catch (err) { console.error('Erro ao carregar perfil:', err); }
     }
     loadProfile();
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     async function loadFavorites() {

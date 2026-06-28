@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 
-export default function useNetworkStatus() {
+export function useNetworkStatus() {
   const [isConnected, setIsConnected] = useState(true);
   const [isInternetReachable, setIsInternetReachable] = useState(true);
   const [lastConnected, setLastConnected] = useState(true);
@@ -41,3 +41,5 @@ export default function useNetworkStatus() {
     checkConnection,
   };
 }
+
+export default useNetworkStatus;

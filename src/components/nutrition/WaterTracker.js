@@ -40,9 +40,11 @@ export default function WaterTracker({ userId }) {
   };
 
   const addWater = async (amount) => {
-    const newIntake = intake + amount;
-    setIntake(newIntake);
-    animateProgress(newIntake);
+    setIntake((prev) => {
+      const newIntake = prev + amount;
+      animateProgress(newIntake);
+      return newIntake;
+    });
     if (userId) {
       await supabase.from('water_logs').insert({ user_id: userId, amount, logged_at: new Date().toISOString() });
     }

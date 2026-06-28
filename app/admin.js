@@ -47,7 +47,7 @@ export default function AdminScreen() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, name, email, subscription_status, subscription_plan')
+        .select('id, name, email, subscription_status, subscription_plan, current_step')
         .order('name', { ascending: true });
       if (data && !error) {
         setStudents(data.map((s) => ({
@@ -56,10 +56,13 @@ export default function AdminScreen() {
           email: s.email || '',
           status: s.subscription_status === 'premium' || s.subscription_status === 'active' ? 'active' : 'inactive',
           plan: s.subscription_plan === 'basic' ? 'Básico' : s.subscription_plan === 'premium' ? 'Premium' : s.subscription_plan === 'ultra' ? 'Ultra' : 'Intermediário',
+          subscription_plan: s.subscription_plan || 'basic',
+          subscription_status: s.subscription_status || 'inactive',
+          current_step: s.current_step || 'onboarding',
         })));
       }
     } catch (err) {
-      console.error('Erro ao buscar alunos:', err);
+      if (__DEV__) console.error('Erro ao buscar alunos:', err);
     } finally {
       setLoading(false);
     }

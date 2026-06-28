@@ -8,17 +8,21 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
-function SocialButton({ icon, iconColor, label, onPress, bgColor }) {
+function SocialButton({ icon, iconColor, label, onPress, bgColor, translucent }) {
+  const buttonBg = translucent ? 'rgba(30, 35, 42, 0.55)' : bgColor || COLORS.surface;
+  const borderColor = translucent ? 'rgba(255, 255, 255, 0.12)' : COLORS.border;
+  const textColor = translucent ? '#FFFFFF' : COLORS.textTitle;
+
   return (
     <TouchableOpacity
-      style={[styles.button, bgColor && { backgroundColor: bgColor }]}
+      style={[styles.button, { backgroundColor: buttonBg, borderColor }]}
       onPress={onPress}
       activeOpacity={0.8}
     >
       <View style={styles.iconContainer}>
         <FontAwesome name={icon} size={ICON_SIZES.md} color={iconColor} />
       </View>
-      <Text style={styles.text}>{label}</Text>
+      <Text style={[styles.text, { color: textColor }]}>{label}</Text>
     </TouchableOpacity>
   );
 }

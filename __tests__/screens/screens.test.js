@@ -113,7 +113,7 @@ describe('Screens', () => {
   describe('TermosScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<TermosScreen />);
-      expect(getByText('TERMOS E POLÍTICAS')).toBeTruthy();
+      expect(getByText('Termos e Privacidade')).toBeTruthy();
     });
 
     it('renders tabs', () => {

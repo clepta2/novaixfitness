@@ -61,12 +61,18 @@ jest.mock('../../src/context/AuthContext', () => ({
 
 jest.mock('../../src/components', () => {
   const React = require('react');
-  const { View, Text } = require('react-native');
+  const { View, Text, TextInput } = require('react-native');
   return {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     ProgressBar: (props) => React.createElement(View, null),
     Badge: (props) => React.createElement(View, null, React.createElement(Text, null, props.value)),
+    Input: ({ label, value, onChangeText, placeholder }) =>
+      React.createElement(TextInput, { testID: `input-${label}`, value: value || '', onChangeText, placeholder }),
+    OnboardingFooter: (props) => React.createElement(View, null, 
+      React.createElement(Text, { onPress: props.onBack }, props.backLabel || 'ANTERIOR'),
+      React.createElement(Text, { onPress: props.onNext }, props.nextLabel || 'PRÓXIMO')
+    ),
   };
 });
 
@@ -82,14 +88,14 @@ describe('Screens - Round 10', () => {
   describe('PhysicalDataScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<PhysicalDataScreen />);
-      expect(getByText('CONTENOS SOBRE VOCÊ')).toBeTruthy();
+      expect(getByText('SOBRE VOCE')).toBeTruthy();
     });
 
-    it('renders sliders', () => {
-      const { getByText } = render(<PhysicalDataScreen />);
-      expect(getByText('IDADE')).toBeTruthy();
-      expect(getByText('PESO')).toBeTruthy();
-      expect(getByText('ALTURA')).toBeTruthy();
+    it('renders data and location inputs, weight/height sliders', () => {
+      const { getAllByText } = render(<PhysicalDataScreen />);
+      expect(getAllByText('DATA DE NASCIMENTO').length).toBeGreaterThanOrEqual(1);
+      expect(getAllByText('PESO').length).toBe(1);
+      expect(getAllByText('ALTURA').length).toBe(1);
     });
   });
 

@@ -3,6 +3,7 @@ export { Input } from './ui/Input';
 export { Card } from './ui/Card';
 export { Header } from './ui/Header';
 export { Avatar } from './ui/Avatar';
+export { OnboardingFooter } from './ui/OnboardingFooter';
 export { default as Badge } from './ui/Badge';
 export { default as ProgressBar } from './ui/ProgressBar';
 export { Timer } from './ui/Timer';
@@ -33,7 +34,9 @@ export { default as HistoryCard } from './workout/HistoryCard';
 export { default as LoadHistory } from './workout/LoadHistory';
 
 export { default as PostCard } from './social/PostCard';
+export { default as ForumPost } from './social/ForumPost';
 export { default as CreatePostModal } from './social/CreatePostModal';
+export { default as CreateForumPostModal } from './social/CreateForumPostModal';
 export { default as NotificationModal } from './social/NotificationModal';
 export { default as ChallengesList } from './social/ChallengesList';
 
@@ -69,6 +72,7 @@ export { default as ContactCard } from './faq/ContactCard';
 
 export { default as AuthInput } from './auth/AuthInput';
 export { default as SocialButton } from './auth/SocialButton';
+export { default as AccountExistsCard } from './auth/AccountExistsCard';
 
 export { default as StudentCard } from './admin/StudentCard';
 export { default as FinanceStats } from './admin/FinanceStats';
@@ -129,4 +133,14 @@ export { default as ConsentToggles } from './settings/ConsentToggles';
 export { default as RightsList } from './settings/RightsList';
 export { default as OfflineSettings } from './settings/OfflineSettings';
 
+export { default as ArticleCard } from './blog/ArticleCard';
+export { default as ArticleDetail } from './blog/ArticleDetail';
+
+export { default as BreathingExercise } from './recovery/BreathingExercise';
+
 export { default as NotificationItem } from './notifications/NotificationItem';
+
+export { default as WaitlistFeature } from './waitlist/WaitlistFeature';
+
+export { default as WeekCalendar } from './planner/WeekCalendar';
+export { default as DayWorkoutSlot } from './planner/DayWorkoutSlot';

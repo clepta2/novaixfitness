@@ -49,6 +49,8 @@ export function Input({
           autoCapitalize={autoCapitalize}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          accessibilityLabel={label || placeholder}
+          accessibilityHint={error || undefined}
         />
         {secureTextEntry && (
           <TouchableOpacity

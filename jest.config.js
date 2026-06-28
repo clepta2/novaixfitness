@@ -21,11 +21,13 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/', '/.expo/'],
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|react-native-reanimated|react-native-gesture-handler|react-native-youtube-iframe|react-native-chart-kit|react-native-webview|lucide-react-native)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|react-native-reanimated|react-native-gesture-handler|react-native-youtube-iframe|react-native-chart-kit|react-native-webview|lucide-react-native|otpauth)',
   ],
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',
+    'app/**/*.{js,jsx}',
     '!src/**/*.test.{js,jsx}',
+    '!app/**/*.test.{js,jsx}',
     '!src/**/index.js',
   ],
   coverageThreshold: {

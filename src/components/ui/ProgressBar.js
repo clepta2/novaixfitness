@@ -12,8 +12,9 @@ const variants = {
   attention: COLORS.attention,
 };
 
-function ProgressBar({ value, max = 100, label, showValue, variant = 'default', style }) {
-  const percentage = Math.min((value / max) * 100, 100);
+function ProgressBar({ value = 0, max = 100, label, showValue, variant = 'default', style }) {
+  const safeValue = value ?? 0;
+  const percentage = Math.min((safeValue / max) * 100, 100);
   const color = variants[variant] || variants.default;
 
   return (

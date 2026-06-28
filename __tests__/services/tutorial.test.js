@@ -52,10 +52,10 @@ describe('Tutorial Service', () => {
       expect(supabase.from).not.toHaveBeenCalled();
     });
 
-    it('updates tutorial_completed to true', async () => {
+    it('updates tutorial_completed to true and sets current_step to home', async () => {
       await completeTutorial('u1');
       expect(supabase.from).toHaveBeenCalledWith('profiles');
-      expect(mockUpdate).toHaveBeenCalledWith({ tutorial_completed: true });
+      expect(mockUpdate).toHaveBeenCalledWith({ tutorial_completed: true, current_step: 'home' });
     });
   });
 
@@ -65,10 +65,10 @@ describe('Tutorial Service', () => {
       expect(supabase.from).not.toHaveBeenCalled();
     });
 
-    it('updates tutorial_skipped to true', async () => {
+    it('updates tutorial_skipped to true and sets current_step to home', async () => {
       await markTutorialSkipped('u1');
       expect(supabase.from).toHaveBeenCalledWith('profiles');
-      expect(mockUpdate).toHaveBeenCalledWith({ tutorial_skipped: true });
+      expect(mockUpdate).toHaveBeenCalledWith({ tutorial_skipped: true, current_step: 'home' });
     });
   });
 

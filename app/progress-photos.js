@@ -34,7 +34,7 @@ export default function ProgressPhotosScreen() {
       const data = await getProgressPhotos(user.id);
       setPhotos(data);
     } catch (err) {
-      console.error('Erro ao carregar fotos:', err);
+      if (__DEV__) console.error('Erro ao carregar fotos:', err);
     } finally {
       setLoading(false);
     }

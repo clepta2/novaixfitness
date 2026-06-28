@@ -31,7 +31,7 @@ export default function ExerciseAccordion({ exercise, isOpen, onToggle, index = 
 
   return (
     <View style={styles.accordion}>
-      <TouchableOpacity style={styles.header} onPress={onToggle} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.header} onPress={onToggle} activeOpacity={0.8} accessibilityLabel={`Exercicio ${exercise.name}, ${isOpen ? 'expandido' : 'colapsado'}`} accessibilityRole="button" accessibilityState={{ expanded: isOpen }}>
         <View style={styles.headerLeft}>
           <View style={[styles.numberBadge, isOpen && styles.numberBadgeActive]}>
             <Text style={[styles.numberText, isOpen && styles.numberTextActive]}>{(index || 0) + 1}</Text>

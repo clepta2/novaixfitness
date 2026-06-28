@@ -35,7 +35,7 @@ function NotificationItem({ meal, enabled, onToggle }) {
 }
 
 export default function MealTimer() {
-  const [enabled, setEnabled] = useState(new Set(['cafe', 'almoco', 'jantar']));
+  const [enabled, setEnabled] = useState(() => new Set(['cafe', 'almoco', 'jantar']));
   const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {

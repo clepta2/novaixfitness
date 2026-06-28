@@ -66,7 +66,7 @@ export default function ExportDataScreen() {
       }
       Alert.alert('Sucesso', `${option.title} exportado com sucesso!`);
     } catch (err) {
-      console.error('Erro ao exportar:', err);
+      if (__DEV__) console.error('Erro ao exportar:', err);
       Alert.alert('Erro', 'Nao foi possivel exportar os dados.');
     } finally {
       setExporting(null);

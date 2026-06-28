@@ -2,14 +2,16 @@
 import { Link, useLocation } from 'react-router-dom';
 
 const menuItems = [
-  { path: '/', label: 'Dashboard', icon: '📊' },
-  { path: '/users', label: 'Usuários', icon: '👥' },
-  { path: '/workouts', label: 'Treinos', icon: '💪' },
-  { path: '/payments', label: 'Pagamentos', icon: '💰' },
+  { path: '/', label: 'Dashboard', icon: '📊', roles: ['admin', 'manager', 'employee'] },
+  { path: '/users', label: 'Usuários', icon: '👥', roles: ['admin', 'manager', 'employee'] },
+  { path: '/workouts', label: 'Treinos', icon: '💪', roles: ['admin', 'manager', 'creator'] },
+  { path: '/payments', label: 'Pagamentos', icon: '💰', roles: ['admin'] },
 ];
 
-export default function Layout({ children, user, onLogout }) {
+export default function Layout({ children, user, profile, onLogout }) {
   const location = useLocation();
+  const role = profile?.role || 'user';
+  const visibleMenuItems = menuItems.filter(item => item.roles.includes(role));
 
   return (
     <div className="min-h-screen flex">
@@ -21,7 +23,7 @@ export default function Layout({ children, user, onLogout }) {
         </div>
 
         <nav className="px-4">
-          {menuItems.map((item) => (
+          {visibleMenuItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}

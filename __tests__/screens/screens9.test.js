@@ -23,6 +23,21 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'demo' }),
 }));
 
+jest.mock('../../src/components/onboarding/DraggableSlider', () => {
+  const React = require('react');
+  return { __esModule: true, default: (props) => React.createElement('DraggableSlider', props) };
+});
+
+jest.mock('../../src/components/onboarding/MiniCalendar', () => {
+  const React = require('react');
+  return { __esModule: true, default: (props) => React.createElement('MiniCalendar', props) };
+});
+
+jest.mock('../../src/components/onboarding/StatePickerModal', () => {
+  const React = require('react');
+  return { __esModule: true, default: (props) => React.createElement('StatePickerModal', props) };
+});
+
 jest.mock('expo-keep-awake', () => ({
   activateKeepAwakeAsync: jest.fn(),
   deactivateKeepAwakeAsync: jest.fn(),
@@ -90,6 +105,11 @@ jest.mock('../../src/services/audioService', () => ({
   unloadSounds: jest.fn().mockResolvedValue({}),
 }));
 
+jest.mock('../../src/services/voiceCoach', () => ({
+  isVoiceCoachEnabled: jest.fn().mockReturnValue(false),
+  setVoiceCoachEnabled: jest.fn(),
+}));
+
 jest.mock('../../src/hooks/useWorkoutTimer', () => {
   return () => ({
     time: 0,
@@ -120,11 +140,26 @@ jest.mock('../../src/components', () => {
     RestOverlay: (props) => React.createElement(View, null),
     WorkoutControls: (props) => React.createElement(View, null, React.createElement(Text, null, 'WorkoutControls')),
     RatingModal: (props) => React.createElement(View, null),
+    TutorialOverlay: (props) => React.createElement(View, null),
+    OnboardingFooter: (props) => React.createElement(View, null,
+      React.createElement(Text, { onPress: props.onBack }, props.backLabel || 'ANTERIOR'),
+      React.createElement(Text, { onPress: props.onNext }, props.nextLabel || 'PRÓXIMO')
+    ),
+    Input: (props) => React.createElement(View, null),
   };
 });
 
+jest.mock('../../src/hooks/useTutorial', () => ({
+  useTutorial: () => ({
+    visible: false,
+    steps: [],
+    handleComplete: jest.fn(),
+    handleSkip: jest.fn(),
+  }),
+}));
+
 import GoalScreen from '../../app/onboarding/objetivo';
-import GenderScreen from '../../app/onboarding/genero';
+import GenderScreen from '../../app/onboarding/dados-fisicos';
 import PlayerScreen from '../../app/player';
 
 describe('Screens - Round 9', () => {
@@ -155,7 +190,7 @@ describe('Screens - Round 9', () => {
 
     it('renders header', () => {
       const { getByText } = render(<GenderScreen />);
-      expect(getByText('QUAL SEU GÊNERO?')).toBeTruthy();
+      expect(getByText('SOBRE VOCE')).toBeTruthy();
     });
   });
 

@@ -107,8 +107,8 @@ export async function getConsentSettings(userId) {
     .single();
 
   return {
-    marketing: data?.consent_marketing ?? true,
-    analytics: data?.consent_analytics ?? true,
+    marketing: data?.consent_marketing ?? false,
+    analytics: data?.consent_analytics ?? false,
     thirdParty: data?.consent_third_party ?? false,
     updatedAt: data?.consent_updated_at,
   };

@@ -1,6 +1,7 @@
 // src/components/ui/Button.js
 // Componente de Botão NOVAIX FITNESS — responsividade e visual premium
 
+import { useState } from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -8,30 +9,57 @@ import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';
 import { scale } from '../../utils/responsive';
 
-export function Button({ title, onPress, variant = 'primary', icon, loading, disabled, style }) {
+const SIZES = {
+  sm: { height: scale(40), fontSize: scale(12), iconSize: 14 },
+  md: { height: scale(50), fontSize: scale(13), iconSize: ICON_SIZES.sm },
+  lg: { height: scale(58), fontSize: scale(15), iconSize: ICON_SIZES.md },
+};
+
+export function Button({ title, onPress, variant = 'primary', icon, iconPosition = 'left', size = 'md', loading, disabled, style }) {
+  const [pressed, setPressed] = useState(false);
+  const s = SIZES[size] || SIZES.md;
+
   const variants = {
-    primary: { container: styles.primary, text: styles.primaryText },
-    secondary: { container: styles.secondary, text: styles.secondaryText },
-    ghost: { container: styles.ghost, text: styles.ghostText },
-    google: { container: styles.google, text: styles.googleText },
-    apple: { container: styles.apple, text: styles.appleText },
+    primary: { container: styles.primary, text: styles.primaryText, iconColor: COLORS.background },
+    secondary: { container: styles.secondary, text: styles.secondaryText, iconColor: COLORS.primary },
+    ghost: { container: styles.ghost, text: styles.ghostText, iconColor: COLORS.textDescription },
+    back: { container: styles.back, text: styles.backText, iconColor: COLORS.textTitle },
+    danger: { container: styles.danger, text: styles.dangerText, iconColor: COLORS.textTitle },
+    google: { container: styles.google, text: styles.googleText, iconColor: '#000000' },
+    apple: { container: styles.apple, text: styles.appleText, iconColor: COLORS.textTitle },
   };
 
   const current = variants[variant] || variants.primary;
 
+  const iconEl = icon ? (
+    <Ionicons name={icon} size={s.iconSize} color={current.iconColor} style={iconPosition === 'right' ? { marginLeft: SPACING.xs } : { marginRight: SPACING.xs }} />
+  ) : null;
+
   return (
     <TouchableOpacity
-      style={[styles.base, current.container, disabled && styles.disabled, style]}
+      style={[
+        styles.base, { height: s.height },
+        current.container,
+        pressed && styles.pressed,
+        disabled && styles.disabled,
+        style,
+      ]}
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       disabled={disabled || loading}
-      activeOpacity={0.82}
+      activeOpacity={0.85}
+      accessibilityLabel={title}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: disabled || loading, busy: loading }}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? COLORS.background : COLORS.primary} />
+        <ActivityIndicator color={variant === 'primary' || variant === 'danger' ? COLORS.background : COLORS.primary} size="small" />
       ) : (
         <>
-          {icon && <Ionicons name={icon} size={ICON_SIZES.sm} style={styles.icon} color={variant === 'primary' ? COLORS.background : COLORS.primary} />}
-          <Text style={[styles.text, current.text]}>{title}</Text>
+          {icon && iconPosition === 'left' && iconEl}
+          <Text style={[styles.text, current.text, { fontSize: s.fontSize }]}>{title}</Text>
+          {icon && iconPosition === 'right' && iconEl}
         </>
       )}
     </TouchableOpacity>
@@ -40,58 +68,31 @@ export function Button({ title, onPress, variant = 'primary', icon, loading, dis
 
 const styles = StyleSheet.create({
   base: {
-    height: scale(54),
     borderRadius: BORDER_RADIUS.md,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: SPACING.sm,
+    gap: SPACING.xs,
   },
   text: {
     fontFamily: 'Montserrat_700Bold',
-    fontSize: scale(14),
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
   },
-  icon: {
-    marginRight: SPACING.xs,
-  },
-  disabled: {
-    opacity: 0.45,
-  },
-  primary: {
-    backgroundColor: COLORS.primary,
-    ...SHADOWS.md,
-  },
-  primaryText: {
-    color: COLORS.background,
-  },
-  secondary: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-  },
-  secondaryText: {
-    color: COLORS.primary,
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-  ghostText: {
-    color: COLORS.textDescription,
-  },
-  google: {
-    backgroundColor: '#FFFFFF',
-    ...SHADOWS.sm,
-  },
-  googleText: {
-    color: '#000000',
-  },
-  apple: {
-    backgroundColor: '#000000',
-    ...SHADOWS.sm,
-  },
-  appleText: {
-    color: '#FFFFFF',
-  },
+  pressed: { opacity: 0.88 },
+  disabled: { opacity: 0.4 },
+  primary: { backgroundColor: COLORS.primary, ...SHADOWS.md },
+  primaryText: { color: COLORS.background },
+  secondary: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: COLORS.border },
+  secondaryText: { color: COLORS.textTitle },
+  ghost: { backgroundColor: 'transparent' },
+  ghostText: { color: COLORS.textDescription },
+  back: { backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border },
+  backText: { color: COLORS.textTitle },
+  danger: { backgroundColor: COLORS.error, ...SHADOWS.md },
+  dangerText: { color: COLORS.textTitle },
+  google: { backgroundColor: COLORS.textTitle, borderWidth: 1, borderColor: COLORS.borderLight, ...SHADOWS.sm },
+  googleText: { color: '#000000' },
+  apple: { backgroundColor: '#000000', ...SHADOWS.sm },
+  appleText: { color: COLORS.textTitle },
 });

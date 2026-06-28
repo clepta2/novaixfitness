@@ -41,6 +41,21 @@ export interface ThemeColors {
   textDescription: string;
   textMuted: string;
 
+  // Extended palette (for icons, badges, onboarding)
+  purple: string;
+  pink: string;
+  rose: string;
+  fuchsia: string;
+  cyan: string;
+  amber: string;
+  gold: string;
+  slateBlue: string;
+  whatsapp: string;
+  googleBlue: string;
+  warning: string;
+  successLight: string;
+  errorLight: string;
+
   // Gradients (arrays para LinearGradient)
   gradientPrimary: [string, string];
   gradientAccent: [string, string];
@@ -88,6 +103,21 @@ const darkTheme: ThemeColors = {
   textDescription: '#94A3B8',
   textMuted: '#666666',
 
+  // Extended palette
+  purple: '#6366F1',
+  pink: '#EC4899',
+  rose: '#F43F5E',
+  fuchsia: '#D946EF',
+  cyan: '#06B6D4',
+  amber: '#F59E0B',
+  gold: '#FFD700',
+  slateBlue: '#7B68EE',
+  whatsapp: '#25D366',
+  googleBlue: '#4285F4',
+  warning: '#FFC107',
+  successLight: '#10B981',
+  errorLight: '#FF4D4D',
+
   // Gradients (arrays para LinearGradient)
   gradientPrimary: ['#CCFF00', '#A8E600'],
   gradientAccent: ['#FF6B35', '#FF8F65'],
@@ -99,14 +129,14 @@ const darkTheme: ThemeColors = {
 const lightTheme: ThemeColors = {
   // Backgrounds & Surfaces
   background: '#FFFFFF',
-  surface: '#F3F4F6',
+  surface: '#F1F5F9',
   surfaceElevated: '#FFFFFF',
-  surfaceOverlay: '#F9FAFB',
-  hover: '#E5E7EB',
+  surfaceOverlay: '#F8FAFC',
+  hover: '#E2E8F0',
 
   // Borders
-  border: '#E5E7EB',
-  borderLight: '#F3F4F6',
+  border: '#CBD5E1',
+  borderLight: '#E2E8F0',
   borderActive: '#CCFF0060',
 
   // Brand
@@ -124,24 +154,46 @@ const lightTheme: ThemeColors = {
   water: '#3B82F6',
 
   // Semantic Backgrounds
-  successBg: '#00E67612',
-  attentionBg: '#FFD60012',
-  errorBg: '#EF444412',
-  infoBg: '#3B82F612',
-  waterBg: '#3B82F612',
+  successBg: '#00E67615',
+  attentionBg: '#FFD60015',
+  errorBg: '#EF444415',
+  infoBg: '#3B82F615',
+  waterBg: '#3B82F615',
 
   // Text
-  textTitle: '#111827',
-  textDescription: '#6B7280',
-  textMuted: '#9CA3AF',
+  textTitle: '#0F172A',
+  textDescription: '#475569',
+  textMuted: '#64748B',
+
+  // Extended palette
+  purple: '#6366F1',
+  pink: '#EC4899',
+  rose: '#F43F5E',
+  fuchsia: '#D946EF',
+  cyan: '#06B6D4',
+  amber: '#F59E0B',
+  gold: '#FFD700',
+  slateBlue: '#7B68EE',
+  whatsapp: '#25D366',
+  googleBlue: '#4285F4',
+  warning: '#FFC107',
+  successLight: '#10B981',
+  errorLight: '#FF4D4D',
 
   // Gradients
   gradientPrimary: ['#CCFF00', '#A8E600'],
   gradientAccent: ['#E85D24', '#FF8F65'],
-  gradientDark: ['#F3F4F6', '#FFFFFF'],
+  gradientDark: ['#F1F5F9', '#FFFFFF'],
   gradientPremium: ['#CCFF00', '#00E676'],
-  gradientSurface: ['#FFFFFF', '#F3F4F6'],
+  gradientSurface: ['#FFFFFF', '#F1F5F9'],
 };
 
 export const THEMES = { dark: darkTheme, light: lightTheme };
-export const COLORS: ThemeColors = darkTheme;
+export const COLORS: ThemeColors = { ...darkTheme };
+
+export function setThemeColors(theme: 'dark' | 'light') {
+  const source = THEMES[theme];
+  (Object.keys(source) as Array<keyof ThemeColors>).forEach(key => {
+    (COLORS as any)[key] = source[key];
+  });
+}

@@ -6,10 +6,6 @@ export default function Payments() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPayments();
-  }, []);
-
   const loadPayments = async () => {
     const { data, error } = await supabase
       .from('profiles')
@@ -19,6 +15,10 @@ export default function Payments() {
     if (!error) setPayments(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    loadPayments();
+  }, []);
 
   const stats = {
     total: payments.length,

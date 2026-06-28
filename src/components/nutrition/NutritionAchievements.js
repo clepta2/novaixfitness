@@ -37,7 +37,7 @@ function AchievementCard({ achievement, unlocked }) {
 }
 
 export default function NutritionAchievements({ userId }) {
-  const [unlocked, setUnlocked] = useState(new Set());
+  const [unlocked, setUnlocked] = useState(() => new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadProgress(); }, [userId]);

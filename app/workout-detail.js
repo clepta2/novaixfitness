@@ -2,7 +2,7 @@
 // Detalhe do Treino - NOVAIX FITNESS
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, ActivityIndicator, Animated, Share } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -89,7 +89,7 @@ export default function WorkoutDetailScreen() {
   const handleOption = useCallback(async (opt) => {
     setShowOptions(false);
     if (opt === 'share') {
-      try { await Share.share({ message: `Confira o treino "${workout?.title}" no NOVAIX Fitness!` }); } catch {}
+      shareWorkout(workout);
     }
     if (opt === 'rate') return setShowRating(true);
     if (opt === 'save') {

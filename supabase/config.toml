@@ -1,0 +1,3 @@
+# Configuração do Supabase - NOVAIX FITNESS
+# Edge Functions não são mais utilizadas para pagamentos
+# O backend Node.js em /backend trata toda a integração com Asaas

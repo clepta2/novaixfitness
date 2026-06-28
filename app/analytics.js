@@ -36,7 +36,7 @@ export default function AnalyticsScreen() {
         setFrequency(freq);
         setMonthlyData(monthly);
       } catch (err) {
-        console.error('Erro ao carregar analytics:', err);
+        if (__DEV__) console.error('Erro ao carregar analytics:', err);
       } finally {
         setLoading(false);
       }

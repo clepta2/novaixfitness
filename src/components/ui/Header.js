@@ -1,70 +1,55 @@
 // src/components/ui/Header.js
-// Componente de Header NOVAIX FITNESS
+// Componente de Header premium - NOVAIX FITNESS
 
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
-import { SPACING } from '../../constants/spacing';
+import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export function Header({ title, subtitle, showBack, rightIcon, onRightPress }) {
+export function Header({ title, subtitle, showBack, rightIcon, onRightPress, rightIcon2, onRightPress2 }) {
   const router = useRouter();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       {showBack ? (
-        <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.iconBtn} accessibilityLabel="Voltar" accessibilityRole="button">
           <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
         </TouchableOpacity>
-      ) : (
-        <View style={styles.iconButton} />
-      )}
+      ) : <View style={styles.iconBtn} />}
 
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{title}</Text>
         {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
 
-      {rightIcon ? (
-        <TouchableOpacity onPress={onRightPress} style={styles.iconButton}>
-          <Ionicons name={rightIcon} size={24} color={COLORS.textTitle} />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.iconButton} />
-      )}
-    </View>
+      <View style={styles.rightActions}>
+        {rightIcon2 && (
+          <TouchableOpacity onPress={onRightPress2} style={styles.iconBtn}>
+            <Ionicons name={rightIcon2} size={22} color={COLORS.textMuted} />
+          </TouchableOpacity>
+        )}
+        {rightIcon ? (
+          <TouchableOpacity onPress={onRightPress} style={styles.iconBtn}>
+            <Ionicons name={rightIcon} size={22} color={COLORS.primary} />
+          </TouchableOpacity>
+        ) : <View style={styles.iconBtn} />}
+      </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  titleContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 18,
-    color: COLORS.textTitle,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  subtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    marginTop: 2,
-  },
+  container: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md },
+  iconBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center' },
+  titleContainer: { flex: 1, alignItems: 'center' },
+  title: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 18, color: COLORS.textTitle, textTransform: 'uppercase', letterSpacing: 1 },
+  subtitle: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
+  rightActions: { flexDirection: 'row', gap: SPACING.xs },
 });

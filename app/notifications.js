@@ -12,6 +12,8 @@ import { supabase } from '../src/config/supabase';
 import { APP_CONFIG } from '../src/config/app';
 import { layout, typography } from '../src/styles';
 import NotificationItem from '../src/components/notifications/NotificationItem';
+import { TutorialOverlay } from '../src/components';
+import { useTutorial } from '../src/hooks/useTutorial';
 
 const NOTIFICATION_TYPES = APP_CONFIG.notifications.types;
 
@@ -21,6 +23,8 @@ export default function NotificationsScreen() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('notifications', true);
 
   const fetchNotifications = useCallback(async () => {
     if (!user?.id) return;
@@ -34,7 +38,7 @@ export default function NotificationsScreen() {
 
       setNotifications(data || []);
     } catch (err) {
-      console.error('Erro ao buscar notificacoes:', err);
+      if (__DEV__) console.error('Erro ao buscar notificacoes:', err);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -97,6 +101,12 @@ export default function NotificationsScreen() {
 
   return (
     <View style={layout.screen}>
+      <TutorialOverlay
+        visible={tutorialVisible}
+        steps={tutorialSteps}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
+      />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
@@ -104,14 +114,14 @@ export default function NotificationsScreen() {
         <View style={styles.headerCenter}>
           <Text style={typography.h2}>Notificacoes</Text>
           {unreadCount > 0 && (
-            <View style={styles.badge}>
+            <View style={styles.badge} testID="badge">
               <Text style={styles.badgeText}>{unreadCount}</Text>
             </View>
           )}
         </View>
         <View style={{ flexDirection: 'row', gap: SPACING.sm }}>
           {unreadCount > 0 && (
-            <TouchableOpacity onPress={markAllAsRead} style={styles.headerBtn}>
+            <TouchableOpacity onPress={markAllAsRead} style={styles.headerBtn} testID="markAllBtn">
               <Ionicons name="checkmark-done" size={20} color={COLORS.primary} />
             </TouchableOpacity>
           )}
@@ -138,6 +148,7 @@ export default function NotificationsScreen() {
           )}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
+          testID="list"
         />
       )}
     </View>

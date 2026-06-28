@@ -11,8 +11,9 @@ import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
 import {
   ProfileHero, AchievementsCarousel, QuickActionsGrid,
   ProfileMenuGroup, RankingCard, WeeklyChallenges, WeightLogger, EditNameModal,
-  GamificationBar,
+  GamificationBar, TutorialOverlay,
 } from '../../../src/components';
+import { useTutorial } from '../../../src/hooks/useTutorial';
 import MuscleMiniRadar from '../../../src/components/profile/MuscleMiniRadar';
 import { useAuth } from '../../../src/context/AuthContext';
 import { supabase } from '../../../src/config/supabase';
@@ -29,6 +30,8 @@ export default function ProfileScreen() {
   const [gamification, setGamification] = useState(null);
   const [showEditName, setShowEditName] = useState(false);
 
+  const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('perfil', true);
+
   const fetchProfile = useCallback(async () => {
     if (!user?.id) return;
     try {
@@ -44,7 +47,7 @@ export default function ProfileScreen() {
       setStats({ streak, workouts: completed, time: Math.round(totalMinutes / 60), favorites: favCount || 0 });
       setGamification(await getGamificationData(user.id));
     } catch (err) {
-      console.error(err);
+      if (__DEV__) console.error(err);
     }
   }, [user?.id]);
 
@@ -89,6 +92,12 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={layout.screen} contentContainerStyle={[layout.scroll, { paddingBottom: 120 }]} showsVerticalScrollIndicator={false}>
+      <TutorialOverlay
+        visible={tutorialVisible}
+        steps={tutorialSteps}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
+      />
       {/* Header */}
       <View style={layout.header}>
         <Text style={typography.h2}>Meu Perfil</Text>

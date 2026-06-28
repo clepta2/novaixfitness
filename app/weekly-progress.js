@@ -171,7 +171,7 @@ export default function WeeklyProgressScreen() {
 
         {weekData?.bestDay && (
           <View style={styles.bestDayCard}>
-            <Ionicons name="trophy" size={24} color="#FFD700" />
+            <Ionicons name="trophy" size={24} color={COLORS.gold} />
             <View style={styles.bestDayInfo}>
               <Text style={typography.h5}>Melhor dia: {weekData.bestDay.fullDay}</Text>
               <Text style={typography.bodySmall}>{weekData.bestDay.count} treinos, {weekData.bestDay.minutes} minutos</Text>

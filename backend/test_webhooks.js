@@ -4,8 +4,9 @@
 // Usa fetch nativo do Node 18+ ou node-fetch
 const fetch = globalThis.fetch || require('node-fetch');
 
+require('dotenv').config({ path: __dirname + '/.env' });
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
-const WEBHOOK_TOKEN = process.env.ASAAS_WEBHOOK_TOKEN || 'test-token';
+const WEBHOOK_TOKEN = process.env.ASAAS_WEBHOOK_TOKEN || 'novaix_webhook_secret_2026';
 
 // ========================================
 // DADOS DE TESTE

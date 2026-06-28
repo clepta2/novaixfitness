@@ -1,4 +1,5 @@
 node_modules/
+admin/node_modules/
 .env
 .expo/
 dist/
@@ -17,3 +18,5 @@ web-build/
 npm-debug.*
 *.orig.*
 *.map
+coverage/
+NUL

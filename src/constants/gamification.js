@@ -19,15 +19,10 @@ export const XP_VALUES = {
 
 export const LEVELS = [
   { level: 1, name: 'Iniciante', xpRequired: 0, color: '#94A3B8', icon: 'seedling', rewards: [] },
-  { level: 2, name: 'Aquecendo', xpRequired: 200, color: '#94A3B8', icon: 'flash', rewards: ['Acesso a dicas de treino'] },
-  { level: 3, name: 'Dedicado', xpRequired: 500, color: '#00E676', icon: 'flame', rewards: ['Badge exclusivo', 'Tema escuro premium'] },
-  { level: 4, name: 'Focado', xpRequired: 1000, color: '#00E676', icon: 'rocket', rewards: ['Avatar exclusivo', 'Estatisticas avancadas'] },
-  { level: 5, name: 'Atleta', xpRequired: 2000, color: '#FFD600', icon: 'trophy', rewards: ['Titulo especial', 'Acesso antecipado'] },
-  { level: 6, name: 'Guerreiro', xpRequired: 3500, color: '#FFD600', icon: 'shield', rewards: ['Frame de perfil', 'Destaque na comunidade'] },
-  { level: 7, name: 'Mestre', xpRequired: 5000, color: '#FF6B35', icon: 'diamond', rewards: ['Coach IA premium', 'Treinos exclusivos'] },
-  { level: 8, name: 'Lenda', xpRequired: 7500, color: '#FF6B35', icon: 'skull', rewards: ['Avatar lendario', 'Consulta nutricional'] },
-  { level: 9, name: 'Lendario', xpRequired: 10000, color: '#CCFF00', icon: 'flash', rewards: ['Badge dourado', 'Supervip'] },
-  { level: 10, name: 'NOVAIX', xpRequired: 15000, color: '#CCFF00', icon: 'star', rewards: ['Titulo supremo', 'Acesso vitalicio', 'Personal trainer virtual'] },
+  { level: 2, name: 'Dedicado', xpRequired: 500, color: '#00E676', icon: 'flame', rewards: ['Badge exclusivo', 'Dicas de treino'] },
+  { level: 3, name: 'Atleta', xpRequired: 2000, color: '#FFD600', icon: 'trophy', rewards: ['Titulo especial', 'Estatisticas avancadas'] },
+  { level: 4, name: 'Mestre', xpRequired: 5000, color: '#FF6B35', icon: 'diamond', rewards: ['Coach IA premium', 'Treinos exclusivos'] },
+  { level: 5, name: 'NOVAIX', xpRequired: 10000, color: '#CCFF00', icon: 'star', rewards: ['Titulo supremo', 'Acesso vitalicio'] },
 ];
 
 export const ACHIEVEMENTS = [
@@ -62,15 +57,23 @@ export const ACHIEVEMENTS = [
   { id: 'social_comment_25', name: 'Conversador', description: 'Deixe 25 comentarios', icon: 'chatbubbles', color: '#00E676', category: 'social', requirement: 25, xpReward: 150 },
 
   // Nivel
-  { id: 'level_3', name: 'Subindo de Nivel', description: 'Alcance o nivel 3', icon: 'trending-up', color: '#00E676', category: 'level', requirement: 3, xpReward: 100 },
-  { id: 'level_5', name: 'Meio Caminho', description: 'Alcance o nivel 5', icon: 'trending-up', color: '#FFD600', category: 'level', requirement: 5, xpReward: 300 },
-  { id: 'level_7', name: 'Elite', description: 'Alcance o nivel 7', icon: 'trending-up', color: '#FF6B35', category: 'level', requirement: 7, xpReward: 500 },
-  { id: 'level_10', name: 'NOVAIX Supremo', description: 'Alcance o nivel maximo', icon: 'star', color: '#CCFF00', category: 'level', requirement: 10, xpReward: 2000 },
+  { id: 'level_2', name: 'Subindo de Nivel', description: 'Alcance o nivel 2', icon: 'trending-up', color: '#00E676', category: 'level', requirement: 2, xpReward: 100 },
+  { id: 'level_3', name: 'Meio Caminho', description: 'Alcance o nivel 3', icon: 'trending-up', color: '#FFD600', category: 'level', requirement: 3, xpReward: 300 },
+  { id: 'level_4', name: 'Elite', description: 'Alcance o nivel 4', icon: 'trending-up', color: '#FF6B35', category: 'level', requirement: 4, xpReward: 500 },
+  { id: 'level_5', name: 'NOVAIX Supremo', description: 'Alcance o nivel maximo', icon: 'star', color: '#CCFF00', category: 'level', requirement: 5, xpReward: 2000 },
 
   // Desafios Semanais
   { id: 'weekly_3_workouts', name: 'Ativo na Semana', description: 'Complete 3 treinos na semana', icon: 'calendar', color: '#00E676', category: 'weekly', requirement: 3, xpReward: 100 },
   { id: 'weekly_5_workouts', name: 'Semana Completa', description: 'Complete 5 treinos na semana', icon: 'calendar', color: '#FFD600', category: 'weekly', requirement: 5, xpReward: 250 },
   { id: 'weekly_all_categories', name: 'Variado', description: 'Treine todas as categorias na semana', icon: 'grid', color: '#FF6B35', category: 'weekly', requirement: 1, xpReward: 200 },
+
+  // XP Acumulado
+  { id: 'xp_100', name: 'Primeiros Passos', description: 'Acumule 100 XP', icon: 'flash', color: '#94A3B8', category: 'xp', requirement: 100, xpReward: 25 },
+  { id: 'xp_500', name: 'Coletor de XP', description: 'Acumule 500 XP', icon: 'flash', color: '#00E676', category: 'xp', requirement: 500, xpReward: 50 },
+  { id: 'xp_1000', name: 'Mestre do XP', description: 'Acumule 1.000 XP', icon: 'flash', color: '#FFD600', category: 'xp', requirement: 1000, xpReward: 100 },
+  { id: 'xp_2500', name: 'Caçador de XP', description: 'Acumule 2.500 XP', icon: 'flash', color: '#FF6B35', category: 'xp', requirement: 2500, xpReward: 200 },
+  { id: 'xp_5000', name: 'Lenda do XP', description: 'Acumule 5.000 XP', icon: 'flash', color: '#CCFF00', category: 'xp', requirement: 5000, xpReward: 500 },
+  { id: 'xp_10000', name: 'Supremo do XP', description: 'Acumule 10.000 XP', icon: 'star', color: '#CCFF00', category: 'xp', requirement: 10000, xpReward: 1000 },
 ];
 
 export const WEEKLY_CHALLENGES = [
@@ -121,6 +124,7 @@ export function getUnlockedAchievements(userStats) {
       case 'time': value = userStats.totalMinutes || 0; break;
       case 'social': value = userStats[`${achievement.id}_count`] || 0; break;
       case 'level': value = userStats.level || 1; break;
+      case 'xp': value = userStats.totalXP || 0; break;
     }
     if (value >= achievement.requirement) {
       unlocked.push(achievement);

@@ -112,6 +112,16 @@ jest.mock('../../src/components', () => ({
   FavoriteWorkoutCard: 'FavoriteWorkoutCard',
   FilterModal: 'FilterModal',
   TagFilter: 'TagFilter',
+  TutorialOverlay: 'TutorialOverlay',
+}));
+
+jest.mock('../../src/hooks/useTutorial', () => ({
+  useTutorial: () => ({
+    visible: false,
+    steps: [],
+    handleComplete: jest.fn(),
+    handleSkip: jest.fn(),
+  }),
 }));
 
 jest.mock('../../src/styles/libraryStyles', () => ({

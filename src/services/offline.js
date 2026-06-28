@@ -79,7 +79,7 @@ export async function addPendingAction(action) {
   try {
     const raw = await AsyncStorage.getItem(CACHE_KEYS.PENDING_ACTIONS);
     const actions = raw ? JSON.parse(raw) : [];
-    actions.push({ ...action, id: Date.now().toString(), timestamp: Date.now() });
+    actions.push({ ...action, id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, timestamp: Date.now() });
     await AsyncStorage.setItem(CACHE_KEYS.PENDING_ACTIONS, JSON.stringify(actions));
   } catch (err) {
     console.error('Erro ao adicionar ação pendente:', err);

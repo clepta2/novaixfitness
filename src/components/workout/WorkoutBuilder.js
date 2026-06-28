@@ -2,7 +2,7 @@
 // Construtor de treinos personalizados - NOVAIX FITNESS
 
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Animated, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Animated, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
@@ -117,11 +117,15 @@ export default function WorkoutBuilder({ onSave, existingWorkout }) {
         </View>
       )}
 
-      <ScrollView style={styles.exercisesList}>
-        {selectedExercises.map((ex, i) => (
-          <ExerciseSlot key={i} exercise={ex} index={i} onRemove={removeExercise} onUpdate={updateExercise} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={selectedExercises}
+        renderItem={({ item, index }) => (
+          <ExerciseSlot exercise={item} index={index} onRemove={removeExercise} onUpdate={updateExercise} />
+        )}
+        keyExtractor={(_, i) => String(i)}
+        style={styles.exercisesList}
+        showsVerticalScrollIndicator={false}
+      />
 
       <TouchableOpacity style={styles.addBtn} onPress={() => setShowPicker(true)}>
         <Ionicons name="add-circle" size={20} color={COLORS.primary} />

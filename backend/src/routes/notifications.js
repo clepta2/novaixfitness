@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
+const { validateBody, sanitizeString } = require('../middleware/validate');
 
 const EXPO_API_URL = 'https://exp.host/--/api/v2/push/send';
 
@@ -26,13 +27,14 @@ async function sendPushNotification(pushToken, title, body, data = {}) {
   return response.json();
 }
 
-router.post('/send', authenticate, async (req, res) => {
+router.post('/send', authenticate, validateBody({
+  title: { required: true, type: 'string', minLength: 1, maxLength: 100 },
+  body: { required: true, type: 'string', minLength: 1, maxLength: 500 },
+  userId: { type: 'string', maxLength: 50 },
+  type: { enum: ['marketing', 'reminder', 'achievement', 'system'] }
+}), async (req, res) => {
   try {
     const { title, body, userId, type } = req.body;
-
-    if (!title || !body) {
-      return res.status(400).json({ error: 'Title and body are required' });
-    }
 
     let targetUserId = userId || req.user.id;
 
@@ -50,7 +52,7 @@ router.post('/send', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'User opted out of marketing notifications' });
     }
 
-    const result = await sendPushNotification(profile.push_token, title, body, { type });
+    const result = await sendPushNotification(profile.push_token, sanitizeString(title), sanitizeString(body), { type });
 
     res.json({ success: true, result });
   } catch (err) {
@@ -59,13 +61,14 @@ router.post('/send', authenticate, async (req, res) => {
   }
 });
 
-router.post('/send-bulk', authenticate, async (req, res) => {
+router.post('/send-bulk', authenticate, validateBody({
+  title: { required: true, type: 'string', minLength: 1, maxLength: 100 },
+  body: { required: true, type: 'string', minLength: 1, maxLength: 500 },
+  type: { enum: ['marketing', 'reminder', 'system'] },
+  filter: { type: 'object' }
+}), async (req, res) => {
   try {
     const { title, body, type, filter } = req.body;
-
-    if (!title || !body) {
-      return res.status(400).json({ error: 'Title and body are required' });
-    }
 
     let query = supabase
       .from('profiles')
@@ -91,8 +94,8 @@ router.post('/send-bulk', authenticate, async (req, res) => {
       .map(p => ({
         to: p.push_token,
         sound: 'default',
-        title,
-        body,
+        title: sanitizeString(title),
+        body: sanitizeString(body),
         data: { type },
       }));
 
@@ -111,7 +114,10 @@ router.post('/send-bulk', authenticate, async (req, res) => {
   }
 });
 
-router.post('/schedule-reminder', authenticate, async (req, res) => {
+router.post('/schedule-reminder', authenticate, validateBody({
+  hour: { type: 'number', min: 0, max: 23 },
+  minute: { type: 'number', min: 0, max: 59 }
+}), async (req, res) => {
   try {
     const { hour, minute } = req.body;
 

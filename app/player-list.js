@@ -11,6 +11,7 @@ import { dailyWorkouts as fallbackWorkouts, activeWorkout as fallbackActive } fr
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { getUserPlan } from '../src/services/planGenerator';
+import { shouldAdaptPlan, analyzeUserPerformance, adaptWorkoutPlan, saveAdaptation, getAdaptationReason } from '../src/services/planAdaptation';
 import { layout } from '../src/styles';
 
 const userLevelMap = {
@@ -39,7 +40,7 @@ export default function PlayerListScreen() {
           .single();
         if (data) setProfile(data);
       } catch (err) {
-        console.error('Erro ao carregar perfil na lista de treinos:', err);
+        if (__DEV__) console.error('Erro ao carregar perfil na lista de treinos:', err);
       }
     }
     loadProfile();
@@ -50,7 +51,22 @@ export default function PlayerListScreen() {
 
   const fetchDailyWorkouts = useCallback(async () => {
     try {
-      const userPlan = user?.id ? await getUserPlan(user.id) : null;
+      let userPlan = user?.id ? await getUserPlan(user.id) : null;
+
+      if (user?.id && userPlan && userPlan.length > 0) {
+        const needsAdapt = await shouldAdaptPlan(user.id);
+        if (needsAdapt) {
+          const performance = await analyzeUserPerformance(user.id);
+          if (performance) {
+            const fullPlan = { week: userPlan.map(w => ({ ...w, exercises: w.exercises ? JSON.parse(w.exercises) : [] })) };
+            const adapted = await adaptWorkoutPlan(user.id, fullPlan, performance);
+            const reason = getAdaptationReason(performance);
+            await saveAdaptation(user.id, fullPlan, adapted, reason);
+            userPlan = await getUserPlan(user.id);
+          }
+        }
+      }
+
       if (userPlan && userPlan.length > 0) {
         const mapped = userPlan.map((w, i) => {
           const exercises = w.exercises ? JSON.parse(w.exercises) : [];
@@ -92,7 +108,7 @@ export default function PlayerListScreen() {
         }
       }
     } catch (err) {
-      console.log('Usando dados fallback:', err);
+      if (__DEV__) console.log('Usando dados fallback:', err);
     } finally {
       setLoading(false);
       setRefreshing(false);

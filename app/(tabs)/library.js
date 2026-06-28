@@ -4,8 +4,9 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
-import { WorkoutCard, FavoriteWorkoutCard, FilterModal } from '../../src/components';
+import { WorkoutCard, FavoriteWorkoutCard, FilterModal, TutorialOverlay } from '../../src/components';
 import { useLibraryData } from '../../src/hooks';
+import { useTutorial } from '../../src/hooks/useTutorial';
 import { layout, typography } from '../../src/styles';
 import { styles } from '../../src/styles/libraryStyles';
 
@@ -20,6 +21,8 @@ export default function LibraryScreen() {
     activePills, removePill, clearAll, userPhysicalLevel, dbWorkouts
   } = useLibraryData();
 
+  const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('library', true);
+
   const handleWorkoutPress = (w) => {
     if (w.locked) {
       Alert.alert('Conteúdo Premium 🔒', 'Exclusivo para assinantes Premium.', [
@@ -33,6 +36,12 @@ export default function LibraryScreen() {
 
   return (
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
+      <TutorialOverlay
+        visible={tutorialVisible}
+        steps={tutorialSteps}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
+      />
       <View style={layout.header}>
         <View style={{ flex: 1 }}>
           <Text style={typography.h2}>Biblioteca</Text>
@@ -96,7 +105,6 @@ export default function LibraryScreen() {
       <View style={layout.section}>
         <View style={layout.sectionHeader}>
           <Text style={typography.label}>MAIS POPULARES</Text>
-          <TouchableOpacity onPress={clearAll}><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
         </View>
         {popularWorkouts.length > 0 ? popularWorkouts.map((w) => <WorkoutCard key={w.id} workout={w} locked={w.locked} onPress={handleWorkoutPress} isOfflineCached={cachedIds.has(w.id)} />) : (
           <View style={styles.empty}><Ionicons name="search" size={32} color={COLORS.textMuted} /><Text style={typography.bodyMuted}>Nenhum treino encontrado</Text></View>
@@ -106,7 +114,6 @@ export default function LibraryScreen() {
       <View style={layout.section}>
         <View style={layout.sectionHeader}>
           <Text style={typography.label}>USADOS RECENTEMENTE</Text>
-          <TouchableOpacity onPress={clearAll}><Text style={typography.bodySmall}>Ver todos</Text></TouchableOpacity>
         </View>
         {recentWorkouts.length > 0 ? recentWorkouts.map((w) => <WorkoutCard key={w.id} workout={w} locked={w.locked} onPress={handleWorkoutPress} isOfflineCached={cachedIds.has(w.id)} />) : (
           <View style={styles.empty}><Ionicons name="search" size={32} color={COLORS.textMuted} /><Text style={typography.bodyMuted}>Nenhum treino encontrado</Text></View>

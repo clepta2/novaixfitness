@@ -10,10 +10,6 @@ export default function Dashboard() {
     recentSignups: []
   });
 
-  useEffect(() => {
-    loadStats();
-  }, []);
-
   const loadStats = async () => {
     const { count: totalUsers } = await supabase
       .from('profiles')
@@ -41,6 +37,10 @@ export default function Dashboard() {
       recentSignups: recentSignups || []
     });
   };
+
+  useEffect(() => {
+    loadStats();
+  }, []);
 
   const cards = [
     { label: 'Total Usuários', value: stats.totalUsers, icon: '👥', color: 'text-blue-400' },

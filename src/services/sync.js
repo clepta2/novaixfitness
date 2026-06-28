@@ -30,7 +30,7 @@ export async function syncPendingActions() {
       await retryWithBackoff(async () => {
         switch (action.type) {
           case 'ADD_FAVORITE':
-            await supabase.from('favorites').insert({ workout_id: action.workoutId });
+            await supabase.from('favorites').upsert({ user_id: action.userId, workout_id: action.workoutId }, { onConflict: 'user_id,workout_id' });
             break;
           case 'REMOVE_FAVORITE':
             await supabase.from('favorites').delete().eq('workout_id', action.workoutId);

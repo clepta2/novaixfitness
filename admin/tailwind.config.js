@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        title: ['Montserrat', 'sans-serif'],
+      },
       colors: {
         novaix: {
           bg: '#12161A',

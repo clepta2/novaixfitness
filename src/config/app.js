@@ -1,8 +1,10 @@
 // src/config/app.js
 // Configuracoes gerais do app - NOVAIX FITNESS
 
+import { COLORS } from '../constants/colors';
+
 export const APP_CONFIG = {
-  whatsappNumber: '5511999999999',
+  whatsappNumber: process.env.EXPO_PUBLIC_WHATSAPP_NUMBER || '',
   supportEmail: 'suporte@novaixfitness.com',
   appName: 'NOVAIX FITNESS',
   waterGoalDefault: 8,
@@ -77,17 +79,17 @@ export const APP_CONFIG = {
       'O segredo do progresso e comecar.',
     ],
     types: {
-      workout_reminder: { icon: 'alarm', color: '#FFD600', route: 'HOME', label: 'Lembrete de Treino', desc: 'Avisar na hora do treino', group: 'treino' },
-      workout_completed: { icon: 'checkmark-circle', color: '#00E676', route: 'HOME', label: 'Treino Concluido', desc: 'Confirmar conclusao do treino', group: 'treino' },
-      new_workout: { icon: 'barbell', color: '#CCFF00', route: 'HOME', label: 'Novo Treino', desc: 'Avisar quando novos treinos chegarem', group: 'treino' },
-      streak: { icon: 'flame', color: '#FF6B35', route: 'PROFILE', label: 'Streak', desc: 'Marcos de dias seguidos', group: 'progresso' },
-      achievement: { icon: 'trophy', color: '#FFD600', route: 'PROFILE', label: 'Conquistas', desc: 'Conquistas desbloqueadas', group: 'progresso' },
-      level_up: { icon: 'trending-up', color: '#CCFF00', route: 'PROFILE', label: 'Subida de Nivel', desc: 'Quando alcancar novo nivel', group: 'progresso' },
-      weekly_plan: { icon: 'calendar', color: '#00E676', route: 'LIBRARY', label: 'Plano Semanal', desc: 'Lembrete do plano da semana', group: 'lembretes' },
-      weekly_summary: { icon: 'stats-chart', color: '#00E676', route: 'HOME', label: 'Resumo Semanal', desc: 'Resumo de atividades', group: 'lembretes' },
-      rest_day: { icon: 'bed', color: '#94A3B8', route: null, label: 'Dia de Descanso', desc: 'Lembrete de recuperacao', group: 'lembretes' },
-      motivational: { icon: 'bulb', color: '#FFD600', route: null, label: 'Motivacao', desc: 'Dicas e motivacao diaria', group: 'lembretes' },
-      system: { icon: 'information-circle', color: '#94A3B8', route: null, label: 'Sistema', desc: 'Notificacoes importantes do app', group: 'lembretes' },
+      workout_reminder: { icon: 'alarm', color: COLORS.attention, route: 'HOME', label: 'Lembrete de Treino', desc: 'Avisar na hora do treino', group: 'treino' },
+      workout_completed: { icon: 'checkmark-circle', color: COLORS.success, route: 'HOME', label: 'Treino Concluido', desc: 'Confirmar conclusao do treino', group: 'treino' },
+      new_workout: { icon: 'barbell', color: COLORS.primary, route: 'HOME', label: 'Novo Treino', desc: 'Avisar quando novos treinos chegarem', group: 'treino' },
+      streak: { icon: 'flame', color: COLORS.secondary, route: 'PROFILE', label: 'Streak', desc: 'Marcos de dias seguidos', group: 'progresso' },
+      achievement: { icon: 'trophy', color: COLORS.attention, route: 'PROFILE', label: 'Conquistas', desc: 'Conquistas desbloqueadas', group: 'progresso' },
+      level_up: { icon: 'trending-up', color: COLORS.primary, route: 'PROFILE', label: 'Subida de Nivel', desc: 'Quando alcancar novo nivel', group: 'progresso' },
+      weekly_plan: { icon: 'calendar', color: COLORS.success, route: 'LIBRARY', label: 'Plano Semanal', desc: 'Lembrete do plano da semana', group: 'lembretes' },
+      weekly_summary: { icon: 'stats-chart', color: COLORS.success, route: 'HOME', label: 'Resumo Semanal', desc: 'Resumo de atividades', group: 'lembretes' },
+      rest_day: { icon: 'bed', color: COLORS.textDescription, route: null, label: 'Dia de Descanso', desc: 'Lembrete de recuperacao', group: 'lembretes' },
+      motivational: { icon: 'bulb', color: COLORS.attention, route: null, label: 'Motivacao', desc: 'Dicas e motivacao diaria', group: 'lembretes' },
+      system: { icon: 'information-circle', color: COLORS.textDescription, route: null, label: 'Sistema', desc: 'Notificacoes importantes do app', group: 'lembretes' },
     },
     defaultPrefs: {
       workout_reminder: true,

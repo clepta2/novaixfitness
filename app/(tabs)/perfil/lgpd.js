@@ -26,7 +26,7 @@ export default function LGPDScreen() {
     try {
       const settings = await getConsentSettings(user.id);
       if (settings) setConsents({ marketing: settings.marketing, analytics: settings.analytics, thirdParty: settings.thirdParty });
-    } catch (err) { console.error('Erro ao carregar consentimentos:', err); }
+    } catch (err) { if (__DEV__) console.error('Erro ao carregar consentimentos:', err); }
     finally { setConsentLoading(false); }
   }, [user?.id]);
 

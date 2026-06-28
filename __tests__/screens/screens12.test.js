@@ -132,8 +132,18 @@ jest.mock('../../src/components', () => {
     WeightLogger: (props) => React.createElement(View, null),
     EditNameModal: (props) => React.createElement(View, null),
     GamificationBar: (props) => React.createElement(View, null),
+    TutorialOverlay: (props) => React.createElement(View, null),
   };
 });
+
+jest.mock('../../src/hooks/useTutorial', () => ({
+  useTutorial: () => ({
+    visible: false,
+    steps: [],
+    handleComplete: jest.fn(),
+    handleSkip: jest.fn(),
+  }),
+}));
 
 import WorkoutDetailScreen from '../../app/workout-detail';
 import ProfileScreen from '../../app/(tabs)/perfil/index';

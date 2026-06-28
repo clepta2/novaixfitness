@@ -83,7 +83,7 @@ export default function RecoveryScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="moon" size={20} color="#7B68EE" />
+            <Ionicons name="moon" size={20} color={COLORS.slateBlue} />
             <Text style={styles.sectionTitle}>SONO</Text>
           </View>
           <Text style={styles.sectionDesc}>Horas dormidas na noite anterior</Text>
@@ -136,5 +136,5 @@ const styles = StyleSheet.create({
   tipText: { fontFamily: 'Inter-Regular', fontSize: 14, color: COLORS.textDescription, lineHeight: 20 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, padding: SPACING.md },
   saveBtnDone: { backgroundColor: COLORS.success },
-  saveBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: '#12161A', letterSpacing: 0.5 },
+  saveBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: COLORS.background, letterSpacing: 0.5 },
 });

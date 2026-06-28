@@ -33,7 +33,7 @@ function SupplementItem({ supplement, taken, onToggle }) {
 }
 
 export default function SupplementTracker({ userId }) {
-  const [taken, setTaken] = useState(new Set());
+  const [taken, setTaken] = useState(() => new Set());
 
   useEffect(() => { loadToday(); }, [userId]);
 

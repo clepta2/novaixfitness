@@ -33,7 +33,7 @@ export default function NotificationSettingsScreen() {
         const { data } = await supabase.from('profiles').select('notification_settings').eq('id', user.id).single();
         if (data?.notification_settings?.reminder_time) setReminderTime(data.notification_settings.reminder_time);
       } catch (err) {
-        console.error('Erro ao carregar configuracoes:', err);
+        if (__DEV__) console.error('Erro ao carregar configuracoes:', err);
       } finally {
         setLoading(false);
       }

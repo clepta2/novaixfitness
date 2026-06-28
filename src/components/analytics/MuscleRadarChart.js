@@ -1,14 +1,15 @@
 // src/components/analytics/MuscleRadarChart.js
 // Gráfico Radar de Equilíbrio Muscular - NOVAIX FITNESS
 
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import Svg, { G, Circle, Line, Polygon, Text as SvgText, Defs, Filter, FeGaussianBlur, FeMerge, FeMergeNode, Rect } from 'react-native-svg';
+import Svg, { G, Circle, Line, Polygon, Text as SvgText, Defs, Filter, FeGaussianBlur, FeMerge, FeMergeNode, RadialGradient, Stop } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 const AnimatedPolygon = Animated.createAnimatedComponent(Polygon);
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const GROUPS = [
   { key: 'chest', label: 'Peito', short: 'PEI', icon: 'body' },
@@ -52,11 +53,18 @@ function getInsight(values) {
 }
 
 export default function MuscleRadarChart({ data = {}, previousData = null }) {
-  const animatedValue = useRef(new Animated.Value(0)).current;
+  const animatedValue = useMemo(() => new Animated.Value(0), []);
+  const pulseAnim = useMemo(() => new Animated.Value(1), []);
 
   useEffect(() => {
     Animated.spring(animatedValue, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true }).start();
-  }, []);
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.25, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+      ])
+    ).start();
+  }, [animatedValue, pulseAnim]);
 
   const values = useMemo(() => GROUPS.map(g => ({
     ...g,
@@ -71,6 +79,11 @@ export default function MuscleRadarChart({ data = {}, previousData = null }) {
   const insight = getInsight(values);
   const maxVal = Math.max(...values.map(v => v.current));
   const minVal = Math.min(...values.map(v => v.current));
+
+  const pulseOpacity = pulseAnim.interpolate({
+    inputRange: [1, 1.25],
+    outputRange: [0.6, 0.1]
+  });
 
   return (
     <View style={styles.container}>
@@ -88,6 +101,10 @@ export default function MuscleRadarChart({ data = {}, previousData = null }) {
       <View style={styles.chartRow}>
         <Svg width={SIZE} height={SIZE}>
           <Defs>
+            <RadialGradient id="radarGrad" cx="50%" cy="50%" rx="50%" ry="50%">
+              <Stop offset="0%" stopColor={COLORS.primary} stopOpacity="0.45" />
+              <Stop offset="100%" stopColor={COLORS.surface} stopOpacity="0.0" />
+            </RadialGradient>
             <Filter id="glow">
               <FeGaussianBlur stdDeviation="4" result="coloredBlur" />
               <FeMerge><FeMergeNode in="coloredBlur" /><FeMergeNode in="SourceGraphic" /></FeMerge>
@@ -106,13 +123,16 @@ export default function MuscleRadarChart({ data = {}, previousData = null }) {
               return <Line key={i} x1={CENTER} y1={CENTER} x2={p.x} y2={p.y} stroke={COLORS.border} strokeWidth={1} opacity={0.3} />;
             })}
             {prevPoints && <Polygon points={prevPoints} fill={COLORS.textMuted + '10'} stroke={COLORS.textMuted} strokeWidth={1} strokeDasharray="4,4" opacity={0.5} />}
-            <AnimatedPolygon points={currentPoints} fill={COLORS.primary + '20'} stroke={COLORS.primary} strokeWidth={2.5} filter="url(#glow)" />
+            <AnimatedPolygon points={currentPoints} fill="url(#radarGrad)" stroke={COLORS.primary} strokeWidth={2.5} filter="url(#glow)" />
             {values.map((v, i) => {
               const p = polarToCartesian(i, v.current, values.length);
               const isMax = v.current === maxVal && v.current > 0;
               const isMin = v.current === minVal && v.current > 0;
               return (
                 <G key={i}>
+                  {isMax && (
+                    <AnimatedCircle cx={p.x} cy={p.y} r={12} fill={COLORS.success} opacity={pulseOpacity} />
+                  )}
                   <Circle cx={p.x} cy={p.y} r={isMax ? 7 : 5} fill={isMax ? COLORS.success : isMin ? COLORS.attention : COLORS.primary} stroke={COLORS.background} strokeWidth={2} filter="url(#softGlow)" />
                   {v.current > 0 && <SvgText x={p.x} y={p.y - 12} textAnchor="middle" fill={COLORS.textTitle} fontSize={8} fontFamily="Montserrat_700Bold">{v.current}%</SvgText>}
                 </G>

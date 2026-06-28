@@ -73,15 +73,15 @@ export default function WorkoutShare({ workout, xp, duration, exercises, onShare
         </TouchableOpacity>
 
         <View style={styles.shareOptions}>
-          <TouchableOpacity style={styles.shareOption}>
-            <Ionicons name="logo-whatsapp" size={24} color="#25D366" />
+          <TouchableOpacity style={styles.shareOption} onPress={() => Share.share({ message: `Treinei com NOVAIX Fitness! ${workout?.name || 'Treino'} - ${duration || 0}min` })}>
+            <Ionicons name="logo-whatsapp" size={24} color={COLORS.whatsapp} />
             <Text style={styles.shareOptionText}>WhatsApp</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.shareOption}>
-            <Ionicons name="logo-instagram" size={24} color="#E4405F" />
+          <TouchableOpacity style={styles.shareOption} onPress={() => Share.share({ message: `Treinei com NOVAIX Fitness! ${workout?.name || 'Treino'} - ${duration || 0}min` })}>
+            <Ionicons name="logo-instagram" size={24} color={COLORS.pink} />
             <Text style={styles.shareOptionText}>Instagram</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.shareOption}>
+          <TouchableOpacity style={styles.shareOption} onPress={() => Share.share({ message: `Treinei com NOVAIX Fitness! ${workout?.name || 'Treino'} - ${duration || 0}min` })}>
             <Ionicons name="copy" size={24} color={COLORS.primary} />
             <Text style={styles.shareOptionText}>Copiar</Text>
           </TouchableOpacity>

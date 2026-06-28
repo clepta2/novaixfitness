@@ -9,7 +9,7 @@ export const ROUTES = {
 
   // Onboarding
   ONBOARDING_GOAL: '/onboarding/objetivo',
-  ONBOARDING_GENDER: '/onboarding/genero',
+  ONBOARDING_GENDER: '/onboarding/dados-fisicos',
   ONBOARDING_PHYSICAL: '/onboarding/dados-fisicos',
   ONBOARDING_MODEL: '/onboarding/modelo',
   ONBOARDING_AVAILABILITY: '/onboarding/disponibilidade',

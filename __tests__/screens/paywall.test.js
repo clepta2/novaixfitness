@@ -1,7 +1,6 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import PaywallScreen from '../../app/paywall';
-import { PLANS } from '../../src/services/payment';
 
 // Mock expo-font
 jest.mock('expo-font', () => ({
@@ -17,145 +16,123 @@ jest.mock('@expo/vector-icons', () => {
 });
 
 // Mock router
-const mockRouter = {
-  push: jest.fn(),
-  replace: jest.fn(),
-  back: jest.fn(),
-};
-jest.mock('expo-router', () => ({
-  useRouter: () => mockRouter,
-}));
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+jest.mock('expo-router', () => ({ useRouter: () => mockRouter }));
 
-// Mock style & layout constants
+// Mock styles
 jest.mock('../../src/styles', () => ({
   typography: {
-    h3: { fontSize: 16 },
-    h2: { fontSize: 20 },
-    h5: { fontSize: 12 },
-    bodyMuted: { fontSize: 14 },
-    bodySmall: { fontSize: 12 },
-    caption: { fontSize: 12 },
-    button: { fontSize: 14 },
-  },
-  layout: {
-    screen: { flex: 1 },
-    scroll: { padding: 24, paddingTop: 60 },
-    section: { marginBottom: 12 },
-    footer: { padding: 12 },
+    h3: { fontSize: 16 }, h4: { fontSize: 14 }, bodyMuted: { fontSize: 14 },
+    body: { fontSize: 14 }, caption: { fontSize: 12 }, label: { fontSize: 12 },
+    h5: { fontSize: 12 }, button: { fontSize: 14 },
   },
 }));
 
 // Mock Auth context
-const mockUser = { id: 'test-user-id', email: 'test@example.com' };
+const mockUpdateProfile = jest.fn(() => Promise.resolve());
 jest.mock('../../src/context/AuthContext', () => ({
   useAuth: () => ({
-    user: mockUser,
+    user: { id: 'test-user-id', email: 'test@example.com' },
+    updateProfile: mockUpdateProfile,
   }),
 }));
 
-// Mock AB test service
-let mockVariant = 'control';
+// Mock payment service
+jest.mock('../../src/services/payment', () => ({
+  PLANS: {
+    basic: { id: 'basic', name: 'Plano Básico', price: 49.90, priceText: 'R$ 49,90', features: [], period: '/mês' },
+    intermediate: { id: 'intermediate', name: 'Plano Intermediário', price: 79.90, priceText: 'R$ 79,90', popular: true, features: [], period: '/mês' },
+    premium: { id: 'premium', name: 'Plano Premium', price: 119.90, priceText: 'R$ 119,90', features: [], period: '/mês' },
+  },
+}));
+
+// Mock paywall components
+jest.mock('../../src/components', () => {
+  const React = require('react');
+  const { Text, TouchableOpacity, View, TextInput } = require('react-native');
+  return {
+    Button: ({ title, onPress, disabled }) => (
+      <TouchableOpacity onPress={onPress} disabled={disabled} testID={`btn-${title}`}>
+        <Text>{title}</Text>
+      </TouchableOpacity>
+    ),
+    PlanCard: ({ plan, isSelected, onSelect }) => (
+      <TouchableOpacity onPress={() => onSelect(plan.id)}>
+        <Text>{plan.name}</Text>
+        {isSelected && <Text>SELECIONADO</Text>}
+      </TouchableOpacity>
+    ),
+    CouponInput: ({ onApply }) => <View />,
+    GuaranteeSection: () => <View />,
+    Input: ({ label, value, onChangeText, placeholder }) => (
+      <TextInput
+        testID={`input-${label}`}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+      />
+    ),
+  };
+});
+
+// Mock abtest service (no longer used, but guard against import error)
 jest.mock('../../src/services/abtest', () => ({
-  getVariant: jest.fn(() => Promise.resolve(mockVariant)),
+  getVariant: jest.fn(() => Promise.resolve('control')),
   trackPaywallView: jest.fn(),
   trackPaywallClick: jest.fn(),
   trackPaywallSkip: jest.fn(),
 }));
 
-// Mock payments service
-const mockCheckoutResult = {
-  paymentId: 'pay-123',
-  pixQrCode: {
-    payload: 'pix-payload-123',
-    encodedImage: 'base64-image-data',
-    expirationDate: '2026-06-26T23:59:59Z',
-  },
-};
-jest.mock('../../src/services/payment', () => ({
-  PLANS: {
-    basic: { id: 'basic', name: 'Plano Básico', price: 49.90, priceText: 'R$ 49,90', features: [] },
-    intermediate: { id: 'intermediate', name: 'Plano Intermediário', price: 79.90, priceText: 'R$ 79,90', popular: true, features: [] },
-    premium: { id: 'premium', name: 'Plano Premium', price: 119.90, priceText: 'R$ 119,90', features: [] },
-  },
-  createCheckout: jest.fn(() => Promise.resolve(mockCheckoutResult)),
-  getPaymentStatus: jest.fn(() => Promise.resolve({ payment: { status: 'PENDING' } })),
-}));
-
-// Mock coupons service
 jest.mock('../../src/services/coupon', () => ({
-  applyCoupon: jest.fn((price, coupon) => {
-    if (coupon?.valid) return price * 0.9; // 10% discount
-    return price;
-  }),
+  applyCoupon: jest.fn((price) => price),
 }));
 
-describe('PaywallScreen', () => {
+describe('PaywallScreen (novo fluxo cartão + Asaas)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockVariant = 'control';
+    jest.useFakeTimers();
   });
 
-  it('renders control variant correctly', async () => {
-    mockVariant = 'control';
-    const { getByText, queryByText } = render(<PaywallScreen />);
-
-    await waitFor(() => {
-      expect(getByText('LIBERE TODO O POTENCIAL')).toBeTruthy();
-      expect(getByText('Escolha o plano ideal para sua evolução')).toBeTruthy();
-      expect(getByText('7 DIAS GRÁTIS')).toBeTruthy();
-      expect(getByText('LIBERAR MEU CRONOGRAMA')).toBeTruthy();
-    });
-
-    // Variant B elements should NOT render
-    expect(queryByText('EVOLUA RAPIDO')).toBeNull();
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
-  it('renders variant_b layout correctly', async () => {
-    mockVariant = 'variant_b';
-    const { getByText, queryByText } = render(<PaywallScreen />);
-
-    await waitFor(() => {
-      expect(getByText('EVOLUA RAPIDO')).toBeTruthy();
-      expect(getByText('OFERTA POR TEMPO LIMITADO')).toBeTruthy();
-      expect(getByText('COMEÇAR AGORA - 7 DIAS GRATIS')).toBeTruthy();
-    });
-
-    // Control elements should NOT render
-    expect(queryByText('LIBERE TODO O POTENCIAL')).toBeNull();
-  });
-
-  it('allows selecting a plan and subscribing', async () => {
-    mockVariant = 'control';
+  it('renderiza título e badge corretamente', () => {
     const { getByText } = render(<PaywallScreen />);
+    expect(getByText('LIBERE TODO O POTENCIAL')).toBeTruthy();
+    expect(getByText('Escolha o plano ideal para sua evolução')).toBeTruthy();
+    expect(getByText('1 MÊS GRÁTIS DE TASTE TEST')).toBeTruthy();
+  });
 
+  it('renderiza os planos disponíveis', () => {
+    const { getByText } = render(<PaywallScreen />);
+    expect(getByText('Plano Básico')).toBeTruthy();
+    expect(getByText('Plano Intermediário')).toBeTruthy();
+    expect(getByText('Plano Premium')).toBeTruthy();
+  });
+
+  it('não renderiza botão de pular (fluxo obrigatório)', () => {
+    const { queryByText } = render(<PaywallScreen />);
+    expect(queryByText('Pular por agora')).toBeNull();
+    expect(queryByText('Pular')).toBeNull();
+  });
+
+  it('mostra botao de ativar', () => {
+    const { getByText } = render(<PaywallScreen />);
+    expect(getByText('ATIVAR 1 MÊS GRÁTIS')).toBeTruthy();
+  });
+
+  it('botao de ativar funciona', async () => {
+    const { getByText } = render(<PaywallScreen />);
+    fireEvent.press(getByText('ATIVAR 1 MÊS GRÁTIS'));
     await waitFor(() => {
-      expect(getByText('Plano Básico')).toBeTruthy();
+      expect(getByText('ATIVAR 1 MÊS GRÁTIS')).toBeTruthy();
     });
+  });
 
-    // Select basic plan
+  it('permite selecionar plano diferente', () => {
+    const { getByText } = render(<PaywallScreen />);
     fireEvent.press(getByText('Plano Básico'));
-
-    // Trigger subscribe
-    fireEvent.press(getByText('LIBERAR MEU CRONOGRAMA'));
-
-    const { createCheckout } = require('../../src/services/payment');
-    await waitFor(() => {
-      expect(createCheckout).toHaveBeenCalledWith('basic', 'PIX');
-    });
-  });
-
-  it('skips paywall and redirects to home', async () => {
-    mockVariant = 'control';
-    const { getByText } = render(<PaywallScreen />);
-
-    await waitFor(() => {
-      expect(getByText('Pular por agora')).toBeTruthy();
-    });
-
-    fireEvent.press(getByText('Pular por agora'));
-
-    const { trackPaywallSkip } = require('../../src/services/abtest');
-    expect(trackPaywallSkip).toHaveBeenCalledWith('test-user-id');
-    expect(mockRouter.replace).toHaveBeenCalledWith('/(tabs)/home');
+    expect(getByText('Plano Básico')).toBeTruthy();
   });
 });

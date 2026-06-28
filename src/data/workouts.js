@@ -1,6 +1,9 @@
 // src/data/workouts.js
 // Dados de treinos - NOVAIX FITNESS
 
+const placeholder = (text, color = '1E232A', textColor = 'CCFF00') =>
+  `https://placehold.co/300x200/${color}/${textColor}?text=${encodeURIComponent(text)}&font=montserrat`;
+
 export const workoutData = {
   '1': {
     id: '1',
@@ -21,10 +24,10 @@ export const workoutData = {
         muscle: 'Peito',
         equipment: 'Barra',
         steps: [
-          { step: 1, text: 'Deite-se no banco com os pés apoiados no chão. Segure a barra com pegada ligeiramente mais larga que os ombros.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+1' },
-          { step: 2, text: 'Retire a barra do suporte e posicione-a acima do peito com braços estendidos.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+2' },
-          { step: 3, text: 'Desça a barra controladamente até tocar levemente o meio do peito. Cotovelos a 45°.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+3' },
-          { step: 4, text: 'Empurre a barra para cima até a posição inicial, contraindo o peitoral no topo.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+4' },
+          { step: 1, text: 'Deite-se no banco com os pés apoiados no chão. Segure a barra com pegada ligeiramente mais larga que os ombros.', image: placeholder('Passo 1') },
+          { step: 2, text: 'Retire a barra do suporte e posicione-a acima do peito com braços estendidos.', image: placeholder('Passo 2') },
+          { step: 3, text: 'Desça a barra controladamente até tocar levemente o meio do peito. Cotovelos a 45°.', image: placeholder('Passo 3') },
+          { step: 4, text: 'Empurre a barra para cima até a posição inicial, contraindo o peitoral no topo.', image: placeholder('Passo 4') },
         ],
         tips: ['Mantenha as escápulas juntas no banco', 'Não trave os cotovelos no topo', 'Respire ao descer, expire ao subir'],
         mistakes: ['Bater a barra no peito', 'Tirar o bumbum do banco', 'Cotovelos abrindo demais'],
@@ -43,10 +46,10 @@ export const workoutData = {
         muscle: 'Peito Superior',
         equipment: 'Halteres',
         steps: [
-          { step: 1, text: 'Ajuste o banco em 30-45°. Sente-se com halteres nas coxas.', image: 'https://via.placeholder.com/300x200/1E232A/6366F1?text=Passo+1' },
-          { step: 2, text: 'Deite-se levantando os halteres com um impulso dos joelhos.', image: 'https://via.placeholder.com/300x200/1E232A/6366F1?text=Passo+2' },
-          { step: 3, text: 'Desça os halteres controladamente até sentir alongamento no peito.', image: 'https://via.placeholder.com/300x200/1E232A/6366F1?text=Passo+3' },
-          { step: 4, text: 'Empurre os halteres para cima e levemente para dentro.', image: 'https://via.placeholder.com/300x200/1E232A/6366F1?text=Passo+4' },
+          { step: 1, text: 'Ajuste o banco em 30-45°. Sente-se com halteres nas coxas.', image: placeholder('Passo 1', '1E232A', '6366F1') },
+          { step: 2, text: 'Deite-se levantando os halteres com um impulso dos joelhos.', image: placeholder('Passo 2', '1E232A', '6366F1') },
+          { step: 3, text: 'Desça os halteres controladamente até sentir alongamento no peito.', image: placeholder('Passo 3', '1E232A', '6366F1') },
+          { step: 4, text: 'Empurre os halteres para cima e levemente para dentro.', image: placeholder('Passo 4', '1E232A', '6366F1') },
         ],
         tips: ['Controle a descida por 2-3 segundos', 'Não bata os halteres no topo', 'Mantenha os pés firmes'],
         mistakes: ['Usar impulso do corpo', 'Deixar os cotovelos abrirem', 'Descer rápido demais'],
@@ -64,10 +67,10 @@ export const workoutData = {
         muscle: 'Peito',
         equipment: 'Polia',
         steps: [
-          { step: 1, text: 'Posicione-se no meio das polias. Pegue as alças com braços abertos.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+1' },
-          { step: 2, text: 'Dê um passo à frente para sentir tração no peito.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+2' },
-          { step: 3, text: 'Traga as mãos juntas à frente do peito, contraindo o peitoral.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+3' },
-          { step: 4, text: 'Volte controladamente à posição inicial.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+4' },
+          { step: 1, text: 'Posicione-se no meio das polias. Pegue as alças com braços abertos.', image: placeholder('Passo 1', '1E232A', '00E676') },
+          { step: 2, text: 'Dê um passo à frente para sentir tração no peito.', image: placeholder('Passo 2', '1E232A', '00E676') },
+          { step: 3, text: 'Traga as mãos juntas à frente do peito, contraindo o peitoral.', image: placeholder('Passo 3', '1E232A', '00E676') },
+          { step: 4, text: 'Volte controladamente à posição inicial.', image: placeholder('Passo 4', '1E232A', '00E676') },
         ],
         tips: ['Contria no final do movimento', 'Mantenha levemente os cotovelos flexionados', 'Não use impulso'],
         mistakes: ['Peso excessivo', 'Movimento rápido', 'Cotovelos travados'],
@@ -88,8 +91,8 @@ export const workoutData = {
     videoId: 'dQw4w9WgXcQ',
     equipment: [],
     exercises: [
-      { id: '1', name: 'Burpee', sets: 4, reps: 10, rest: 20, muscle: 'Corpo todo', steps: [{ step: 1, text: 'Em pé, agache e coloque as mãos no chão.', image: 'https://via.placeholder.com/300x200/1E232A/FF6B35?text=Passo+1' }, { step: 2, text: 'Jogue as pernas para trás em posição de prancha.', image: 'https://via.placeholder.com/300x200/1E232A/FF6B35?text=Passo+2' }, { step: 3, text: 'Faça uma flexão.', image: 'https://via.placeholder.com/300x200/1E232A/FF6B35?text=Passo+3' }, { step: 4, text: 'Traga as pernas e salte explosivamente.', image: 'https://via.placeholder.com/300x200/1E232A/FF6B35?text=Passo+4' }], tips: ['Seja explosivo', 'Mantenha o ritmo'], mistakes: ['Ficar devagar', 'Não flexionar o braço'], alternatives: [{ name: 'Agachamento com salto', level: 'Iniciante', reason: 'Versão simplificada' }] },
-      { id: '2', name: 'Mountain Climber', sets: 4, reps: 20, rest: 20, muscle: 'Core', steps: [{ step: 1, text: 'Posição de prancha.', image: 'https://via.placeholder.com/300x200/1E232A/FFD600?text=Passo+1' }, { step: 2, text: 'Alterne os joelhos em direção ao peito.', image: 'https://via.placeholder.com/300x200/1E232A/FFD600?text=Passo+2' }], tips: ['Rápido e controlado'], mistakes: ['Levantar muito o bumbum'], alternatives: [{ name: 'Prancha com toque', level: 'Iniciante', reason: 'Mais leve' }] },
+      { id: '1', name: 'Burpee', sets: 4, reps: 10, rest: 20, muscle: 'Corpo todo', steps: [{ step: 1, text: 'Em pé, agache e coloque as mãos no chão.', image: placeholder('Passo 1', '1E232A', 'FF6B35') }, { step: 2, text: 'Jogue as pernas para trás em posição de prancha.', image: placeholder('Passo 2', '1E232A', 'FF6B35') }, { step: 3, text: 'Faça uma flexão.', image: placeholder('Passo 3', '1E232A', 'FF6B35') }, { step: 4, text: 'Traga as pernas e salte explosivamente.', image: placeholder('Passo 4', '1E232A', 'FF6B35') }], tips: ['Seja explosivo', 'Mantenha o ritmo'], mistakes: ['Ficar devagar', 'Não flexionar o braço'], alternatives: [{ name: 'Agachamento com salto', level: 'Iniciante', reason: 'Versão simplificada' }] },
+      { id: '2', name: 'Mountain Climber', sets: 4, reps: 20, rest: 20, muscle: 'Core', steps: [{ step: 1, text: 'Posição de prancha.', image: placeholder('Passo 1', '1E232A', 'FFD600') }, { step: 2, text: 'Alterne os joelhos em direção ao peito.', image: placeholder('Passo 2', '1E232A', 'FFD600') }], tips: ['Rápido e controlado'], mistakes: ['Levantar muito o bumbum'], alternatives: [{ name: 'Prancha com toque', level: 'Iniciante', reason: 'Mais leve' }] },
     ],
   },
   '3': {
@@ -102,8 +105,8 @@ export const workoutData = {
     videoId: 'dQw4w9WgXcQ',
     equipment: [],
     exercises: [
-      { id: '1', name: 'Flexão de Joelhos', sets: 3, reps: 10, rest: 60, muscle: 'Peito', steps: [{ step: 1, text: 'Apoie os joelhos no chão.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+1' }, { step: 2, text: 'Desça o peito até o chão.', image: 'https://via.placeholder.com/300x200/1E232A/CCFF00?text=Passo+2' }], tips: ['Corpo reto'], mistakes: ['Barriga caída'], alternatives: [{ name: 'Flexão na parede', level: 'Iniciante', reason: 'Mais fácil' }] },
-      { id: '2', name: 'Agachamento Livre', sets: 3, reps: 15, rest: 60, muscle: 'Pernas', steps: [{ step: 1, text: 'Fique em pé com pés na largura dos ombros.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+1' }, { step: 2, text: 'Agache como se fosse sentar.', image: 'https://via.placeholder.com/300x200/1E232A/00E676?text=Passo+2' }], tips: ['Joelhos na direção dos pés'], mistakes: ['Joelhos para dentro'], alternatives: [] },
+      { id: '1', name: 'Flexão de Joelhos', sets: 3, reps: 10, rest: 60, muscle: 'Peito', steps: [{ step: 1, text: 'Apoie os joelhos no chão.', image: placeholder('Passo 1') }, { step: 2, text: 'Desça o peito até o chão.', image: placeholder('Passo 2') }], tips: ['Corpo reto'], mistakes: ['Barriga caída'], alternatives: [{ name: 'Flexão na parede', level: 'Iniciante', reason: 'Mais fácil' }] },
+      { id: '2', name: 'Agachamento Livre', sets: 3, reps: 15, rest: 60, muscle: 'Pernas', steps: [{ step: 1, text: 'Fique em pé com pés na largura dos ombros.', image: placeholder('Passo 1', '1E232A', '00E676') }, { step: 2, text: 'Agache como se fosse sentar.', image: placeholder('Passo 2', '1E232A', '00E676') }], tips: ['Joelhos na direção dos pés'], mistakes: ['Joelhos para dentro'], alternatives: [] },
     ],
   },
 };

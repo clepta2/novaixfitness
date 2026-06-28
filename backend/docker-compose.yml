@@ -1,0 +1,78 @@
+# ============================================
+# NOVAIX FITNESS - Docker Compose
+# ============================================
+
+version: '3.8'
+
+services:
+  # Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: novaix-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - ASAAS_ENV=${ASAAS_ENV:-sandbox}
+      - ASAAS_API_KEY=${ASAAS_API_KEY}
+      - ASAAS_WEBHOOK_TOKEN=${ASAAS_WEBHOOK_TOKEN}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:8081}
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - novaix-network
+    volumes:
+      - logs:/app/logs
+
+  # PostgreSQL (opcional - para testes locais)
+  postgres:
+    image: postgres:16-alpine
+    container_name: novaix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-novaix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-novaix_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-novaix_fitness}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - novaix-network
+    profiles:
+      - database
+
+  # Redis (opcional - para cache)
+  redis:
+    image: redis:7-alpine
+    container_name: novaix-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - novaix-network
+    profiles:
+      - cache
+
+volumes:
+  postgres_data:
+  redis_data:
+  logs:
+
+networks:
+  novaix-network:
+    driver: bridge

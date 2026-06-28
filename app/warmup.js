@@ -7,15 +7,7 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { layout, typography } from '../src/styles';
 import { speakWelcome } from '../src/services/voiceCoach';
-
-const EXERCISES = [
-  { name: 'Rotação de Pescoço', duration: 30, icon: 'accessibility', desc: 'Gire lentamente em ambos os sentidos' },
-  { name: 'Círculos de Braço', duration: 30, icon: 'body', desc: 'Círculos amplos para frente e trás' },
-  { name: 'Agachamento Dinâmico', duration: 40, icon: 'walk', desc: 'Agache e suba devagar, 12 reps' },
-  { name: 'Alongamento de Quadril', duration: 30, icon: 'fitness', desc: 'Estique cada lado por 15s' },
-  { name: 'Jumping Jacks Leve', duration: 30, icon: 'pulse', desc: 'Pule abrindo braços e pernas' },
-  { name: 'Mountain Climber Lento', duration: 30, icon: 'trending-up', desc: 'Alterne joelhos no peito, controle o ritmo' },
-];
+import { WARMUP_EXERCISES as EXERCISES } from '../src/data/warmupExercises';
 
 export default function WarmupScreen() {
   const router = useRouter();
@@ -104,7 +96,7 @@ export default function WarmupScreen() {
           <View style={styles.actions}>
             {!started ? (
               <TouchableOpacity style={styles.startBtn} onPress={startExercise} activeOpacity={0.8}>
-                <Ionicons name="play" size={20} color="#12161A" />
+                <Ionicons name="play" size={20} color={COLORS.background} />
                 <Text style={styles.startBtnText}>INICIAR</Text>
               </TouchableOpacity>
             ) : (
@@ -129,7 +121,7 @@ export default function WarmupScreen() {
 
         {completed.length === EXERCISES.length && (
           <TouchableOpacity style={styles.doneBtn} onPress={() => router.back()} activeOpacity={0.8}>
-            <Ionicons name="checkmark-circle" size={20} color="#12161A" />
+            <Ionicons name="checkmark-circle" size={20} color={COLORS.background} />
             <Text style={styles.doneBtnText}>AQUECIMENTO CONCLUÍDO</Text>
           </TouchableOpacity>
         )}
@@ -156,7 +148,7 @@ const styles = StyleSheet.create({
   timerFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 3 },
   actions: { width: '100%' },
   startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, padding: SPACING.md },
-  startBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: '#12161A', letterSpacing: 1 },
+  startBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: COLORS.background, letterSpacing: 1 },
   skipBtn: { alignItems: 'center', padding: SPACING.md },
   skipBtnText: { fontFamily: 'Montserrat-SemiBold', fontSize: 13, color: COLORS.textMuted },
   exerciseList: { gap: SPACING.xs },

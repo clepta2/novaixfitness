@@ -22,7 +22,7 @@ export function Avatar({ uri, name, size = 'md', style }) {
   };
 
   const sizeValue = sizes[size];
-  const initials = name ? name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '';
+  const initials = name ? name.split(' ').filter(n => n.length > 0).map(n => n[0]).join('').substring(0, 2).toUpperCase() : '?';
 
   if (uri) {
     return (

@@ -24,6 +24,13 @@ function StudentCard({ student, onEdit }) {
           <View style={styles.planTag}>
             <Text style={styles.planText}>{student.plan}</Text>
           </View>
+          <View style={[styles.planTag, { backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border }]}>
+            <Text style={[styles.planText, { color: COLORS.primary }]}>
+              {student.current_step === 'onboarding' ? 'Onboarding 📝' :
+               student.current_step === 'pagamento' ? 'Pagamento 💳' :
+               student.current_step === 'tutorial' ? 'Tutorial 🎓' : 'Completo ✅'}
+            </Text>
+          </View>
         </View>
       </View>
       <TouchableOpacity style={styles.editBtn} onPress={() => onEdit?.(student)}>

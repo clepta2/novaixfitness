@@ -20,14 +20,10 @@ async function handleNetworkChange(state) {
     syncTimeout = setTimeout(async () => {
       const pendingCount = await getPendingActionsCount();
       if (pendingCount > 0) {
-        console.log(`[AutoSync] Reconectado. Sincronizando ${pendingCount} ações...`);
         try {
-          const result = await syncPendingActions();
-          console.log(`[AutoSync] Sincronizado: ${result.synced}, Falhou: ${result.failed}`);
+          await syncPendingActions();
           await updateLastSync();
-        } catch (err) {
-          console.error('[AutoSync] Erro na sincronização:', err);
-        }
+        } catch (err) {}
       }
     }, DEBOUNCE_MS);
   }
@@ -38,14 +34,12 @@ async function handleNetworkChange(state) {
 export function startAutoSync() {
   if (unsubscribe) return;
   unsubscribe = NetInfo.addEventListener(handleNetworkChange);
-  console.log('[AutoSync] Iniciado');
 }
 
 export function stopAutoSync() {
   if (unsubscribe) {
     unsubscribe();
     unsubscribe = null;
-    console.log('[AutoSync] Parado');
   }
   if (syncTimeout) {
     clearTimeout(syncTimeout);
@@ -57,7 +51,6 @@ export async function forceSyncNow() {
   const pendingCount = await getPendingActionsCount();
   if (pendingCount === 0) return { synced: 0, failed: 0 };
 
-  console.log(`[AutoSync] Forçando sync de ${pendingCount} ações...`);
   const result = await syncPendingActions();
   await updateLastSync();
   return result;

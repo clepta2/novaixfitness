@@ -115,7 +115,7 @@ export default function MealHistory({ userId }) {
       ) : (
         <FlatList
           data={filtered}
-          keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
+          keyExtractor={(item, index) => item.id?.toString() || `meal-${index}`}
           renderItem={({ item }) => <MealItem meal={item} />}
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}

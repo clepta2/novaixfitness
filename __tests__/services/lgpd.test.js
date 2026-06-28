@@ -95,8 +95,8 @@ describe('LGPD Service', () => {
     it('returns consent settings with defaults', async () => {
       supabase.from.mockReturnValue(mockChain(null));
       const result = await getConsentSettings('user-1');
-      expect(result).toHaveProperty('marketing', true);
-      expect(result).toHaveProperty('analytics', true);
+      expect(result).toHaveProperty('marketing', false);
+      expect(result).toHaveProperty('analytics', false);
       expect(result).toHaveProperty('thirdParty', false);
     });
 

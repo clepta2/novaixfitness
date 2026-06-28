@@ -3,6 +3,9 @@
 
 import * as Sharing from 'expo-sharing';
 import { Platform, Alert } from 'react-native';
+import { APP_CONFIG } from '../config/app';
+
+const WEBSITE_URL = APP_CONFIG.links.website;
 
 export async function shareWorkout(workout) {
   if (!workout) return;
@@ -12,7 +15,7 @@ export async function shareWorkout(workout) {
     `Categoria: ${workout.category || 'Treino'}\n` +
     `Duração: ${workout.duration || 45} min\n` +
     `Nível: ${workout.level || 'Intermediário'}\n\n` +
-    `Baixe agora: https://novaixfitness.com`;
+    `Baixe agora: ${WEBSITE_URL}`;
 
   try {
     if (await Sharing.isAvailableAsync()) {
@@ -28,6 +31,26 @@ export async function shareWorkout(workout) {
   }
 }
 
+export async function shareAchievement(achievement) {
+  if (!achievement) return;
+
+  const message = `🏆 Conquista desbloqueada no NOVAIX Fitness!\n\n` +
+    `${achievement.icon || '🎉'} ${achievement.name}\n` +
+    `${achievement.description || ''}\n\n` +
+    `Baixe: ${WEBSITE_URL}`;
+
+  try {
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(message, {
+        mimeType: 'text/plain',
+        dialogTitle: 'Compartilhar conquista',
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao compartilhar conquista:', error);
+  }
+}
+
 export async function shareProgress(stats) {
   if (!stats) return;
 
@@ -35,7 +58,7 @@ export async function shareProgress(stats) {
     `🔥 Streak: ${stats.streak} dias\n` +
     `💪 Treinos: ${stats.totalWorkouts}\n` +
     `⏱️ Tempo total: ${stats.totalMinutes} min\n\n` +
-    `Baixe: https://novaixfitness.com`;
+    `Baixe: ${WEBSITE_URL}`;
 
   try {
     if (await Sharing.isAvailableAsync()) {
