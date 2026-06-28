@@ -2,14 +2,17 @@
 // Tela de detalhe do produto - NOVAIX FITNESS
 
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Linking, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Linking, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
-import { FavoriteButton } from '../src/components/marketplace';
+import { FavoriteButton, ProductCard } from '../src/components/marketplace';
+import ImageCarousel from '../src/components/marketplace/ImageCarousel';
+import ProductReviews from '../src/components/marketplace/ProductReviews';
+import { shareProduct, shareToWhatsApp } from '../src/components/marketplace/ShareProduct';
 import { getProductById, getRelatedProducts, toggleFavorite, isFavorited } from '../src/services/marketplace';
 
 export default function MarketplaceDetailScreen() {
@@ -31,9 +34,7 @@ export default function MarketplaceDetailScreen() {
           const rel = await getRelatedProducts(id, p.category_id);
           setRelated(rel);
         }
-        if (user?.id) {
-          setFavorited(await isFavorited(user.id, id));
-        }
+        if (user?.id) setFavorited(await isFavorited(user.id, id));
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar produto:', err);
       } finally {
@@ -45,41 +46,33 @@ export default function MarketplaceDetailScreen() {
 
   const handleToggleFavorite = async () => {
     if (!user?.id) return;
-    const result = await toggleFavorite(user.id, id);
-    setFavorited(result);
+    setFavorited(await toggleFavorite(user.id, id));
   };
 
   const handleBuy = () => {
     if (product?.affiliate_url) Linking.openURL(product.affiliate_url);
   };
 
-  if (loading) {
-    return <View style={[layout.screen, styles.centered]}><ActivityIndicator size="large" color={COLORS.primary} /></View>;
-  }
-
-  if (!product) {
-    return <View style={[layout.screen, styles.centered]}><Text style={typography.bodyMuted}>Produto nao encontrado</Text></View>;
-  }
+  if (loading) return <View style={[layout.screen, styles.centered]}><ActivityIndicator size="large" color={COLORS.primary} /></View>;
+  if (!product) return <View style={[layout.screen, styles.centered]}><Text style={typography.bodyMuted}>Produto nao encontrado</Text></View>;
 
   const hasDiscount = product.original_price && product.original_price > product.price;
   const category = product.marketplace_categories;
+  const allImages = [product.image_url, ...(product.images || [])].filter(Boolean);
   const buyLabel = product.stock_type === 'coupon' ? 'RESGATAR CUPOM' : product.stock_type === 'digital' ? 'COMPRAR' : 'VER NA LOJA';
 
   return (
     <View style={layout.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.imageSection}>
-          {product.image_url ? (
-            <Image source={{ uri: product.image_url }} style={styles.heroImage} resizeMode="cover" />
-          ) : (
-            <View style={styles.placeholderHero}>
-              <Ionicons name="image-outline" size={64} color={COLORS.textMuted} />
-            </View>
-          )}
+          <ImageCarousel images={allImages} height={280} />
           <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={22} color={COLORS.textTitle} />
           </TouchableOpacity>
           <View style={styles.topActions}>
+            <TouchableOpacity style={styles.shareBtn} onPress={() => shareProduct(product)}>
+              <Ionicons name="share-outline" size={20} color={COLORS.textTitle} />
+            </TouchableOpacity>
             <FavoriteButton isFavorited={favorited} onPress={handleToggleFavorite} size={22} />
           </View>
           {hasDiscount && (
@@ -115,23 +108,33 @@ export default function MarketplaceDetailScreen() {
             </View>
           )}
 
-          <TouchableOpacity style={styles.buyBtn} onPress={handleBuy} activeOpacity={0.8}>
-            <Ionicons name={product.stock_type === 'coupon' ? 'pricetag' : 'cart'} size={20} color={COLORS.background} />
-            <Text style={styles.buyBtnText}>{buyLabel}</Text>
-          </TouchableOpacity>
+          <View style={styles.actionRow}>
+            <TouchableOpacity style={styles.buyBtn} onPress={handleBuy} activeOpacity={0.8}>
+              <Ionicons name={product.stock_type === 'coupon' ? 'pricetag' : 'cart'} size={20} color={COLORS.background} />
+              <Text style={styles.buyBtnText}>{buyLabel}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.whatsappBtn} onPress={() => shareToWhatsApp(product)} activeOpacity={0.8}>
+              <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+            </TouchableOpacity>
+          </View>
+
+          <ProductReviews productId={id} />
 
           {related.length > 0 && (
             <View style={styles.relatedSection}>
               <Text style={typography.label}>PRODUTOS RELACIONADOS</Text>
-              {related.map(p => (
-                <TouchableOpacity key={p.id} style={styles.relatedCard} onPress={() => router.push({ pathname: '/marketplace-detail', params: { id: p.id } })}>
-                  <View style={styles.relatedInfo}>
-                    <Text style={styles.relatedName} numberOfLines={1}>{p.name}</Text>
-                    <Text style={styles.relatedBrand}>{p.brand}</Text>
-                    <Text style={styles.relatedPrice}>R$ {p.price?.toFixed(2)}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.relatedScroll}>
+                {related.map(p => (
+                  <View key={p.id} style={styles.relatedCard}>
+                    <ProductCard
+                      product={p}
+                      onPress={() => router.push({ pathname: '/marketplace-detail', params: { id: p.id } })}
+                      isFavorited={false}
+                      onToggleFavorite={() => {}}
+                    />
                   </View>
-                </TouchableOpacity>
-              ))}
+                ))}
+              </ScrollView>
             </View>
           )}
         </View>
@@ -145,10 +148,9 @@ export default function MarketplaceDetailScreen() {
 const styles = StyleSheet.create({
   centered: { justifyContent: 'center', alignItems: 'center' },
   imageSection: { height: 280, backgroundColor: COLORS.surfaceElevated, position: 'relative' },
-  heroImage: { width: '100%', height: '100%' },
-  placeholderHero: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   backBtn: { position: 'absolute', top: 48, left: SPACING.xl, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  topActions: { position: 'absolute', top: 48, right: SPACING.xl },
+  topActions: { position: 'absolute', top: 48, right: SPACING.xl, flexDirection: 'row', gap: SPACING.sm },
+  shareBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   discountBadge: { position: 'absolute', bottom: SPACING.md, left: SPACING.xl, backgroundColor: COLORS.error, paddingHorizontal: SPACING.md, paddingVertical: 4, borderRadius: BORDER_RADIUS.sm },
   discountText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: '#FFF' },
   content: { padding: SPACING.xl },
@@ -162,12 +164,11 @@ const styles = StyleSheet.create({
   ratingText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginLeft: 4 },
   descSection: { marginBottom: SPACING.xl },
   description: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textDescription, lineHeight: 22, marginTop: SPACING.sm },
-  buyBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, height: 52, marginBottom: SPACING.xxl },
+  actionRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.lg },
+  buyBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, height: 52 },
   buyBtnText: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.background, letterSpacing: 1 },
+  whatsappBtn: { width: 52, height: 52, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: '#25D366' + '40', justifyContent: 'center', alignItems: 'center' },
   relatedSection: { marginTop: SPACING.lg },
-  relatedCard: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.sm },
-  relatedInfo: { flex: 1 },
-  relatedName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },
-  relatedBrand: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
-  relatedPrice: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.primary, marginTop: 4 },
+  relatedScroll: { marginTop: SPACING.md },
+  relatedCard: { width: 160, marginRight: SPACING.md },
 });

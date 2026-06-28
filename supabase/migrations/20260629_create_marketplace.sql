@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS marketplace_products (
   original_price DECIMAL(10,2),
   brand TEXT,
   image_url TEXT,
+  images TEXT[] DEFAULT '{}',
   affiliate_url TEXT,
   rating DECIMAL(2,1) DEFAULT 0,
   review_count INTEGER DEFAULT 0,
@@ -42,16 +43,32 @@ CREATE TABLE IF NOT EXISTS marketplace_favorites (
   UNIQUE(user_id, product_id)
 );
 
+-- Avaliacoes
+CREATE TABLE IF NOT EXISTS marketplace_reviews (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  product_id UUID NOT NULL REFERENCES marketplace_products(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(product_id, user_id)
+);
+
 -- RLS
 ALTER TABLE marketplace_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE marketplace_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE marketplace_favorites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE marketplace_reviews ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Anyone reads categories" ON marketplace_categories FOR SELECT USING (true);
 CREATE POLICY "Anyone reads active products" ON marketplace_products FOR SELECT USING (is_active = true);
 CREATE POLICY "Users read own favorites" ON marketplace_favorites FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users add favorites" ON marketplace_favorites FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users remove favorites" ON marketplace_favorites FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "Anyone reads reviews" ON marketplace_reviews FOR SELECT USING (true);
+CREATE POLICY "Users add reviews" ON marketplace_reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users update own reviews" ON marketplace_reviews FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users delete own reviews" ON marketplace_reviews FOR DELETE USING (auth.uid() = user_id);
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_products_category ON marketplace_products(category_id);
