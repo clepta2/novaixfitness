@@ -14,7 +14,7 @@ export default function Workouts({ loggedInUserRole }) {
   const loadWorkouts = async () => {
     const { data, error } = await supabase
       .from('workouts')
-      .select('*')
+      .select('id, title, category, level, duration_minutes, is_premium, created_at')
       .order('created_at', { ascending: false });
 
     if (!error) setWorkouts(data);
@@ -56,7 +56,7 @@ export default function Workouts({ loggedInUserRole }) {
       setShowModal(false);
       loadWorkouts();
     } else {
-      alert('Erro ao salvar treino: ' + error.message);
+      alert('Erro ao salvar treino. Tente novamente.');
     }
   };
 

@@ -26,7 +26,7 @@ export default function Dashboard() {
 
     const { data: recentSignups } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, name, email, subscription_status, subscription_plan, created_at')
       .order('created_at', { ascending: false })
       .limit(5);
 

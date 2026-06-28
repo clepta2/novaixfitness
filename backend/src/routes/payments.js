@@ -7,6 +7,7 @@ const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
 const asaas = require('../services/asaas');
 const { validateBody, sanitizeString } = require('../middleware/validate');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 async function getOrCreateAsaasCustomerId(userId, email, name, cpfCnpj, phone) {
   const { data: profile } = await supabase.from('profiles').select('asaas_customer_id, name').eq('id', userId).single();
@@ -35,7 +36,7 @@ router.post('/customer', authenticate, validateBody({
     const customerId = await getOrCreateAsaasCustomerId(req.user.id, req.user.email || email, name, cpfCnpj, phone);
     res.json({ customer: { id: customerId } });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -85,7 +86,7 @@ router.post('/checkout', authenticate, validateBody({
       bankSlipUrl: payment.bankSlipUrl,
     });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -99,7 +100,7 @@ router.get('/status/:paymentId', authenticate, async (req, res) => {
       payment: pay ? { id: pay.id, status: pay.status, value: pay.value, paymentDate: pay.paymentDate } : null,
     });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -138,7 +139,7 @@ router.post('/subscribe', authenticate, validateBody({
 
     res.json({ subscription });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -159,7 +160,7 @@ router.post('/cancel', authenticate, async (req, res) => {
 
     res.json({ message: 'Assinatura cancelada' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -169,7 +170,7 @@ router.get('/history', authenticate, async (req, res) => {
     const { data: p } = await supabase.from('payments').select('*').eq('user_id', req.user.id).order('created_at', { ascending: false }).limit(20);
     res.json(p || []);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -192,7 +193,7 @@ router.post('/transfer', authenticate, validateBody({
 
     res.json({ success: true, transfer });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

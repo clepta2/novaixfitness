@@ -45,7 +45,7 @@ export default function UserModal({ isOpen, onClose, onSubmit, user, loggedInUse
       await onSubmit(form);
       onClose();
     } catch (err) {
-      alert(err.message || 'Erro ao processar.');
+      alert('Erro ao processar. Tente novamente.');
     } finally {
       setLoading(false);
     }

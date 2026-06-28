@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
+const { requireRole } = require('../middleware/role');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 // Listar FAQs ativos (publico)
 router.get('/', async (req, res) => {
@@ -28,12 +30,12 @@ router.get('/', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Erro ao buscar FAQs:', err);
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Criar FAQ (admin)
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticate, requireRole(['admin']), async (req, res) => {
   try {
     const { question, answer, category, sort_order } = req.body;
 
@@ -57,12 +59,12 @@ router.post('/', authenticate, async (req, res) => {
     res.json(data);
   } catch (err) {
     console.error('Erro ao criar FAQ:', err);
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Atualizar FAQ (admin)
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', authenticate, requireRole(['admin']), async (req, res) => {
   try {
     const { question, answer, category, sort_order, active } = req.body;
 
@@ -77,12 +79,12 @@ router.put('/:id', authenticate, async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Deletar FAQ (admin)
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', authenticate, requireRole(['admin']), async (req, res) => {
   try {
     const { error } = await supabase
       .from('faqs')
@@ -93,7 +95,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 
     res.json({ message: 'FAQ removido' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

@@ -31,8 +31,7 @@ router.post('/asaas', async (req, res) => {
 
     const { event, payment, subscription } = req.body;
 
-    console.log('📨 Webhook Asaas corpo:', JSON.stringify(req.body, null, 2));
-    console.log('📨 Webhook Asaas recebido:', event);
+    console.log('📨 Webhook recebido:', event);
 
     switch (event) {
       case 'PAYMENT_RECEIVED':
@@ -85,8 +84,8 @@ router.post('/asaas', async (req, res) => {
 
     res.json({ received: true, approved: true, status: 'APPROVED' });
   } catch (err) {
-    console.error('Erro no webhook:', err);
-    res.status(500).json({ error: err.message });
+    console.error('Erro no webhook:', err.message);
+    res.status(500).json({ error: 'Erro interno' });
   }
 });
 

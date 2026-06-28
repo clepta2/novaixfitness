@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const { validateBody, sanitizeString } = require('../middleware/validate');
+const { sanitizeError } = require('../middleware/errorHandler');
+const { validateCpf } = require('../middleware/validate');
 
 /**
  * @swagger
@@ -41,13 +43,17 @@ router.post('/signup', validateBody({
   name: { required: true, type: 'string', minLength: 2, maxLength: 100 }
 }), async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, cpf, phone } = req.body;
     const sanitizedName = sanitizeString(name);
+
+    if (cpf && !validateCpf(cpf)) {
+      return res.status(400).json({ error: 'CPF invalido' });
+    }
 
     const { data, error } = await supabase.auth.signUp({
       email: email.toLowerCase(),
       password,
-      options: { data: { name: sanitizedName } }
+      options: { data: { name: sanitizedName, cpf: cpf || null, phone: phone || null } }
     });
 
     if (error) throw error;
@@ -62,7 +68,7 @@ router.post('/signup', validateBody({
 
     res.json({ user: data.user, session: data.session });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -106,7 +112,7 @@ router.post('/login', validateBody({
 
     res.json({ user: data.user, session: data.session });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -144,7 +150,7 @@ router.post('/reset-password', validateBody({
 
     res.json({ message: 'E-mail de recuperação enviado' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

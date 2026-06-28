@@ -464,6 +464,11 @@
 
     const API_BASE = 'https://novaix-api.onrender.com';
 
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     async function loadTestimonials() {
       const container = document.getElementById('testimonials-container');
       try {
@@ -479,12 +484,12 @@
         container.innerHTML = testimonials.map(t => `
           <div class="testimonial-card">
             <div class="testimonial-stars">${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}</div>
-            <p>"${t.content}"</p>
+            <p>"${sanitize(t.content)}"</p>
             <div class="testimonial-author">
-              <div class="author-avatar">${t.initials || t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}</div>
+              <div class="author-avatar">${sanitize(t.initials || t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())}</div>
               <div>
-                <strong>${t.name}</strong>
-                <span>${t.role || 'Aluno'}</span>
+                <strong>${sanitize(t.name)}</strong>
+                <span>${sanitize(t.role || 'Aluno')}</span>
               </div>
             </div>
           </div>
@@ -512,11 +517,11 @@
         container.innerHTML = faqs.map(faq => `
           <div class="faq-item">
             <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
-              <span>${faq.question}</span>
+              <span>${sanitize(faq.question)}</span>
               <span class="faq-toggle">+</span>
             </div>
             <div class="faq-answer">
-              <p>${faq.answer}</p>
+              <p>${sanitize(faq.answer)}</p>
             </div>
           </div>
         `).join('');
@@ -544,13 +549,13 @@
           posts.map(p => `
             <div class="community-post-card">
               <div class="post-author">
-                <div class="post-avatar">${(p.profiles?.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}</div>
+                <div class="post-avatar">${sanitize((p.profiles?.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())}</div>
                 <div>
-                  <strong>${p.profiles?.name || 'Atleta'}</strong>
+                  <strong>${sanitize(p.profiles?.name || 'Atleta')}</strong>
                   <span>${formatPostDate(p.created_at)}</span>
                 </div>
               </div>
-              <p class="post-content">${p.content}</p>
+              <p class="post-content">${sanitize(p.content)}</p>
               <div class="post-stats">
                 <span>❤️ ${p.likes_count || 0}</span>
                 <span>💬 ${p.comments_count || 0}</span>

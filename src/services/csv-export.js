@@ -150,6 +150,123 @@ export async function exportAchievements(userId) {
   return saveAndShareCSV(csv, 'novaix_conquistas.csv');
 }
 
+export async function exportProfileData(userId) {
+  if (!userId) throw new Error('Usuario nao autenticado');
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('name, email, cpf, phone, subscription_status, subscription_plan, onboarding, total_xp, total_workouts, total_minutes, max_streak, streak, created_at')
+    .eq('id', userId)
+    .single();
+
+  const row = {
+    nome: profile?.name || '',
+    email: profile?.email || '',
+    cpf: profile?.cpf || '',
+    telefone: profile?.phone || '',
+    plano: profile?.subscription_plan || 'free',
+    status_assinatura: profile?.subscription_status || 'free',
+    xp_total: profile?.total_xp || 0,
+    treinos_total: profile?.total_workouts || 0,
+    minutos_total: profile?.total_minutes || 0,
+    melhor_streak: profile?.max_streak || 0,
+    streak_atual: profile?.streak || 0,
+    objetivo: profile?.onboarding?.goal || '',
+    nivel: profile?.onboarding?.level || '',
+    membro_desde: formatDate(profile?.created_at),
+  };
+
+  const csv = convertToCSV([row], Object.keys(row));
+  return saveAndShareCSV(csv, 'novaix_perfil.csv');
+}
+
+export async function exportChatHistory(userId) {
+  if (!userId) throw new Error('Usuario nao autenticado');
+
+  const { data: messages } = await supabase
+    .from('coach_chat_messages')
+    .select('message, is_user, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  const rows = (messages || []).map(m => ({
+    data: formatDate(m.created_at),
+    hora: new Date(m.created_at).toLocaleTimeString('pt-BR'),
+    remetente: m.is_user ? 'Voce' : 'Coach IA',
+    mensagem: m.message || '',
+  }));
+
+  const csv = convertToCSV(rows, ['data', 'hora', 'remetente', 'mensagem']);
+  return saveAndShareCSV(csv, 'novaix_chat_historico.csv');
+}
+
+export async function exportAllData(userId) {
+  if (!userId) throw new Error('Usuario nao autenticado');
+
+  const allData = {};
+
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  allData.profile = profile || {};
+
+  const { data: workouts } = await supabase.from('user_workouts').select('*, workouts(title, category)').eq('user_id', userId);
+  allData.workouts = workouts || [];
+
+  const { data: weights } = await supabase.from('weight_logs').select('*').eq('user_id', userId);
+  allData.weightLogs = weights || [];
+
+  const { data: favorites } = await supabase.from('favorites').select('*').eq('user_id', userId);
+  allData.favorites = favorites || [];
+
+  const { data: posts } = await supabase.from('posts').select('*').eq('user_id', userId);
+  allData.posts = posts || [];
+
+  const { data: achievements } = await supabase.from('user_achievements').select('*').eq('user_id', userId);
+  allData.achievements = achievements || [];
+
+  const { data: chat } = await supabase.from('coach_chat_messages').select('*').eq('user_id', userId);
+  allData.chatMessages = chat || [];
+
+  const { data: injuries } = await supabase.from('injury_details').select('*').eq('user_id', userId);
+  allData.injuries = injuries || [];
+
+  const json = JSON.stringify(allData, null, 2);
+  const fileUri = FileSystem.documentDirectory + 'novaix_todos_dados.json';
+  await FileSystem.writeAsStringAsync(fileUri, json, { encoding: FileSystem.EncodingType.UTF8 });
+
+  if (await Sharing.isAvailableAsync()) {
+    await Sharing.shareAsync(fileUri, {
+      mimeType: 'application/json',
+      dialogTitle: 'Exportar todos os dados (LGPD)',
+    });
+  }
+
+  return fileUri;
+}
+
+export async function deleteAllUserData(userId) {
+  if (!userId) throw new Error('Usuario nao autenticado');
+
+  await supabase.from('coach_chat_messages').delete().eq('user_id', userId);
+  await supabase.from('user_achievements').delete().eq('user_id', userId);
+  await supabase.from('favorites').delete().eq('user_id', userId);
+  await supabase.from('post_likes').delete().eq('user_id', userId);
+  await supabase.from('post_comments').delete().eq('user_id', userId);
+  await supabase.from('posts').delete().eq('user_id', userId);
+  await supabase.from('user_workouts').delete().eq('user_id', userId);
+  await supabase.from('weight_logs').delete().eq('user_id', userId);
+  await supabase.from('water_logs').delete().eq('user_id', userId);
+  await supabase.from('injury_details').delete().eq('user_id', userId);
+
+  await supabase.from('profiles').update({
+    name: 'Conta excluida',
+    email: `deleted_${userId}@novaix.fitness`,
+    cpf: null,
+    phone: null,
+    onboarding: null,
+    subscription_status: 'cancelled',
+  }).eq('id', userId);
+}
+
 async function saveAndShareCSV(csv, filename) {
   const fileUri = FileSystem.documentDirectory + filename;
   await FileSystem.writeAsStringAsync(fileUri, csv, { encoding: FileSystem.EncodingType.UTF8 });

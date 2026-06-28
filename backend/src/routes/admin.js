@@ -4,6 +4,7 @@ const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/role');
 const { validateBody, sanitizeString } = require('../middleware/validate');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 // Criar novo usuário (Administrador, Gerente ou Funcionário cadastrando alguém)
 router.post('/users', authenticate, requireRole(['admin', 'manager', 'employee']), validateBody({
@@ -67,7 +68,7 @@ router.post('/users', authenticate, requireRole(['admin', 'manager', 'employee']
       }
     });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -141,7 +142,7 @@ router.put('/users/:id', authenticate, requireRole(['admin', 'manager']), valida
       profile: updatedProfile
     });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -157,7 +158,7 @@ router.delete('/users/:id', authenticate, requireRole(['admin']), async (req, re
 
     res.json({ message: 'Conta excluída com sucesso!' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

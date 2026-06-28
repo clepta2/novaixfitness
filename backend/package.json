@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "backup": "node scripts/backup.js",
+    "backup:daily": "node scripts/daily-backup.js",
     "test:webhook": "node test_webhooks.js",
     "test": "jest --coverage --forceExit --detectOpenHandles",
     "test:watch": "jest --watch",

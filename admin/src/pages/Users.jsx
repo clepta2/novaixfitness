@@ -15,7 +15,7 @@ export default function Users({ loggedInUserRole }) {
   const loadUsers = async () => {
     const { data, error } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, name, email, role, subscription_status, subscription_plan, current_step, created_at')
       .order('created_at', { ascending: false });
 
     if (!error) setUsers(data);

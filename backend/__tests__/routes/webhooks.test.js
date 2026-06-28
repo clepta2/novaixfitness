@@ -110,5 +110,25 @@ describe('Webhook Routes', () => {
       const res = await request(app).post('/api/webhooks/asaas').set('asaas-access-token', 'valid').send({ event: 'UNKNOWN_EVENT' });
       expect(res.status).toBe(200);
     });
+
+    it('deve retornar 500 quando handler lança erro', async () => {
+      asaas.verifyWebhookToken.mockReturnValue(true);
+      paymentHandlers.handlePaymentReceived.mockRejectedValue(new Error('DB connection failed'));
+      const res = await request(app).post('/api/webhooks/asaas').set('asaas-access-token', 'valid').send({ event: 'PAYMENT_RECEIVED', payment: { id: 'pay-1' } });
+      expect(res.status).toBe(500);
+      expect(res.body.error).toBe('Erro interno');
+    });
+
+    it('deve retornar 401 sem header de token', async () => {
+      asaas.verifyWebhookToken.mockReturnValue(false);
+      const res = await request(app).post('/api/webhooks/asaas').send({ event: 'PAYMENT_RECEIVED', payment: { id: 'pay-1' } });
+      expect(res.status).toBe(401);
+    });
+
+    it('deve retornar 200 com payload vazio para evento desconhecido', async () => {
+      asaas.verifyWebhookToken.mockReturnValue(true);
+      const res = await request(app).post('/api/webhooks/asaas').set('asaas-access-token', 'valid').send({});
+      expect(res.status).toBe(200);
+    });
   });
 });

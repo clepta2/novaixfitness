@@ -6,6 +6,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
 const { validateBody, sanitizeString } = require('../middleware/validate');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 const EXPO_API_URL = 'https://exp.host/--/api/v2/push/send';
 
@@ -57,7 +58,7 @@ router.post('/send', authenticate, validateBody({
     res.json({ success: true, result });
   } catch (err) {
     console.error('Erro ao enviar notificacao:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: sanitizeError(err) });
   }
 });
 
@@ -110,7 +111,7 @@ router.post('/send-bulk', authenticate, validateBody({
     res.json({ sent: messages.length, result });
   } catch (err) {
     console.error('Erro ao enviar notificacoes em massa:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: sanitizeError(err) });
   }
 });
 
@@ -144,7 +145,7 @@ router.post('/schedule-reminder', authenticate, validateBody({
       message: 'Reminder scheduled. Client should handle local scheduling.',
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: sanitizeError(err) });
   }
 });
 

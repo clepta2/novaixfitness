@@ -8,10 +8,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
-import { exportWorkoutHistory, exportProgressData, exportAnalyticsData, exportAchievements } from '../src/services/csv-export';
+import { exportWorkoutHistory, exportProgressData, exportAnalyticsData, exportAchievements, exportProfileData, exportChatHistory, exportAllData } from '../src/services/csv-export';
 import { layout, typography } from '../src/styles';
 
 const EXPORT_OPTIONS = [
+  {
+    id: 'all',
+    icon: 'folder-open',
+    title: 'Todos os Meus Dados (LGPD)',
+    desc: 'Exportacao completa em JSON com todos os dados pessoais',
+    filename: 'novaix_todos_dados.json',
+  },
+  {
+    id: 'profile',
+    icon: 'person',
+    title: 'Dados do Perfil',
+    desc: 'Informacoes pessoais, configuracoes e estatisticas',
+    filename: 'novaix_perfil.csv',
+  },
   {
     id: 'workouts',
     icon: 'barbell',
@@ -40,6 +54,13 @@ const EXPORT_OPTIONS = [
     desc: 'Todas as conquistas desbloqueadas com datas',
     filename: 'novaix_conquistas.csv',
   },
+  {
+    id: 'chat',
+    icon: 'chatbubbles',
+    title: 'Historico do Chat',
+    desc: 'Todas as conversas com o Coach IA',
+    filename: 'novaix_chat_historico.csv',
+  },
 ];
 
 export default function ExportDataScreen() {
@@ -51,6 +72,12 @@ export default function ExportDataScreen() {
     setExporting(option.id);
     try {
       switch (option.id) {
+        case 'all':
+          await exportAllData(user.id);
+          break;
+        case 'profile':
+          await exportProfileData(user.id);
+          break;
         case 'workouts':
           await exportWorkoutHistory(user.id);
           break;
@@ -62,6 +89,9 @@ export default function ExportDataScreen() {
           break;
         case 'achievements':
           await exportAchievements(user.id);
+          break;
+        case 'chat':
+          await exportChatHistory(user.id);
           break;
       }
       Alert.alert('Sucesso', `${option.title} exportado com sucesso!`);

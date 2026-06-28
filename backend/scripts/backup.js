@@ -17,24 +17,35 @@ const TABLES = [
   'profiles',
   'workouts',
   'exercises',
-  'workout_logs',
+  'user_workouts',
   'favorites',
   'subscriptions',
   'payments',
   'notifications',
   'posts',
-  'comments',
+  'post_likes',
+  'post_comments',
   'admin_2fa',
-  'coupons',
-  'referrals',
-  'achievements',
+  'user_achievements',
   'weight_logs',
   'water_logs',
   'body_measurements',
   'progress_photos',
-  'challenges',
-  'consents',
+  'coach_chat_messages',
+  'login_attempts',
+  'blocked_ips',
+  'faqs',
+  'testimonials',
+  'forum_posts',
+  'forum_replies',
+  'onboarding_v2',
+  'injury_details',
+  'injury_checkins',
+  'injury_photos',
+  'movement_tests',
 ];
+
+const MAX_BACKUPS = 7;
 
 async function backupTable(tableName) {
   const { data, error } = await supabase.from(tableName).select('*');
@@ -108,6 +119,27 @@ async function runBackup() {
   console.log(`Tabelas: ${successTables}/${TABLES.length}`);
   console.log(`Total de registros: ${totalRecords}`);
   console.log(`Arquivos em: ${backupDir}`);
+
+  rotateBackups();
+}
+
+function rotateBackups() {
+  const backupsDir = path.join(__dirname, '../backups');
+  if (!fs.existsSync(backupsDir)) return;
+
+  const dirs = fs.readdirSync(backupsDir)
+    .filter(d => fs.statSync(path.join(backupsDir, d)).isDirectory())
+    .sort()
+    .reverse();
+
+  if (dirs.length > MAX_BACKUPS) {
+    const toRemove = dirs.slice(MAX_BACKUPS);
+    for (const dir of toRemove) {
+      const dirPath = path.join(backupsDir, dir);
+      fs.rmSync(dirPath, { recursive: true });
+      console.log(`Backup antigo removido: ${dir}`);
+    }
+  }
 }
 
 runBackup().catch(console.error);

@@ -100,7 +100,10 @@ app.use('/api/faqs', cacheMiddleware(600));
 app.use('/api/testimonials', cacheMiddleware(300));
 
 // ===== SWAGGER =====
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+app.use('/api-docs', (req, res, next) => {
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:");
+  next();
+}, swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'NOVAIX FITNESS API'
 }));

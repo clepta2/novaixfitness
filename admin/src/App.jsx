@@ -35,7 +35,7 @@ function App() {
       }
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, name, email, role')
         .eq('id', user.id)
         .single();
       if (!error && data) {

@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 // Listar depoimentos aprovados (publico)
 router.get('/', async (req, res) => {
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Erro ao buscar depoimentos:', err);
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -72,7 +73,7 @@ router.post('/', authenticate, async (req, res) => {
     res.json({ message: 'Depoimento enviado para aprovacao', testimonial: data });
   } catch (err) {
     console.error('Erro ao criar depoimento:', err);
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -89,7 +90,7 @@ router.get('/my', authenticate, async (req, res) => {
 
     res.json(data || []);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -106,7 +107,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 
     res.json({ message: 'Depoimento removido' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

@@ -1,6 +1,8 @@
 // src/middleware/errorHandler.js
 // Handler centralizado de erros - NOVAIX FITNESS
 
+const { reportError } = require('../services/errorReporter');
+
 class AppError extends Error {
   constructor(message, statusCode = 500, code = 'INTERNAL_ERROR') {
     super(message);
@@ -57,6 +59,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   console.error('Erro não tratado:', err);
+  reportError(err, { path: req?.originalUrl, method: req?.method, ip: req?.ip });
 
   return res.status(500).json({
     error: 'Erro interno do servidor',
@@ -76,6 +79,28 @@ const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
+const SAFE_MESSAGES = {
+  'Invalid login credentials': 'Credenciais invalidas',
+  'User already registered': 'Email ja cadastrado',
+  'Email not confirmed': 'Email nao confirmado',
+  'Password should be at least 6 characters': 'Senha deve ter no minimo 6 caracteres',
+  'Signup requires a valid password': 'Senha invalida',
+  'Email not found': 'Email nao encontrado',
+  'Token has expired': 'Sessao expirada, faca login novamente',
+  'Invalid or expired token': 'Sessao expirada, faca login novamente',
+};
+
+function sanitizeError(err) {
+  if (err.isOperational) return err.message;
+  const msg = err.message || '';
+  if (SAFE_MESSAGES[msg]) return SAFE_MESSAGES[msg];
+  if (msg.includes('ECONNREFUSED') || msg.includes('ENOTFOUND')) return 'Servico indisponivel';
+  if (msg.includes('duplicate key') || msg.includes('unique constraint')) return 'Registro duplicado';
+  if (msg.includes('violates foreign key')) return 'Referencia invalida';
+  if (msg.includes('violates not-null')) return 'Campo obrigatorio ausente';
+  return 'Erro interno do servidor';
+}
+
 module.exports = {
   AppError,
   ValidationError,
@@ -87,4 +112,5 @@ module.exports = {
   errorHandler,
   notFoundHandler,
   asyncHandler,
+  sanitizeError,
 };

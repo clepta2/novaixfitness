@@ -151,9 +151,12 @@ async function createCheckoutLink({ customerId, planType, billingType, successUr
 // ========================================
 
 function verifyWebhookToken(token) {
-  console.log(`🔑 [DEBUG WEBHOOK] Token recebido: "${token}" | Esperado no .env: "${process.env.ASAAS_WEBHOOK_TOKEN}"`);
-  // Retorna true para permitir a autorização durante os testes locais do usuário
-  return true;
+  const expected = process.env.ASAAS_WEBHOOK_TOKEN;
+  if (!expected) {
+    console.error('ASAAS_WEBHOOK_TOKEN não configurado no .env');
+    return false;
+  }
+  return token === expected;
 }
 
 function parseWebhookEvent(body) {

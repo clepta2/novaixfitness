@@ -9,3 +9,4 @@ export { useWorkoutTags } from './useWorkoutTags';
 export { useLibraryData } from './useLibraryData';
 export { default as useOfflineData } from './useOfflineData';
 export { default as usePaywallPayment } from './usePaywallPayment';
+export { useDebounce, useDebouncedCallback } from './useDebounce';

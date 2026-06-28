@@ -6,6 +6,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { authenticate } = require('../middleware/auth');
 const { validateBody, sanitizeString, sanitizeObject } = require('../middleware/validate');
+const { sanitizeError } = require('../middleware/errorHandler');
 
 // Buscar perfil do usuário
 router.get('/profile', authenticate, async (req, res) => {
@@ -20,7 +21,7 @@ router.get('/profile', authenticate, async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -48,7 +49,7 @@ router.put('/profile', authenticate, validateBody({
 
     res.json(data);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
@@ -68,7 +69,7 @@ router.post('/onboarding', authenticate, async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ error: sanitizeError(err) });
   }
 });
 

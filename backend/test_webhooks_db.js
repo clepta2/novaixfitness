@@ -30,7 +30,7 @@ if (!useServiceKey) {
 
 const supabaseAdmin = createClient(supabaseUrl, serviceKey);
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
-const webhookToken = process.env.ASAAS_WEBHOOK_TOKEN || 'novaix_webhook_secret_2026';
+const webhookToken = process.env.ASAAS_WEBHOOK_TOKEN;
 
 const tempEmail = `test_webhook_${Date.now()}@novaix.com`;
 const tempPassword = 'password123';
