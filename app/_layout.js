@@ -155,6 +155,7 @@ function AppContent() {
             <Stack.Screen name="shopping" lazy />
             <Stack.Screen name="challenges" lazy />
             <Stack.Screen name="settings/accessibility" lazy />
+            <Stack.Screen name="progress" lazy />
             <Stack.Screen name="progress/initialPhoto" lazy />
             <Stack.Screen name="progress/monthlyReview" lazy />
             <Stack.Screen name="progress/report" lazy />

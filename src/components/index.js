@@ -131,6 +131,10 @@ export { default as MeasurementForm } from './progress/MeasurementForm';
 export { default as BMICard } from './progress/BMICard';
 export { default as MeasurementChart } from './progress/MeasurementChart';
 export { default as MeasurementHistory } from './progress/MeasurementHistory';
+export { default as ProgressHero } from './progress/ProgressHero';
+export { default as ProgressStats } from './progress/ProgressStats';
+export { default as MeasurementTrends } from './progress/MeasurementTrends';
+export { default as ProgressQuickActionsGrid } from './progress/QuickActionsGrid';
 
 export { default as ProfileCard } from './settings/ProfileCard';
 export { default as SettingsGroup } from './settings/SettingsGroup';
