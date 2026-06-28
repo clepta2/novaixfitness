@@ -9,6 +9,8 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import WorkoutComparison from './WorkoutComparison';
 import WorkoutAchievements from './WorkoutAchievements';
+import MuscleGroupBar from './MuscleGroupBar';
+import WorkoutRating from './WorkoutRating';
 
 function AnimatedStat({ icon, value, label, color, delay = 0 }) {
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -32,33 +34,13 @@ function AnimatedStat({ icon, value, label, color, delay = 0 }) {
   );
 }
 
-function MuscleGroupBar({ name, count, max, color }) {
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  const width = max > 0 ? (count / max) * 100 : 0;
 
-  useEffect(() => {
-    Animated.spring(animatedValue, { toValue: width, tension: 30, friction: 8, useNativeDriver: false }).start();
-  }, [width]);
-
-  const barWidth = animatedValue.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] });
-
-  return (
-    <View style={styles.muscleRow}>
-      <Text style={styles.muscleName}>{name}</Text>
-      <View style={styles.muscleBar}>
-        <Animated.View style={[styles.muscleFill, { width: barWidth, backgroundColor: color }]} />
-      </View>
-      <Text style={styles.muscleCount}>{count}</Text>
-    </View>
-  );
-}
 
 export default function WorkoutSummary({
   workout, duration, calories, xpEarned, exercisesCompleted, setsCompleted,
   muscleGroups, rating, onRate, onShare, onClose,
   previousWorkout, achievements = [], personalRecords = [],
 }) {
-  const [selectedRating, setSelectedRating] = useState(rating || 0);
   const headerScale = useRef(new Animated.Value(0)).current;
   const headerFade = useRef(new Animated.Value(0)).current;
 
@@ -69,8 +51,6 @@ export default function WorkoutSummary({
       Animated.timing(headerFade, { toValue: 1, duration: 500, useNativeDriver: true }),
     ]).start();
   }, []);
-
-  const handleRate = (star) => { setSelectedRating(star); onRate?.(star); };
 
   const handleShare = async () => {
     const prText = personalRecords?.length > 0 ? `\n🏆 ${personalRecords.length} record(s)!` : '';
@@ -131,22 +111,7 @@ export default function WorkoutSummary({
             </View>
           )}
 
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Ionicons name="star" size={16} color={COLORS.attention} />
-              <Text style={styles.sectionTitle}>AVALIAÇÃO</Text>
-            </View>
-            <View style={styles.ratingCard}>
-              <View style={styles.ratingRow}>
-                {[1, 2, 3, 4, 5].map(star => (
-                  <TouchableOpacity key={star} onPress={() => handleRate(star)} style={styles.starBtn}>
-                    <Ionicons name={star <= selectedRating ? 'star' : 'star-outline'} size={40} color={star <= selectedRating ? COLORS.attention : COLORS.textMuted} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {selectedRating > 0 && <Text style={styles.ratingText}>{['', 'Ruim', 'Ok', 'Bom', 'Muito Bom', 'Perfeito!'][selectedRating]}</Text>}
-            </View>
-          </View>
+          <WorkoutRating rating={rating} onRate={onRate} />
 
           <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
             <Ionicons name="share-social" size={20} color={COLORS.background} />
@@ -182,15 +147,6 @@ const styles = StyleSheet.create({
   prName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },
   prDetail: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
   muscleCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
-  muscleRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.sm },
-  muscleName: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textDescription, width: 70 },
-  muscleBar: { flex: 1, height: 6, backgroundColor: COLORS.surfaceOverlay, borderRadius: 3, overflow: 'hidden' },
-  muscleFill: { height: '100%', borderRadius: 3 },
-  muscleCount: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.textTitle, width: 20, textAlign: 'right' },
-  ratingCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
-  ratingRow: { flexDirection: 'row', gap: SPACING.md },
-  starBtn: { padding: SPACING.xs },
-  ratingText: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.primary, marginTop: SPACING.md },
   shareBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, paddingVertical: SPACING.lg, borderRadius: BORDER_RADIUS.lg, marginTop: SPACING.md },
   shareText: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.background, letterSpacing: 1 },
   closeBtn: { alignItems: 'center', paddingVertical: SPACING.md },

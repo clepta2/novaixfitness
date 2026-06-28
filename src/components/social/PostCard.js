@@ -10,6 +10,7 @@ import { Avatar } from '../ui/Avatar';
 import { supabase } from '../../config/supabase';
 import { useRealtimeComments } from '../../hooks/useRealtimeComments';
 import { useRealtimeLikes } from '../../hooks/useRealtimeLikes';
+import CommentSection from './CommentSection';
 
 function PostCard({ post, onLike, onComment, currentUserId }) {
   const [showComments, setShowComments] = useState(false);
@@ -133,38 +134,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
       </View>
 
       {showComments && (
-        <View style={styles.commentsSection}>
-          {loadingComments ? (
-            <Text style={styles.loadingText}>Carregando...</Text>
-          ) : comments.length > 0 ? (
-            <View style={styles.commentsList}>
-              {comments.map((comment) => (
-                <View key={comment.id} style={styles.commentItem}>
-                  <Avatar name={comment.profiles?.name || 'Anônimo'} size="sm" />
-                  <View style={styles.commentContent}>
-                    <Text style={styles.commentAuthor}>{comment.profiles?.name || 'Anônimo'}</Text>
-                    <Text style={styles.commentText}>{comment.content}</Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <Text style={styles.noComments}>Nenhum comentário ainda</Text>
-          )}
-
-          <View style={styles.commentInput}>
-            <TextInput
-              style={styles.commentField}
-              placeholder="Comentário..."
-              placeholderTextColor={COLORS.textMuted}
-              value={commentText}
-              onChangeText={setCommentText}
-            />
-            <TouchableOpacity style={[styles.commentBtn, !commentText.trim() && styles.commentBtnDisabled]} onPress={handleComment} disabled={!commentText.trim()}>
-              <Ionicons name="send" size={18} color={commentText.trim() ? COLORS.primary : COLORS.textMuted} />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <CommentSection comments={comments} loading={loadingComments} onSubmit={handleComment} commentText={commentText} onCommentTextChange={setCommentText} />
       )}
     </View>
   );
@@ -184,16 +154,4 @@ const styles = StyleSheet.create({
   actionBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs },
   actionText: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted },
   actionTextActive: { color: COLORS.error },
-  commentsSection: { marginTop: SPACING.md, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: COLORS.border },
-  loadingText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, textAlign: 'center', paddingVertical: SPACING.md },
-  commentsList: { gap: SPACING.md, marginBottom: SPACING.md },
-  commentItem: { flexDirection: 'row', gap: SPACING.sm },
-  commentContent: { flex: 1, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.sm },
-  commentAuthor: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle, marginBottom: 2 },
-  commentText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription },
-  noComments: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, textAlign: 'center', paddingVertical: SPACING.md },
-  commentInput: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
-  commentField: { flex: 1, height: 40, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, paddingHorizontal: SPACING.md, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14 },
-  commentBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.primary + '20', justifyContent: 'center', alignItems: 'center' },
-  commentBtnDisabled: { backgroundColor: COLORS.surfaceOverlay },
 });
