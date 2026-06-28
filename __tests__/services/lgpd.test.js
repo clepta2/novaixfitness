@@ -30,6 +30,7 @@ const mockChain = (data = null, error = null) => {
     delete: jest.fn().mockReturnThis(),
     eq: jest.fn().mockReturnThis(),
     single: jest.fn().mockResolvedValue({ data, error }),
+    maybeSingle: jest.fn().mockResolvedValue({ data, error }),
   };
   chain.then = jest.fn((resolve) => resolve({ data, error }));
   return chain;
@@ -55,7 +56,8 @@ describe('LGPD Service', () => {
         .mockReturnValueOnce(mockChain(emptyData))
         .mockReturnValueOnce(mockChain(emptyData))
         .mockReturnValueOnce(mockChain(emptyData))
-        .mockReturnValueOnce(mockChain(emptyData));
+        .mockReturnValueOnce(mockChain(emptyData))
+        .mockReturnValueOnce(mockChain(null));
 
       const result = await exportUserData('user-1');
       const parsed = JSON.parse(result);

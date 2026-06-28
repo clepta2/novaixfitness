@@ -165,6 +165,9 @@ export { default as XpBreakdown } from './gamification/XpBreakdown';
 
 export { default as WaitlistFeature } from './waitlist/WaitlistFeature';
 
+export { default as IntroSlide } from './intro/IntroSlide';
+export { default as DotIndicator } from './intro/DotIndicator';
+
 export { default as WeekCalendar } from './planner/WeekCalendar';
 export { default as DayWorkoutSlot } from './planner/DayWorkoutSlot';
 

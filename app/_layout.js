@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense, useState } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -10,6 +10,7 @@ import {
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { ActivityIndicator, View } from 'react-native';
 import { ThemeProvider as NavigationThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { COLORS } from '../src/constants/colors';
@@ -19,16 +20,21 @@ import { setupCrashHandler } from '../src/services/crashReport';
 import { startAutoSync, stopAutoSync } from '../src/services/autoSync';
 import { injectWebStyles, ErrorBoundary, OfflineIndicator } from '../src/components';
 
-// Rotas que nÃ£o necessitam autenticaÃ§Ã£o (login)
-const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'landing'];
+const INTRO_STORAGE_KEY = '@novaix:intro_seen';
+const PUBLIC_ROUTES = ['index', 'register', 'forgot-password', 'landing', 'intro'];
 
 function AuthRedirect() {
   const { user, profile, loading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
+  const [introSeen, setIntroSeen] = useState(null);
 
   useEffect(() => {
-    if (loading) return;
+    AsyncStorage.getItem(INTRO_STORAGE_KEY).then((val) => setIntroSeen(val === 'true'));
+  }, []);
+
+  useEffect(() => {
+    if (loading || introSeen === null) return;
 
     const inTabsGroup = segments[0] === '(tabs)';
     const inOnboarding = segments[0] === 'onboarding';
@@ -36,40 +42,36 @@ function AuthRedirect() {
     const currentRoute = segments[0] || 'index';
     const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute);
 
-    // 1. NÃ£o autenticado tentando acessar Ã¡rea restrita â†’ envia para o login (index)
-    if (!user) {
-      if (inTabsGroup || inOnboarding || inPaywall) {
-        router.replace('/');
+    // 1. UsuÃ¡rio autenticado — ignora intro
+    if (user) {
+      if (!profile) return;
+      const step = profile.current_step || 'onboarding';
+
+      if (step === 'onboarding') {
+        if (!inOnboarding) router.replace('/onboarding/objetivo');
+        return;
+      }
+      if (step === 'pagamento') {
+        if (!inPaywall) router.replace('/paywall');
+        return;
+      }
+      if (isPublicRoute || inOnboarding || inPaywall) {
+        router.replace('/(tabs)/home');
       }
       return;
     }
 
-    // 2. Autenticado mas dados de perfil nÃ£o carregados ainda â†’ aguarda
-    if (!profile) return;
-
-    // 3. Verifica em qual etapa do cadastro/onboarding o usuÃ¡rio estÃ¡
-    const step = profile.current_step || 'onboarding';
-
-    if (step === 'onboarding') {
-      if (!inOnboarding) {
-        router.replace('/onboarding/objetivo');
-      }
+    // 2. NÃ£o autenticado + intro NÃO visto â†' mostra intro
+    if (!introSeen && currentRoute !== 'intro') {
+      router.replace('/intro');
       return;
     }
 
-    if (step === 'pagamento') {
-      if (!inPaywall) {
-        router.replace('/paywall');
-      }
-      return;
+    // 3. NÃ£o autenticado + intro visto mas em rota restrita â†' envia para login
+    if (inTabsGroup || inOnboarding || inPaywall) {
+      router.replace('/');
     }
-
-    // 4. Autenticado e com todas as etapas concluÃ­das (tutorial ou home)
-    // Se ele tentar voltar para rotas pÃºblicas, onboarding ou paywall, redireciona para a home
-    if (isPublicRoute || inOnboarding || inPaywall) {
-      router.replace('/(tabs)/home');
-    }
-  }, [user, profile, loading, segments]);
+  }, [user, profile, loading, segments, introSeen]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -117,6 +119,7 @@ function AppContent() {
         <OfflineIndicator />
         <Suspense fallback={<LoadingScreen />}>
           <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="intro" />
           <Stack.Screen name="index" />
           <Stack.Screen name="register" lazy />
           <Stack.Screen name="forgot-password" lazy />
@@ -193,14 +196,5 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
-
-
-
-
-
-
-
-
-
 
 
