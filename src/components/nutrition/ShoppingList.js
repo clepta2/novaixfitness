@@ -1,6 +1,3 @@
-// src/components/nutrition/ShoppingList.js
-// Lista de compras gerada do plano alimentar - NOVAIX FITNESS
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,40 +5,7 @@ import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-
-function extractShoppingItems(mealPlan) {
-  if (!mealPlan?.week) return [];
-
-  const itemMap = {};
-  const categories = {
-    'Proteínas': ['frango', 'peixe', 'ovo', 'carne', 'sardinha', 'tilapia', 'presunto', 'whey'],
-    'Carboidratos': ['arroz', 'feijão', 'pão', 'batata', 'macarrão', 'cereal', 'aveia', 'granola', 'mandioca'],
-    'Laticínios': ['leite', 'iogurte', 'queijo', 'manteiga'],
-    'Frutas': ['banana', 'maçã', 'laranja', 'fruta'],
-    'Legumes': ['salada', 'cenoura', 'tomate', 'brócolis', 'legume'],
-    'Outros': ['azeite', 'café', 'suco', 'mel'],
-  };
-
-  mealPlan.week.forEach(day => {
-    day.meals?.forEach(meal => {
-      meal.items?.forEach(item => {
-        const lower = item.toLowerCase();
-        if (!itemMap[lower]) {
-          let category = 'Outros';
-          for (const [cat, keywords] of Object.entries(categories)) {
-            if (keywords.some(k => lower.includes(k))) {
-              category = cat;
-              break;
-            }
-          }
-          itemMap[lower] = { name: item, category, checked: false };
-        }
-      });
-    });
-  });
-
-  return Object.values(itemMap);
-}
+import { extractShoppingItems, generateShoppingHTML } from '../../helpers/shoppingListHelper';
 
 export default function ShoppingList({ mealPlan }) {
   const [items, setItems] = useState([]);
@@ -66,29 +30,8 @@ export default function ShoppingList({ mealPlan }) {
   const checkedCount = items.filter(i => i.checked).length;
 
   const handleExport = async () => {
-    const unchecked = items.filter(i => !i.checked);
-    const html = `
-      <!DOCTYPE html>
-      <html><head><meta charset="utf-8"><style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h1 { color: #CCFF00; background: #12161A; padding: 15px; text-align: center; border-radius: 8px; }
-        h3 { color: #12161A; border-bottom: 2px solid #CCFF00; padding-bottom: 5px; margin-top: 20px; }
-        ul { list-style: none; padding: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-        li::before { content: "☐ "; color: #CCFF00; font-weight: bold; }
-        .checked { text-decoration: line-through; color: #999; }
-      </style></head><body>
-        <h1>🛒 LISTA DE COMPRAS NOVAIX</h1>
-        <p style="color:#666">${items.length} itens • ${checkedCount} já tem</p>
-        ${Object.entries(grouped).map(([cat, catItems]) => `
-          <h3>${cat}</h3>
-          <ul>${catItems.map(i => `<li class="${i.checked ? 'checked' : ''}">${i.name}</li>`).join('')}</ul>
-        `).join('')}
-        <p style="text-align:center;color:#999;margin-top:30px;font-size:12px;">Gerado por NOVAIX Fitness • ${new Date().toLocaleDateString('pt-BR')}</p>
-      </body></html>
-    `;
-
     try {
+      const html = generateShoppingHTML(items, grouped, checkedCount);
       const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri, { mimeType: 'application/pdf', dialogTitle: 'Lista de Compras' });
     } catch (err) {
@@ -141,9 +84,9 @@ export default function ShoppingList({ mealPlan }) {
       <Text style={styles.progress}>{checkedCount}/{items.length} itens verificados</Text>
 
       <FlatList
-          removeClippedSubviews={true}
-          maxToRenderPerBatch={10}
-          windowSize={5}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        windowSize={5}
         data={flatData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -165,7 +108,6 @@ const styles = StyleSheet.create({
   exportText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.primary },
   progress: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginBottom: SPACING.md },
   scroll: { maxHeight: 300 },
-  categoryGroup: { marginBottom: SPACING.md },
   categoryTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.primary, letterSpacing: 1, marginBottom: SPACING.xs },
   itemRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, paddingVertical: SPACING.xs },
   itemText: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textTitle, flex: 1 },
