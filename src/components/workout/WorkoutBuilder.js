@@ -8,46 +8,7 @@ import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import ExercisePicker from './ExercisePicker';
-
-const MUSCLE_COLORS = {
-  'Peito': COLORS.success, 'Costas': COLORS.info, 'Pernas': COLORS.secondary,
-  'Ombros': COLORS.attention, 'Braços': COLORS.primary, 'Abdômen': COLORS.success,
-};
-
-function ExerciseSlot({ exercise, index, onRemove, onUpdate }) {
-  const scaleAnim = useRef(new Animated.Value(0.9)).current;
-  React.useEffect(() => { Animated.spring(scaleAnim, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true }).start(); }, []);
-  const muscleColor = MUSCLE_COLORS[exercise.muscle] || COLORS.primary;
-
-  return (
-    <Animated.View style={[styles.slot, { transform: [{ scale: scaleAnim }] }]}>
-      <View style={[styles.slotNumber, { backgroundColor: muscleColor + '20' }]}>
-        <Text style={[styles.slotNumberText, { color: muscleColor }]}>{index + 1}</Text>
-      </View>
-      <View style={styles.slotInfo}>
-        <Text style={styles.slotName}>{exercise.name}</Text>
-        <Text style={styles.slotMuscle}>{exercise.muscle} • {exercise.equipment || 'Peso corporal'}</Text>
-      </View>
-      <View style={styles.slotInputs}>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>SÉRIES</Text>
-          <TextInput style={styles.miniInput} value={String(exercise.sets || 4)} onChangeText={(v) => onUpdate(index, { ...exercise, sets: parseInt(v) || 4 })} keyboardType="numeric" />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>REPS</Text>
-          <TextInput style={styles.miniInput} value={String(exercise.reps || '10-12')} onChangeText={(v) => onUpdate(index, { ...exercise, reps: v })} />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>DESCANSO</Text>
-          <TextInput style={styles.miniInput} value={String(exercise.rest || 60)} onChangeText={(v) => onUpdate(index, { ...exercise, rest: parseInt(v) || 60 })} keyboardType="numeric" />
-        </View>
-      </View>
-      <TouchableOpacity style={styles.removeBtn} onPress={() => onRemove(index)}>
-        <Ionicons name="close-circle" size={20} color={COLORS.error} />
-      </TouchableOpacity>
-    </Animated.View>
-  );
-}
+import ExerciseSlot from './ExerciseSlot';
 
 export default function WorkoutBuilder({ onSave, existingWorkout }) {
   const [name, setName] = useState(existingWorkout?.name || '');
@@ -161,17 +122,6 @@ const styles = StyleSheet.create({
   muscleBadge: { paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: BORDER_RADIUS.sm },
   muscleText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10 },
   exercisesList: { flex: 1, marginBottom: SPACING.md },
-  slot: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border, gap: SPACING.sm },
-  slotNumber: { width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  slotNumberText: { fontFamily: 'Montserrat_700Bold', fontSize: 11 },
-  slotInfo: { flex: 1 },
-  slotName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },
-  slotMuscle: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
-  slotInputs: { flexDirection: 'row', gap: SPACING.xs },
-  inputGroup: { alignItems: 'center' },
-  inputLabel: { fontFamily: 'Inter_400Regular', fontSize: 8, color: COLORS.textMuted, marginBottom: 2 },
-  miniInput: { width: 44, height: 28, backgroundColor: COLORS.background, borderRadius: 4, borderWidth: 1, borderColor: COLORS.border, textAlign: 'center', color: COLORS.textTitle, fontFamily: 'Montserrat_600SemiBold', fontSize: 11 },
-  removeBtn: { padding: SPACING.xs },
   addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary + '15', paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.primary + '30', marginBottom: SPACING.sm },
   addText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.primary, letterSpacing: 0.5 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, paddingVertical: SPACING.lg, borderRadius: BORDER_RADIUS.lg },

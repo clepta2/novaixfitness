@@ -1,44 +1,12 @@
-// src/components/social/Leaderboard.js
-// Ranking global de atletas - NOVAIX FITNESS
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import RankItem from './RankItem';
 
-const RANK_COLORS = [COLORS.attention, COLORS.textMuted, COLORS.secondary];
-const RANK_ICONS = ['trophy', 'medal', 'ribbon'];
-
-function RankItem({ item, index, isCurrentUser }) {
-  const rankColor = index < 3 ? RANK_COLORS[index] : COLORS.textMuted;
-  const rankIcon = index < 3 ? RANK_ICONS[index] : null;
-
-  return (
-    <View style={[styles.rankItem, isCurrentUser && styles.rankItemCurrent]}>
-      <View style={[styles.rankBadge, { backgroundColor: rankColor + '20' }]}>
-        {rankIcon ? (
-          <Ionicons name={rankIcon} size={16} color={rankColor} />
-        ) : (
-          <Text style={[styles.rankNumber, { color: rankColor }]}>{index + 1}</Text>
-        )}
-      </View>
-
-      <View style={styles.rankInfo}>
-        <Text style={[styles.rankName, isCurrentUser && styles.rankNameCurrent]}>{item.name}</Text>
-        <Text style={styles.rankLevel}>{item.level || 'Nível 1'}</Text>
-      </View>
-
-      <View style={styles.rankStats}>
-        <Text style={styles.rankXP}>{item.xp?.toLocaleString() || 0} XP</Text>
-        <Text style={styles.rankWorkouts}>{item.workouts || 0} treinos</Text>
-      </View>
-    </View>
-  );
-}
-
-export default function Leaderboard({ userId }) {
+function Leaderboard({ userId }) {
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('all');
@@ -149,6 +117,8 @@ export default function Leaderboard({ userId }) {
   );
 }
 
+export default memo(Leaderboard);
+
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
   header: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.md },
@@ -163,15 +133,4 @@ const styles = StyleSheet.create({
   empty: { alignItems: 'center', padding: SPACING.xxl },
   emptyText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginTop: SPACING.sm },
   separator: { height: 1, backgroundColor: COLORS.border, marginVertical: SPACING.xs },
-  rankItem: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.sm, borderRadius: BORDER_RADIUS.sm },
-  rankItemCurrent: { backgroundColor: COLORS.primary + '10' },
-  rankBadge: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  rankNumber: { fontFamily: 'Montserrat_700Bold', fontSize: 12 },
-  rankInfo: { flex: 1 },
-  rankName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },
-  rankNameCurrent: { color: COLORS.primary },
-  rankLevel: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
-  rankStats: { alignItems: 'flex-end' },
-  rankXP: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.primary },
-  rankWorkouts: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
 });
