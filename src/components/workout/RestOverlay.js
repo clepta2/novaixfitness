@@ -8,17 +8,9 @@ import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
+import { formatTimeShort, CIRCLE_CONSTANTS } from '../../helpers/timer';
 
-const CIRCLE_SIZE = 200;
-const CIRCLE_STROKE = 8;
-const CIRCLE_RADIUS = (CIRCLE_SIZE - CIRCLE_STROKE) / 2;
-const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
-
-function formatTime(seconds) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
+const { SIZE: CIRCLE_SIZE, STROKE: CIRCLE_STROKE, RADIUS: CIRCLE_RADIUS, CIRCUMFERENCE: CIRCLE_CIRCUMFERENCE } = CIRCLE_CONSTANTS;
 
 function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, nextIndex, totalExercises }) {
   const isUrgent = timeRemaining <= 5;
@@ -78,7 +70,7 @@ function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, 
               <Text style={[styles.phaseText, { color: timerColor }]}>DESCANSO</Text>
             </View>
             <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-              <Text style={[styles.timer, { color: timerColor }]}>{formatTime(timeRemaining)}</Text>
+              <Text style={[styles.timer, { color: timerColor }]}>{formatTimeShort(timeRemaining)}</Text>
             </Animated.View>
             <Text style={styles.progressPct}>{Math.round(progress * 100)}%</Text>
           </View>
