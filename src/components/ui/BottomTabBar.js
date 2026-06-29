@@ -1,6 +1,3 @@
-// src/components/ui/BottomTabBar.js
-// Menu Tab Bar Reutilizável para Telas Internas - NOVAIX FITNESS
-
 import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +11,7 @@ function BottomTabBar({ activeTab }) {
     { key: 'home', label: 'Início', icon: 'home', iconOutline: 'home-outline', route: '/(tabs)/home' },
     { key: 'library', label: 'Treinos', icon: 'barbell', iconOutline: 'barbell-outline', route: '/(tabs)/library' },
     { key: 'feed', label: 'Comunidade', icon: 'people', iconOutline: 'people-outline', route: '/(tabs)/feed' },
-    { key: 'perfil', label: 'Perfil', icon: 'person', iconOutline: 'person-outline', route: '/(tabs)/perfil' },
+    { key: 'config', label: 'Config.', icon: 'settings', iconOutline: 'settings-outline', route: '/(tabs)/config' },
   ];
 
   return (
