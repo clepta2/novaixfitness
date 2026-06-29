@@ -30,7 +30,7 @@ export async function askGeminiCoach(message, profileContext = {}, conversationH
   const systemInstruction = `Coach/Nutri IA NOVAIX: direto, motivador. Usuario: Peso ${profileContext.weight || '?'}kg, Altura ${profileContext.height || '?'}cm, Idade ${profileContext.age || '?'}a, Obj: ${profileContext.goal || 'Geral'}, Equip: ${profileContext.gymType || 'Geral'}, Nivel: ${profileContext.level || 'Geral'}. Responda em chat curto, max 3 paragrafos, objetivo.`;
 
   if (!apiKey) {
-    return generateFallbackResponse(message, profileContext);
+    throw new Error('API_KEY_MISSING');
   }
 
   try {
@@ -63,10 +63,10 @@ export async function askGeminiCoach(message, profileContext = {}, conversationH
     const reply = result.candidates?.[0]?.content?.parts?.[0]?.text;
     if (reply) return reply;
 
-    return generateFallbackResponse(message, profileContext);
+    return 'Desculpe, não consegui processar sua mensagem. Tente novamente.';
   } catch (error) {
     console.error('Erro Gemini API:', error);
-    return generateFallbackResponse(message, profileContext);
+    return 'Erro ao conectar com o assistente. Verifique sua conexão e tente novamente.';
   }
 }
 

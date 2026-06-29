@@ -128,7 +128,10 @@ export default function ChatCoachScreen() {
             { text: 'Ver Planos', onPress: () => { router.push('/paywall'); } },
           ]
         );
+      } else if (err.message === 'API_KEY_MISSING') {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: 'Configure a chave de API do Google para usar o Coach IA. Acesse as configurações do app.', isUser: false }]);
       } else {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: 'Erro ao conectar com o assistente. Verifique sua conexão e tente novamente.', isUser: false }]);
         if (__DEV__) console.error('Erro ao enviar mensagem:', err);
       }
     } finally {
