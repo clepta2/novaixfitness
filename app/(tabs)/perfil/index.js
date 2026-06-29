@@ -1,35 +1,24 @@
-// app/(tabs)/perfil/index.js
-// Tela de Perfil - NOVAIX FITNESS
-
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import {
-  ProfileHero, AchievementsCarousel, QuickActionsGrid,
-  ProfileMenuGroup, RankingCard, WeeklyChallenges, WeightLogger, EditNameModal,
-  GamificationBar, TutorialOverlay,
-} from '../../../src/components';
+import { ProfileHero, WeightLogger, EditNameModal, TutorialOverlay, ErrorBoundary } from '../../../src/components';
 import { useTutorial } from '../../../src/hooks/useTutorial';
 import MuscleMiniRadar from '../../../src/components/profile/MuscleMiniRadar';
+import ProfileMenuGroup from '../../../src/components/profile/ProfileMenuGroup';
 import { useAuth } from '../../../src/context/AuthContext';
 import { supabase } from '../../../src/config/supabase';
-import { getGamificationData } from '../../../src/services/gamification';
-import { ACHIEVEMENTS } from '../../../src/constants/gamification';
-import { layout, typography } from '../../../src/styles';
-import { scale } from '../../../src/utils/responsive';
+import { layout } from '../../../src/styles';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState({ streak: 0, workouts: 0, time: 0, favorites: 0 });
-  const [gamification, setGamification] = useState(null);
   const [showEditName, setShowEditName] = useState(false);
-
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('perfil', true);
 
   const fetchProfile = useCallback(async () => {
@@ -38,17 +27,12 @@ export default function ProfileScreen() {
       const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
       const { data: workouts } = await supabase.from('user_workouts').select('*, workouts(title, duration_minutes, duration)').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20);
       const { count: favCount } = await supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
-
       const completed = workouts?.filter(w => w.completed).length || 0;
       const totalMinutes = workouts?.reduce((sum, w) => sum + (w.duration || w.workouts?.duration_minutes || 0), 0) || 0;
       const streak = calcStreak(workouts || []);
-
       setProfile(profileData);
       setStats({ streak, workouts: completed, time: Math.round(totalMinutes / 60), favorites: favCount || 0 });
-      setGamification(await getGamificationData(user.id));
-    } catch (err) {
-      if (__DEV__) console.error(err);
-    }
+    } catch (err) { if (__DEV__) console.error(err); }
   }, [user?.id]);
 
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
@@ -80,33 +64,21 @@ export default function ProfileScreen() {
     try {
       await supabase.from('profiles').update({ name: newName }).eq('id', user.id);
       setProfile(prev => ({ ...prev, name: newName }));
-    } catch (_e) {
-      if (Platform.OS === 'web') alert('Erro ao salvar'); else Alert.alert('Erro', 'Não foi possível salvar');
-    }
+    } catch { Alert.alert('Erro', 'Não foi possível salvar'); }
   };
 
-  const confirmSignOut = () => Alert.alert('Sair', 'Tem certeza que deseja sair?', [
-    { text: 'Cancelar', style: 'cancel' },
-    { text: 'Sair', style: 'destructive', onPress: signOut },
-  ]);
-
   return (
+    <ErrorBoundary screenName="Perfil">
     <ScrollView style={layout.screen} contentContainerStyle={[layout.scroll, { paddingBottom: 120 }]} showsVerticalScrollIndicator={false}>
-      <TutorialOverlay
-        visible={tutorialVisible}
-        steps={tutorialSteps}
-        onComplete={handleComplete}
-        onSkip={handleSkip}
-      />
-      {/* Header */}
+      <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
       <View style={layout.header}>
-        <Text style={typography.h2}>Meu Perfil</Text>
+        <View style={{ width: 24 }} />
+        <Ionicons name="person" size={22} color={COLORS.primary} />
         <TouchableOpacity onPress={() => router.push('/settings')} style={layout.headerBtn}>
-          <Ionicons name="settings-outline" size={22} color={COLORS.primary} />
+          <Ionicons name="settings-outline" size={22} color={COLORS.textTitle} />
         </TouchableOpacity>
       </View>
 
-      {/* Hero: avatar + stats + XP */}
       <ProfileHero
         name={userName}
         email={userEmail}
@@ -115,54 +87,24 @@ export default function ProfileScreen() {
         onPressAvatar={handleUpdateAvatar}
         onEditName={() => setShowEditName(true)}
         stats={stats}
-        xp={gamification?.totalXP || 0}
       />
 
-      {/* XP e Nível */}
-      <GamificationBar xp={gamification?.totalXP || 0} />
+      {user?.id && <View style={layout.section}><MuscleMiniRadar userId={user.id} /></View>}
 
-      {/* Ações rápidas */}
-      <QuickActionsGrid />
-
-      {/* Mini Radar Muscular */}
-      {user?.id && (
-        <View style={layout.section}>
-          <MuscleMiniRadar userId={user.id} />
-        </View>
-      )}
-
-      {/* Conquistas em carrossel */}
-      <AchievementsCarousel
-        achievements={gamification?.achievements || []}
-        totalAchievements={ACHIEVEMENTS.length}
-      />
-
-      {/* Desafios semanais + Ranking (compactos) */}
-      {user?.id && (
-        <View style={layout.section}>
-          <WeeklyChallenges userId={user.id} />
-        </View>
-      )}
-      {user?.id && (
-        <View style={layout.section}>
-          <RankingCard userId={user.id} />
-        </View>
-      )}
-
-      {/* Peso */}
       <WeightLogger />
-
-      {/* Menu agrupado e colapsável */}
       <ProfileMenuGroup />
 
-      {/* Sair */}
-      <TouchableOpacity style={styles.logoutBtn} onPress={confirmSignOut}>
+      <TouchableOpacity style={styles.logoutBtn} onPress={() => Alert.alert('Sair', 'Tem certeza que deseja sair?', [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Sair', style: 'destructive', onPress: signOut },
+      ])}>
         <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
         <Text style={styles.logoutText}>Sair da conta</Text>
       </TouchableOpacity>
 
       <EditNameModal visible={showEditName} onClose={() => setShowEditName(false)} initialName={userName} onSave={updateProfileName} />
     </ScrollView>
+    </ErrorBoundary>
   );
 }
 
@@ -178,5 +120,5 @@ function calcStreak(workouts) {
 
 const styles = StyleSheet.create({
   logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error + '12', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.error + '30', marginBottom: SPACING.xl },
-  logoutText: { fontFamily: 'Montserrat_600SemiBold', fontSize: scale(14), color: COLORS.error },
+  logoutText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.error },
 });
