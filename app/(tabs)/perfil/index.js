@@ -1,24 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet, Platform, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import { ProfileHero, WeightLogger, EditNameModal, TutorialOverlay, ErrorBoundary } from '../../../src/components';
+import { ProfileHero, WeightLogger, EditNameModal, SettingsGroup, OfflineSettings, TutorialOverlay, ErrorBoundary } from '../../../src/components';
 import { useTutorial } from '../../../src/hooks/useTutorial';
 import MuscleMiniRadar from '../../../src/components/profile/MuscleMiniRadar';
-import ProfileMenuGroup from '../../../src/components/profile/ProfileMenuGroup';
 import { useAuth } from '../../../src/context/AuthContext';
+import { useTheme } from '../../../src/context/ThemeContext';
 import { supabase } from '../../../src/config/supabase';
-import { layout } from '../../../src/styles';
+import { layout, typography } from '../../../src/styles';
+import { setVoiceCoachEnabled } from '../../../src/services/voiceCoach';
+import { THEME_OPTIONS, SETTINGS_GROUPS } from '../../../src/data/settingsOptions';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, signOut } = useAuth();
+  const { themeMode, setThemeMode } = useTheme();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState({ streak: 0, workouts: 0, time: 0, favorites: 0 });
   const [showEditName, setShowEditName] = useState(false);
+  const [settings, setSettings] = useState({
+    autoPlay: true, soundEffects: true, hapticFeedback: true,
+    showRestTimer: true, autoSkipRest: false, voiceCoach: true,
+  });
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('perfil', true);
 
   const fetchProfile = useCallback(async () => {
@@ -32,6 +39,7 @@ export default function ProfileScreen() {
       const streak = calcStreak(workouts || []);
       setProfile(profileData);
       setStats({ streak, workouts: completed, time: Math.round(totalMinutes / 60), favorites: favCount || 0 });
+      if (profileData?.app_settings) { setSettings(profileData.app_settings); setVoiceCoachEnabled(profileData.app_settings.voiceCoach !== false); }
     } catch (err) { if (__DEV__) console.error(err); }
   }, [user?.id]);
 
@@ -67,37 +75,69 @@ export default function ProfileScreen() {
     } catch { Alert.alert('Erro', 'Não foi possível salvar'); }
   };
 
+  const handleToggle = async (key) => {
+    const newSettings = { ...settings, [key]: !settings[key] };
+    setSettings(newSettings);
+    if (key === 'voiceCoach') setVoiceCoachEnabled(newSettings.voiceCoach);
+    await supabase.from('profiles').update({ app_settings: newSettings }).eq('id', user.id);
+  };
+
   return (
-    <ErrorBoundary screenName="Perfil">
+    <ErrorBoundary screenName="Conta">
     <ScrollView style={layout.screen} contentContainerStyle={[layout.scroll, { paddingBottom: 120 }]} showsVerticalScrollIndicator={false}>
       <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
+
       <View style={layout.header}>
         <View style={{ width: 24 }} />
         <Ionicons name="person" size={22} color={COLORS.primary} />
-        <TouchableOpacity onPress={() => router.push('/settings')} style={layout.headerBtn}>
-          <Ionicons name="settings-outline" size={22} color={COLORS.textTitle} />
-        </TouchableOpacity>
+        <View style={{ width: 24 }} />
       </View>
 
       <ProfileHero
-        name={userName}
-        email={userEmail}
-        memberSince={memberSince}
-        uri={profile?.avatar_url}
-        onPressAvatar={handleUpdateAvatar}
-        onEditName={() => setShowEditName(true)}
-        stats={stats}
+        name={userName} email={userEmail} memberSince={memberSince}
+        uri={profile?.avatar_url} onPressAvatar={handleUpdateAvatar}
+        onEditName={() => setShowEditName(true)} stats={stats}
       />
 
       {user?.id && <View style={layout.section}><MuscleMiniRadar userId={user.id} /></View>}
 
       <WeightLogger />
-      <ProfileMenuGroup />
 
-      <TouchableOpacity style={styles.logoutBtn} onPress={() => Alert.alert('Sair', 'Tem certeza que deseja sair?', [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sair', style: 'destructive', onPress: signOut },
-      ])}>
+      <View style={styles.section}>
+        <Text style={typography.label}>APARÊNCIA</Text>
+        <View style={styles.themeRow}>
+          {THEME_OPTIONS.map((opt) => (
+            <TouchableOpacity key={opt.key} style={[styles.themeBtn, themeMode === opt.key && styles.themeBtnActive]} onPress={() => setThemeMode(opt.key)}>
+              <Ionicons name={opt.icon} size={20} color={themeMode === opt.key ? COLORS.background : COLORS.textMuted} />
+              <Text style={[styles.themeBtnText, themeMode === opt.key && styles.themeBtnTextActive]}>{opt.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {SETTINGS_GROUPS.map((g) => <SettingsGroup key={g.title} title={g.title} items={g.items} settings={settings} onToggle={handleToggle} />)}
+
+      <OfflineSettings />
+
+      <View style={styles.quickLinks}>
+        <TouchableOpacity style={styles.quickLink} onPress={() => router.push('/notifications')}>
+          <Ionicons name="notifications-outline" size={20} color={COLORS.attention} />
+          <Text style={styles.quickLinkText}>Notificações</Text>
+          <Ionicons name="chevron-forward" size={16} color={COLORS.textMuted} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.quickLink} onPress={() => router.push('/subscription')}>
+          <Ionicons name="card-outline" size={20} color={COLORS.secondary} />
+          <Text style={styles.quickLinkText}>Assinatura</Text>
+          <Ionicons name="chevron-forward" size={16} color={COLORS.textMuted} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.quickLink} onPress={() => router.push('/export-data')}>
+          <Ionicons name="download-outline" size={20} color={COLORS.success} />
+          <Text style={styles.quickLinkText}>Exportar Dados</Text>
+          <Ionicons name="chevron-forward" size={16} color={COLORS.textMuted} />
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.logoutBtn} onPress={() => Alert.alert('Sair', 'Tem certeza?', [{ text: 'Cancelar', style: 'cancel' }, { text: 'Sair', style: 'destructive', onPress: signOut }])}>
         <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
         <Text style={styles.logoutText}>Sair da conta</Text>
       </TouchableOpacity>
@@ -119,6 +159,15 @@ function calcStreak(workouts) {
 }
 
 const styles = StyleSheet.create({
+  section: { marginBottom: SPACING.xl },
+  themeRow: { flexDirection: 'row', gap: SPACING.sm },
+  themeBtn: { flex: 1, alignItems: 'center', paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border },
+  themeBtnActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  themeBtnText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted, marginTop: SPACING.xs },
+  themeBtnTextActive: { color: COLORS.background },
+  quickLinks: { marginBottom: SPACING.xl },
+  quickLink: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginBottom: SPACING.xs, borderWidth: 1, borderColor: COLORS.border },
+  quickLinkText: { flex: 1, fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textDescription },
   logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.error + '12', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.error + '30', marginBottom: SPACING.xl },
   logoutText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.error },
 });
