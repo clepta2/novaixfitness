@@ -1,8 +1,8 @@
 export const APP_SCREENS = [
   'intro', 'index', 'login', 'register', 'forgot-password',
-  'paywall', 'subscription', 'chat-coach', 'notification-settings',
+  'paywall', 'subscription', 'chat-coach',
   'notifications', 'analytics', 'export-data', 'body-measures',
-  'progress-photos', 'weekly-progress', 'settings', 'dashboard',
+  'progress-photos', 'weekly-progress', 'dashboard',
   'workout-detail', 'player-list', 'warmup', 'recovery', 'changelog',
   'mindfulness', 'blog', 'forum', 'social', 'planner',
   'marketplace', 'marketplace-detail', 'marketplace-favorites',

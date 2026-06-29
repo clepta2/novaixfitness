@@ -17,7 +17,6 @@ const ACTIONS = [
   { icon: 'time', color: COLORS.attention, label: 'Histórico', route: '/(tabs)/perfil/history', bg: COLORS.attention + '22' },
   { icon: 'download', color: COLORS.primary, label: 'Exportar', route: '/export-data', bg: COLORS.primary + '22' },
   { icon: 'card', color: COLORS.error, label: 'Assinatura', route: '/subscription', bg: COLORS.error + '22' },
-  { icon: 'settings', color: COLORS.textDescription, label: 'Config.', route: '/settings', bg: COLORS.textDescription + '22' },
 ];
 
 function ActionBtn({ icon, color, bg, label, onPress }) {

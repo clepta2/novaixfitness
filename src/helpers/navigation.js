@@ -32,11 +32,10 @@ export const ROUTES = {
   CHAT_COACH: '/chat-coach',
   DASHBOARD: '/dashboard',
   ANALYTICS: '/analytics',
-  SETTINGS: '/settings',
+  SETTINGS: '/(tabs)/perfil',
   WARMUP: '/warmup',
   RECOVERY: '/recovery',
   NOTIFICATIONS: '/notifications',
-  NOTIFICATION_SETTINGS: '/notification-settings',
   ADMIN: '/admin',
 
   // Profile sub-pages
