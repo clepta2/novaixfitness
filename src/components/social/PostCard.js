@@ -11,6 +11,7 @@ import { supabase } from '../../config/supabase';
 import { useRealtimeComments } from '../../hooks/useRealtimeComments';
 import { useRealtimeLikes } from '../../hooks/useRealtimeLikes';
 import CommentSection from './CommentSection';
+import PostActions from './PostActions';
 
 function PostCard({ post, onLike, onComment, currentUserId }) {
   const [showComments, setShowComments] = useState(false);
@@ -117,21 +118,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
         <Image source={{ uri: post.image }} style={styles.image} resizeMode="cover" />
       )}
 
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionBtn} onPress={handleLike}>
-          <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={22} color={isLiked ? COLORS.error : COLORS.textMuted} />
-          <Text style={[styles.actionText, isLiked && styles.actionTextActive]}>{likes}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionBtn} onPress={toggleComments}>
-          <Ionicons name="chatbubble-outline" size={20} color={COLORS.textMuted} />
-          <Text style={styles.actionText}>{comments.length || post.comments}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionBtn} onPress={handleShare}>
-          <Ionicons name="share-outline" size={20} color={COLORS.textMuted} />
-        </TouchableOpacity>
-      </View>
+      <PostActions isLiked={isLiked} likes={likes} commentsCount={comments.length || post.comments} onLike={handleLike} onComment={toggleComments} onShare={handleShare} />
 
       {showComments && (
         <CommentSection comments={comments} loading={loadingComments} onSubmit={handleComment} commentText={commentText} onCommentTextChange={setCommentText} />
@@ -150,8 +137,4 @@ const styles = StyleSheet.create({
   time: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
   content: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textTitle, lineHeight: 20, marginBottom: SPACING.md },
   image: { width: '100%', height: 200, borderRadius: BORDER_RADIUS.md, marginBottom: SPACING.md, backgroundColor: COLORS.background },
-  actions: { flexDirection: 'row', gap: SPACING.xl, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: COLORS.border },
-  actionBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs },
-  actionText: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted },
-  actionTextActive: { color: COLORS.error },
 });
