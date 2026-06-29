@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function SetLogList({ logs, loading }) {
+export default memo(function SetLogList({ logs, loading }) {
   return (
     <View style={styles.container}>
       <Text style={typography.caption}>SÉRIES REALIZADAS:</Text>
@@ -22,7 +23,7 @@ export default function SetLogList({ logs, loading }) {
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: SPACING.md },

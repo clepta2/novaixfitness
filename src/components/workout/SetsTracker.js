@@ -1,9 +1,5 @@
-// src/components/workout/SetsTracker.js
-// Rastreamento de Séries e Cargas com Timer de Descanso e Suporte Offline - NOVAIX FITNESS
-
 import { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -13,6 +9,9 @@ import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import { addPendingAction, cacheExerciseLogs, getCachedExerciseLogs } from '../../services/offline';
 import { speakNextExercise, speakRestStart, speakRestHalfway, speakRestEnd, speakHalfway, speakMotivation, isVoiceCoachEnabled, setVoiceCoachEnabled } from '../../services/voiceCoach';
 import { typography } from '../../styles';
+import ExerciseSelector from './ExerciseSelector';
+import SetInput from './SetInput';
+import RestCountdown from './RestCountdown';
 import SetLogList from './SetLogList';
 
 export default memo(function SetsTracker({ userWorkoutId, workout }) {
@@ -100,47 +99,9 @@ export default memo(function SetsTracker({ userWorkoutId, workout }) {
 
   return (
     <Card variant="surface" style={styles.card}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xs }}>
-        <Text style={typography.label}>REGISTRO DE SÉRIES</Text>
-        <TouchableOpacity onPress={() => { const v = !voiceEnabled; setVoiceCoachEnabled(v); setVoiceEnabled(v); }} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <Ionicons name={voiceEnabled ? 'volume-medium' : 'volume-mute'} size={16} color={COLORS.primary} />
-          <Text style={{ fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.textMuted }}>{voiceEnabled ? 'VOZ ATIVA' : 'MUTADO'}</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selector}>
-        {exercises.map((ex) => (
-          <TouchableOpacity key={ex.id || ex.name} style={[styles.selectorBtn, selectedEx === ex.name && styles.selectorBtnActive]} onPress={() => setSelectedEx(ex.name)}>
-            <Text style={[styles.selectorText, selectedEx === ex.name && styles.selectorTextActive]}>{ex.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {countdown !== null && (
-        <View style={styles.timerContainer}>
-          <Ionicons name="time" size={20} color={COLORS.primary} />
-          <Text style={styles.timerText}>DESCANSO: {countdown}s</Text>
-          <View style={styles.timerControls}>
-            <TouchableOpacity onPress={() => setCountdown(c => c + 15)} style={styles.controlBtn}><Text style={styles.controlText}>+15s</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => setCountdown(c => Math.max(0, c - 15))} style={styles.controlBtn}><Text style={styles.controlText}>-15s</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => setCountdown(null)} style={[styles.controlBtn, styles.skipBtn]}><Text style={styles.skipText}>Pular</Text></TouchableOpacity>
-          </View>
-        </View>
-      )}
-
-      <View style={styles.inputRow}>
-        <View style={styles.inputContainer}>
-          <Text style={typography.caption}>CARGA (KG)</Text>
-          <TextInput style={styles.input} value={weight} onChangeText={setWeight} placeholder="0" placeholderTextColor={COLORS.textMuted} keyboardType="numeric" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={typography.caption}>REPS</Text>
-          <TextInput style={styles.input} value={reps} onChangeText={setReps} placeholder="10" placeholderTextColor={COLORS.textMuted} keyboardType="numeric" />
-        </View>
-        <TouchableOpacity style={styles.addBtn} onPress={handleAddSet} disabled={saving}>
-          {saving ? <ActivityIndicator size="small" color={COLORS.background} /> : <Ionicons name="add" size={24} color={COLORS.background} />}
-        </TouchableOpacity>
-      </View>
-
+      <ExerciseSelector exercises={exercises} selected={selectedEx} onSelect={setSelectedEx} voiceEnabled={voiceEnabled} onToggleVoice={() => { const v = !voiceEnabled; setVoiceCoachEnabled(v); setVoiceEnabled(v); }} />
+      {countdown !== null && <RestCountdown countdown={countdown} onAdd={() => setCountdown(c => c + 15)} onSubtract={() => setCountdown(c => Math.max(0, c - 15))} onSkip={() => setCountdown(null)} />}
+      <SetInput weight={weight} setWeight={setWeight} reps={reps} setReps={setReps} onAdd={handleAddSet} saving={saving} />
       <SetLogList logs={logs} loading={loadingLogs} />
     </Card>
   );
@@ -148,20 +109,4 @@ export default memo(function SetsTracker({ userWorkoutId, workout }) {
 
 const styles = StyleSheet.create({
   card: { padding: SPACING.lg, marginTop: SPACING.lg, marginBottom: SPACING.md },
-  selector: { flexDirection: 'row', marginVertical: SPACING.md },
-  selectorBtn: { paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, borderRadius: 20, backgroundColor: COLORS.background, marginRight: SPACING.xs, borderWidth: 1, borderColor: COLORS.border },
-  selectorBtnActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  selectorText: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.textMuted },
-  selectorTextActive: { color: COLORS.background },
-  timerContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.primary + '10', borderLeftWidth: 3, borderLeftColor: COLORS.primary, padding: SPACING.md, borderRadius: 8, marginBottom: SPACING.md, gap: SPACING.sm },
-  timerText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.primary, flex: 1 },
-  timerControls: { flexDirection: 'row', gap: SPACING.xs },
-  controlBtn: { paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: 4, backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border },
-  controlText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textTitle },
-  skipBtn: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  skipText: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.background },
-  inputRow: { flexDirection: 'row', gap: SPACING.md, alignItems: 'flex-end', marginBottom: SPACING.md },
-  inputContainer: { flex: 1 },
-  input: { height: 40, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border, paddingHorizontal: SPACING.md, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14, marginTop: 4 },
-  addBtn: { width: 40, height: 40, borderRadius: BORDER_RADIUS.md, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
 });

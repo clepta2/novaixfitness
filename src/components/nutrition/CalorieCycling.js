@@ -6,46 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-
-const CYCLING_PLANS = [
-  {
-    id: '3plus1',
-    name: '3+1',
-    desc: '3 dias normais, 1 dia alto',
-    days: [
-      { type: 'high', label: 'Alto', multiplier: 1.3 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-    ],
-  },
-  {
-    id: '2plus1',
-    name: '2+1',
-    desc: '2 dias baixos, 1 dia alto',
-    days: [
-      { type: 'low', label: 'Baixo', multiplier: 0.8 },
-      { type: 'low', label: 'Baixo', multiplier: 0.8 },
-      { type: 'high', label: 'Alto', multiplier: 1.2 },
-    ],
-  },
-  {
-    id: '5plus2',
-    name: '5+2',
-    desc: '5 dias normais, 2 dias baixos',
-    days: [
-      { type: 'low', label: 'Baixo', multiplier: 0.75 },
-      { type: 'low', label: 'Baixo', multiplier: 0.75 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-      { type: 'normal', label: 'Normal', multiplier: 1.0 },
-    ],
-  },
-];
-
-const TYPE_COLORS = { high: COLORS.primary, normal: COLORS.success, low: COLORS.info };
+import { CYCLING_PLANS, TYPE_COLORS } from '../../data/calorieCycling';
 
 export default function CalorieCycling({ baseCalories = 2000, onApply }) {
   const [selectedPlan, setSelectedPlan] = useState('3plus1');
