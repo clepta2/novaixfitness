@@ -7,22 +7,13 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-
-const RATING_CONFIG = [
-  { stars: 1, label: 'Ruim', icon: 'thumbs-down', color: COLORS.error },
-  { stars: 2, label: 'Ok', icon: 'remove', color: COLORS.secondary },
-  { stars: 3, label: 'Bom', icon: 'checkmark', color: COLORS.attention },
-  { stars: 4, label: 'Muito Bom', icon: 'thumbs-up', color: COLORS.success },
-  { stars: 5, label: 'Perfeito!', icon: 'trophy', color: COLORS.primary },
-];
-
-const QUICK_TAGS = ['Fácil', 'Difícil', 'Divertido', 'Monótono', 'Bem planejado', 'Exaustivo'];
+import { RATING_CONFIG, QUICK_TAGS } from '../../data/ratingModal';
 
 function StarRating({ rating, onSelect }) {
   return (
     <View style={styles.starsContainer}>
       {[1, 2, 3, 4, 5].map(star => (
-        <TouchableOpacity key={star} onPress={() => { onSelect(star); try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {} }} style={styles.starBtn}>
+        <TouchableOpacity key={star} onPress={() => { onSelect(star); try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {} }} style={styles.starBtn} accessibilityLabel={`Avaliar ${star} estrela${star > 1 ? 's' : ''}`} accessibilityRole="button">
           <Ionicons name={star <= rating ? 'star' : 'star-outline'} size={44} color={star <= rating ? COLORS.attention : COLORS.surfaceOverlay} />
         </TouchableOpacity>
       ))}
