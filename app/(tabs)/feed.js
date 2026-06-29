@@ -2,7 +2,7 @@
 // Tela de Comunidade/Feed - NOVAIX FITNESS
 
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, TouchableOpacity, RefreshControl, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
@@ -16,14 +16,9 @@ import { useTutorial } from '../../src/hooks/useTutorial';
 import { useAuth } from '../../src/context/AuthContext';
 import { supabase } from '../../src/config/supabase';
 import { layout, typography } from '../../src/styles';
+import { formatRelativeDate } from '../../src/helpers/dates';
 
 const filters = ['Todos', 'Populares', 'Recentes', 'Meus Posts'];
-
-function formatDate(dateStr) {
-  if (!dateStr) return 'Sem data';
-  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
-  return diff === 0 ? 'Hoje' : diff === 1 ? 'Ontem' : diff < 7 ? `${diff} dias atrás` : new Date(dateStr).toLocaleDateString('pt-BR');
-}
 
 export default function FeedScreen() {
   const { user } = useAuth();
@@ -63,7 +58,7 @@ export default function FeedScreen() {
         user: { name: p.profiles?.name || 'Atleta', avatar: p.profiles?.avatar_url || null },
         content: p.content,
         image: p.image_url,
-        createdAt: formatDate(p.created_at),
+        createdAt: formatRelativeDate(p.created_at),
         likes: p.likes_count || 0,
         comments: p.comments_count || 0,
         isLiked: false
