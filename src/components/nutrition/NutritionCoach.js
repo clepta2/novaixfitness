@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import NutritionMessageBubble from './NutritionMessageBubble';
 
 const QUICK_QUESTIONS = [
   'Quanta proteína devo comer por dia?',
@@ -14,22 +15,6 @@ const QUICK_QUESTIONS = [
   'Como calcular minhas calorias?',
   'Melhores alimentos para ganhar massa',
 ];
-
-function MessageBubble({ message }) {
-  const isUser = message.isUser;
-  return (
-    <View style={[styles.bubble, isUser ? styles.bubbleUser : styles.bubbleAI]}>
-      {!isUser && (
-        <View style={styles.aiAvatar}>
-          <Ionicons name="nutrition" size={14} color={COLORS.primary} />
-        </View>
-      )}
-      <View style={[styles.bubbleContent, isUser ? styles.bubbleContentUser : styles.bubbleContentAI]}>
-        <Text style={[styles.bubbleText, isUser && styles.bubbleTextUser]}>{message.text}</Text>
-      </View>
-    </View>
-  );
-}
 
 export default function NutritionCoach({ userId, userWeight = 70, userGoal = 'manter' }) {
   const [messages, setMessages] = useState([
@@ -103,7 +88,7 @@ export default function NutritionCoach({ userId, userWeight = 70, userGoal = 'ma
         ref={flatListRef}
         data={messages}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <MessageBubble message={item} />}
+        renderItem={({ item }) => <NutritionMessageBubble message={item} />}
         contentContainerStyle={styles.list}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />

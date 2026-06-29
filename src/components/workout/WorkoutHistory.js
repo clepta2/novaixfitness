@@ -9,20 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import HistoryCard from './HistoryCard';
 import WorkoutStatsSummary from './WorkoutStatsSummary';
-
-const PERIODS = [
-  { key: 'all', label: 'Todos' },
-  { key: 'week', label: '7 dias' },
-  { key: 'month', label: '30 dias' },
-  { key: 'quarter', label: '3 meses' },
-];
-
-const SORT_OPTIONS = [
-  { key: 'recent', label: 'Mais recente', icon: 'time' },
-  { key: 'oldest', label: 'Mais antigo', icon: 'time-outline' },
-  { key: 'rating', label: 'Melhor avaliado', icon: 'star' },
-  { key: 'duration', label: 'Mais longo', icon: 'timer' },
-];
+import { PERIODS, SORT_OPTIONS } from '../../data/workoutHistory';
 
 export default function WorkoutHistory({ userId, onSelect }) {
   const [workouts, setWorkouts] = useState([]);
