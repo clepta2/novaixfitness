@@ -7,23 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getMealLogs } from '../../services/mealAnalyzer';
-
-const MEAL_ICONS = { cafe: 'sunny', almoco: 'restaurant', jantar: 'moon', lanche: 'cafe', outro: 'nutrition' };
-const MEAL_COLORS = { cafe: COLORS.attention, almoco: COLORS.primary, jantar: COLORS.info, lanche: COLORS.success, outro: COLORS.textMuted };
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diff = Math.floor((now - date) / 86400000);
-  if (diff === 0) return 'Hoje';
-  if (diff === 1) return 'Ontem';
-  if (diff < 7) return `${diff} dias atrás`;
-  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-}
-
-function formatTime(dateStr) {
-  return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-}
+import { MEAL_ICONS, MEAL_COLORS, formatDate, formatMealTime } from '../../data/mealHistory';
 
 function MealItem({ meal }) {
   const icon = MEAL_ICONS[meal.meal_type] || MEAL_ICONS.outro;
@@ -37,7 +21,7 @@ function MealItem({ meal }) {
       <View style={styles.mealInfo}>
         <View style={styles.mealHeader}>
           <Text style={styles.mealName}>{meal.description || 'Refeição'}</Text>
-          <Text style={styles.mealTime}>{formatTime(meal.logged_at)}</Text>
+          <Text style={styles.mealTime}>{formatMealTime(meal.logged_at)}</Text>
         </View>
         <Text style={styles.mealDate}>{formatDate(meal.logged_at)}</Text>
         <View style={styles.mealMacros}>
