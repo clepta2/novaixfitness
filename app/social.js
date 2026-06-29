@@ -12,15 +12,7 @@ import { supabase } from '../src/config/supabase';
 import { getUnreadCount } from '../src/services/notifications';
 import { ErrorBoundary, PostCard, ChallengesList, Leaderboard, CreatePostModal, NotificationModal, SocialHub, QuickSocialActions } from '../src/components';
 import { PostSkeleton, FeedEmptyState } from '../src/components/social/FeedSkeleton';
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
-  if (diff === 0) return 'Hoje';
-  if (diff === 1) return 'Ontem';
-  if (diff < 7) return `${diff} dias atrás`;
-  return new Date(dateStr).toLocaleDateString('pt-BR');
-}
+import { formatRelativeDate } from '../src/helpers/dates';
 
 export default function SocialScreen() {
   const router = useRouter();
@@ -47,7 +39,7 @@ export default function SocialScreen() {
       setPosts(dbPosts.map(p => ({
         id: p.id, userId: p.user_id,
         user: { name: p.profiles?.name || 'Atleta', avatar: p.profiles?.avatar_url || null },
-        content: p.content, image: p.image_url, createdAt: formatDate(p.created_at),
+        content: p.content, image: p.image_url,         createdAt: formatRelativeDate(p.created_at),
         likes: p.likes_count || 0, comments: p.comments_count || 0, isLiked: false,
       })));
     }
@@ -108,7 +100,7 @@ export default function SocialScreen() {
   const handleQuickAction = (actionId) => {
     if (actionId === 'post') setShowCreatePost(true);
     else if (actionId === 'workout') router.push('/player');
-    else if (actionId === 'invite') router.push('/settings');
+    else if (actionId === 'invite') router.push('/(tabs)/perfil/links');
   };
 
   const renderFeed = () => {
@@ -121,7 +113,7 @@ export default function SocialScreen() {
     <ErrorBoundary screenName="SocialHub">
       <View style={layout.screen}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar">
+          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={typography.h2}>COMUNIDADE</Text>

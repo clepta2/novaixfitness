@@ -1,7 +1,7 @@
 // src/components/workout/WorkoutInfo.js
 // Info do treino (stats + equipamentos) - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -35,7 +35,7 @@ function StatItem({ icon, value, color, delay }) {
   );
 }
 
-export default function WorkoutInfo({ workout, totalSets, calories }) {
+export default memo(function WorkoutInfo({ workout, totalSets, calories }) {
   const duration = workout?.duration_minutes || workout?.duration || 45;
   const exerciseCount = workout?.exercises?.length || 0;
   const equipment = workout?.equipment || [];
@@ -73,7 +73,7 @@ export default function WorkoutInfo({ workout, totalSets, calories }) {
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg },

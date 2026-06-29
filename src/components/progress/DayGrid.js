@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -6,7 +7,7 @@ import { typography } from '../../styles';
 
 const today = new Date().getDay();
 
-export default function DayGrid({ byDay }) {
+export default memo(function DayGrid({ byDay }) {
   return (
     <View style={styles.card}>
       <Text style={typography.label}>DIAS DA SEMANA</Text>
@@ -31,7 +32,7 @@ export default function DayGrid({ byDay }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },

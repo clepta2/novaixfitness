@@ -2,13 +2,14 @@
 // Tela Blog/Artigos - NOVAIX FITNESS
 
 import { useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { ErrorBoundary } from '../src/components';
 import { ARTICLES, ARTICLE_CATEGORIES } from '../src/data/articles';
 import ArticleCard from '../src/components/blog/ArticleCard';
 import ArticleDetail from '../src/components/blog/ArticleDetail';
+import { styles } from '../src/styles/blogStyles';
 
 export default function BlogScreen() {
   const [selectedCategory, setSelectedCategory] = useState('todos');
@@ -26,7 +27,7 @@ export default function BlogScreen() {
     return (
       <View style={styles.screen}>
         <View style={styles.detailHeader}>
-          <TouchableOpacity onPress={handleBack} style={styles.backBtn}>
+          <TouchableOpacity onPress={handleBack} style={styles.backBtn} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={22} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={styles.detailHeaderTitle}>ARTIGO</Text>
@@ -38,6 +39,7 @@ export default function BlogScreen() {
   }
 
   return (
+    <ErrorBoundary screenName="Blog">
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
@@ -54,6 +56,9 @@ export default function BlogScreen() {
                 style={[styles.categoryPill, isActive && styles.categoryPillActive]}
                 onPress={() => setSelectedCategory(cat.id)}
                 activeOpacity={0.7}
+                accessibilityLabel={`Filtrar por ${cat.label}`}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: isActive }}
               >
                 <Ionicons name={cat.icon} size={14} color={isActive ? COLORS.background : COLORS.textMuted} />
                 <Text style={[styles.categoryPillText, isActive && styles.categoryPillTextActive]}>
@@ -78,82 +83,6 @@ export default function BlogScreen() {
         )}
       </ScrollView>
     </View>
+    </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { padding: SPACING.xl, paddingBottom: SPACING.massive },
-  header: { marginBottom: SPACING.xxl },
-  headerTitle: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 28,
-    lineHeight: 36,
-    color: COLORS.textTitle,
-  },
-  headerSubtitle: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textDescription,
-    marginTop: SPACING.xs,
-  },
-  categoriesScroll: { marginBottom: SPACING.xl },
-  categoryPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.full,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    marginRight: SPACING.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  categoryPillActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
-  },
-  categoryPillText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textMuted,
-    letterSpacing: 0.5,
-  },
-  categoryPillTextActive: {
-    color: COLORS.background,
-  },
-  articlesList: { gap: 0 },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SPACING.massive,
-  },
-  emptyText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textMuted,
-    marginTop: SPACING.md,
-  },
-  detailHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: SPACING.xl,
-    paddingTop: SPACING.xxxl,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  detailHeaderTitle: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 14,
-    color: COLORS.textTitle,
-    letterSpacing: 1,
-  },
-});

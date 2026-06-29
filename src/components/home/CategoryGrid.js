@@ -1,10 +1,11 @@
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SPACING } from '../../constants/spacing';
 import { typography } from '../../styles';
 import { scale } from '../../utils/responsive';
 
-export default function CategoryGrid({ categories, categoryCounts, onPress }) {
+function CategoryGrid({ categories, categoryCounts, onPress }) {
   return (
     <View>
       <Text style={[typography.label, { marginTop: SPACING.xl, marginBottom: SPACING.md }]}>CATEGORIAS DE TREINO</Text>
@@ -22,6 +23,8 @@ export default function CategoryGrid({ categories, categoryCounts, onPress }) {
     </View>
   );
 }
+
+export default memo(CategoryGrid);
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.md },

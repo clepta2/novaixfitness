@@ -82,13 +82,15 @@ jest.mock('../../src/config/supabase', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     AuthInput: (props) => React.createElement(View, null, React.createElement(Text, null, props.label)),
     SocialButton: (props) => React.createElement(View, null, React.createElement(Text, null, props.label)),
     Input: (props) => React.createElement(View, null, React.createElement(Text, null, props.label)),
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 jest.mock('../../src/components/landing/HeroSection', () => {

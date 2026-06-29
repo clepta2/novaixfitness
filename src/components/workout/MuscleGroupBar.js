@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, memo } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 
-export default function MuscleGroupBar({ name, count, max, color }) {
+export default memo(function MuscleGroupBar({ name, count, max, color }) {
   const animatedValue = useMemo(() => new Animated.Value(0), []);
   const width = max > 0 ? (count / max) * 100 : 0;
 
@@ -22,7 +22,7 @@ export default function MuscleGroupBar({ name, count, max, color }) {
       <Text style={styles.count}>{count}</Text>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.sm },

@@ -62,7 +62,7 @@ export default function ForgotPasswordScreen() {
                 <View style={{ height: SPACING.xl }} />
                 <AuthInput label="E-MAIL" placeholder="digite seu e-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} />
                 <Button title="ENVIAR LINK DE RECUPERAÇÃO" onPress={handleSendResetEmail} loading={loading} />
-                <TouchableOpacity style={{ marginTop: SPACING.lg, alignItems: 'center' }} onPress={() => router.canGoBack() ? router.back() : router.replace('/')}><Text style={[typography.bodySmall, { color: COLORS.primary, fontFamily: 'Montserrat_700Bold' }]}>Voltar para o login</Text></TouchableOpacity>
+                <TouchableOpacity style={{ marginTop: SPACING.lg, alignItems: 'center' }} onPress={() => router.canGoBack() ? router.back() : router.replace('/')} accessibilityLabel="Voltar para o login" accessibilityRole="button"><Text style={[typography.bodySmall, { color: COLORS.primary, fontFamily: 'Montserrat_700Bold' }]}>Voltar para o login</Text></TouchableOpacity>
               </>
             ) : (
               <>
@@ -80,7 +80,7 @@ export default function ForgotPasswordScreen() {
                   ))}
                 </View>
                 <Button title="VOLTAR AO LOGIN" onPress={() => router.canGoBack() ? router.back() : router.replace('/')} />
-                <TouchableOpacity style={{ marginTop: SPACING.lg, alignItems: 'center' }} onPress={() => setSent(false)}><Text style={[typography.bodySmall, { color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' }]}>Não recebeu? Reenviar e-mail</Text></TouchableOpacity>
+                <TouchableOpacity style={{ marginTop: SPACING.lg, alignItems: 'center' }} onPress={() => setSent(false)} accessibilityLabel="Reenviar e-mail" accessibilityRole="button"><Text style={[typography.bodySmall, { color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' }]}>Não recebeu? Reenviar e-mail</Text></TouchableOpacity>
               </>
             )}
           </View>

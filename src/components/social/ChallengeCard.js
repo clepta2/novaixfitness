@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -20,7 +20,7 @@ function AnimatedProgressBar({ progress, target, color }) {
   );
 }
 
-export default function ChallengeCard({ challenge, index, onPress, onShare }) {
+export default memo(function ChallengeCard({ challenge, index, onPress, onShare }) {
   const animatedValue = useMemo(() => new Animated.Value(0), []);
   const icon = ICON_MAP[challenge.category] || 'fitness';
   const color = COLOR_MAP[challenge.category] || COLORS.primary;
@@ -55,7 +55,7 @@ export default function ChallengeCard({ challenge, index, onPress, onShare }) {
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { width: 280, marginRight: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border },

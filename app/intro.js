@@ -62,7 +62,7 @@ function IntroScreen() {
 
   const goToLogin = useCallback(async () => {
     await markIntroSeen();
-    router.replace('/');
+    router.replace('/(tabs)/home');
   }, [markIntroSeen, router]);
 
   const handleNext = useCallback(() => {

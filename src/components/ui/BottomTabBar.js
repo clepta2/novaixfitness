@@ -1,13 +1,13 @@
 // src/components/ui/BottomTabBar.js
 // Menu Tab Bar Reutilizável para Telas Internas - NOVAIX FITNESS
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 
-export default function BottomTabBar({ activeTab }) {
+function BottomTabBar({ activeTab }) {
   const router = useRouter();
 
   const tabs = [
@@ -39,6 +39,8 @@ export default function BottomTabBar({ activeTab }) {
     </View>
   );
 }
+
+export default memo(BottomTabBar);
 
 const styles = StyleSheet.create({
   container: {

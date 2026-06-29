@@ -1,13 +1,13 @@
 // src/components/social/WorkoutShare.js
 // Compartilhar conclusão de treino - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function WorkoutShare({ workout, xp, duration, exercises, onShare }) {
+export default memo(function WorkoutShare({ workout, xp, duration, exercises, onShare }) {
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -89,7 +89,7 @@ export default function WorkoutShare({ workout, xp, duration, exercises, onShare
       </View>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, borderWidth: 1, borderColor: COLORS.success + '40' },

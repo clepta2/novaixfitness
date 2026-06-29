@@ -1,13 +1,13 @@
 // src/components/paywall/PlanCard.js
 // Card de plano - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function PlanCard({ plan, isSelected, onSelect }) {
+export default memo(function PlanCard({ plan, isSelected, onSelect }) {
   const [scaleAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function PlanCard({ plan, isSelected, onSelect }) {
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   glowWrap: {

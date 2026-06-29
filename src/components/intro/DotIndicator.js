@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
-export default function DotIndicator({ total, currentIndex }) {
+export default memo(function DotIndicator({ total, currentIndex }) {
   const animatedWidths = useRef(
     Array.from({ length: total }, () => new Animated.Value(0))
   ).current;
@@ -42,7 +42,7 @@ export default function DotIndicator({ total, currentIndex }) {
       ))}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

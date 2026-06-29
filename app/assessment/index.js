@@ -1,4 +1,4 @@
-﻿// app/assessment/index.js
+// app/assessment/index.js
 // Avaliação inicial completa
 
 import { useState } from 'react';
@@ -54,7 +54,7 @@ export default function AssessmentScreen() {
       });
       setSaved(true);
     } catch (err) {
-      console.error('Erro ao salvar avaliação:', err);
+      if (__DEV__) console.error('Erro ao salvar avaliação:', err);
     }
   };
 

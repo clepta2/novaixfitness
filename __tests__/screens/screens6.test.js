@@ -113,7 +113,8 @@ jest.mock('../../src/styles/subscriptionStyles', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     WorkoutListView: (props) => React.createElement(View, null, React.createElement(Text, null, 'WorkoutListView')),
@@ -127,6 +128,7 @@ jest.mock('../../src/components', () => {
       return React.createElement(View, null, React.createElement(Text, null, 'TwoFactorPrompt'));
     },
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 jest.mock('../../src/components/admin/AdminDashboard', () => {

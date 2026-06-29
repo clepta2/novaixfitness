@@ -7,6 +7,7 @@ import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { getMealLogs, getDailySummary, calculateNutritionGoals } from '../src/services/mealAnalyzer';
 import { ErrorBoundary, WaterTracker } from '../src/components';
+import BottomTabBar from '../src/components/ui/BottomTabBar';
 import DailySummaryCard from '../src/components/nutrition/DailySummaryCard';
 import MealTimeline from '../src/components/nutrition/MealTimeline';
 import MealLogModal from '../src/components/nutrition/MealLogModal';
@@ -59,7 +60,7 @@ export default function NutritionScreen() {
     <ErrorBoundary screenName="Nutrition">
       <View style={styles.screen}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} accessibilityLabel="Voltar">
+          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={22} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>NUTRIÇÃO</Text>
@@ -81,7 +82,7 @@ export default function NutritionScreen() {
           </View>
         ) : (
 
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 110 }]} showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={loading} onRefresh={loadData} tintColor={COLORS.primary} />}>
           {weightMissing && (
             <View style={styles.warningCard}>
@@ -91,7 +92,7 @@ export default function NutritionScreen() {
           )}
           <DailySummaryCard summary={summary} goals={goals} />
 
-          <TouchableOpacity style={styles.logBtn} onPress={() => setModalVisible(true)} accessibilityLabel="Registrar refeição">
+          <TouchableOpacity style={styles.logBtn} onPress={() => setModalVisible(true)} accessibilityLabel="Registrar refeição" accessibilityRole="button">
             <Ionicons name="add-circle" size={22} color={COLORS.background} />
             <Text style={styles.logBtnText}>REGISTRAR REFEIÇÃO</Text>
           </TouchableOpacity>
@@ -125,6 +126,7 @@ export default function NutritionScreen() {
           profileContext={{ weight, goal }}
           onSaved={loadData}
         />
+        <BottomTabBar activeTab="perfil" />
       </View>
     </ErrorBoundary>
   );

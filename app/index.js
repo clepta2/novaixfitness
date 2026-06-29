@@ -9,7 +9,8 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
-import { Button, AuthInput, SocialButton } from '../src/components';
+import { BRAND_NAME } from '../src/constants/brand';
+import { Button, AuthInput, SocialButton, ErrorBoundary } from '../src/components';
 import { useAuth } from '../src/context/AuthContext';
 import { useTheme } from '../src/context/ThemeContext';
 import { supabase } from '../src/config/supabase';
@@ -93,7 +94,7 @@ export default function LoginScreen() {
         return showAlert('Aviso', 'Autenticação biométrica não configurada no dispositivo.');
       }
       const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Login Rápido - NOVAIX FITNESS',
+        promptMessage: `Login Rápido - ${BRAND_NAME}`,
         fallbackLabel: 'Usar Senha',
       });
       if (result.success) {
@@ -105,6 +106,7 @@ export default function LoginScreen() {
   }, [router]);
 
   return (
+    <ErrorBoundary screenName="Login">
     <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ImageBackground
         source={require('../assets/images/gym_interior.jpg')}
@@ -125,14 +127,14 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.brand}>
-              <Text style={typography.brand}>NOVAIX FITNESS</Text>
+              <Text style={typography.brand}>{BRAND_NAME}</Text>
               <Text style={typography.h5}>Sua Nova Evolução no Treino</Text>
             </View>
 
             <View>
               <AuthInput placeholder="E-mail ou CPF" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} />
               <AuthInput placeholder="Senha" value={password} onChangeText={setPassword} secureTextEntry icon="lock-closed-outline" translucent={true} />
-              <TouchableOpacity onPress={() => router.push('/forgot-password')}><Text style={[typography.bodySmall, { color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' }]}>Esqueceu a senha?</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/forgot-password')} accessibilityLabel="Esqueceu a senha" accessibilityRole="button"><Text style={[typography.bodySmall, { color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' }]}>Esqueceu a senha?</Text></TouchableOpacity>
               <View style={{ height: SPACING.lg }} />
               <View style={styles.actionRow}>
                 <View style={{ flex: 1 }}>
@@ -149,12 +151,13 @@ export default function LoginScreen() {
 
             <View style={styles.footer}>
               <Text style={typography.bodyMuted}>Ainda não tem conta? </Text>
-              <TouchableOpacity onPress={() => router.push('/register')}><Text style={typography.h4}>Cadastre-se</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/register')} accessibilityLabel="Cadastrar-se" accessibilityRole="button"><Text style={typography.h4}>Cadastre-se</Text></TouchableOpacity>
             </View>
           </ScrollView>
         </LinearGradient>
       </ImageBackground>
     </KeyboardAvoidingView>
+    </ErrorBoundary>
   );
 }
 

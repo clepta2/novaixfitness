@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -28,7 +28,7 @@ function MealItem({ meal }) {
   );
 }
 
-export default function MealTimeline({ meals = [] }) {
+export default memo(function MealTimeline({ meals = [] }) {
   const grouped = meals.reduce((acc, meal) => {
     const type = meal.meal_type || 'lanche';
     if (!acc[type]) acc[type] = [];
@@ -66,7 +66,7 @@ export default function MealTimeline({ meals = [] }) {
       })}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

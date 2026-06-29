@@ -1,6 +1,3 @@
-// src/services/share.js
-// Serviço de compartilhamento - NOVAIX FITNESS
-
 import * as Sharing from 'expo-sharing';
 import { Platform, Alert } from 'react-native';
 import { APP_CONFIG } from '../config/app';
@@ -13,8 +10,8 @@ export async function shareWorkout(workout) {
   const message = `💪 Treine com o NOVAIX Fitness!\n\n` +
     `Treino: ${workout.name}\n` +
     `Categoria: ${workout.category || 'Treino'}\n` +
-    `Duração: ${workout.duration || 45} min\n` +
-    `Nível: ${workout.level || 'Intermediário'}\n\n` +
+    `Duracao: ${workout.duration || 45} min\n` +
+    `Nivel: ${workout.level || 'Intermediario'}\n\n` +
     `Baixe agora: ${WEBSITE_URL}`;
 
   try {
@@ -27,7 +24,7 @@ export async function shareWorkout(workout) {
       Alert.alert('Compartilhar', message);
     }
   } catch (error) {
-    console.error('Erro ao compartilhar:', error);
+    if (__DEV__) console.error('Erro ao compartilhar:', error);
   }
 }
 
@@ -47,7 +44,7 @@ export async function shareAchievement(achievement) {
       });
     }
   } catch (error) {
-    console.error('Erro ao compartilhar conquista:', error);
+    if (__DEV__) console.error('Erro ao compartilhar conquista:', error);
   }
 }
 
@@ -68,6 +65,6 @@ export async function shareProgress(stats) {
       });
     }
   } catch (error) {
-    console.error('Erro ao compartilhar:', error);
+    if (__DEV__) console.error('Erro ao compartilhar progresso:', error);
   }
 }

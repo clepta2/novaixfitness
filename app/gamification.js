@@ -8,8 +8,8 @@ import { useAuth } from '../src/context/AuthContext';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { getGamificationData } from '../src/services/gamification';
-import { getLevelForXP, ACHIEVEMENTS, getUnlockedAchievements, XP_VALUES } from '../src/constants/gamification';
-import { Header, ErrorBoundary, LevelCard, AchievementGrid, GamificationChallenges, XpBreakdown } from '../src/components';
+import { ACHIEVEMENTS, XP_VALUES } from '../src/constants/gamification';
+import { Header, ErrorBoundary, LevelCard, AchievementGrid, GamificationChallenges, XpBreakdown, RankingCard } from '../src/components';
 
 const STATS = [
   { key: 'totalXP', label: 'XP Total', icon: 'flash', color: COLORS.primary },
@@ -115,6 +115,10 @@ function GamificationContent() {
 
       <View style={styles.section}>
         <AchievementGrid unlockedIds={unlockedIds} />
+      </View>
+
+      <View style={styles.section}>
+        <RankingCard userId={user?.id} />
       </View>
 
       <View style={styles.section}>

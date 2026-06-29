@@ -20,4 +20,16 @@ export const styles = StyleSheet.create({
   skeletonLine: { height: 16, backgroundColor: COLORS.surfaceOverlay, borderRadius: 4, marginBottom: SPACING.sm },
   skeletonGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm, marginTop: SPACING.lg },
   skeletonCard: { width: '48%', height: 80, backgroundColor: COLORS.surfaceOverlay, borderRadius: BORDER_RADIUS.md },
+  footer: {
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+    backgroundColor: COLORS.background,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    position: 'absolute',
+    bottom: 85,
+    left: 0,
+    right: 0,
+    zIndex: 90,
+  },
 });

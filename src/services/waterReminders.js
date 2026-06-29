@@ -46,25 +46,39 @@ function getWaterTip() {
 
 export async function logWaterIntake(userId, amountML) {
   if (!userId) return;
-  await supabase.from('water_logs').insert({
-    user_id: userId,
-    amount_ml: amountML,
-    logged_at: new Date().toISOString(),
-  });
+  try {
+    await supabase.from('water_logs').insert({
+      user_id: userId,
+      amount_ml: amountML,
+      logged_at: new Date().toISOString(),
+    });
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao registrar água:', err);
+  }
 }
 
 export async function getTodayWater(userId) {
   if (!userId) return 0;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const { data } = await supabase.from('water_logs').select('amount_ml').eq('user_id', userId).gte('logged_at', today.toISOString());
-  return data?.reduce((sum, item) => sum + item.amount_ml, 0) || 0;
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const { data } = await supabase.from('water_logs').select('amount_ml').eq('user_id', userId).gte('logged_at', today.toISOString());
+    return data?.reduce((sum, item) => sum + item.amount_ml, 0) || 0;
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao buscar água:', err);
+    return 0;
+  }
 }
 
 export async function getWaterHistory(userId, days = 7) {
   if (!userId) return [];
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-  const { data } = await supabase.from('water_logs').select('amount_ml, logged_at').eq('user_id', userId).gte('logged_at', startDate.toISOString()).order('logged_at', { ascending: true });
-  return data || [];
+  try {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    const { data } = await supabase.from('water_logs').select('amount_ml, logged_at').eq('user_id', userId).gte('logged_at', startDate.toISOString()).order('logged_at', { ascending: true });
+    return data || [];
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao buscar histórico de água:', err);
+    return [];
+  }
 }

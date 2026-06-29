@@ -1,7 +1,7 @@
 // src/components/workout/WorkoutQuickStats.js
 // Estatísticas rápidas do treino - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -14,7 +14,7 @@ const STAT_CONFIG = [
   { icon: 'repeat', label: 'Séries', color: COLORS.info },
 ];
 
-export default function WorkoutQuickStats({ duration, calories, exerciseCount, totalSets }) {
+export default memo(function WorkoutQuickStats({ duration, calories, exerciseCount, totalSets }) {
   const values = [`${duration}min`, `${calories}`, `${exerciseCount}`, `${totalSets}`];
 
   return (
@@ -30,7 +30,7 @@ export default function WorkoutQuickStats({ duration, calories, exerciseCount, t
       ))}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', paddingHorizontal: SPACING.lg, gap: SPACING.sm, marginBottom: SPACING.lg },

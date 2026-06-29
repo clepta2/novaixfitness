@@ -1,6 +1,7 @@
 // src/components/marketplace/ProductList.js
 // Grid de produtos com skeleton, pull-to-refresh e infinite scroll - NOVAIX FITNESS
 
+import { memo } from 'react';
 import { View, FlatList, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import ProductCard from './ProductCard';
 import { ProductListSkeleton } from './ProductSkeleton';
@@ -8,7 +9,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function ProductList({ products, onProductPress, favorites, onToggleFavorite, loading, refreshing, onRefresh, onLoadMore, hasMore }) {
+export default memo(function ProductList({ products, onProductPress, favorites, onToggleFavorite, loading, refreshing, onRefresh, onLoadMore, hasMore }) {
   if (loading && (!products || products.length === 0)) {
     return <ProductListSkeleton count={4} />;
   }
@@ -47,7 +48,7 @@ export default function ProductList({ products, onProductPress, favorites, onTog
       )}
     />
   );
-}
+});
 
 const styles = StyleSheet.create({
   list: { paddingBottom: SPACING.xl },

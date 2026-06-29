@@ -1,6 +1,6 @@
 // src/components/workout/WorkoutPreview.js
 // Pré-visualização do treino - NOVAIX FITNESS
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -8,7 +8,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 const MC = { chest: COLORS.success, back: COLORS.info, legs: COLORS.secondary, shoulders: COLORS.attention, arms: COLORS.primary, abs: '#00E676', cardio: COLORS.rose };
 
-export default function WorkoutPreview({ name, category, level, exercises = [], duration }) {
+export default memo(function WorkoutPreview({ name, category, level, exercises = [], duration }) {
   const totalSets = exercises.reduce((s, e) => s + (e.sets || 4), 0);
   const totalReps = exercises.reduce((s, e) => s + (parseInt(String(e.reps).replace(/[^0-9]/g, '')) || 10) * (e.sets || 4), 0);
   const muscles = [...new Set(exercises.map(e => e.muscleGroup || e.muscle))];
@@ -46,7 +46,7 @@ export default function WorkoutPreview({ name, category, level, exercises = [], 
       ))}
     </View>
   );
-}
+});
 
 const s = StyleSheet.create({
   ct: { flex: 1 }, sl: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.sm },

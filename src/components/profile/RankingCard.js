@@ -1,14 +1,16 @@
 // src/components/profile/RankingCard.js
 // Card de ranking global - NOVAIX FITNESS
 
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, FlatList, StyleSheet, Animated } from 'react-native';
+import React, { useState, useEffect, useRef, memo } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
-export default function RankingCard({ userId }) {
+export default memo(function RankingCard({ userId, compact = false }) {
+  const router = useRouter();
   const [rankings, setRankings] = useState([]);
   const [userRank, setUserRank] = useState(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -19,56 +21,85 @@ export default function RankingCard({ userId }) {
 
   useEffect(() => {
     async function loadRanking() {
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, name, total_xp, total_workouts')
-        .not('total_xp', 'is', null)
-        .order('total_xp', { ascending: false })
-        .limit(20);
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, name, total_xp, total_workouts')
+          .not('total_xp', 'is', null)
+          .order('total_xp', { ascending: false })
+          .limit(20);
 
-      if (data) {
-        const ranked = data.map((p, i) => ({
-          ...p,
-          rank: i + 1,
-          initials: (p.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
-        }));
-        setRankings(ranked);
+        if (error) throw error;
 
-        const userPos = ranked.findIndex(r => r.id === userId);
-        if (userPos >= 0) {
-          setUserRank(ranked[userPos]);
+        if (data) {
+          const ranked = data.map((p, i) => ({
+            ...p,
+            rank: i + 1,
+            initials: (p.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+          }));
+          setRankings(ranked);
+
+          const userPos = ranked.findIndex(r => r.id === userId);
+          if (userPos >= 0) {
+            setUserRank(ranked[userPos]);
+          } else {
+            const { data: userData } = await supabase
+              .from('profiles')
+              .select('id, name, total_xp, total_workouts')
+              .eq('id', userId)
+              .single();
+
+            if (userData) {
+              const { count } = await supabase
+                .from('profiles')
+                .select('*', { count: 'exact', head: true })
+                .gt('total_xp', userData.total_xp || 0);
+
+              setUserRank({
+                ...userData,
+                rank: (count || 0) + 1,
+                initials: (userData.name || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+              });
+            }
+          }
         }
+      } catch (err) {
+        if (__DEV__) console.error('Erro ao carregar ranking:', err);
       }
     }
     loadRanking();
   }, [userId]);
 
   const getMedalColor = (rank) => {
-    if (rank === 1) return '#FFD700';
-    if (rank === 2) return '#C0C0C0';
-    if (rank === 3) return '#CD7F32';
+    if (rank === 1) return COLORS.gold;
+    if (rank === 2) return COLORS.textMuted;
+    if (rank === 3) return COLORS.bronze;
     return COLORS.textMuted;
   };
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+    <Animated.View style={[styles.container, compact && styles.containerCompact, { opacity: fadeAnim }]}>
       <View style={styles.header}>
         <Ionicons name="trophy" size={20} color={COLORS.primary} />
         <Text style={styles.title}>RANKING GLOBAL</Text>
+        <TouchableOpacity onPress={() => router.push('/gamification')} style={styles.seeMore} accessibilityLabel="Ver ranking completo" accessibilityRole="button">
+          <Text style={styles.seeMoreText}>Ver mais</Text>
+          <Ionicons name="chevron-forward" size={14} color={COLORS.primary} />
+        </TouchableOpacity>
       </View>
 
       {userRank && (
-        <View style={styles.userPosition}>
-          <Text style={styles.userPositionText}>Sua posicao: #{userRank.rank}</Text>
+        <View style={[styles.userPosition, compact && styles.userPositionCompact]}>
+          <Text style={styles.userPositionText}>#{userRank.rank}</Text>
           <Text style={styles.userXP}>{userRank.total_xp || 0} XP</Text>
         </View>
       )}
 
       <FlatList
           removeClippedSubviews={true}
-          maxToRenderPerBatch={10}
-          windowSize={5}
-        data={rankings.slice(0, 10)}
+          maxToRenderPerBatch={compact ? 5 : 10}
+          windowSize={compact ? 3 : 5}
+        data={rankings.slice(0, compact ? 5 : 10)}
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
         renderItem={({ item }) => (
@@ -91,13 +122,17 @@ export default function RankingCard({ userId }) {
       />
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
+  containerCompact: { padding: SPACING.md },
   header: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.md },
-  title: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textTitle, letterSpacing: 1 },
+  title: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textTitle, letterSpacing: 1, flex: 1 },
+  seeMore: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  seeMoreText: { fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.primary },
   userPosition: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.primary + '10', borderRadius: 8, padding: SPACING.md, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.primary + '30' },
+  userPositionCompact: { padding: SPACING.sm, marginBottom: SPACING.sm },
   userPositionText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.primary },
   userXP: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.primary },
   rankItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: SPACING.sm, borderBottomWidth: 1, borderBottomColor: COLORS.border },

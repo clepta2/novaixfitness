@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING } from '../../src/constants/spacing';
-import { ProgressBar } from '../../src/components';
+import { ProgressBar, ErrorBoundary } from '../../src/components';
 import { ROUTES } from '../../src/helpers/navigation';
 import { layout, typography } from '../../src/styles';
 import { useAuth } from '../../src/context/AuthContext';
@@ -134,6 +134,7 @@ export default function ProcessingScreen() {
   const spin = spinValue.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 
   return (
+    <ErrorBoundary screenName="Processando">
     <View style={layout.centered}>
       <View style={styles.header}>
         <Text style={typography.h3}>PROCESSANDO...</Text>
@@ -163,6 +164,7 @@ export default function ProcessingScreen() {
         ))}
       </View>
     </View>
+    </ErrorBoundary>
   );
 }
 

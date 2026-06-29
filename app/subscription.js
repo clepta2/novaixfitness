@@ -6,12 +6,12 @@ import { View, Text, ScrollView, TouchableOpacity, Alert, Platform } from 'react
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
-import { Button } from '../src/components';
+
 import { getCurrentSubscription, cancelSubscription, getPaymentHistory, PLANS } from '../src/services/payment';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
 import { styles } from '../src/styles/subscriptionStyles';
+import { ErrorBoundary } from '../src/components';
 import { STATUS_MAP, INFO_ITEMS } from '../src/data/subscriptionData';
 
 
@@ -91,6 +91,7 @@ export default function SubscriptionScreen() {
   const isSubscribed = subscription?.subscription_status === 'active';
 
   return (
+    <ErrorBoundary screenName="Subscription">
     <ScrollView style={layout.screen} contentContainerStyle={layout.scroll} showsVerticalScrollIndicator={false}>
       <View style={layout.header}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -141,11 +142,11 @@ export default function SubscriptionScreen() {
 
       {isSubscribed && (
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => router.push('/paywall')}>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => router.push('/paywall')} accessibilityLabel="Trocar plano" accessibilityRole="button">
             <Ionicons name="swap-horizontal" size={20} color={COLORS.primary} />
             <Text style={[typography.h5, { color: COLORS.primary }]}>Trocar Plano</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionBtn, styles.cancelBtn]} onPress={handleCancel}>
+          <TouchableOpacity style={[styles.actionBtn, styles.cancelBtn]} onPress={handleCancel} accessibilityLabel="Cancelar assinatura" accessibilityRole="button">
             <Ionicons name="close-circle" size={20} color={COLORS.error} />
             <Text style={[typography.h5, { color: COLORS.error }]}>Cancelar</Text>
           </TouchableOpacity>
@@ -191,5 +192,6 @@ export default function SubscriptionScreen() {
 
       <View style={{ height: 100 }} />
     </ScrollView>
+    </ErrorBoundary>
   );
 }

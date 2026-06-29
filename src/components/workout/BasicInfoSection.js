@@ -20,7 +20,7 @@ export default function BasicInfoSection({ name, setName, description, setDescri
         <Text style={styles.fieldLabel}>CATEGORIA *</Text>
         <View style={styles.chipRow}>
           {CATEGORIES.map(opt => (
-            <TouchableOpacity key={opt} style={[styles.chip, category === opt && styles.chipActive]} onPress={() => setCategory(opt)}>
+            <TouchableOpacity key={opt} style={[styles.chip, category === opt && styles.chipActive]} onPress={() => setCategory(opt)} accessibilityLabel={`Categoria: ${opt}`} accessibilityRole="button" accessibilityState={{ selected: category === opt }}>
               <Text style={[styles.chipText, category === opt && styles.chipTextActive]}>{opt}</Text>
             </TouchableOpacity>
           ))}
@@ -30,7 +30,7 @@ export default function BasicInfoSection({ name, setName, description, setDescri
         <Text style={styles.fieldLabel}>NÍVEL</Text>
         <View style={styles.chipRow}>
           {LEVELS.map(opt => (
-            <TouchableOpacity key={opt} style={[styles.chip, level === opt && styles.chipActive]} onPress={() => setLevel(opt)}>
+            <TouchableOpacity key={opt} style={[styles.chip, level === opt && styles.chipActive]} onPress={() => setLevel(opt)} accessibilityLabel={`Nível: ${opt}`} accessibilityRole="button" accessibilityState={{ selected: level === opt }}>
               <Text style={[styles.chipText, level === opt && styles.chipTextActive]}>{opt}</Text>
             </TouchableOpacity>
           ))}
@@ -43,7 +43,7 @@ export default function BasicInfoSection({ name, setName, description, setDescri
         </View>
         <View style={styles.halfField}>
           <Text style={styles.fieldLabel}>PREMIUM</Text>
-          <TouchableOpacity style={[styles.toggleBtn, isPremium && styles.toggleActive]} onPress={() => setIsPremium(!isPremium)}>
+          <TouchableOpacity style={[styles.toggleBtn, isPremium && styles.toggleActive]} onPress={() => setIsPremium(!isPremium)} accessibilityLabel={isPremium ? 'Marcar como não premium' : 'Marcar como premium'} accessibilityRole="button" accessibilityState={{ checked: isPremium }}>
             <Ionicons name={isPremium ? 'lock' : 'lock-open'} size={16} color={isPremium ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.toggleText, isPremium && styles.toggleTextActive]}>{isPremium ? 'Sim' : 'Não'}</Text>
           </TouchableOpacity>

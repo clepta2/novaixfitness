@@ -97,7 +97,8 @@ jest.mock('../../src/data/filters', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     HistoryCard: (props) => React.createElement(View, null, React.createElement(Text, null, 'HistoryCard')),
     FilterBar: (props) => React.createElement(View, null, React.createElement(Text, null, 'FilterBar')),
@@ -118,6 +119,7 @@ jest.mock('../../src/components', () => {
       { key: 'month', label: '1 mes', days: 30 },
     ],
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 jest.mock('../../src/components/notifications/NotificationItem', () => {

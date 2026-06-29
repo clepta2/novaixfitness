@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { Badge, ExerciseAccordion, WorkoutInfo, VideoPreview, MoreOptionsModal, RatingModal, WorkoutQuickStats, WorkoutHeaderDetail, ErrorBoundary } from '../src/components';
+import BottomTabBar from '../src/components/ui/BottomTabBar';
 import { supabase } from '../src/config/supabase';
 import { useAuth } from '../src/context/AuthContext';
 import { shareWorkout } from '../src/services/share';
@@ -137,7 +138,7 @@ export default function WorkoutDetailScreen() {
   return (
     <ErrorBoundary screenName="WorkoutDetail">
     <View style={layout.screen}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: 180 }]} showsVerticalScrollIndicator={false}>
         <WorkoutHeaderDetail
           workout={workout}
           isFavorite={isFavorite}
@@ -177,7 +178,7 @@ export default function WorkoutDetailScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.startBtn} activeOpacity={0.8} onPress={handleStart}>
+        <TouchableOpacity style={styles.startBtn} activeOpacity={0.8} onPress={handleStart} accessibilityLabel="Iniciar treino" accessibilityRole="button">
           <Ionicons name="play" size={20} color={COLORS.background} />
           <Text style={styles.startText}>INICIAR TREINO</Text>
         </TouchableOpacity>
@@ -185,6 +186,7 @@ export default function WorkoutDetailScreen() {
 
       <MoreOptionsModal visible={showOptions} onSelect={handleOption} onClose={() => setShowOptions(false)} />
       <RatingModal visible={showRating} onClose={() => setShowRating(false)} onSubmit={handleRating} />
+      <BottomTabBar activeTab="library" />
     </View>
     </ErrorBoundary>
   );

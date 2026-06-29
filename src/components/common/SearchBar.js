@@ -1,13 +1,13 @@
 // src/components/common/SearchBar.js
 // Barra de busca padronizada - NOVAIX FITNESS
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function SearchBar({ value, onChangeText, placeholder = 'Buscar...', onSubmit, loading = false }) {
+export default memo(function SearchBar({ value, onChangeText, placeholder = 'Buscar...', onSubmit, loading = false }) {
   const [focused, setFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -40,7 +40,7 @@ export default function SearchBar({ value, onChangeText, placeholder = 'Buscar..
       )}
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, paddingHorizontal: SPACING.md, borderWidth: 1.5, borderColor: COLORS.border, height: 48 },

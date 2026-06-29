@@ -3,9 +3,8 @@
 
 import { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
+import { SPACING } from '../../../src/constants/spacing';
 import { Header } from '../../../src/components';
 import { legalTabs, termsContent, privacyContent, medicalContent } from '../../../src/data/legalContent';
 
@@ -24,7 +23,7 @@ export default function TermsScreen() {
 
       <View style={styles.tabRow}>
         {legalTabs.map((tab, i) => (
-          <TouchableOpacity key={tab} style={[styles.tab, activeTab === i && styles.tabActive]} onPress={() => setActiveTab(i)}>
+          <TouchableOpacity key={tab} style={[styles.tab, activeTab === i && styles.tabActive]} onPress={() => setActiveTab(i)} accessibilityLabel={tab} accessibilityRole="tab" accessibilityState={{ selected: activeTab === i }}>
             <Text style={[styles.tabText, activeTab === i && styles.tabTextActive]}>{tab}</Text>
           </TouchableOpacity>
         ))}

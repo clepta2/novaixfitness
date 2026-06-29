@@ -1,13 +1,14 @@
 // src/components/marketplace/ProductCard.js
 // Card de produto do marketplace - NOVAIX FITNESS
 
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import FavoriteButton from './FavoriteButton';
 
-export default function ProductCard({ product, onPress, isFavorited, onToggleFavorite }) {
+export default memo(function ProductCard({ product, onPress, isFavorited, onToggleFavorite }) {
   const category = product?.marketplace_categories;
   const hasDiscount = product.original_price && product.original_price > product.price;
   const discountPercent = hasDiscount ? Math.round((1 - product.price / product.original_price) * 100) : 0;
@@ -47,7 +48,7 @@ export default function ProductCard({ product, onPress, isFavorited, onToggleFav
       </View>
     </TouchableOpacity>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { flex: 1, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', marginBottom: SPACING.md },

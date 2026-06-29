@@ -7,12 +7,12 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { COLORS } from '../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { getWorkoutAnalytics, getWorkoutFrequency, getMonthlyComparison, getWeightHistory, calculateMuscleBalance } from '../src/services/analytics';
 import { layout, typography } from '../src/styles';
-import { DashboardStats, MuscleRadarChart } from '../src/components';
+import { DashboardStats, MuscleRadarChart, ErrorBoundary } from '../src/components';
 import { shareProgress } from '../src/services/share';
 import { styles } from '../src/styles/dashboardStyles';
 import WeeklySummary from '../src/components/dashboard/WeeklySummary';
@@ -87,6 +87,7 @@ export default function DashboardScreen() {
   }, [data?.weightHistory]);
 
   return (
+    <ErrorBoundary screenName="Dashboard">
     <View style={layout.screen}>
       <ScrollView
         contentContainerStyle={styles.scroll}
@@ -94,11 +95,11 @@ export default function DashboardScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => { setRefreshing(true); await loadData(); }} tintColor={COLORS.primary} />}
       >
         <View style={layout.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={typography.h2}>Meu Progresso</Text>
-          <TouchableOpacity onPress={() => shareProgress({ streak: data?.streak || 0, totalWorkouts: data?.totalWorkouts || 0, totalMinutes: data?.totalMinutes || 0 })}>
+          <TouchableOpacity onPress={() => shareProgress({ streak: data?.streak || 0, totalWorkouts: data?.totalWorkouts || 0, totalMinutes: data?.totalMinutes || 0 })} accessibilityLabel="Compartilhar progresso" accessibilityRole="button">
             <Ionicons name="share-social" size={22} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
@@ -175,5 +176,6 @@ export default function DashboardScreen() {
         <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
+    </ErrorBoundary>
   );
 }

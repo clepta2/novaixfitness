@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function RecentSearches({ searches, onSelect, onClear }) {
+export default memo(function RecentSearches({ searches, onSelect, onClear }) {
   if (!searches.length) return null;
 
   return (
@@ -23,7 +24,7 @@ export default function RecentSearches({ searches, onSelect, onClear }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: SPACING.xl, marginBottom: SPACING.sm },

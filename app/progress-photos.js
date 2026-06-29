@@ -10,7 +10,7 @@ import {
   getProgressPhotos, deleteProgressPhoto, PHOTO_LABELS,
 } from '../src/services/progress-photos';
 import { layout, typography } from '../src/styles';
-import { CompareView, PhotoGrid, PhotoModal, PhotoPicker } from '../src/components';
+import { CompareView, PhotoGrid, PhotoModal, PhotoPicker, ErrorBoundary } from '../src/components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -80,6 +80,7 @@ export default function ProgressPhotosScreen() {
   const allLabels = [...new Set([...PHOTO_LABELS, ...labels])];
 
   return (
+    <ErrorBoundary screenName="ProgressPhotos">
     <View style={layout.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
@@ -146,6 +147,7 @@ export default function ProgressPhotosScreen() {
         />
       )}
     </View>
+    </ErrorBoundary>
   );
 }
 

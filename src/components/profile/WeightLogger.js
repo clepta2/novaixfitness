@@ -8,6 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Card } from '../ui/Card';
 import { supabase } from '../../config/supabase';
+import { formatDateBR } from '../../helpers/dates';
 import { useAuth } from '../../context/AuthContext';
 import { typography } from '../../styles';
 
@@ -70,12 +71,6 @@ export default function WeightLogger() {
     }
   };
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('pt-BR');
-  };
-
   if (loading) {
     return (
       <Card variant="surface" style={styles.card}>
@@ -127,7 +122,7 @@ export default function WeightLogger() {
           <Text style={typography.caption}>ÚLTIMOS REGISTROS:</Text>
           {history.map((log) => (
             <View key={log.id} style={styles.historyRow}>
-              <Text style={typography.bodySmall}>{formatDate(log.logged_at)}</Text>
+              <Text style={typography.bodySmall}>{formatDateBR(log.logged_at)}</Text>
               <Text style={typography.h5}>{log.weight} kg</Text>
               <Text style={typography.bodySmall}>
                 {log.body_fat ? `${log.body_fat}% BF` : '--'}

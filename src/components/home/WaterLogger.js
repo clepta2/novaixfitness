@@ -1,16 +1,16 @@
-// src/components/home/WaterLogger.js
-// Widget de Hidratação animado - NOVAIX FITNESS
-
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { useAuth } from '../../context/AuthContext';
 
 const DAILY_TARGET = 2500;
+const STORAGE_KEY = '@novaix:water';
+const RESET_KEY = '@novaix:water_date';
 
 function WaterGlass({ filled }) {
   return (
@@ -20,10 +20,13 @@ function WaterGlass({ filled }) {
   );
 }
 
-export default function WaterLogger() {
+function getTodayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export default memo(function WaterLogger() {
   const { user } = useAuth();
   const [consumed, setConsumed] = useState(0);
-  const [loading, setLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -35,32 +38,55 @@ export default function WaterLogger() {
     Animated.spring(progressAnim, { toValue: Math.min(100, (consumed / DAILY_TARGET) * 100), tension: 30, friction: 8, useNativeDriver: false }).start();
   }, [consumed]);
 
-  const fetchTodayWater = useCallback(async () => {
-    if (!user?.id) { setLoading(false); return; }
+  const loadWater = useCallback(async () => {
     try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const { data } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', today.toISOString());
-      if (data) {
-        const total = data.reduce((sum, item) => sum + item.amount_ml, 0);
-        setConsumed(total);
+      const savedDate = await AsyncStorage.getItem(RESET_KEY);
+      const today = getTodayKey();
+
+      if (savedDate !== today) {
+        await AsyncStorage.setItem(RESET_KEY, today);
+        await AsyncStorage.setItem(STORAGE_KEY, '0');
+        setConsumed(0);
+        return;
       }
-    } catch (err) { console.error('Erro:', err); }
-    finally { setLoading(false); }
+
+      const saved = await AsyncStorage.getItem(STORAGE_KEY);
+      if (saved !== null) {
+        setConsumed(parseInt(saved, 10) || 0);
+        return;
+      }
+
+      if (user?.id) {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const { data } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', todayStart.toISOString());
+        if (data) {
+          const total = data.reduce((sum, item) => sum + item.amount_ml, 0);
+          setConsumed(total);
+          await AsyncStorage.setItem(STORAGE_KEY, String(total));
+        }
+      }
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar água:', err);
+    }
   }, [user?.id]);
 
-  useEffect(() => { fetchTodayWater(); }, [fetchTodayWater]);
+  useEffect(() => { loadWater(); }, [loadWater]);
 
   const addWater = async (amount) => {
-    if (!user?.id) return;
     try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); } catch {}
-    const { error } = await supabase.from('water_logs').insert({ user_id: user.id, amount_ml: amount });
-    if (!error) setConsumed(prev => prev + amount);
+
+    const newTotal = consumed + amount;
+    setConsumed(newTotal);
+    await AsyncStorage.setItem(STORAGE_KEY, String(newTotal));
+
+    if (user?.id) {
+      supabase.from('water_logs').insert({ user_id: user.id, amount_ml: amount }).catch(() => {});
+    }
   };
 
   const percentage = Math.min(100, Math.round((consumed / DAILY_TARGET) * 100));
   const glassesCount = Math.min(10, Math.ceil(consumed / 250));
-
   const progressWidth = progressAnim.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] });
 
   return (
@@ -100,7 +126,7 @@ export default function WaterLogger() {
       </View>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },

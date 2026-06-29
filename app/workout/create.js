@@ -71,7 +71,7 @@ export default function CreateWorkoutScreen() {
       });
       if (error) throw error;
       Alert.alert('Sucesso', 'Treino criado com sucesso!', [{ text: 'OK', onPress: () => router.back() }]);
-    } catch (err) { console.error('Erro ao salvar:', err); Alert.alert('Erro', 'Não foi possível salvar o treino'); }
+    } catch (err) { if (__DEV__) console.error('Erro ao salvar:', err); Alert.alert('Erro', 'Não foi possível salvar o treino'); }
     finally { setSaving(false); }
   };
 

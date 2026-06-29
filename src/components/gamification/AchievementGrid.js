@@ -24,7 +24,7 @@ function AchievementBadge({ achievement, unlocked, onInfo }) {
       <View style={[styles.iconWrap, { backgroundColor: color + '20' }]}>
         <Ionicons name={unlocked ? achievement.icon : 'lock-closed'} size={ICON_SIZES.md} color={color} />
       </View>
-      <Text style={[styles.badgeName, !unlocked && styles.badgeNameLocked]} numberOfLines={1}>{unlocked ? achievement.name : '???'}</Text>
+      <Text style={[styles.badgeName, !unlocked && styles.badgeNameLocked]} numberOfLines={1}>{unlocked ? achievement.name : 'Bloqueada'}</Text>
       <Text style={styles.badgeXP}>+{achievement.xpReward} XP</Text>
     </TouchableOpacity>
   );

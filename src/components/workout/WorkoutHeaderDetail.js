@@ -1,7 +1,7 @@
 // src/components/workout/WorkoutHeaderDetail.js
 // Cabeçalho do detalhe do treino - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -13,7 +13,7 @@ const CATEGORY_COLORS = {
   'Yoga': COLORS.info, 'Calistenia': COLORS.success, 'Natação': COLORS.info,
 };
 
-export default function WorkoutHeaderDetail({ workout, isFavorite, isOffline, onBack, onFavorite, onOptions }) {
+export default memo(function WorkoutHeaderDetail({ workout, isFavorite, isOffline, onBack, onFavorite, onOptions }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(-20)).current;
 
@@ -66,7 +66,7 @@ export default function WorkoutHeaderDetail({ workout, isFavorite, isOffline, on
       </View>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: SPACING.lg, paddingTop: SPACING.md, marginBottom: SPACING.md },

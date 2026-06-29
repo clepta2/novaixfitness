@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
-import { OnboardingFooter } from '../../src/components';
+import { OnboardingFooter, ErrorBoundary } from '../../src/components';
 import DraggableSlider from '../../src/components/onboarding/DraggableSlider';
 import MiniCalendar from '../../src/components/onboarding/MiniCalendar';
 import LocationSection from '../../src/components/onboarding/LocationSection';
@@ -60,6 +60,7 @@ export default function OnboardingStep2() {
   };
 
   return (
+    <ErrorBoundary screenName="DadosFisicos">
     <KeyboardAvoidingView style={s.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={s.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <View style={s.header}>
@@ -142,6 +143,7 @@ export default function OnboardingStep2() {
 
       <MiniCalendar visible={showCalendar} selectedDate={dob} onSelect={(d) => { setDob(d); setShowCalendar(false); }} onClose={() => setShowCalendar(false)} />
     </KeyboardAvoidingView>
+    </ErrorBoundary>
   );
 }
 

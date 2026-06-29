@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -9,7 +9,7 @@ import * as Haptics from 'expo-haptics';
 import ChallengeModal from './ChallengeModal';
 import ChallengeCard from './ChallengeCard';
 
-export default function ChallengesList({ userId }) {
+export default memo(function ChallengesList({ userId }) {
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
@@ -67,7 +67,7 @@ export default function ChallengesList({ userId }) {
       <ChallengeModal visible={!!selectedChallenge} challenge={selectedChallenge} onComplete={handleComplete} onClose={() => setSelectedChallenge(null)} />
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { marginBottom: SPACING.lg },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -7,7 +7,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const RANK_COLORS = [COLORS.attention, COLORS.textMuted, COLORS.secondary];
 const RANK_ICONS = ['trophy', 'medal', 'ribbon'];
 
-export default function RankItem({ item, index, isCurrentUser }) {
+export default memo(function RankItem({ item, index, isCurrentUser }) {
   const rankColor = index < 3 ? RANK_COLORS[index] : COLORS.textMuted;
   const rankIcon = index < 3 ? RANK_ICONS[index] : null;
 
@@ -32,7 +32,7 @@ export default function RankItem({ item, index, isCurrentUser }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.sm, borderRadius: BORDER_RADIUS.sm },

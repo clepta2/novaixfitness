@@ -7,6 +7,8 @@ import { SPACING, BORDER_RADIUS } from '../constants/spacing';
 import { scale } from '../utils/responsive';
 
 export const styles = StyleSheet.create({
+  gridRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.lg },
+  gridItem: { flex: 1 },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
   streakBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border, height: 42, justifyContent: 'center' },
   streakText: { fontFamily: 'Montserrat_700Bold', fontSize: scale(12), color: COLORS.primary },

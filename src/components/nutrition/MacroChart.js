@@ -1,7 +1,7 @@
 // src/components/nutrition/MacroChart.js
 // Gráfico circular de distribuição de macros - NOVAIX FITNESS
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import { COLORS } from '../../constants/colors';
@@ -19,7 +19,7 @@ function getColor(macro) {
   return colors[macro] || COLORS.textMuted;
 }
 
-export default function MacroChart({ protein = 0, carbs = 0, fat = 0 }) {
+function MacroChartInner({ protein = 0, carbs = 0, fat = 0 }) {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -93,6 +93,8 @@ export default function MacroChart({ protein = 0, carbs = 0, fat = 0 }) {
     </View>
   );
 }
+
+export default memo(MacroChartInner);
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

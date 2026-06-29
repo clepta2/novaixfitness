@@ -159,7 +159,7 @@ export default function FeedScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} onPress={() => setShowCreatePost(true)} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.fab} onPress={() => setShowCreatePost(true)} activeOpacity={0.8} accessibilityLabel="Criar novo post" accessibilityRole="button">
         <Ionicons name="add" size={28} color={COLORS.background} />
       </TouchableOpacity>
       <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} userId={user?.id} />

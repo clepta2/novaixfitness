@@ -67,7 +67,8 @@ jest.mock('../../src/helpers/navigation', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     ProgressBar: (props) => React.createElement(View, null),
@@ -76,6 +77,7 @@ jest.mock('../../src/components', () => {
       React.createElement(Text, { onPress: props.onNext }, props.nextLabel || 'PRÓXIMO')
     ),
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 import ModelScreen from '../../app/onboarding/modelo';

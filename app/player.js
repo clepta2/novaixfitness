@@ -109,7 +109,7 @@ export default function PlayerScreen() {
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <Text style={typography.h2}>{workout?.name || 'Treino'}</Text>
-            <TouchableOpacity onPress={toggleVoiceCoach} style={styles.voiceToggle}>
+            <TouchableOpacity onPress={toggleVoiceCoach} style={styles.voiceToggle} accessibilityLabel={voiceEnabled ? 'Desativar coach de voz' : 'Ativar coach de voz'} accessibilityRole="button">
               <Ionicons name={voiceEnabled ? 'volume-high' : 'volume-mute'} size={20} color={voiceEnabled ? COLORS.primary : COLORS.textMuted} />
             </TouchableOpacity>
           </View>
@@ -128,10 +128,10 @@ export default function PlayerScreen() {
           <View style={styles.bottomSpacer} />
         </ScrollView>
         <View style={layout.footer}>
-          <View style={styles.startBtn} onTouchEnd={() => timer.startWorkout()}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => timer.startWorkout()} activeOpacity={0.8} accessibilityLabel="Iniciar treino" accessibilityRole="button">
             <Ionicons name="play" size={ICON_SIZES.sm} color={COLORS.background} />
             <Text style={styles.startText}>INICIAR TREINO</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

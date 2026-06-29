@@ -1,7 +1,7 @@
 // src/components/progress/PhotoGrid.js
 // Grid de fotos animado - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -47,7 +47,7 @@ function PhotoItem({ photo, selected, onPress, onLongPress, index }) {
   );
 }
 
-export default function PhotoGrid({ photos, selectedIds, onSelect, onLongPress, compareMode }) {
+function PhotoGrid({ photos, selectedIds, onSelect, onLongPress, compareMode }) {
   if (photos.length === 0) {
     return (
       <View style={styles.empty}>
@@ -75,6 +75,8 @@ export default function PhotoGrid({ photos, selectedIds, onSelect, onLongPress, 
     </View>
   );
 }
+
+export default memo(PhotoGrid);
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },

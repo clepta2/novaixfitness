@@ -1,4 +1,4 @@
-﻿// app/workout/history.js
+// app/workout/history.js
 // Histórico de treinos com filtro por período
 
 import { useState, useEffect } from 'react';
@@ -51,7 +51,7 @@ export default function HistoryScreen() {
       const avgRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : 0;
       setStats({ total, duration, avgRating });
     } catch (err) {
-      console.error('Erro ao carregar histórico:', err);
+      if (__DEV__) console.error('Erro ao carregar histórico:', err);
     } finally {
       setLoading(false);
     }

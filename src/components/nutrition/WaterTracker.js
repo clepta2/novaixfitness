@@ -82,11 +82,11 @@ export default function WaterTracker({ userId }) {
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.addBtn} onPress={() => addWater(250)}>
+        <TouchableOpacity style={styles.addBtn} onPress={() => addWater(250)} accessibilityLabel="Adicionar 250 ml" accessibilityRole="button">
           <Ionicons name="add" size={20} color={COLORS.background} />
           <Text style={styles.addBtnText}>250ml</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addBtnSmall} onPress={() => addWater(500)}>
+        <TouchableOpacity style={styles.addBtnSmall} onPress={() => addWater(500)} accessibilityLabel="Adicionar 500 ml" accessibilityRole="button">
           <Text style={styles.addBtnSmallText}>+500ml</Text>
         </TouchableOpacity>
       </View>

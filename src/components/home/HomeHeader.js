@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -5,7 +6,7 @@ import { SPACING , ICON_SIZES } from '../../constants/spacing';
 import { layout, typography } from '../../styles';
 
 
-export default function HomeHeader({ userName, levelData, streak, onChatPress, onNotificationsPress }) {
+export default memo(function HomeHeader({ userName, levelData, streak, onChatPress, onNotificationsPress }) {
   return (
     <View style={layout.header}>
       <View>
@@ -32,7 +33,7 @@ export default function HomeHeader({ userName, levelData, streak, onChatPress, o
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   actions: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs },

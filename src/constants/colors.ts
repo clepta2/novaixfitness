@@ -49,6 +49,8 @@ export interface ThemeColors {
   cyan: string;
   amber: string;
   gold: string;
+  star: string;
+  bronze: string;
   slateBlue: string;
   whatsapp: string;
   googleBlue: string;
@@ -112,6 +114,8 @@ const darkTheme: ThemeColors = {
   cyan: '#06B6D4',
   amber: '#F59E0B',
   gold: '#FFD700',
+  star: '#F59E0B',
+  bronze: '#CD7F32',
   slateBlue: '#7B68EE',
   whatsapp: '#25D366',
   googleBlue: '#4285F4',
@@ -175,6 +179,8 @@ const lightTheme: ThemeColors = {
   cyan: '#06B6D4',
   amber: '#F59E0B',
   gold: '#FFD700',
+  star: '#F59E0B',
+  bronze: '#CD7F32',
   slateBlue: '#7B68EE',
   whatsapp: '#25D366',
   googleBlue: '#4285F4',

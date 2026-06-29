@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function NutritionProgress({ streak, nextBadge }) {
+export default memo(function NutritionProgress({ streak, nextBadge }) {
   if (!nextBadge) return null;
   const progress = (streak / nextBadge.days) * 100;
 
@@ -15,7 +16,7 @@ export default function NutritionProgress({ streak, nextBadge }) {
       <Text style={styles.text}>{streak}/{nextBadge.days} dias</Text>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.sm, padding: SPACING.md },

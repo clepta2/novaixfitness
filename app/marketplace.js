@@ -103,11 +103,11 @@ export default function MarketplaceScreen() {
     <View style={layout.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={{ fontFamily: 'Montserrat_800ExtraBold', fontSize: 18, color: COLORS.textTitle, textTransform: 'uppercase', letterSpacing: 1 }}>LOJA</Text>
-          <TouchableOpacity onPress={() => router.push('/marketplace-favorites')}>
+          <TouchableOpacity onPress={() => router.push('/marketplace-favorites')} accessibilityLabel="Ver favoritos" accessibilityRole="button">
             <Ionicons name="heart-outline" size={24} color={COLORS.textMuted} />
           </TouchableOpacity>
         </View>

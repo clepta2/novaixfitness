@@ -1,12 +1,12 @@
 // src/components/common/ProgressBar.js
 // Barra de progresso animada - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function ProgressBar({ value = 0, max = 100, label, showPercentage = true, color = COLORS.primary, height = 8 }) {
+export default memo(function ProgressBar({ value = 0, max = 100, label, showPercentage = true, color = COLORS.primary, height = 8 }) {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const percentage = max > 0 ? Math.min(100, (value / max) * 100) : 0;
 
@@ -29,7 +29,7 @@ export default function ProgressBar({ value = 0, max = 100, label, showPercentag
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { marginBottom: SPACING.sm },

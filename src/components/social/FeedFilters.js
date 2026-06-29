@@ -1,21 +1,22 @@
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function FeedFilters({ filters, selected, onSelect }) {
+export default memo(function FeedFilters({ filters, selected, onSelect }) {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
       <View style={styles.container}>
         {filters.map((f) => (
-          <TouchableOpacity key={f} style={[styles.chip, selected === f && styles.chipActive]} onPress={() => onSelect(f)}>
+          <TouchableOpacity key={f} style={[styles.chip, selected === f && styles.chipActive]} onPress={() => onSelect(f)} accessibilityLabel={f} accessibilityRole="button">
             <Text style={[typography.bodySmall, selected === f && styles.chipTextActive]}>{f}</Text>
           </TouchableOpacity>
         ))}
       </View>
     </ScrollView>
   );
-}
+});
 
 const styles = StyleSheet.create({
   scroll: { marginLeft: -SPACING.xl, paddingLeft: SPACING.xl, marginBottom: SPACING.xl },

@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function WeekSummary({ data }) {
+export default memo(function WeekSummary({ data }) {
   const items = [
     { value: data?.totalWorkouts || 0, label: 'Treinos' },
     { value: data?.totalMinutes || 0, label: 'Minutos' },
@@ -31,7 +32,7 @@ export default function WeekSummary({ data }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },

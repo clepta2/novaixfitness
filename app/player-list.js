@@ -5,8 +5,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, RefreshControl, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../src/constants/colors';
-import { SPACING } from '../src/constants/spacing';
-import { WorkoutListView } from '../src/components';
+
+import { WorkoutListView, ErrorBoundary } from '../src/components';
 import { dailyWorkouts as fallbackWorkouts, activeWorkout as fallbackActive } from '../src/data/dailyWorkouts';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
@@ -108,7 +108,7 @@ export default function PlayerListScreen() {
         }
       }
     } catch (err) {
-      if (__DEV__) console.log('Usando dados fallback:', err);
+      if (__DEV__) console.warn('Dados fallback carregados');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -149,6 +149,7 @@ export default function PlayerListScreen() {
   }
 
   return (
+    <ErrorBoundary screenName="PlayerList">
     <View style={layout.screen}>
       <ScrollView
         contentContainerStyle={layout.scroll}
@@ -162,6 +163,7 @@ export default function PlayerListScreen() {
         />
       </ScrollView>
     </View>
+    </ErrorBoundary>
   );
 }
 

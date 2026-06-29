@@ -74,9 +74,15 @@ jest.mock('../../src/services/share', () => ({
   shareProgress: jest.fn(),
 }));
 
-jest.mock('../../src/components', () => ({
-  DashboardStats: 'DashboardStats',
-}));
+jest.mock('../../src/components', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
+    DashboardStats: 'DashboardStats',
+  };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
+});
 
 import DashboardScreen from '../../app/dashboard';
 

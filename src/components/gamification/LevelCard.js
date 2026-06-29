@@ -1,14 +1,14 @@
 // src/components/gamification/LevelCard.js
 // Card de nivel e progresso XP - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getXPProgress } from '../../constants/gamification';
 
-export default function LevelCard({ xp = 0 }) {
+export default memo(function LevelCard({ xp = 0 }) {
   const { current, next, progress, xpInLevel, xpNeeded } = getXPProgress(xp);
   const barAnim = useRef(new Animated.Value(0)).current;
 
@@ -45,7 +45,7 @@ export default function LevelCard({ xp = 0 }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

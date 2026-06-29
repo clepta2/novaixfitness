@@ -113,7 +113,8 @@ jest.mock('../../src/styles/workoutDetailStyles', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     Badge: (props) => React.createElement(View, null, React.createElement(Text, null, props.value)),
     ProgressBar: (props) => React.createElement(View, null),
     ExerciseAccordion: (props) => React.createElement(View, null, React.createElement(Text, null, props.exercise?.name || 'Exercise')),
@@ -135,6 +136,7 @@ jest.mock('../../src/components', () => {
     GamificationBar: (props) => React.createElement(View, null),
     TutorialOverlay: (props) => React.createElement(View, null),
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 jest.mock('../../src/hooks/useTutorial', () => ({

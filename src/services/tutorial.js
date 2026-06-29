@@ -14,17 +14,18 @@ export async function hasCompletedTutorial(userId, screenId = 'home') {
       const completed = JSON.parse(stored);
       return completed[screenId] === true;
     }
+
+    const { data } = await supabase
+      .from('profiles')
+      .select('tutorial_completed')
+      .eq('id', userId)
+      .single();
+
+    return data?.tutorial_completed === true;
   } catch (err) {
-    if (__DEV__) console.error('Erro ao ler tutoriais do storage:', err);
+    if (__DEV__) console.error('Erro ao verificar tutorial:', err);
+    return false;
   }
-
-  const { data } = await supabase
-    .from('profiles')
-    .select('tutorial_completed')
-    .eq('id', userId)
-    .single();
-
-  return data?.tutorial_completed === true;
 }
 
 export async function completeTutorial(userId, screenId = 'home') {

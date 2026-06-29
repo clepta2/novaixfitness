@@ -1,4 +1,4 @@
-﻿// app/goals/index.js
+// app/goals/index.js
 // Metas e conquistas - DATA DRIVEN
 
 import { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { supabase } from '../../src/config/supabase';
+import { ErrorBoundary } from '../../src/components';
 import { useAuth } from '../../src/context/AuthContext';
 import { ACHIEVEMENT_CATEGORIES, ACHIEVEMENTS, GOAL_TYPES, getUnlockedAchievements } from '../../src/data/achievements';
 
@@ -80,6 +81,7 @@ export default function GoalsScreen() {
   };
 
   return (
+    <ErrorBoundary screenName="Goals">
     <View style={styles.screen}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color={COLORS.textMuted} /></TouchableOpacity>
@@ -120,6 +122,7 @@ export default function GoalsScreen() {
         </TouchableOpacity>
       </Modal>
     </View>
+    </ErrorBoundary>
   );
 }
 

@@ -1,5 +1,5 @@
-﻿// src/components/onboarding/MultiSectionStep.js
-// Step multi-seÃ§Ã£o - DATA DRIVEN com validaÃ§Ã£o e guias
+// src/components/onboarding/MultiSectionStep.js
+// Step multi-seção - DATA DRIVEN com validação e guias
 
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
@@ -14,9 +14,9 @@ export default function MultiSectionStep({ step, data, onUpdate }) {
   const validate = (section, value) => {
     if (!section.validation) return '';
     const { min, max, required, message } = section.validation;
-    if (required && (!value && value !== 0)) return message || 'ObrigatÃ³rio';
-    if (min !== undefined && value < min) return message || `MÃ­nimo ${min}`;
-    if (max !== undefined && value > max) return message || `MÃ¡ximo ${max}`;
+    if (required && (!value && value !== 0)) return message || 'Obrigatório';
+    if (min !== undefined && value < min) return message || `Mínimo ${min}`;
+    if (max !== undefined && value > max) return message || `Máximo ${max}`;
     return '';
   };
 

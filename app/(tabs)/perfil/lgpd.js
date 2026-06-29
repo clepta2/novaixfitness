@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert, StyleSheet } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../../src/constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
+import { SPACING } from '../../../src/constants/spacing';
 import { useAuth } from '../../../src/context/AuthContext';
 import { layout, typography } from '../../../src/styles';
 import {
@@ -72,7 +72,7 @@ export default function LGPDScreen() {
     <View style={layout.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={typography.h2}>Privacidade (LGPD)</Text>

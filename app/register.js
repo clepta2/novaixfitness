@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../src/constants/colors';
 import { SPACING } from '../src/constants/spacing';
-import { Button, AuthInput, AccountExistsCard } from '../src/components';
+import { Button, AuthInput, AccountExistsCard, ErrorBoundary } from '../src/components';
 import { useAuth } from '../src/context/AuthContext';
 import { useTheme } from '../src/context/ThemeContext';
 import { supabase } from '../src/config/supabase';
@@ -115,6 +115,7 @@ export default function RegisterScreen() {
   };
 
   return (
+    <ErrorBoundary screenName="Register">
     <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ImageBackground source={require('../assets/images/gym_interior.jpg')} style={StyleSheet.absoluteFillObject} resizeMode="cover">
         <LinearGradient colors={isDark ? ['rgba(18,22,26,0.6)', 'rgba(18,22,26,0.96)'] : ['rgba(255,255,255,0.5)', 'rgba(255,255,255,0.97)']} style={{ flex: 1 }}>
@@ -169,7 +170,7 @@ export default function RegisterScreen() {
                 <Button title="CADASTRAR E CONTINUAR" onPress={handleRegister} loading={loading} />
               </>)}
             </View>
-            <View style={styles.footer}><Text style={typography.bodyMuted}>Já tem conta? </Text><TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')}><Text style={typography.h4}>Entrar</Text></TouchableOpacity></View>
+            <View style={styles.footer}><Text style={typography.bodyMuted}>Já tem conta? </Text><TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')} accessibilityLabel="Ir para login" accessibilityRole="button"><Text style={typography.h4}>Entrar</Text></TouchableOpacity></View>
           </ScrollView>
         </LinearGradient>
       </ImageBackground>
@@ -187,6 +188,7 @@ export default function RegisterScreen() {
         </TouchableWithoutFeedback>
       </Modal>
     </KeyboardAvoidingView>
+    </ErrorBoundary>
   );
 }
 

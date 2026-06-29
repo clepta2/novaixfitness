@@ -1,13 +1,13 @@
 // src/components/workout/ExerciseStepCarousel.js
 // Carrossel passo a passo animado - NOVAIX FITNESS
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function ExerciseStepCarousel({ steps }) {
+function ExerciseStepCarousel({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -63,6 +63,8 @@ export default function ExerciseStepCarousel({ steps }) {
     </View>
   );
 }
+
+export default memo(ExerciseStepCarousel);
 
 const styles = StyleSheet.create({
   container: { marginBottom: SPACING.lg },

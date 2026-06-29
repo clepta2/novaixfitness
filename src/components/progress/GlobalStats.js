@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function GlobalStats({ totalWorkouts, streak, totalXP }) {
+export default memo(function GlobalStats({ totalWorkouts, streak, totalXP }) {
   const items = [
     { icon: 'trophy', value: totalWorkouts || 0, label: 'Total Treinos' },
     { icon: 'flame', value: streak || 0, label: 'Melhor Streak' },
@@ -25,7 +26,7 @@ export default function GlobalStats({ totalWorkouts, streak, totalXP }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

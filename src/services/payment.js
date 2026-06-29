@@ -6,25 +6,30 @@ import { supabase } from '../config/supabase';
 const API_BASE = process.env.EXPO_PUBLIC_API_URL;
 
 async function apiRequest(endpoint, options = {}) {
-  const { data: { session } } = await supabase.auth.getSession();
-  const token = session?.access_token;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
 
-  const response = await fetch(`${API_BASE}/api${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      ...options.headers,
-    },
-  });
+    const response = await fetch(`${API_BASE}/api${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.error || 'Erro na requisição');
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro na requisicao');
+    }
+
+    return data;
+  } catch (err) {
+    if (__DEV__) console.error('Erro na API de pagamento:', err);
+    throw err;
   }
-
-  return data;
 }
 
 export const PLANS = {

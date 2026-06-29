@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -32,7 +32,7 @@ function MacroBar({ label, current, goal, color, icon, delay = 0 }) {
   );
 }
 
-export default function DailySummaryCard({ summary, goals }) {
+export default memo(function DailySummaryCard({ summary, goals }) {
   const calAnim = useRef(new Animated.Value(0)).current;
   const data = summary || { calories: 0, protein: 0, carbs: 0, fat: 0, meals: 0 };
   const remaining = Math.max(0, goals.calories - Math.round(data.calories));
@@ -70,7 +70,7 @@ export default function DailySummaryCard({ summary, goals }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

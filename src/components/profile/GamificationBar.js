@@ -1,14 +1,14 @@
 // src/components/profile/GamificationBar.js
 // Barra de XP e nível animada - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getXPProgress } from '../../constants/gamification';
 
-export default function GamificationBar({ xp = 0 }) {
+export default memo(function GamificationBar({ xp = 0 }) {
   const { current, next, progress, xpInLevel, xpNeeded } = getXPProgress(xp);
   const progressAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -50,7 +50,7 @@ export default function GamificationBar({ xp = 0 }) {
       )}
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.xl },

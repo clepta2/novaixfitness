@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -11,7 +11,7 @@ const ACTIVITY_TYPES = {
   meal: { icon: 'nutrition', color: COLORS.info, label: 'Refeição' },
 };
 
-export default function ActivityItem({ activity }) {
+export default memo(function ActivityItem({ activity }) {
   const config = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.workout;
 
   return (
@@ -40,7 +40,7 @@ export default function ActivityItem({ activity }) {
       </TouchableOpacity>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', gap: SPACING.md, padding: SPACING.sm },

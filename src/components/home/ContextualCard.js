@@ -97,18 +97,18 @@ const styles = StyleSheet.create({
   headerText: { flex: 1 },
   title: {
     fontSize: 13,
-    fontFamily: 'Montserrat-Bold',
-    color: COLORS.text,
+    fontFamily: 'Montserrat_700Bold',
+    color: COLORS.textTitle,
     letterSpacing: 1,
   },
   subtitle: {
     fontSize: 11,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Inter_600SemiBold',
     marginTop: 2,
   },
   description: {
     fontSize: 14,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter_400Regular',
     color: COLORS.textMuted,
     lineHeight: 20,
     marginBottom: SPACING.lg,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   actionLabel: {
     fontSize: 13,
-    fontFamily: 'Montserrat-Bold',
+    fontFamily: 'Montserrat_700Bold',
     color: COLORS.background,
     letterSpacing: 0.5,
   },
@@ -138,6 +138,6 @@ const styles = StyleSheet.create({
   },
   motivationText: {
     fontSize: 12,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Inter_600SemiBold',
   },
 });

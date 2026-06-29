@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 
-export default function CommentSection({ comments, loading, onSubmit, commentText, onCommentTextChange }) {
+function CommentSection({ comments, loading, onSubmit, commentText, onCommentTextChange }) {
   return (
     <View style={styles.container}>
       {loading ? (
@@ -33,11 +33,14 @@ export default function CommentSection({ comments, loading, onSubmit, commentTex
           placeholderTextColor={COLORS.textMuted}
           value={commentText}
           onChangeText={onCommentTextChange}
+          accessibilityLabel="Escrever comentario"
         />
         <TouchableOpacity
           style={[styles.sendBtn, !commentText.trim() && styles.sendBtnDisabled]}
           onPress={onSubmit}
           disabled={!commentText.trim()}
+          accessibilityLabel="Enviar comentario"
+          accessibilityRole="button"
         >
           <Ionicons name="send" size={18} color={commentText.trim() ? COLORS.primary : COLORS.textMuted} />
         </TouchableOpacity>
@@ -45,6 +48,8 @@ export default function CommentSection({ comments, loading, onSubmit, commentTex
     </View>
   );
 }
+
+export default memo(CommentSection);
 
 const styles = StyleSheet.create({
   container: { marginTop: SPACING.md, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: COLORS.border },

@@ -9,7 +9,7 @@ export { default as ProgressBar } from './ui/ProgressBar';
 export { Timer } from './ui/Timer';
 export { default as AnimatedCounter } from './ui/AnimatedCounter';
 export { default as FilterBar, getDateRange, PERIOD_FILTERS } from './ui/FilterBar';
-
+export { default as BottomTabBar } from './ui/BottomTabBar';
 
 export { default as ExerciseAccordion } from './workout/ExerciseAccordion';
 export { default as ExerciseStepCarousel } from './workout/ExerciseStepCarousel';
@@ -71,6 +71,9 @@ export { default as WaterLogger } from './home/WaterLogger';
 export { default as WeeklyProgress } from './home/WeeklyProgress';
 export { default as ContextualCard } from './home/ContextualCard';
 export { default as HomeHeader } from './home/HomeHeader';
+export { default as GamificationSummary } from './home/GamificationSummary';
+export { default as WeeklyStats } from './home/WeeklyStats';
+export { default as QuickActions } from './home/QuickActions';
 export { default as CategoryGrid } from './home/CategoryGrid';
 export { default as RecentActivity } from './home/RecentActivity';
 export { default as StoreBanner } from './home/StoreBanner';

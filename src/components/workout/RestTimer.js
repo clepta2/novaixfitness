@@ -54,17 +54,17 @@ export default function RestTimer({ timeRemaining, totalTime, nextExercise, curr
       <RestRing timeRemaining={timeRemaining} totalTime={totalTime} timerColor={timerColor} progress={progress} pulseAnim={pulseAnim} />
 
       <View style={styles.timeControls}>
-        <TouchableOpacity style={styles.timeBtn} onPress={onSubtractTime}>
+        <TouchableOpacity style={styles.timeBtn} onPress={onSubtractTime} accessibilityLabel="Subtrair 15 segundos" accessibilityRole="button">
           <Ionicons name="remove-circle" size={24} color={COLORS.textMuted} />
           <Text style={styles.timeBtnText}>-15s</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickToggle} onPress={() => setShowQuick(!showQuick)}>
+        <TouchableOpacity style={styles.quickToggle} onPress={() => setShowQuick(!showQuick)} accessibilityLabel="Mostrar tempos rápidos" accessibilityRole="button">
           <Ionicons name="timer" size={16} color={COLORS.primary} />
           <Text style={styles.quickToggleText}>Tempo Rápido</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.timeBtn} onPress={onAddTime}>
+        <TouchableOpacity style={styles.timeBtn} onPress={onAddTime} accessibilityLabel="Adicionar 15 segundos" accessibilityRole="button">
           <Ionicons name="add-circle" size={24} color={COLORS.primary} />
           <Text style={[styles.timeBtnText, { color: COLORS.primary }]}>+15s</Text>
         </TouchableOpacity>
@@ -73,7 +73,7 @@ export default function RestTimer({ timeRemaining, totalTime, nextExercise, curr
       {showQuick && (
         <View style={styles.quickRow}>
           {QUICK_TIMES.map(t => (
-            <TouchableOpacity key={t.seconds} style={styles.quickBtn} onPress={() => onChangeTime(t.seconds)}>
+            <TouchableOpacity key={t.seconds} style={styles.quickBtn} onPress={() => onChangeTime(t.seconds)} accessibilityLabel={`Definir tempo para ${t.label}`} accessibilityRole="button">
               <Ionicons name={t.icon} size={14} color={COLORS.primary} />
               <Text style={styles.quickBtnText}>{t.label}</Text>
             </TouchableOpacity>
@@ -83,7 +83,7 @@ export default function RestTimer({ timeRemaining, totalTime, nextExercise, curr
 
       <NextExercisePreview exercise={nextExercise} currentSet={currentSet} totalSets={totalSets} />
 
-      <TouchableOpacity style={styles.skipBtn} onPress={onSkip}>
+      <TouchableOpacity style={styles.skipBtn} onPress={onSkip} accessibilityLabel="Iniciar agora" accessibilityRole="button">
         <Ionicons name="play-skip-forward" size={18} color={COLORS.background} />
         <Text style={styles.skipText}>INICIAR AGORA</Text>
       </TouchableOpacity>

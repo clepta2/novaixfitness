@@ -1,7 +1,7 @@
 // src/components/workout/FavoriteWorkoutCard.js
 // Card horizontal de favorito - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -11,7 +11,7 @@ const LEVEL_COLORS = {
   'Iniciante': COLORS.success, 'Intermediário': COLORS.attention, 'Avançado': COLORS.error,
 };
 
-export default function FavoriteWorkoutCard({ workout, onPress, onRemove, index = 0 }) {
+export default memo(function FavoriteWorkoutCard({ workout, onPress, onRemove, index = 0 }) {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -61,7 +61,7 @@ export default function FavoriteWorkoutCard({ workout, onPress, onRemove, index 
       )}
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { width: 160, marginRight: SPACING.md },

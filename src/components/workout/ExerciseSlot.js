@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -9,7 +9,7 @@ const MUSCLE_COLORS = {
   'Ombros': COLORS.attention, 'Braços': COLORS.primary, 'Abdômen': COLORS.success,
 };
 
-export default function ExerciseSlot({ exercise, index, onRemove, onUpdate }) {
+export default memo(function ExerciseSlot({ exercise, index, onRemove, onUpdate }) {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
   useEffect(() => { Animated.spring(scaleAnim, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true }).start(); }, []);
   const muscleColor = MUSCLE_COLORS[exercise.muscle] || COLORS.primary;
@@ -42,7 +42,7 @@ export default function ExerciseSlot({ exercise, index, onRemove, onUpdate }) {
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border, gap: SPACING.sm },

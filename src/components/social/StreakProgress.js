@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function StreakProgress({ streak, nextLevel, config }) {
+export default memo(function StreakProgress({ streak, nextLevel, config }) {
   if (!nextLevel) return null;
   const progress = (streak / nextLevel.min) * 100;
 
@@ -17,7 +17,7 @@ export default function StreakProgress({ streak, nextLevel, config }) {
       <Text style={styles.text}>{streak}/{nextLevel.min}</Text>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.sm, padding: SPACING.md, marginBottom: SPACING.md },

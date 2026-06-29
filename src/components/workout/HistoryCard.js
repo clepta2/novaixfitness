@@ -1,11 +1,12 @@
 // src/components/workout/HistoryCard.js
 // Card de histórico de treino - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { isToday, getDaysBetween, formatTimeBR } from '../../helpers/dates';
 
 const CATEGORY_COLORS = {
   'Musculação': COLORS.primary,
@@ -19,12 +20,8 @@ const CATEGORY_COLORS = {
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
-  const now = new Date();
-  const isToday = date.toDateString() === now.toDateString();
-  const yesterday = new Date(now - 86400000);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
-  if (isToday) return `Hoje, ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-  if (isYesterday) return `Ontem, ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+  if (isToday(dateStr)) return `Hoje, ${formatTimeBR(dateStr)}`;
+  if (getDaysBetween(dateStr, new Date()) === 1) return `Ontem, ${formatTimeBR(dateStr)}`;
   return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 
@@ -36,7 +33,7 @@ function parseNotes(notes) {
   } catch { return notes; }
 }
 
-export default function HistoryCard({ item, onPress, index = 0 }) {
+export default memo(function HistoryCard({ item, onPress, index = 0 }) {
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -123,7 +120,7 @@ export default function HistoryCard({ item, onPress, index = 0 }) {
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { marginBottom: SPACING.sm },

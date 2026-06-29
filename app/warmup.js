@@ -1,13 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { ErrorBoundary } from '../src/components';
 import { layout, typography } from '../src/styles';
 import { speakWelcome } from '../src/services/voiceCoach';
 import { WARMUP_EXERCISES as EXERCISES } from '../src/data/warmupExercises';
+import { styles } from '../src/styles/warmupStyles';
 
 export default function WarmupScreen() {
   const router = useRouter();
@@ -63,9 +65,10 @@ export default function WarmupScreen() {
   };
 
   return (
+    <ErrorBoundary screenName="Warmup">
     <View style={layout.screen}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
           <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
         </TouchableOpacity>
         <Text style={typography.h2}>Aquecimento</Text>
@@ -95,12 +98,12 @@ export default function WarmupScreen() {
 
           <View style={styles.actions}>
             {!started ? (
-              <TouchableOpacity style={styles.startBtn} onPress={startExercise} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.startBtn} onPress={startExercise} activeOpacity={0.8} accessibilityLabel="Iniciar exercício" accessibilityRole="button">
                 <Ionicons name="play" size={20} color={COLORS.background} />
                 <Text style={styles.startBtnText}>INICIAR</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.skipBtn} onPress={skipExercise} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.skipBtn} onPress={skipExercise} activeOpacity={0.8} accessibilityLabel="Pular exercício" accessibilityRole="button">
                 <Text style={styles.skipBtnText}>PULAR</Text>
               </TouchableOpacity>
             )}
@@ -120,7 +123,7 @@ export default function WarmupScreen() {
         </View>
 
         {completed.length === EXERCISES.length && (
-          <TouchableOpacity style={styles.doneBtn} onPress={() => router.back()} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.doneBtn} onPress={() => router.back()} activeOpacity={0.8} accessibilityLabel="Aquecimento concluído, voltar" accessibilityRole="button">
             <Ionicons name="checkmark-circle" size={20} color={COLORS.background} />
             <Text style={styles.doneBtnText}>AQUECIMENTO CONCLUÍDO</Text>
           </TouchableOpacity>
@@ -129,38 +132,6 @@ export default function WarmupScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
+    </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: SPACING.xl, paddingBottom: SPACING.md },
-  counter: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: COLORS.primary },
-  progressTrack: { height: 4, backgroundColor: COLORS.surface, marginHorizontal: SPACING.xl, borderRadius: 2, overflow: 'hidden' },
-  progressFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },
-  content: { padding: SPACING.xl },
-  exerciseCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.xl },
-  exerciseIcon: { width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.primary + '15', justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.md },
-  exerciseName: { fontFamily: 'Montserrat-Bold', fontSize: 18, color: COLORS.textTitle, marginBottom: 4, textAlign: 'center' },
-  exerciseDesc: { fontFamily: 'Inter-Regular', fontSize: 13, color: COLORS.textMuted, textAlign: 'center', marginBottom: SPACING.lg },
-  timerSection: { alignItems: 'center', marginBottom: SPACING.lg, width: '100%' },
-  timerValue: { fontFamily: 'Montserrat-ExtraBold', fontSize: 48, color: COLORS.primary, marginBottom: SPACING.sm },
-  timerBar: { height: 6, backgroundColor: COLORS.background, borderRadius: 3, width: '100%', overflow: 'hidden' },
-  timerFill: { height: '100%', backgroundColor: COLORS.primary, borderRadius: 3 },
-  actions: { width: '100%' },
-  startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, padding: SPACING.md },
-  startBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: COLORS.background, letterSpacing: 1 },
-  skipBtn: { alignItems: 'center', padding: SPACING.md },
-  skipBtnText: { fontFamily: 'Montserrat-SemiBold', fontSize: 13, color: COLORS.textMuted },
-  exerciseList: { gap: SPACING.xs },
-  exerciseRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },
-  exerciseRowActive: { borderColor: COLORS.primary, backgroundColor: COLORS.primary + '08' },
-  exerciseRowDone: { opacity: 0.5 },
-  rowDot: { width: 24, height: 24, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginRight: SPACING.md },
-  rowDotDone: { backgroundColor: COLORS.success },
-  rowNum: { fontFamily: 'Montserrat-Bold', fontSize: 11, color: COLORS.textMuted },
-  rowText: { flex: 1, fontFamily: 'Inter-SemiBold', fontSize: 13, color: COLORS.textTitle },
-  rowTextDone: { textDecorationLine: 'line-through', color: COLORS.textMuted },
-  rowDuration: { fontFamily: 'Montserrat-SemiBold', fontSize: 12, color: COLORS.textMuted },
-  doneBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: COLORS.success, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginTop: SPACING.xl },
-  doneBtnText: { fontFamily: 'Montserrat-Bold', fontSize: 14, color: '#fff', letterSpacing: 1 },
-});

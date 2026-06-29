@@ -1,7 +1,7 @@
 // src/components/analytics/PeriodSelector.js
 // Seletor de período animado - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -14,7 +14,7 @@ const PERIODS = [
   { key: 'year', label: '1 ano', icon: 'calendar-outline' },
 ];
 
-export default function PeriodSelector({ selected, onSelect }) {
+export default memo(function PeriodSelector({ selected, onSelect }) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function PeriodSelector({ selected, onSelect }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { marginBottom: SPACING.lg },

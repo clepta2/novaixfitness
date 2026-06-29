@@ -1,5 +1,5 @@
-﻿// app/onboarding/loading.js
-// Tela de loading durante geraÃ§Ã£o do plano IA
+// app/onboarding/loading.js
+// Tela de loading durante geração do plano IA
 
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
@@ -13,7 +13,7 @@ import { supabase } from '../../src/config/supabase';
 
 const STEPS = [
   { icon: 'analytics', label: 'ANALISANDO SEU PERFIL...' },
-  { icon: 'barbell', label: 'SELECIONANDO EXERCÃCIOS...' },
+  { icon: 'barbell', label: 'SELECIONANDO EXERCÍCIOS...' },
   { icon: 'restaurant', label: 'CRIANDO PLANO ALIMENTAR...' },
   { icon: 'checkmark-circle', label: 'PRONTO!' },
 ];

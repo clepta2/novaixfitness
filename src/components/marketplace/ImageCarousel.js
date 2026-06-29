@@ -1,14 +1,14 @@
 // src/components/marketplace/ImageCarousel.js
 // Carrossel de imagens do produto - NOVAIX FITNESS
 
-import { useState, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
 import { View, ScrollView, Image, Dimensions, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 
 const { width } = Dimensions.get('window');
 
-export default function ImageCarousel({ images, height = 280 }) {
+export default memo(function ImageCarousel({ images, height = 280 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 
@@ -48,7 +48,7 @@ export default function ImageCarousel({ images, height = 280 }) {
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   empty: { backgroundColor: COLORS.surfaceElevated },

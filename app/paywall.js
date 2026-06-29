@@ -1,4 +1,4 @@
-﻿import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
@@ -18,11 +18,11 @@ export default function PaywallScreen() {
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.navRow}>
-          <TouchableOpacity onPress={handleLogout} style={styles.navPill} activeOpacity={0.7}>
+          <TouchableOpacity onPress={handleLogout} style={styles.navPill} activeOpacity={0.7} accessibilityLabel="Sair" accessibilityRole="button">
             <Ionicons name="log-out-outline" size={16} color={COLORS.textMuted} />
             <Text style={styles.navPillText}>Sair</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSkip} style={styles.navPill} activeOpacity={0.7}>
+          <TouchableOpacity onPress={handleSkip} style={styles.navPill} activeOpacity={0.7} accessibilityLabel="Pular pagamento" accessibilityRole="button">
             <Text style={styles.navPillText}>Pular</Text>
             <Ionicons name="arrow-forward-outline" size={16} color={COLORS.textMuted} />
           </TouchableOpacity>

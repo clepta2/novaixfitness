@@ -1,17 +1,11 @@
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { formatRelativeDate } from '../../helpers/dates';
 
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
-  if (diff === 0) return 'Hoje';
-  if (diff === 1) return 'Ontem';
-  return `${diff}d atras`;
-}
-
-export default function RecentActivity({ workouts = [], onPress }) {
+function RecentActivity({ workouts = [], onPress }) {
   if (workouts.length === 0) return null;
 
   return (
@@ -25,7 +19,7 @@ export default function RecentActivity({ workouts = [], onPress }) {
           <View style={[styles.dot, { backgroundColor: w.completed ? COLORS.success : COLORS.primary }]} />
           <View style={styles.info}>
             <Text style={styles.name} numberOfLines={1}>{w.name || w.title || 'Treino'}</Text>
-            <Text style={styles.meta}>{w.category || 'Treino'} · {formatDate(w.completed_at || w.created_at)}</Text>
+            <Text style={styles.meta}>{w.category || 'Treino'} · {formatRelativeDate(w.completed_at || w.created_at)}</Text>
           </View>
           <Text style={styles.duration}>{w.duration_minutes || w.duration || 30}min</Text>
         </TouchableOpacity>
@@ -34,14 +28,16 @@ export default function RecentActivity({ workouts = [], onPress }) {
   );
 }
 
+export default memo(RecentActivity);
+
 const styles = StyleSheet.create({
   container: { marginTop: SPACING.lg },
   header: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.md },
-  title: { fontFamily: 'Montserrat-Bold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1 },
+  title: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1 },
   row: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.xs, borderWidth: 1, borderColor: COLORS.border },
   dot: { width: 8, height: 8, borderRadius: 4, marginRight: SPACING.md },
   info: { flex: 1 },
-  name: { fontFamily: 'Montserrat-SemiBold', fontSize: 13, color: COLORS.textTitle },
-  meta: { fontFamily: 'Inter-Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
-  duration: { fontFamily: 'Montserrat-Bold', fontSize: 12, color: COLORS.primary },
+  name: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },
+  meta: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
+  duration: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.primary },
 });

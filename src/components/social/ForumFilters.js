@@ -14,12 +14,15 @@ export default function ForumFilters({ categories, selected, onSelect, search, o
           placeholderTextColor={COLORS.textMuted}
           value={search}
           onChangeText={onSearchChange}
+          accessibilityLabel="Buscar posts"
         />
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
         <TouchableOpacity
           style={[styles.chip, selected === 'all' && styles.chipActive]}
           onPress={() => onSelect('all')}
+          accessibilityLabel="Todos"
+          accessibilityRole="button"
         >
           <Text style={[styles.chipText, selected === 'all' && styles.chipTextActive]}>Todos</Text>
         </TouchableOpacity>
@@ -28,6 +31,8 @@ export default function ForumFilters({ categories, selected, onSelect, search, o
             key={cat.id}
             style={[styles.chip, selected === cat.id && styles.chipActive]}
             onPress={() => onSelect(cat.id)}
+            accessibilityLabel={cat.label}
+            accessibilityRole="button"
           >
             <Text style={[styles.chipText, selected === cat.id && styles.chipTextActive]}>{cat.label}</Text>
           </TouchableOpacity>

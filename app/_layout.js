@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { COLORS } from '../src/constants/colors';
+import { BRAND_SHORT } from '../src/constants/brand';
 import { setupNotificationListeners } from '../src/services/notifications';
 import { registerForPushNotificationsAsync, addNotificationReceivedListener, addNotificationResponseListener } from '../src/services/pushNotifications';
 import { setupCrashHandler } from '../src/services/crashReport';
@@ -52,7 +53,12 @@ function AuthRedirect() {
     if (!user?.id) return;
     registerForPushNotificationsAsync(user.id);
     const receivedSub = addNotificationReceivedListener(({ title, body }) => {
-      if (__DEV__) console.log('Push recebido em foreground:', title, body);
+      if (title || body) {
+        import('react-native').then(({ Alert, Platform }) => {
+          if (Platform.OS === 'web') alert(`${title}: ${body}`);
+          else Alert.alert(title || BRAND_SHORT, body || '');
+        });
+      }
     });
     const responseSub = addNotificationResponseListener(router);
     const tapSub = setupNotificationListeners(router);

@@ -1,7 +1,7 @@
 // src/components/progress/BMICard.js
 // Card de IMC animado - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -18,7 +18,7 @@ function getBMICategory(bmi) {
   return BMI_CATEGORIES.find(c => bmi >= c.min && bmi < c.max) || BMI_CATEGORIES[3];
 }
 
-export default function BMICard({ bmi, height, weight }) {
+export default memo(function BMICard({ bmi, height, weight }) {
   const bmiValue = parseFloat(bmi) || 0;
   const category = getBMICategory(bmiValue);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -67,7 +67,7 @@ export default function BMICard({ bmi, height, weight }) {
       </View>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },

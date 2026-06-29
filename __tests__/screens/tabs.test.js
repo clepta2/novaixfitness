@@ -157,7 +157,8 @@ jest.mock('../../src/styles/libraryStyles', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
     DailyWorkoutCard: (props) => React.createElement(View, null, React.createElement(Text, null, 'DailyWorkoutCard')),
     OfflineBanner: (props) => React.createElement(View, null),
     TutorialOverlay: (props) => React.createElement(View, null),
@@ -170,6 +171,7 @@ jest.mock('../../src/components', () => {
     RecentActivity: (props) => React.createElement(View, null, React.createElement(Text, null, 'RecentActivity')),
     OfflineIndicator: (props) => React.createElement(View, null),
   };
+  return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
 describe('Tab Screens', () => {

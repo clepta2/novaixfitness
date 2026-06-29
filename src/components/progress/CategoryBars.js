@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function CategoryBars({ categories, total }) {
+export default memo(function CategoryBars({ categories, total }) {
   if (!categories || Object.keys(categories).length === 0) return null;
 
   return (
@@ -20,7 +21,7 @@ export default function CategoryBars({ categories, total }) {
       ))}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border },

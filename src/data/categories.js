@@ -1,9 +1,9 @@
 import { COLORS } from '../constants/colors';
 
 export const HOME_CATEGORIES = [
-  { key: 'inferiores', label: 'INFERIORES', icon: 'footsteps', bg: COLORS.primary, color: '#000', category: 'inferiores' },
-  { key: 'superiores', label: 'SUPERIORES', icon: 'fitness', bg: '#FFFFFF', color: '#000', category: 'superiores' },
-  { key: 'cardio', label: 'CARDIO', icon: 'heart', bg: '#00E676', color: '#000', category: 'cardio' },
+  { key: 'inferiores', label: 'INFERIORES', icon: 'footsteps', bg: COLORS.primary, color: COLORS.background, category: 'inferiores' },
+  { key: 'superiores', label: 'SUPERIORES', icon: 'fitness', bg: COLORS.surfaceElevated, color: COLORS.textTitle, category: 'superiores' },
+  { key: 'cardio', label: 'CARDIO', icon: 'heart', bg: '#00C853', color: COLORS.background, category: 'cardio' },
 ];
 
 export const ALL_CATEGORIES = [

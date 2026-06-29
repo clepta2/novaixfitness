@@ -1,7 +1,7 @@
 // src/components/home/WeeklyProgress.js
 // Progresso de Treinos da Semana - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -12,7 +12,7 @@ import { supabase } from '../../config/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { typography } from '../../styles';
 
-export default function WeeklyProgress() {
+export default memo(function WeeklyProgress() {
   const { user } = useAuth();
   const [completedThisWeek, setCompletedThisWeek] = useState(0);
   const [targetWeekly, setTargetWeekly] = useState(3);
@@ -95,7 +95,7 @@ export default function WeeklyProgress() {
       <ProgressBar value={completedThisWeek} max={targetWeekly} label={progressText} />
     </Card>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: { padding: SPACING.lg, marginBottom: SPACING.md },

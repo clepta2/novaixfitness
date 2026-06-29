@@ -1,4 +1,4 @@
-﻿// app/onboarding/index.js
+// app/onboarding/index.js
 // Tela principal do onboarding - 2 Fases
 
 import { useState, useCallback, useEffect } from 'react';
@@ -63,7 +63,7 @@ export default function OnboardingScreen() {
         <View style={styles.phaseBar}>
           <View style={[styles.phaseIndicator, currentPhase === 1 && styles.phaseActive]}>
             <View style={[styles.phaseDot, currentPhase === 1 && styles.phaseDotActive]} />
-            <Text style={[styles.phaseText, currentPhase === 1 && styles.phaseTextActive]}>VocÃª</Text>
+            <Text style={[styles.phaseText, currentPhase === 1 && styles.phaseTextActive]}>Você</Text>
           </View>
           <View style={styles.phaseLine} />
           <View style={[styles.phaseIndicator, currentPhase === 2 && styles.phaseActive]}>

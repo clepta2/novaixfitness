@@ -2,7 +2,7 @@
 // Tela de Mindfulness e Exercícios Respiratórios - NOVAIX FITNESS
 
 import { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -10,6 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { layout, typography } from '../src/styles';
 import { breathingExercises } from '../src/data/breathingExercises';
 import BreathingExercise from '../src/components/recovery/BreathingExercise';
+import { styles } from '../src/styles/mindfulnessStyles';
 
 export default function MindfulnessScreen() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function MindfulnessScreen() {
     return (
       <View style={layout.screen}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => setSelectedExercise(null)}>
+          <TouchableOpacity onPress={() => setSelectedExercise(null)} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={typography.h2}>{selectedExercise.name}</Text>
@@ -57,7 +58,7 @@ export default function MindfulnessScreen() {
   return (
     <View style={layout.screen}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
           <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
         </TouchableOpacity>
         <Text style={typography.h2}>Mindfulness</Text>
@@ -82,7 +83,7 @@ export default function MindfulnessScreen() {
 
         <Text style={styles.sectionTitle}>ESCOLHA UMA TÉCNICA</Text>
         {breathingExercises.map((exercise) => (
-          <TouchableOpacity key={exercise.id} style={styles.exerciseCard} onPress={() => setSelectedExercise(exercise)} activeOpacity={0.8}>
+          <TouchableOpacity key={exercise.id} style={styles.exerciseCard} onPress={() => setSelectedExercise(exercise)} activeOpacity={0.8} accessibilityLabel={`Iniciar ${exercise.name}`} accessibilityRole="button">
             <View style={[styles.iconCircle, { backgroundColor: exercise.color + '20' }]}>
               <Ionicons name={exercise.icon} size={24} color={exercise.color} />
             </View>
@@ -107,30 +108,3 @@ export default function MindfulnessScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: SPACING.xl, paddingBottom: SPACING.md },
-  scroll: { padding: SPACING.xl },
-  statsRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.xxl },
-  statCard: { flex: 1, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
-  statValue: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 24, color: COLORS.primary },
-  statLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 4 },
-  sectionTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md },
-  exerciseCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },
-  iconCircle: { width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginRight: SPACING.md },
-  exerciseInfo: { flex: 1 },
-  exerciseName: { fontFamily: 'Montserrat_700Bold', fontSize: 15, color: COLORS.textTitle, marginBottom: 2 },
-  exerciseDescription: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textDescription, marginBottom: 6 },
-  exerciseMeta: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },
-  benefitTag: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.primary, backgroundColor: COLORS.primary + '15', paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: BORDER_RADIUS.sm, overflow: 'hidden' },
-  metaText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
-  activeCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, alignItems: 'center', marginBottom: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
-  activeDescription: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription, textAlign: 'center', marginTop: SPACING.sm },
-  phaseGuide: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginTop: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
-  guideTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md },
-  phaseRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.sm },
-  phaseDot: { width: 8, height: 8, borderRadius: 4 },
-  phaseText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription },
-  tipCard: { flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.lg, marginTop: SPACING.xl, borderWidth: 1, borderColor: COLORS.border, gap: SPACING.md },
-  tipText: { flex: 1, fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription, lineHeight: 20 },
-});

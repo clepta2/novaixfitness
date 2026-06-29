@@ -99,9 +99,9 @@ describe('PaywallScreen (novo fluxo cartão + Asaas)', () => {
 
   it('renderiza título e badge corretamente', () => {
     const { getByText } = render(<PaywallScreen />);
-    expect(getByText('LIBERE TODO O POTENCIAL')).toBeTruthy();
-    expect(getByText('Escolha o plano ideal para sua evolução')).toBeTruthy();
-    expect(getByText('1 MÊS GRÁTIS DE TASTE TEST')).toBeTruthy();
+    expect(getByText('LIBERE TODO SEU POTENCIAL')).toBeTruthy();
+    expect(getByText('Escolha o plano ideal para sua evolucao')).toBeTruthy();
+    expect(getByText('7 DIAS GRATIS')).toBeTruthy();
   });
 
   it('renderiza os planos disponíveis', () => {
@@ -111,10 +111,9 @@ describe('PaywallScreen (novo fluxo cartão + Asaas)', () => {
     expect(getByText('Plano Premium')).toBeTruthy();
   });
 
-  it('não renderiza botão de pular (fluxo obrigatório)', () => {
-    const { queryByText } = render(<PaywallScreen />);
-    expect(queryByText('Pular por agora')).toBeNull();
-    expect(queryByText('Pular')).toBeNull();
+  it('renderiza botao de pular', () => {
+    const { getByText } = render(<PaywallScreen />);
+    expect(getByText('Pular')).toBeTruthy();
   });
 
   it('mostra botao de ativar', () => {

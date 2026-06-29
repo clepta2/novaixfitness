@@ -2,7 +2,8 @@ import { ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING } from '../src/constants/spacing';
-import { layout, typography } from '../src/styles';
+import { BRAND_NAME } from '../src/constants/brand';
+import { layout } from '../src/styles';
 import ChangelogItem from '../src/components/changelog/ChangelogItem';
 import { CHANGELOG } from '../src/data/changelog';
 
@@ -13,7 +14,7 @@ export default function ChangelogScreen() {
         <Ionicons name="sparkles" size={32} color={COLORS.primary} />
         <Text style={styles.title}>O QUE HÁ DE NOVO?</Text>
         <Text style={styles.subtitle}>
-          Acompanhe as novidades, melhorias e correções do NOVAIX FITNESS
+          Acompanhe as novidades, melhorias e correções do {BRAND_NAME}
         </Text>
       </View>
 

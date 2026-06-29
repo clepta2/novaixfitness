@@ -1,7 +1,7 @@
 // src/components/marketplace/ProductReviews.js
 // Sistema de avaliacoes do produto - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -11,7 +11,7 @@ import { supabase } from '../../config/supabase';
 
 const MAX_COMMENT_LENGTH = 500;
 
-export default function ProductReviews({ productId }) {
+function ProductReviews({ productId }) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(5);
@@ -66,7 +66,7 @@ export default function ProductReviews({ productId }) {
         <Text style={styles.title}>AVALIACOES ({reviews.length})</Text>
         {reviews.length > 0 && (
           <View style={styles.avgRow}>
-            <Ionicons name="star" size={14} color="#F59E0B" />
+            <Ionicons name="star" size={14} color={COLORS.star} />
             <Text style={styles.avgText}>{avgRating}</Text>
           </View>
         )}
@@ -84,7 +84,7 @@ export default function ProductReviews({ productId }) {
               <View style={styles.stars}>
                 {[1, 2, 3, 4, 5].map(i => (
                   <TouchableOpacity key={i} onPress={() => setRating(i)}>
-                    <Ionicons name={i <= rating ? 'star' : 'star-outline'} size={22} color="#F59E0B" />
+                    <Ionicons name={i <= rating ? 'star' : 'star-outline'} size={22} color={COLORS.star} />
                   </TouchableOpacity>
                 ))}
               </View>
@@ -117,7 +117,7 @@ export default function ProductReviews({ productId }) {
             <Text style={styles.reviewerName}>{review.profiles?.name || 'Anonimo'}</Text>
             <View style={styles.reviewStars}>
               {[1, 2, 3, 4, 5].map(i => (
-                <Ionicons key={i} name={i <= review.rating ? 'star' : 'star-outline'} size={12} color="#F59E0B" />
+                <Ionicons key={i} name={i <= review.rating ? 'star' : 'star-outline'} size={12} color={COLORS.star} />
               ))}
             </View>
           </View>
@@ -128,6 +128,8 @@ export default function ProductReviews({ productId }) {
     </View>
   );
 }
+
+export default memo(ProductReviews);
 
 const styles = StyleSheet.create({
   container: { marginTop: SPACING.xl },

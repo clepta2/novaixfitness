@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, KeyboardAvoidingView, Platform, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../src/constants/colors';
@@ -7,7 +7,8 @@ import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/config/supabase';
 import { askGeminiCoach, saveChatMessage, getChatHistory, clearChatHistory } from '../src/services/gemini';
 import { analyzeMealText, saveMealLog } from '../src/services/mealAnalyzer';
-import { ChatHeader, MessageBubble, ChatInput, QuickTips } from '../src/components';
+import { ChatHeader, MessageBubble, ChatInput, QuickTips, ErrorBoundary } from '../src/components';
+import BottomTabBar from '../src/components/ui/BottomTabBar';
 import { layout } from '../src/styles';
 import { detectMealLog, formatMealSummary } from '../src/helpers/chatHelpers';
 
@@ -160,6 +161,7 @@ export default function ChatCoachScreen() {
   }
 
   return (
+    <ErrorBoundary screenName="ChatCoach">
     <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ChatHeader onBack={() => router.back()} onClear={handleClearChat} />
 
@@ -168,7 +170,7 @@ export default function ChatCoachScreen() {
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MessageBubble message={item} />}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: 110 }]}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
         removeClippedSubviews={true}
         maxToRenderPerBatch={10}
@@ -178,7 +180,9 @@ export default function ChatCoachScreen() {
       {messages.length <= 1 && <QuickTips onSendTip={handleSend} />}
 
       <ChatInput value={inputText} onChange={setInputText} onSend={() => handleSend()} loading={loading} />
+      <BottomTabBar activeTab="perfil" />
     </KeyboardAvoidingView>
+    </ErrorBoundary>
   );
 }
 

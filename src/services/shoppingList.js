@@ -1,4 +1,4 @@
-﻿// src/services/shoppingList.js
+// src/services/shoppingList.js
 // Lista de compras gerada por IA
 
 import { APP_CONFIG } from '../config/app';
@@ -74,11 +74,20 @@ function generateFallbackShoppingList() {
 
 export async function saveShoppingList(userId, list) {
   if (!userId || !list) return;
-  await supabase.from('shopping_lists').upsert({ user_id: userId, items: list, is_active: true, week_start: new Date().toISOString() }, { onConflict: 'user_id,is_active' });
+  try {
+    await supabase.from('shopping_lists').upsert({ user_id: userId, items: list, is_active: true, week_start: new Date().toISOString() }, { onConflict: 'user_id,is_active' });
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao salvar lista:', err);
+  }
 }
 
 export async function getShoppingList(userId) {
   if (!userId) return null;
-  const { data } = await supabase.from('shopping_lists').select('*').eq('user_id', userId).eq('is_active', true).single();
-  return data?.items || null;
+  try {
+    const { data } = await supabase.from('shopping_lists').select('*').eq('user_id', userId).eq('is_active', true).single();
+    return data?.items || null;
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao buscar lista:', err);
+    return null;
+  }
 }

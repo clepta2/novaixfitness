@@ -21,7 +21,7 @@ function AchievementCard({ achievement, unlocked }) {
       </View>
       {unlocked && <View style={styles.dot} />}
       <Text style={[styles.name, !unlocked && styles.lockedText]} numberOfLines={2}>
-        {unlocked ? achievement.name : '???'}
+        {unlocked ? achievement.name : 'Bloqueada'}
       </Text>
       {unlocked && achievement.description && (
         <Text style={styles.desc} numberOfLines={2}>{achievement.description}</Text>

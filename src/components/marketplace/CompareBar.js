@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function CompareBar({ selectedProducts, onCompare, onClear, maxCompare = 3 }) {
+export default memo(function CompareBar({ selectedProducts, onCompare, onClear, maxCompare = 3 }) {
   if (!selectedProducts || selectedProducts.length < 2) return null;
 
   return (
@@ -22,7 +23,7 @@ export default function CompareBar({ selectedProducts, onCompare, onClear, maxCo
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   bar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.surfaceElevated, borderTopWidth: 1, borderTopColor: COLORS.border, paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md, position: 'absolute', bottom: 0, left: 0, right: 0 },

@@ -95,11 +95,11 @@ export default function BodyMeasuresScreen() {
     <View style={layout.screen}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={layout.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Voltar" accessibilityRole="button">
             <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
           </TouchableOpacity>
           <Text style={typography.h2}>Medidas Corporais</Text>
-          <TouchableOpacity onPress={() => setShowForm(!showForm)}>
+          <TouchableOpacity onPress={() => setShowForm(!showForm)} accessibilityLabel={showForm ? 'Fechar formulário' : 'Adicionar medida'} accessibilityRole="button">
             <Ionicons name={showForm ? 'close' : 'add'} size={24} color={COLORS.primary} />
           </TouchableOpacity>
         </View>

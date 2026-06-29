@@ -1,7 +1,7 @@
 // src/components/settings/MenuSection.js
 // Seção de menu animada - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -44,7 +44,7 @@ function MenuItem({ item, index, onPress }) {
   );
 }
 
-export default function MenuSection({ title, items, onPress }) {
+function MenuSection({ title, items, onPress }) {
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -54,6 +54,8 @@ export default function MenuSection({ title, items, onPress }) {
     </View>
   );
 }
+
+export default memo(MenuSection);
 
 const styles = StyleSheet.create({
   section: { marginBottom: SPACING.xl },

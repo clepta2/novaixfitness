@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function MeasurementHistory({ history, onDelete }) {
+export default memo(function MeasurementHistory({ history, onDelete }) {
   return (
     <View style={styles.section}>
       <Text style={typography.label}>HISTÓRICO</Text>
@@ -26,7 +27,7 @@ export default function MeasurementHistory({ history, onDelete }) {
       ))}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   section: { gap: SPACING.sm },

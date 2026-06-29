@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default function FeaturedProducts({ products, loading, onPress }) {
+export default memo(function FeaturedProducts({ products, loading, onPress }) {
   if (loading) {
     return (
       <View style={styles.container}>
@@ -38,7 +39,7 @@ export default function FeaturedProducts({ products, loading, onPress }) {
       </ScrollView>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: { marginTop: SPACING.lg },
