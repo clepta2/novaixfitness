@@ -61,7 +61,7 @@ export default function MeuTreinoScreen() {
         goal: selectedGoal,
       };
       await saveOnboarding({ ...onboarding, ...workoutData });
-      router.push('/onboarding/resumo');
+      router.push('/onboarding/processando');
     }
   };
 

@@ -47,7 +47,7 @@ export default function PlanoScreen() {
         restActivities: selectedRestActivities,
       };
       await saveOnboarding({ ...onboarding, ...planData });
-      router.push('/onboarding/resumo');
+      router.push('/onboarding/processando');
     }
   };
 
