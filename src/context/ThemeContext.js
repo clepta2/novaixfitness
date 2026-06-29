@@ -1,9 +1,6 @@
-// src/context/ThemeContext.js
-// Contexto de tema claro/escuro - NOVAIX FITNESS
-
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { COLORS, setThemeColors } from '../constants/colors';
+import { COLORS, THEMES, setThemeColors } from '../constants/colors';
 import { useAuth } from './AuthContext';
 import { supabase } from '../config/supabase';
 import { updateWebStyles } from '../components/common/WebStyles';
@@ -19,6 +16,7 @@ export function ThemeProvider({ children }) {
   const { user, profile } = useAuth();
   const systemScheme = useColorScheme();
   const [themeMode, setThemeModeState] = useState('dark');
+  const [colors, setColors] = useState({ ...COLORS });
 
   const resolvedTheme = useMemo(() => {
     if (themeMode === 'system') return systemScheme || 'dark';
@@ -26,6 +24,8 @@ export function ThemeProvider({ children }) {
   }, [themeMode, systemScheme]);
 
   useEffect(() => {
+    const source = THEMES[resolvedTheme] || THEMES.dark;
+    setColors({ ...source });
     setThemeColors(resolvedTheme);
     updateWebStyles();
   }, [resolvedTheme]);
@@ -49,11 +49,11 @@ export function ThemeProvider({ children }) {
   }, [user?.id, profile?.app_settings]);
 
   const value = useMemo(() => ({
-    colors: COLORS,
+    colors,
     isDark: resolvedTheme === 'dark',
     themeMode,
     setThemeMode,
-  }), [resolvedTheme, themeMode, setThemeMode]);
+  }), [colors, resolvedTheme, themeMode, setThemeMode]);
 
   return (
     <ThemeContext.Provider value={value}>
