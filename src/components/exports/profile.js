@@ -1,0 +1,14 @@
+export { default as ProfileHeader } from '../profile/ProfileHeader';
+export { default as ProfileHero } from '../profile/ProfileHero';
+export { default as StatsGrid } from '../profile/StatsGrid';
+export { default as PhysicalData } from '../profile/PhysicalData';
+export { default as BadgesRow } from '../profile/BadgesRow';
+export { default as GamificationBar } from '../profile/GamificationBar';
+export { default as AchievementsList } from '../profile/AchievementsList';
+export { default as AchievementsCarousel } from '../profile/AchievementsCarousel';
+export { default as QuickActionsGrid } from '../profile/QuickActionsGrid';
+export { default as ProfileMenuGroup } from '../profile/ProfileMenuGroup';
+export { default as RankingCard } from '../profile/RankingCard';
+export { default as WeeklyChallenges } from '../profile/WeeklyChallenges';
+export { default as WeightLogger } from '../profile/WeightLogger';
+export { default as EditNameModal } from '../profile/EditNameModal';

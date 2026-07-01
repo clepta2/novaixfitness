@@ -7,6 +7,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { Button } from '../ui/Button';
 import { COMPOSER } from '../../data/socialTexts';
+import { validateContent } from '../../middleware/communityGuard';
 
 export default function CreatePostModal({ visible, onClose, onSubmit, userId }) {
   const [content, setContent] = useState('');
@@ -54,6 +55,17 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
     if (!content.trim() && !imageUri) {
       Alert.alert(COMPOSER.errorTitle, COMPOSER.emptyError);
       return;
+    }
+    if (content.trim()) {
+      const { clean, masked, violations } = validateContent(content);
+      if (!clean) {
+        Alert.alert(
+          'Conteúdo inadequado',
+          'Seu post contém palavras proibidas. Por favor, mantenha o respeito na comunidade.',
+        );
+        if (violations.length > 0) setContent(masked);
+        return;
+      }
     }
     setLoading(true);
     const imageUrl = await uploadImage(userId);

@@ -1,0 +1,40 @@
+{
+  "severe": [
+    "filho da puta", "filhos da puta", "fdp", "caralho", "cu do mundo",
+    "buceta", "piranha", "puta", "vagabunda", "vagabundo",
+    "arrombado", "arrombada", "cuzao", "cuzão",
+    "desgraçado", "desgraçada", "desgraça", "desgraca",
+    "viado", "bicha", "bichona", "capiroto", "cachorra",
+    "retardado", "retardada", "deficiente mental",
+    "mongol", "mongoloide", "nazi", "nazista", "hitler",
+    "filhadaputa", "pqp", "tnc", "krl", "vsf"
+  ],
+  "moderate": [
+    "idiota", "imbecil", "burro", "burra", "burrice",
+    "otario", "otaria", "otário", "otária",
+    "lixo humano", "porcaria", "merda", "bosta",
+    "corno", "corna", "chifrudo", "fedido", "fedida",
+    "gordo", "gorda", "baleia", "porco", "magro", "magra",
+    "feio", "feia", "horripilante", "nojento", "nojenta"
+  ],
+  "drugs": [
+    "maconha", "cocaína", "cocaina", "crack", "lsd", "mdma",
+    "ecstasy", "anabolizante", "esteroid", "hgh",
+    "droga", "narcotico", "entorpecente"
+  ],
+  "violence": [
+    "matar", "assassinar", "morte", "suicidio", "suicídio",
+    "bater em", "agredir", "violencia", "violência"
+  ],
+  "spam": [
+    "clique aqui", "clique agora", "ganhe dinheiro",
+    "trabalhe de casa", "renda extra", "pix rápido",
+    "investimento garantido", "free money", "make money fast"
+  ],
+  "fallback": [
+    "porra", "foda", "fodase", "fodasse", "toma no cu",
+    "se foder", "se fodeu", "pau no cu", "cu de burro",
+    "bosta", "caralho", "cacete", "pqp", "maldito",
+    "maldita", "desgraça", "inferno", "caramba"
+  ]
+}

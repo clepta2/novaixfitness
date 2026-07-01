@@ -1,12 +1,29 @@
 import React, { memo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { COMMENTS } from '../../data/socialTexts';
+import { validateContent } from '../../middleware/communityGuard';
 
 function CommentSection({ comments, loading, onSubmit, commentText, onCommentTextChange }) {
+  const handleSubmit = () => {
+    if (!commentText.trim()) return;
+    const { clean, masked, violations } = validateContent(commentText);
+    if (!clean) {
+      Alert.alert(
+        'Conteúdo inadequado',
+        'Seu comentário contém palavras proibidas. Por favor, mantenha o respeito na comunidade.',
+      );
+      if (violations.length > 0) {
+        onCommentTextChange(masked);
+      }
+      return;
+    }
+    onSubmit?.();
+  };
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -38,7 +55,7 @@ function CommentSection({ comments, loading, onSubmit, commentText, onCommentTex
         />
         <TouchableOpacity
           style={[styles.sendBtn, !commentText.trim() && styles.sendBtnDisabled]}
-          onPress={onSubmit}
+          onPress={handleSubmit}
           disabled={!commentText.trim()}
           accessibilityLabel={COMMENTS.sendLabel}
           accessibilityRole="button"

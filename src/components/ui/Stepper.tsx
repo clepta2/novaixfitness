@@ -1,11 +1,11 @@
 // src/components/ui/Stepper.tsx
 // Stepper visual para onboarding e formularios - NOVAIX FITNESS
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { SPACING } from '../../constants/spacing';
 
 interface Step {
   label: string;
@@ -49,7 +49,7 @@ export default function Stepper({
         {steps.map((step, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
-          const dotColor = isCompleted ? COLORS.primary : isActive ? COLORS.primary : COLORS.surfaceElevated;
+          const dotColor = isCompleted || isActive ? COLORS.primary : COLORS.surfaceElevated;
           const textColor = isCompleted || isActive ? COLORS.primary : COLORS.textMuted;
 
           return (
@@ -86,7 +86,6 @@ export default function Stepper({
         })}
       </View>
 
-      {/* Barra de progresso */}
       <View style={[styles.progressTrack, { height: sizeConfig.lineHeight }]}>
         <Animated.View style={[styles.progressFill, {
           width: progressAnim.interpolate({
@@ -100,120 +99,13 @@ export default function Stepper({
   );
 }
 
-// Stepper horizontal simplificado para poucos passos
-export function SimpleStepper({ total, current }: { total: number; current: number }) {
-  return (
-    <View style={styles.simpleContainer}>
-      {Array.from({ length: total }).map((_, i) => (
-        <View key={i} style={[
-          styles.simpleDot,
-          i <= current ? styles.simpleDotActive : styles.simpleDotInactive,
-        ]} />
-      ))}
-    </View>
-  );
-}
-
-// Stepper com numeros
-export function NumberedStepper({ steps, currentStep }: { steps: string[]; currentStep: number }) {
-  return (
-    <View style={styles.numberedContainer}>
-      {steps.map((label, index) => {
-        const isActive = index === currentStep;
-        const isCompleted = index < currentStep;
-        return (
-          <View key={index} style={styles.numberedStep}>
-            <View style={[styles.numberedCircle, isCompleted && styles.numberedCircleCompleted, isActive && styles.numberedCircleActive]}>
-              <Text style={[styles.numberedText, (isCompleted || isActive) && styles.numberedTextActive]}>
-                {isCompleted ? '✓' : index + 1}
-              </Text>
-            </View>
-            <Text style={[styles.numberedLabel, isActive && styles.numberedLabelActive]} numberOfLines={2}>
-              {label}
-            </Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: { paddingVertical: SPACING.md },
-  stepsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: SPACING.sm,
-  },
-  stepWrapper: {
-    alignItems: 'center',
-    flex: 1,
-    gap: SPACING.xs,
-  },
-  dot: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activeIndicator: {
-    backgroundColor: COLORS.primary,
-  },
-  label: {
-    fontFamily: 'Inter_500Medium',
-    textAlign: 'center',
-    maxWidth: 70,
-  },
-  progressTrack: {
-    backgroundColor: COLORS.surfaceElevated,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 2,
-  },
-  simpleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 6,
-  },
-  simpleDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  simpleDotActive: { backgroundColor: COLORS.primary },
-  simpleDotInactive: { backgroundColor: COLORS.surfaceElevated },
-  numberedContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  numberedStep: {
-    alignItems: 'center',
-    flex: 1,
-    gap: SPACING.xs,
-  },
-  numberedCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: COLORS.surfaceElevated,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  numberedCircleCompleted: { backgroundColor: COLORS.primary },
-  numberedCircleActive: { backgroundColor: COLORS.primary, borderWidth: 2, borderColor: COLORS.primary + '40' },
-  numberedText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 12,
-    color: COLORS.textMuted,
-  },
-  numberedTextActive: { color: COLORS.background },
-  numberedLabel: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 11,
-    color: COLORS.textMuted,
-    textAlign: 'center',
-  },
-  numberedLabelActive: { color: COLORS.primary, fontWeight: '500' },
+  stepsRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: SPACING.sm },
+  stepWrapper: { alignItems: 'center', flex: 1, gap: SPACING.xs },
+  dot: { justifyContent: 'center', alignItems: 'center' },
+  activeIndicator: { backgroundColor: COLORS.primary },
+  label: { fontFamily: 'Inter_500Medium', textAlign: 'center', maxWidth: 70 },
+  progressTrack: { backgroundColor: COLORS.surfaceElevated, borderRadius: 2, overflow: 'hidden' },
+  progressFill: { backgroundColor: COLORS.primary, borderRadius: 2 },
 });

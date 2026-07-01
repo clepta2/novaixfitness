@@ -1,12 +1,13 @@
 // src/components/ui/PlanCard.tsx
 // Card de plano com animacao e destaque - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';
+import PlanFeatureList from './PlanFeatureList';
 
 interface PlanCardProps {
   plan: any;
@@ -75,22 +76,7 @@ export default function PlanCard({
 
         <View style={styles.divider} />
 
-        <View style={styles.features}>
-          {features.map((feature: any, index: number) => {
-            const text = typeof feature === 'string' ? feature : feature?.text || '';
-            const included = typeof feature === 'string' ? true : feature?.included !== false;
-            return (
-              <View key={index} style={styles.featureRow}>
-                <Ionicons
-                  name={included ? 'checkmark-circle' : ('close-circle' as any)}
-                  size={16}
-                  color={included ? COLORS.success : COLORS.textMuted}
-                />
-                <Text style={[styles.featureText, !included && { color: COLORS.textMuted }]}>{text}</Text>
-              </View>
-            );
-          })}
-        </View>
+        <PlanFeatureList features={features} />
 
         <View style={[styles.selectBtn, isSelected && styles.selectBtnActive]}>
           <Text style={[styles.selectBtnText, isSelected && styles.selectBtnTextActive]}>
@@ -103,116 +89,22 @@ export default function PlanCard({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.surface,
-    borderRadius: BORDER_RADIUS.lg,
-    borderWidth: 2,
-    overflow: 'hidden',
-    ...SHADOWS.md,
-  },
-  containerActive: {
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  popularBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    backgroundColor: COLORS.primary,
-    paddingVertical: SPACING.xs,
-  },
-  popularText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 10,
-    color: COLORS.background,
-    letterSpacing: 1,
-  },
-  discountBadge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: COLORS.success,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
-    borderRadius: BORDER_RADIUS.sm,
-  },
-  discountText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 11,
-    color: COLORS.background,
-  },
-  content: {
-    padding: SPACING.xl,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: SPACING.md,
-  },
-  name: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 16,
-    color: COLORS.textTitle,
-    marginBottom: SPACING.xs,
-  },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  currency: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
-    color: COLORS.textMuted,
-  },
-  price: {
-    fontFamily: 'Montserrat_800ExtraBold',
-    fontSize: 36,
-    color: COLORS.primary,
-  },
-  period: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: COLORS.textMuted,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: COLORS.border,
-    marginVertical: SPACING.md,
-  },
-  features: {
-    gap: SPACING.sm,
-    marginBottom: SPACING.xl,
-  },
-  featureRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  featureText: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 13,
-    color: COLORS.textDescription,
-    flex: 1,
-  },
-  selectBtn: {
-    backgroundColor: COLORS.surfaceElevated,
-    borderRadius: BORDER_RADIUS.md,
-    paddingVertical: SPACING.md,
-    alignItems: 'center',
-  },
-  selectBtnActive: {
-    backgroundColor: COLORS.primary,
-  },
-  selectBtnText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 13,
-    color: COLORS.textTitle,
-    letterSpacing: 0.5,
-  },
-  selectBtnTextActive: {
-    color: COLORS.background,
-  },
+  container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 2, overflow: 'hidden', ...SHADOWS.md },
+  containerActive: { shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.25, shadowRadius: 16, elevation: 8 },
+  popularBadge: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: COLORS.primary, paddingVertical: SPACING.xs },
+  popularText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.background, letterSpacing: 1 },
+  discountBadge: { position: 'absolute', top: 12, right: 12, backgroundColor: COLORS.success, paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: BORDER_RADIUS.sm },
+  discountText: { fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.background },
+  content: { padding: SPACING.xl },
+  header: { alignItems: 'center', marginBottom: SPACING.md },
+  name: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, marginBottom: SPACING.xs },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline' },
+  currency: { fontFamily: 'Inter_400Regular', fontSize: 16, color: COLORS.textMuted },
+  price: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 36, color: COLORS.primary },
+  period: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted },
+  divider: { height: 1, backgroundColor: COLORS.border, marginVertical: SPACING.md },
+  selectBtn: { backgroundColor: COLORS.surfaceElevated, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.md, alignItems: 'center' },
+  selectBtnActive: { backgroundColor: COLORS.primary },
+  selectBtnText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.textTitle, letterSpacing: 0.5 },
+  selectBtnTextActive: { color: COLORS.background },
 });
