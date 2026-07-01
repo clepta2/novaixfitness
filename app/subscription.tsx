@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/subscription.tsx
 // Assinatura com animacoes de transicao - NOVAIX FITNESS
 

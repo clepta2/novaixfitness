@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/admin.tsx
 // Painel Administrativo com animacoes de entrada - NOVAIX FITNESS
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/chat.tsx
 // Pagina de chats com melhorias visuais - NOVAIX FITNESS
 

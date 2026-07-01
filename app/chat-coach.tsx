@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { View, FlatList, KeyboardAvoidingView, Platform, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../src/constants/colors';

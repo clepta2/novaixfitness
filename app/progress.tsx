@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/progress.tsx
 // Progresso com timeline animado - NOVAIX FITNESS
 

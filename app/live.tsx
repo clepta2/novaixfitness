@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/live.js
 // Página principal de lives de treino
 

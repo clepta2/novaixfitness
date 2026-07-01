@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/player.tsx
 // Tela de Player de Treino com novos componentes - NOVAIX FITNESS
 

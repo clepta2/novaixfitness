@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/goals/index.js
 // Metas e conquistas - DATA DRIVEN
 

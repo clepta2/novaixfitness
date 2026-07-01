@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/index.js
 // Tela principal do onboarding - 2 Fases
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/marketplace.tsx
 // Marketplace com cards animados - NOVAIX FITNESS
 

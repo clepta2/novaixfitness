@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/settings/appearance.tsx
 // Configuracao de aparencia com animacoes - NOVAIX FITNESS
 

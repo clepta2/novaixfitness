@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/assessment/index.tsx
 // Avaliacao com animacoes de entrada - NOVAIX FITNESS
 

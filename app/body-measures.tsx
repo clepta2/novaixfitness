@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/body-measures.tsx
 // Medidas corporais com graficos animados - NOVAIX FITNESS
 

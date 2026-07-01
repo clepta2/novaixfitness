@@ -37,6 +37,10 @@ export { default as LoadHistory } from './workout/LoadHistory';
 export { default as ExerciseSearch } from './workout/ExerciseSearch';
 export { default as ExerciseConfigurator } from './workout/ExerciseConfigurator';
 export { default as WorkoutPreview } from './workout/WorkoutPreview';
+export { default as PlayerFullscreen } from './workout/PlayerFullscreen';
+export { default as PlaybackSpeed } from './workout/PlaybackSpeed';
+export { default as VideoSeekBar } from './workout/VideoSeekBar';
+export { default as LoopToggle } from './workout/LoopToggle';
 
 export { default as PostCard } from './social/PostCard';
 export { default as ForumPost } from './social/ForumPost';

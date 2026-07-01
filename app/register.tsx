@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/register.tsx
 // Tela de Cadastro com animacoes de entrada - NOVAIX FITNESS
 

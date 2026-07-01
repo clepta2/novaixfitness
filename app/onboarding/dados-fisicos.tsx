@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/dados-fisicos.tsx
 // Tela 2 - Genero + Dados Fisicos com melhorias visuais - NOVAIX FITNESS
 

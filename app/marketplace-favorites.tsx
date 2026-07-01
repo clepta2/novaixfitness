@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/marketplace-favorites.js
 // Pagina de favoritos do marketplace - NOVAIX FITNESS
 

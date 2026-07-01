@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/dashboard.js
 // Dashboard Unificado de Progresso - NOVAIX FITNESS
 

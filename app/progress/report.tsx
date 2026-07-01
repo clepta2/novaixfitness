@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/progress/report.js
 // Relatório mensal em PDF
 

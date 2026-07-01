@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/experiencia.js
 // Tela 6 - Nivel de Experiencia - NOVAIX FITNESS
 

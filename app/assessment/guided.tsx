@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/assessment/guided.js
 // Avaliação guiada com timer
 

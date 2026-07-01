@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/analytics.tsx
 // Dashboard de Analytics com animacoes - NOVAIX FITNESS
 

@@ -13,3 +13,4 @@ export { useDebounce, useDebouncedCallback } from './useDebounce';
 export { useRealtimePosts } from './useRealtimePosts';
 export { useRealtimeComments } from './useRealtimeComments';
 export { useRealtimeLikes } from './useRealtimeLikes';
+export { usePlayerGestures } from './usePlayerGestures';

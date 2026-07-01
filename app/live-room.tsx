@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/live-room.js
 // Sala de live de treino
 

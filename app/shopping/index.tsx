@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/shopping/index.js
 // Lista de compras gerada por IA
 

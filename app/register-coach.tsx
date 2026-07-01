@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/register-coach.js
 // Tela de Inscrição/Registro de Coach (CREF / KYC) - NOVAIX FITNESS
 

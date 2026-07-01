@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/progress/initialPhoto.js
 // Foto inicial para comparação
 

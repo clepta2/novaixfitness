@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/workout/preCheckin.js
 // Check-in pré-treino
 

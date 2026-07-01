@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/_layout.js
 // Layout do fluxo de Onboarding - NOVAIX FITNESS (Simplificado: 3 passos)
 

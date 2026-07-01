@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/processando.js
 // Tela de Carregamento - NOVAIX FITNESS
 

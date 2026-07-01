@@ -27,3 +27,7 @@ export { default as ExerciseConfigurator } from './ExerciseConfigurator';
 export { default as WorkoutPreview } from './WorkoutPreview';
 export { default as WorkoutCoachChat } from './WorkoutCoachChat';
 export { default as StepIndicator } from './StepIndicator';
+export { default as PlayerFullscreen } from './PlayerFullscreen';
+export { default as PlaybackSpeed } from './PlaybackSpeed';
+export { default as VideoSeekBar } from './VideoSeekBar';
+export { default as LoopToggle } from './LoopToggle';

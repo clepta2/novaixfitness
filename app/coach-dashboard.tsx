@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/coach-dashboard.tsx
 // Painel do Coach com animacoes de entrada - NOVAIX FITNESS
 

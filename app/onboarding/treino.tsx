@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/treino.js
 // Tela de tipo de treino - COM MIDDLEWARES
 

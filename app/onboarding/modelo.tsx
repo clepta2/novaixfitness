@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/modelo.js
 // Tela 3 - Modelo Corporal - NOVAIX FITNESS
 

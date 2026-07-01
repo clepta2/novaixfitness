@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/progress/monthlyReview.js
 // Revisão mensal de progresso
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';

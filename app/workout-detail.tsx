@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/workout-detail.tsx
 // Detalhe do Treino com novos componentes - NOVAIX FITNESS
 

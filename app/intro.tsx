@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/intro.tsx
 // Intro com animacoes de entrada - NOVAIX FITNESS
 

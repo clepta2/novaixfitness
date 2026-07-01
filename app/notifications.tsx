@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/notificacoes.tsx
 // Notificacoes com animacoes de entrada - NOVAIX FITNESS
 

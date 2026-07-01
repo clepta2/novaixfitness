@@ -995,5 +995,100 @@
     "defaultMessage": "Bem vindo de volta!",
     "claim": "Resgatar Recompensa",
     "claimed": "Recompensa Resgatada"
+  },
+  "errors": {
+    "biometric": "Falha na autenticação biométrica.",
+    "fixFormErrors": "Corrija os erros no formulário.",
+    "favoriteUpdateFailed": "Falha ao atualizar favorito",
+    "exportFailed": "Não foi possível exportar os dados.",
+    "generateFailed": "Não foi possível gerar a lista",
+    "reportFailed": "Não foi possível gerar o relatório",
+    "photoSaveFailed": "Não foi possível salvar as fotos",
+    "deleteFailed": "Não foi possível deletar",
+    "server": "Erro no servidor. Tente novamente.",
+    "network": "Sem conexão. Verifique sua internet.",
+    "timeout": "Tempo esgotado. Tente novamente.",
+    "generic": "Ocorreu um erro inesperado."
+  },
+  "auth": {
+    "heroTitle": "Sua Nova Evolução no Treino",
+    "noAccountYet": "Ainda não tem conta?",
+    "emailOrCpfTaken": "E-mail ou CPF já cadastrado.",
+    "signupFailed": "Falha ao criar conta",
+    "enterEmailOrCpf": "Insira seu E-mail ou CPF",
+    "invalidEmailOrCpfFormat": "Formato de E-mail ou CPF inválido",
+    "loginFailed": "Falha ao fazer login",
+    "passwordMin": "Mínimo 6 caracteres",
+    "forgotPassword": "Esqueceu a senha?",
+    "login": "ENTRAR",
+    "orContinueWith": "ou continue com"
+  },
+  "social": {
+    "publishFailed": "Não foi possível publicar seu post",
+    "commentFailed": "Não foi possível enviar o comentário",
+    "justNow": "Agora"
+  },
+  "lgpd": {
+    "exportSuccess": "Dados exportados com sucesso!",
+    "exportFailed": "Não foi possível exportar os dados.",
+    "deleteFailed": "Não foi possível deletar a conta.",
+    "saveFailed": "Não foi possível salvar as configurações."
+  },
+  "player": {
+    "confirmExit": "Salvar progresso e sair?"
+  },
+  "onboarding": {
+    "planError": "Ocorreu um erro ao criar seu plano."
+  },
+  "admin": {
+    "tabs": {
+      "students": "Alunos",
+      "financial": "Financeiro",
+      "content": "Conteúdo",
+      "campaigns": "Campanhas"
+    },
+    "noName": "Sem nome"
+  },
+  "assessment": {
+    "exercises": {
+      "prancha": "Prancha",
+      "flexoes": "Flexões",
+      "agachamento": "Agachamento",
+      "corrida": "Corrida",
+      "abdominais": "Abdominais",
+      "burpees": "Burpees",
+      "barra": "Barra"
+    },
+    "levels": {
+      "beginner": "Iniciante",
+      "intermediate": "Intermediário",
+      "advanced": "Avançado"
+    },
+    "options": {
+      "no": "Não",
+      "yes": "Sim",
+      "almost": "Quase",
+      "difficult": "Com dificuldade"
+    }
+  },
+  "wearables": {
+    "appleWatchAvailable": "Apple Watch disponível",
+    "notAvailable": "Não disponível",
+    "runningActivities": "Corridas e atividades",
+    "loadingDevices": "Carregando dispositivos..."
+  },
+  "waitlist": {
+    "joinFailed": "Não foi possível inscrever. Tente novamente."
+  },
+  "shopping": {
+    "generateFailed": "Não foi possível gerar a lista"
+  },
+  "workoutCreate": {
+    "steps": {
+      "info": "Info",
+      "exercises": "Exercícios",
+      "configure": "Configurar",
+      "preview": "Preview"
+    }
   }
 }

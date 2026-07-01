@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/mindfulness.js
 // Tela de Mindfulness e Exercícios Respiratórios - NOVAIX FITNESS
 

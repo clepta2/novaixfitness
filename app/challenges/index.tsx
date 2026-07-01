@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/challenges/index.tsx
 // Desafios diarios com cards animados - NOVAIX FITNESS
 

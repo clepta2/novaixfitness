@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/ai/index.js
 // Aba de IA - Hub central
 

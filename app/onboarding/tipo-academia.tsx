@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/tipo-academia.js
 // Tela 5b - Tipo de Academia - NOVAIX FITNESS
 

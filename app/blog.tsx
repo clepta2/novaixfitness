@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/blog.js
 // Tela Blog/Artigos - NOVAIX FITNESS
 

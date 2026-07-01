@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/forgot-password.tsx
 // Recuperacao de senha com animacoes - NOVAIX FITNESS
 

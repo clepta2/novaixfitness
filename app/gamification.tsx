@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/gamification.tsx
 // Gamification com rankings animados e melhorias visuais - NOVAIX FITNESS
 

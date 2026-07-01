@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/weekly-progress.tsx
 // Progresso semanal com animacoes - NOVAIX FITNESS
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/index.tsx
 // Tela de Login com animacoes de entrada - NOVAIX FITNESS
 
@@ -14,6 +14,7 @@ import { SHADOWS } from '../src/constants/shadows';
 import { BRAND_NAME } from '../src/constants/brand';
 import { Button, AuthInput, ErrorBoundary } from '../src/components';
 import { useTheme } from '../src/context/ThemeContext';
+import { useI18n } from '../src/i18n';
 import useLogin from '../src/hooks/useLogin';
 import { useResponsive } from '../src/hooks/useResponsive';
 import { layout, typography } from '../src/styles';
@@ -21,6 +22,7 @@ import { layout, typography } from '../src/styles';
 export default function LoginScreen() {
   const { isDark } = useTheme();
   const { isSmall } = useResponsive();
+  const { t } = useI18n();
   const {
     router, email, setEmail, password, setPassword, loading,
     handleLogin, handleGoogle, handleApple, handleBiometrics,
@@ -70,7 +72,7 @@ export default function LoginScreen() {
             {/* Brand com animacao */}
             <Animated.View style={[styles.brand, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
               <Text style={styles.brandName}>{BRAND_NAME}</Text>
-              <Text style={styles.brandTagline}>Sua Nova Evolucao no Treino</Text>
+              <Text style={styles.brandTagline}>{t('auth.heroTitle')}</Text>
             </Animated.View>
 
             {/* Formulario com animacao */}
@@ -104,7 +106,7 @@ export default function LoginScreen() {
                 onPress={() => router.push('/forgot-password')} 
                 style={styles.forgotBtn}
               >
-                <Text style={styles.forgotText}>Esqueceu a senha?</Text>
+                <Text style={styles.forgotText}>{t('auth.forgotPassword')}</Text>
               </TouchableOpacity>
 
               <View style={styles.actionRow}>
@@ -122,7 +124,7 @@ export default function LoginScreen() {
               {/* Divider */}
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>ou</Text>
+                <Text style={styles.dividerText}>{t('auth.orContinueWith')}</Text>
                 <View style={styles.dividerLine} />
               </View>
 
@@ -140,9 +142,9 @@ export default function LoginScreen() {
 
             {/* Footer com animacao */}
             <Animated.View style={[styles.footer, { opacity: fadeAnim }]}>
-              <Text style={styles.footerText}>Ainda nao tem conta? </Text>
+              <Text style={styles.footerText}>{t('auth.noAccountYet')} </Text>
               <TouchableOpacity onPress={() => router.push('/register')}>
-                <Text style={styles.footerLink}>Cadastre-se</Text>
+                <Text style={styles.footerLink}>{t('auth.signup')}</Text>
               </TouchableOpacity>
             </Animated.View>
           </ScrollView>

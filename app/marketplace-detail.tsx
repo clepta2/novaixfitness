@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/marketplace-detail.js
 // Tela de detalhe do produto - NOVAIX FITNESS
 

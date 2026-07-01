@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/localizacao.js
 // Tela 3 - Localização - NOVAIX FITNESS
 

@@ -32,4 +32,18 @@ export const SOCIAL_FEATURES = {
   ENABLE_BLOCKING: true,
 } as const;
 
+// Midia avancada
+export const MAX_VIDEO_DURATION = 60;
+export const MAX_CAROUSEL_IMAGES = 10;
+
+export const SUPPORTED_MOODS = [
+  'Motivado',
+  'Feliz',
+  'Cansado',
+  'Ansioso',
+  'Orgulhoso',
+  'Determinado',
+] as const;
+
 export type SocialLimits = typeof SOCIAL_LIMITS;
+export type MoodType = (typeof SUPPORTED_MOODS)[number];

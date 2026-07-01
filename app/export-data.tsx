@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/export-data.js
 // Tela de Exportação de Dados - NOVAIX FITNESS
 

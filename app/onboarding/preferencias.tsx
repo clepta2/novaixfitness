@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // app/onboarding/preferencias.js
 // Tela 3 - Preferências Consolidadas (Disponibilidade + Academia + Experiência) - NOVAIX FITNESS
 import { useState } from 'react';
