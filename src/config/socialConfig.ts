@@ -22,6 +22,15 @@ export const SOCIAL_LIMITS = {
   // Busca
   MIN_SEARCH_LENGTH: 2,
   MAX_SEARCH_RESULTS: 50,
+
+  // Mentions
+  MENTION_SEARCH_LIMIT: 5,
+
+  // Replies
+  MAX_REPLY_DEPTH: 1,
+
+  // Story Highlights
+  STORY_HIGHLIGHT_LIMIT: 10,
 } as const;
 
 export const SOCIAL_FEATURES = {
@@ -44,6 +53,8 @@ export const SUPPORTED_MOODS = [
   'Orgulhoso',
   'Determinado',
 ] as const;
+
+export const { MENTION_SEARCH_LIMIT, MAX_REPLY_DEPTH, STORY_HIGHLIGHT_LIMIT } = SOCIAL_LIMITS;
 
 export type SocialLimits = typeof SOCIAL_LIMITS;
 export type MoodType = (typeof SUPPORTED_MOODS)[number];

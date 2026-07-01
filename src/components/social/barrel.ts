@@ -54,3 +54,16 @@ export { StorySkeleton, LiveCardSkeleton, ChatListSkeleton, GroupCardSkeleton, S
 export { default as DirectChatDrawer } from './DirectChatDrawer';
 export { default as ActiveDuelCard } from './ActiveDuelCard';
 export { default as ReelItem } from './ReelItem';
+// Phase 4 - Community Explore
+export { default as ExplorePage } from './ExplorePage';
+export { default as SuggestedFollows } from './SuggestedFollows';
+export { default as TrendingTopics } from './TrendingTopics';
+export { default as PostInsights } from './PostInsights';
+export { default as ArchivedPosts } from './ArchivedPosts';
+// Phase 4 - Social Interactions
+export { default as CommentReply } from './CommentReply';
+export { default as CommentLike } from './CommentLike';
+export { default as MentionInput } from './MentionInput';
+export { default as StoryHighlights } from './StoryHighlights';
+export { default as RepostCard } from './RepostCard';
+export { default as MuteUserButton } from './MuteUserButton';

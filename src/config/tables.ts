@@ -20,6 +20,10 @@ export const TABLES = {
   STORY_VIEWS: 'story_views',
   FAVORITES: 'favorites',
 
+  // Community Analytics
+  POST_VIEWS: 'post_views',
+  USER_MUTES: 'user_mutes',
+
   // Chat & Messaging
   CONVERSATIONS: 'conversations',
   CONVERSATION_MEMBERS: 'conversation_members',
