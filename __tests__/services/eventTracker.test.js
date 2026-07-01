@@ -11,7 +11,7 @@ jest.mock('../../src/config/supabase', () => {
 
 jest.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
 
-const tracker = require('../../src/services/eventTracker');
+const tracker = require('../../src/services/analyticsTracker');
 
 beforeEach(() => {
   jest.clearAllMocks();

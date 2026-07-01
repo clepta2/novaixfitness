@@ -11,7 +11,8 @@ import { Avatar } from '../ui/Avatar';
 import { useAuth } from '../../context/AuthContext';
 import { useSecurity } from '../../hooks/useSecurity';
 import { moderateText } from '../../services/contentModeration';
-import { getMessages, sendMessage, markAsRead, subscribeToConversation } from '../../services/chat';
+import { getMessages, sendMessage } from '../../services/chatMessages';
+import { markAsRead, subscribeToConversation } from '../../services/chatConversations';
 import { useI18n } from '../../i18n';
 
 export default function ChatView({ conversation, onBack }) {

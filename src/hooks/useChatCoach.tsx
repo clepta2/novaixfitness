@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { supabase } from '../config/supabase';
 import { askGeminiCoach, saveChatMessage, getChatHistory, clearChatHistory } from '../services/gemini';
-import { analyzeMealText, saveMealLog } from '../services/mealAnalyzer';
+import { analyzeMealText, saveMealLog } from '../services/mealAnalyzerService';
 import { detectMealLog, formatMealSummary } from '../helpers/chatHelpers';
 import { buildChatContext, createWelcomeMessage, createCoachMessage, createUserMessage, cleanupLimitExceededMessage } from './helpers/chatHelpers';
 import { Profile } from '../types';

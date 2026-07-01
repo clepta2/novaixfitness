@@ -6,6 +6,14 @@ jest.mock('expo-font', () => ({
   useFonts: () => [true],
 }));
 
+jest.mock('../../src/i18n', () => ({
+  useI18n: () => ({
+    locale: 'pt',
+    t: (key) => key,
+    changeLocale: jest.fn(),
+  }),
+}));
+
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');
   return {
@@ -139,7 +147,18 @@ jest.mock('../../src/constants/gamification', () => ({
 }));
 
 jest.mock('../../src/hooks/useTutorial', () => ({
-  useTutorial: () => ({ showTutorial: false, completeTutorial: jest.fn(), shouldShowTutorial: false }),
+  useTutorial: () => ({ visible: false, steps: [], handleComplete: jest.fn(), handleSkip: jest.fn() }),
+}));
+
+jest.mock('../../src/hooks/useNotificationPrefs', () => ({
+  useNotificationPrefs: () => ({
+    notifications: [], loading: false, refreshing: false,
+    prefs: {}, reminderTime: '08:00', setReminderTime: jest.fn(),
+    pushEnabled: true, quietHours: { enabled: false, start: '22:00', end: '07:00' },
+    unreadCount: 0, notifGroups: [],
+    onRefresh: jest.fn(), markAsRead: jest.fn(), markAllAsRead: jest.fn(), clearAll: jest.fn(),
+    handleNotifToggle: jest.fn(), handlePushToggle: jest.fn(),
+  }),
 }));
 
 import NotificationsScreen from '../../app/notifications';
@@ -156,7 +175,7 @@ describe('Screens - Round 4', () => {
   describe('NotificationsScreen', () => {
     it('renders and shows empty state', () => {
       const { getByText } = render(<NotificationsScreen />);
-      expect(getByText('Notificações')).toBeTruthy();
+      expect(getByText('Notificacoes')).toBeTruthy();
     });
   });
 

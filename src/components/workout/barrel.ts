@@ -1,5 +1,4 @@
 export { default as ExerciseAccordion } from './ExerciseAccordion';
-export { default as ExerciseQuickPanel } from './ExerciseQuickPanel';
 export { default as ExerciseStepCarousel } from './ExerciseStepCarousel';
 export { default as WorkoutListItem } from './WorkoutListItem';
 export { default as ProgressSection } from './ProgressSection';
@@ -25,9 +24,7 @@ export { default as LoadHistory } from './LoadHistory';
 export { default as ExerciseSearch } from './ExerciseSearch';
 export { default as ExerciseConfigurator } from './ExerciseConfigurator';
 export { default as WorkoutPreview } from './WorkoutPreview';
-export { default as WorkoutCoachChat } from './WorkoutCoachChat';
 export { default as StepIndicator } from './StepIndicator';
-export { default as PlayerFullscreen } from './PlayerFullscreen';
 export { default as PlaybackSpeed } from './PlaybackSpeed';
 export { default as VideoSeekBar } from './VideoSeekBar';
 export { default as LoopToggle } from './LoopToggle';

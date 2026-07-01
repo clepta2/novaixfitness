@@ -2,6 +2,7 @@
 // app/player.tsx
 // Tela de Player de Treino com novos componentes - NOVAIX FITNESS
 
+import { useState, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -12,10 +13,12 @@ import { EXERCISE, COMPLETION } from '../src/data/workoutTexts';
 import { 
   WorkoutTimer, ExerciseProgress, RestOverlay, WorkoutControls, 
   RatingModal, TutorialOverlay, XPFloating, ErrorBoundary, ExerciseVideo,
-  ProgressRing, AnimatedCounter, GlassCard, GradientButton, Skeleton, WorkoutShare
+  ProgressRing, AnimatedCounter, GlassCard, GradientButton, Skeleton, WorkoutShare,
+  PlayerFullscreen
 } from '../src/components';
 import useWorkoutPlayer from '../src/hooks/useWorkoutPlayer';
 import { useResponsive } from '../src/hooks/useResponsive';
+import { usePlayerGestures } from '../src/hooks/usePlayerGestures';
 import { layout, typography } from '../src/styles';
 import { styles } from '../src/styles/playerStyles';
 
@@ -35,6 +38,9 @@ export default function PlayerScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const { isSmall, horizontalPadding } = useResponsive();
+  const [fullscreenVisible, setFullscreenVisible] = useState(false);
+  const videoRef = useRef(null);
+  const { panHandlers, tapHandlers } = usePlayerGestures({ videoRef });
   const {
     workout, loading, showRating, voiceEnabled, showXP, xpAmount,
     tutorialVisible, tutorialSteps, handleComplete, handleSkip,
@@ -111,14 +117,21 @@ export default function PlayerScreen() {
       )}
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <ExerciseProgress exercises={workout.exercises} currentIndex={timer.currentExerciseIndex} currentSet={timer.currentSet} totalSets={timer.totalSets} />
-        
+
         {timer.currentExercise && (
-          <View style={styles.videoSection}>
+          <View style={styles.videoSection} {...panHandlers} {...tapHandlers}>
             <ExerciseVideo
               exerciseName={timer.currentExercise.name}
               videoId={timer.currentExercise.video_id}
               thumbnailUrl={timer.currentExercise.thumbnail_url}
             />
+            <TouchableOpacity
+              style={styles.fullscreenBtn}
+              onPress={() => setFullscreenVisible(true)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="expand" size={20} color={COLORS.background} />
+            </TouchableOpacity>
           </View>
         )}
 
@@ -183,6 +196,15 @@ export default function PlayerScreen() {
           />
         </Modal>
       )}
+
+      {/* Fullscreen Modal */}
+      <Modal visible={fullscreenVisible} animationType="fade" transparent={false}>
+        <PlayerFullscreen
+          exerciseName={timer.currentExercise?.name}
+          videoId={timer.currentExercise?.video_id}
+          onClose={() => setFullscreenVisible(false)}
+        />
+      </Modal>
     </View>
     </ErrorBoundary>
   );

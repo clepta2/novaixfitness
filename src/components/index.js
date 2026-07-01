@@ -14,3 +14,4 @@ export * from './exports/planner';
 export * from './exports/marketplace';
 export * from './exports/onboarding';
 export * from './exports/nutrition';
+export * from './exports/notifications';

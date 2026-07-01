@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { SHADOWS } from '../../src/constants/shadows';
-import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary, PostSkeleton, FeedEmptyState, FeedHeader, FeedFilters, StoryRing, StoryViewer, StoryCreateModal, DailyCheckIn, Loading, ReelItem } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary, PostSkeleton, FeedEmptyState, FeedHeader, FeedFilters, StoryRing, StoryViewer, StoryCreateModal, DailyCheckIn, Loading, ReelItem, TrendingTopics, SuggestedFollows } from '../../src/components';
 import { ComposerCard } from '../../src/components/feed/ComposerCard';
 import { ReelsBar } from '../../src/components/feed/ReelsBar';
 import { DuelsSection } from '../../src/components/feed/DuelsSection';
@@ -117,6 +117,8 @@ export default function FeedScreen() {
         <StoryRing currentUserId={user?.id || ''} currentUserAvatar={profile?.avatar_url} currentUserName={profile?.name} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />
         <ReelsBar reels={feedReels} onPressReel={(i) => { setActiveReelIndex(i); setShowReelsModal(true); }} />
         <DuelsSection />
+        <TrendingTopics />
+        <SuggestedFollows userId={user?.id} />
         <ChallengesList userId={user?.id} />
 
         {loading ? (

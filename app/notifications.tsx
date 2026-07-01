@@ -1,10 +1,8 @@
-
+﻿
 // app/notificacoes.tsx
 // Notificacoes com animacoes de entrada - NOVAIX FITNESS
 
-
-            ;
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

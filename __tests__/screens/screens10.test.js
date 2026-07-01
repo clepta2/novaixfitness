@@ -131,14 +131,14 @@ describe('Screens - Round 10', () => {
   describe('PhysicalDataScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<PhysicalDataScreen />);
-      expect(getByText('SOBRE VOCÊ')).toBeTruthy();
+      expect(getByText('SOBRE VOCE')).toBeTruthy();
     });
 
     it('renders data and location inputs, weight/height sliders', () => {
       const { getAllByText } = render(<PhysicalDataScreen />);
       expect(getAllByText('DATA DE NASCIMENTO').length).toBeGreaterThanOrEqual(1);
-      expect(getAllByText('PESO').length).toBeGreaterThanOrEqual(1);
-      expect(getAllByText('ALTURA').length).toBeGreaterThanOrEqual(1);
+      expect(getAllByText('PESO (kg)').length).toBeGreaterThanOrEqual(1);
+      expect(getAllByText('ALTURA (cm)').length).toBeGreaterThanOrEqual(1);
     });
   });
 

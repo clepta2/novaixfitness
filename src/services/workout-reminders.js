@@ -2,8 +2,37 @@
 // Sistema de lembretes de treino - NOVAIX FITNESS
 
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 import { supabase } from '../config/supabase';
-import { getRestDays, getMotivationalMessage, getWeeklyFeedback } from './reminder-helpers';
+import { sendPushNotification, sendPushToUser } from './notifications';
+import { APP_CONFIG } from '../config/app';
+
+const { streakMessages } = APP_CONFIG.notifications;
+
+function getRestDays(workoutDays) {
+  const allDays = [1, 2, 3, 4, 5, 6, 7];
+  return allDays.filter(d => !workoutDays.includes(d));
+}
+
+function getMotivationalMessage() {
+  const messages = [
+    'Cada treino te aproxima do seu objetivo!',
+    'Disciplina e mais forte que motivacao.',
+    'Seu corpo agradece cada gota de suor.',
+    'Hoje e um bom dia para superar seus limites.',
+    'A consistencia e a chave do sucesso.',
+    'Nao pare agora! Voce esta indo muito bem.',
+    'O unico treino ruim e o que nao aconteceu.',
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function getWeeklyFeedback(count) {
+  if (count >= 5) return 'Semana incrivel!';
+  if (count >= 3) return 'Muito bem! Continue assim.';
+  if (count >= 1) return 'Bom comeco! Tente treinar mais.';
+  return 'Semana fraca. Volte com tudo!';
+}
 
 
 export async function setupWorkoutReminders(userId) {
@@ -186,4 +215,48 @@ export async function getActiveReminders() {
   );
 }
 
-// Funções auxiliares movidas para reminder-helpers.js
+export async function sendScheduledWorkoutReminder(pushToken, hour, minute, workoutName) {
+  const h = hour ?? 19;
+  const m = minute ?? 0;
+  const name = workoutName || 'seu treino';
+
+  if (Platform.OS === 'web') return;
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: 'Hora de treinar!',
+      body: `Bora! ${name} esta te esperando. Seu streak esta em risco!`,
+      data: { type: 'workout_reminder' },
+      sound: true,
+    },
+    trigger: { hour: h, minute: m, repeats: true, channelId: 'default' },
+  });
+}
+
+export async function sendScheduledStreakReminder(userId, pushToken, streakDays) {
+  const message = streakMessages[streakDays]
+    || `Parabens! ${streakDays} dias seguidos treinando! Continue assim!`;
+
+  await sendPushNotification(pushToken, `Streak de ${streakDays} dias!`, message, {
+    type: 'streak',
+    streak_days: streakDays,
+  });
+}
+
+export async function sendScheduledWeeklySummary(userId, pushToken, stats) {
+  const { workoutsCompleted = 0, minutesTrained = 0, streakDays = 0 } = stats || {};
+
+  const body = `${workoutsCompleted} treinos · ${minutesTrained} min`
+    + (streakDays > 0 ? ` · ${streakDays} dias seguidos` : '')
+    + '. Continue firme!';
+
+  await sendPushNotification(pushToken, 'Resumo da semana', body, {
+    type: 'weekly_summary',
+  });
+}
+
+export async function sendScheduledNextDayReminder(userId, workoutName) {
+  await sendPushToUser(userId, 'Treino de amanha', `Prepare-se! Amanha: ${workoutName}`, {
+    type: 'workout_reminder',
+  });
+}

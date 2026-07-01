@@ -1,5 +1,5 @@
 import NetInfo from '@react-native-community/netinfo';
-import { syncPendingActions, getPendingActionsCount } from './sync';
+import { syncPendingActions, hasPendingActions, getQueueStats } from './offlineSync';
 import { updateLastSync } from './offline';
 
 let unsubscribe = null;
@@ -17,8 +17,8 @@ async function handleNetworkChange(state) {
 
     if (syncTimeout) clearTimeout(syncTimeout);
     syncTimeout = setTimeout(async () => {
-      const pendingCount = await getPendingActionsCount();
-      if (pendingCount > 0) {
+      const hasPending = await hasPendingActions();
+      if (hasPending) {
         try {
           await syncPendingActions();
           await updateLastSync();
@@ -48,8 +48,8 @@ export function stopAutoSync() {
 }
 
 export async function forceSyncNow() {
-  const pendingCount = await getPendingActionsCount();
-  if (pendingCount === 0) return { synced: 0, failed: 0 };
+  const hasPending = await hasPendingActions();
+  if (!hasPending) return { synced: 0, failed: 0 };
 
   onSyncStateChange?.('syncing');
   const result = await syncPendingActions();

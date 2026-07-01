@@ -16,6 +16,7 @@ jest.mock('../../src/middleware/auth', () => ({
 }));
 
 jest.mock('../../src/middleware/role', () => ({
+  ROLE_HIERARCHY: { user: 0, creator: 1, workout_admin: 2, community_admin: 2, employee: 2, manager: 3, admin: 4, superadmin: 5 },
   requireRole: (roles) => (req, res, next) => {
     const userRole = req.user?.app_metadata?.role || 'user';
     if (!roles.includes(userRole)) {

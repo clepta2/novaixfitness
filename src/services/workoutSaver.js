@@ -3,8 +3,7 @@
 
 import { supabase } from '../config/supabase';
 import { recordWorkoutCompletion } from './gamification';
-import { sendWorkoutCompletedNotification } from './notifications';
-import { sendPushToUser } from './pushNotifications';
+import { sendWorkoutCompletedNotification, sendPushToUser } from './notifications';
 
 export async function saveCompleteWorkout(userId, workout, logs, duration) {
   if (!userId) return null;

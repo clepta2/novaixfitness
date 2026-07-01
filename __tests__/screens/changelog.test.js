@@ -51,6 +51,21 @@ jest.mock('../../src/components/changelog/ChangelogItem', () => {
   };
 });
 
+jest.mock('../../src/components', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return {
+    ErrorBoundary: (props) => React.createElement(View, null, props.children),
+    ChangelogItem: ({ version, date, changes }) => (
+      React.createElement(View, { testID: `changelog-${version}` },
+        React.createElement(Text, null, `v${version}`),
+        React.createElement(Text, null, date),
+        changes.map((c, i) => React.createElement(Text, { key: i }, c.text))
+      )
+    ),
+  };
+});
+
 describe('ChangelogScreen', () => {
   it('renders title', () => {
     const { getByText } = render(<ChangelogScreen />);

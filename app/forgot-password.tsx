@@ -1,10 +1,10 @@
-
+﻿
 // app/forgot-password.tsx
 // Recuperacao de senha com animacoes - NOVAIX FITNESS
 
 
             ;
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, StyleSheet, ImageBackground, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

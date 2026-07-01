@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../../src/constants/spacing';
-import { Avatar } from '../../../src/components';
+import { Avatar, MuteUserButton } from '../../../src/components';
 import { useAuth } from '../../../src/context/AuthContext';
 import { supabase } from '../../../src/config/supabase';
 import { Header, ErrorBoundary, PostCard } from '../../../src/components';
@@ -21,6 +21,7 @@ export default function UserProfileScreen() {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -63,6 +64,10 @@ export default function UserProfileScreen() {
       setFollowing(true);
       setProfile(prev => ({ ...prev, followers_count: (prev?.followers_count || 0) + 1 }));
     }
+  };
+
+  const handleToggleMute = (userId: string) => {
+    setIsMuted(prev => !prev);
   };
 
   const onRefresh = async () => {
@@ -116,12 +121,15 @@ export default function UserProfileScreen() {
             </View>
 
             {!isOwnProfile && (
-              <TouchableOpacity style={[styles.followBtn, following && styles.followingBtn]} accessibilityLabel={following ? 'Deixar de seguir' : 'Seguir'} accessibilityRole="button" onPress={handleFollow}>
-                <Ionicons name={following ? 'checkmark' : 'person-add'} size={16} color={following ? COLORS.primary : COLORS.background} />
-                <Text style={[styles.followText, following && styles.followingText]}>
-                  {following ? 'Seguindo' : 'Seguir'}
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.actionsRow}>
+                <TouchableOpacity style={[styles.followBtn, following && styles.followingBtn]} accessibilityLabel={following ? 'Deixar de seguir' : 'Seguir'} accessibilityRole="button" onPress={handleFollow}>
+                  <Ionicons name={following ? 'checkmark' : 'person-add'} size={16} color={following ? COLORS.primary : COLORS.background} />
+                  <Text style={[styles.followText, following && styles.followingText]}>
+                    {following ? 'Seguindo' : 'Seguir'}
+                  </Text>
+                </TouchableOpacity>
+                <MuteUserButton userId={id} isMuted={isMuted} onToggle={handleToggleMute} />
+              </View>
             )}
           </View>
 
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
   stat: { alignItems: 'center' },
   statValue: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },
   statLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
+  actionsRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
   followBtn: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.xxl, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.full },
   followText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.background },
   followingBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: COLORS.primary },

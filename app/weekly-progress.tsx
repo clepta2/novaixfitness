@@ -1,10 +1,10 @@
-
+﻿
 // app/weekly-progress.tsx
 // Progresso semanal com animacoes - NOVAIX FITNESS
 
 
             ;
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

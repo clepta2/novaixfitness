@@ -1,7 +1,7 @@
-// app/paywall.tsx
+﻿// app/paywall.tsx
 // Paywall com melhorias visuais e animacoes - NOVAIX FITNESS
 
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform, Switch, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';

@@ -187,7 +187,7 @@ describe('Library Screen', () => {
 
   it('renders categories', () => {
     const { getByText } = render(<LibraryScreen />);
-    expect(getByText('MEUS FAVORITOS')).toBeTruthy();
+    expect(getByText('MUSCULACAO')).toBeTruthy();
   });
 
   it('renders workout list', () => {

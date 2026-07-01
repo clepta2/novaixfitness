@@ -4,7 +4,7 @@
 
 
             ;
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';

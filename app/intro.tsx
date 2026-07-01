@@ -4,7 +4,7 @@
 
 
             ;
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, Animated,
   StyleSheet, Dimensions,

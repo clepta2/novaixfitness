@@ -5,7 +5,7 @@ import { Animated, View, StyleSheet, ColorValue } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { COLORS } from '../../src/constants/colors';
 import { ICON_SIZES } from '../../src/constants/spacing';
-import { ComponentProps } from 'react';
+import { useState, useEffect } from 'react';
 
 type AnimatedTabIconProps = {
   name: ComponentProps<typeof Ionicons>['name'];
@@ -53,6 +53,7 @@ export default function TabLayout() {
       <Tabs.Screen name="home" options={{ title: 'Início', tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="home" nameOutline="home-outline" focused={focused} color={color} /> }} />
       <Tabs.Screen name="library" options={{ title: 'Treinos', tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="barbell" nameOutline="barbell-outline" focused={focused} color={color} /> }} />
       <Tabs.Screen name="feed" options={{ title: 'Comunidade', tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="people" nameOutline="people-outline" focused={focused} color={color} /> }} />
+      <Tabs.Screen name="explore" options={{ title: 'Explorar', tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="compass" nameOutline="compass-outline" focused={focused} color={color} /> }} />
       <Tabs.Screen name="perfil" options={{ title: 'Config.', href: null }} />
       <Tabs.Screen name="config" options={{ title: 'Configurações', tabBarIcon: ({ focused, color }) => <AnimatedTabIcon name="settings" nameOutline="settings-outline" focused={focused} color={color} /> }} />
       <Tabs.Screen name="ajuda" options={{ href: null }} />

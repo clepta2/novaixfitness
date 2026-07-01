@@ -23,7 +23,7 @@ export async function getMessages(conversationId: string, limit: number = 50, be
 export async function sendMessage(
   conversationId: string, userId: string, content: string,
   type: MessageType = 'text', replyTo: string | null = null,
-): Promise<ChatMessage> {
+): Promise<ChatMessage | null> {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
       .from(TABLES.MESSAGES)

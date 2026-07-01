@@ -17,7 +17,7 @@ jest.mock('../../src/config/supabase', () => {
 });
 
 const { supabase } = require('../../src/config/supabase');
-const { getNotificationPrefs, isNotificationEnabled, getNotificationGroups, getPrefsForSettings } = require('../../src/services/notificationPrefs');
+const { getNotificationPrefs, isNotificationEnabled, getNotificationGroups, getPrefsForSettings } = require('../../src/services/notifications-real');
 
 describe('notificationPrefs', () => {
   beforeEach(() => {

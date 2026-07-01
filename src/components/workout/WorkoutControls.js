@@ -1,12 +1,13 @@
 // src/components/workout/WorkoutControls.js
 // Controles do treino com visual premium - NOVAIX FITNESS
 
-import React, { memo, useCallback, useRef, useEffect } from 'react';
+import React, { memo, useCallback, useRef, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import LoopToggle from './LoopToggle';
 
 function ControlButton({ icon, size = 22, color, bgColor, borderColor, onPress, label, style }) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -40,6 +41,7 @@ function WorkoutControls({ phase, onPause, onResume, onSkip, onStop, onMarkCompl
   const isPaused = phase === 'paused';
   const isExercising = phase === 'exercising';
   const isResting = phase === 'resting';
+  const [isLooping, setIsLooping] = useState(false);
 
   const glowAnim = useRef(new Animated.Value(0)).current;
 
@@ -101,6 +103,10 @@ function WorkoutControls({ phase, onPause, onResume, onSkip, onStop, onMarkCompl
           onPress={onSkip}
           label="PULAR"
         />
+
+        <View style={styles.loopWrapper}>
+          <LoopToggle isLooping={isLooping} onToggle={() => setIsLooping(!isLooping)} />
+        </View>
       </View>
 
       {isExercising && (
@@ -146,4 +152,5 @@ const styles = StyleSheet.create({
   completeSubtext: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.background + 'AA' },
   restHint: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.xs, paddingVertical: SPACING.sm },
   restHintText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
+  loopWrapper: { alignItems: 'center' },
 });

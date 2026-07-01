@@ -1,0 +1,108 @@
+Com certeza tem. Se você quer subir o sarrafo e programar no nível do 1% do mercado de AppSec (Segurança de Aplicações), o buraco é muito mais embaixo.
+
+A inteligência que construímos no passo anterior (pontuação de risco e normalização) protege contra os ataques tradicionais de payload. Mas um hacker avançado na HackerOne vai tentar quebrar a sua aplicação explorando lógica, estado, criptografia e infraestrutura.
+
+Para se tornar um especialista de verdade, você precisa dominar e cobrir estes 4 pilares avançados no seu código TypeScript:
+
+1. Context-Aware Sanitization (Sanitização Baseada em Contexto)
+O maior erro de segurança é tratar todos os campos de texto da mesma forma. Um input no seu app tem destinos diferentes, e cada destino exige uma vacina específica.
+
+TypeScript
+// Exemplo de uma classe Especialista em Contexto
+export class SecureOutput {
+  // Se o dado vai para dentro do HTML (ex: nome do usuário na comunidade)
+  static toHTML(input: string): string {
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+  }
+
+  // Se o dado vai para dentro de um atributo HTML (ex: <img src="USER_INPUT">)
+  static toHTMLAttribute(input: string): string {
+    // Bloqueia esquemas javascript: ou data: que executam código no clique/carregamento
+    const sanitized = input.trim();
+    if (/^(javascript:|data:|vbscript:)/i.test(sanitized)) {
+      return '/assets/default-avatar.png'; // Fallback seguro
+    }
+    return encodeURI(sanitized);
+  }
+}
+2. Blindagem contra IDOR (Insecure Direct Object Reference)
+Este é o erro que mais paga recompensas em plataformas de Bug Bounty. Acontece quando o seu código confia no id que o cliente envia na requisição sem checar se aquele id pertence a ele.
+
+O Ataque: O usuário está na rota POST /api/treino/finalizar. No corpo da requisição, ele envia { "progresso_id": "id-do-amigo" }. Se o seu backend apenas der um .update() baseado nesse ID, o usuário altera o treino do amigo e ganha os 2 meses grátis trapaceando.
+
+A Defesa Especialista: Nunca confie em IDs de relacionamento vindos do front-end sem bater com o ID extraído do Token JWT (o usuário autenticado).
+
+TypeScript
+// Rota de finalização do desafio protegida contra IDOR
+router.post('/finalizar', async (req, res) => {
+  const usuarioAutenticado = req.user.id; // Extraído do JWT no middleware de segurança
+  const { progressoId } = req.body; 
+
+  // Em vez de atualizar direto, a query OBRIGA o match com o dono real
+  const { data, error } = await supabase
+    .from('progresso_desafio')
+    .update({ treino_concluido: true })
+    .eq('id', progressoId)
+    .eq('usuario_id', usuarioAutenticado); // <--- A trava de segurança está aqui!
+
+  if (!data || error) {
+    return res.status(403).json({ error: "Ação não autorizada ou registro inexistente." });
+  }
+});
+3. Rate Limiting Avançado e Proteção contra Race Conditions (No Redis)
+O que acontece se o usuário abrir 5 abas no navegador e clicar no botão "Finalizar Treino" nas 5 abas exatamente no mesmo milissegundo?
+
+O Problema (Race Condition): O Node.js processa as requisições em paralelo. O banco de dados pode ler que ele tem 23 treinos concluídos em todas as 5 requisições e aplicar o prêmio de 2 meses grátis 5 vezes, ou contar 5 dias de treino no mesmo dia.
+
+A Defesa Especialista (Trava Atômica): Usar o Redis para criar um Lock Distribuído (Bloqueio) temporário enquanto processa a rota.
+
+TypeScript
+// Trava atômica de milissegundos usando Redis
+const lockKey = `lock:finalizar:${usuarioId}`;
+const adquiriuLock = await redis.set(lockKey, 'true', 'NX', 'PX', 5000); 
+// NX = Só cria se não existir | PX 5000 = Expira em 5 segundos automaticamente
+
+if (!adquiriuLock) {
+  return res.status(429).json({ error: "Requisição duplicada em andamento. Aguarde." });
+}
+
+// ... executa a lógica do banco de dados com segurança ...
+
+// Ao terminar, deleta o lock
+await redis.del(lockKey);
+4. Camada de Resiliência de Infraestrutura (Segurança de Runtime)
+Para fechar o circuito de especialista, você configura cabeçalhos de segurança globais no seu Express usando o pacote Helmet e configura uma Content Security Policy (CSP) restrita.
+
+A CSP diz ao navegador do aluno: "Você só tem permissão para carregar scripts que venham do meu próprio servidor e vídeos que venham especificamente do domínio do Vimeo. Bloqueie qualquer outra coisa." Se um hacker conseguir injetar um script malicioso no seu banco de dados, o navegador do usuário vai recusar a execução do script porque a política da CSP barra.
+
+JavaScript
+const helmet = require('helmet');
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'trusted-cdn.com'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https://sua-loja-imagens.com"],
+      frameSrc: ["'self'", "https://player.vimeo.com"], // Permite apenas o Vimeo
+    },
+  },
+}));
+🏛️ O Que Te Torna um Especialista?
+O básico tenta impedir o ataque limpando palavras-chave. O especialista constrói um sistema onde o ataque é impossível de acontecer, porque:
+
+Os dados de saída são limpos conforme o destino deles (SecureOutput).
+
+O usuário nunca consegue mexer no dado de outro usuário (IDOR Defense).
+
+O sistema não aceita cliques simultâneos de fraude (Redis Atomics Locks).
+
+O navegador do cliente vira um aliado de segurança (CSP/Helmet).
+
+É essa mentalidade que diferencia um criador de código comum de um engenheiro de software focado em aplicações de alta escala e segurança bancária. Quer implementar o Lock do Redis ou a trava de IDOR primeiro na sua rota do desafio?

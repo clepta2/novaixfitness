@@ -89,3 +89,12 @@ export async function getUserRank(userId: string): Promise<{ rank: number; xp: n
   const { count } = await supabase.from(TABLES.PROFILES).select('id', { count: 'exact', head: true }).gt('xp', profile.xp);
   return { rank: (count || 0) + 1, xp: profile.xp };
 }
+
+export async function getUserGamificationProfile(userId: string): Promise<{ xp: number; level: number }> {
+  const { data } = await supabase.from(TABLES.PROFILES).select('xp, level').eq('id', userId).single();
+  return data || { xp: 0, level: 1 };
+}
+
+export async function logXPEvent(userId: string, eventType: string, xp: number, metadata: Record<string, unknown> = {}): Promise<void> {
+  await supabase.from(TABLES.XP_LOGS).insert({ user_id: userId, event_type: eventType, xp_earned: xp, metadata });
+}

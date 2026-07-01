@@ -1,10 +1,10 @@
-
+﻿
 // app/analytics.tsx
 // Dashboard de Analytics com animacoes - NOVAIX FITNESS
 
 
             ;
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useMountedRef } from '../src/hooks/useMountedRef';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { useRouter } from 'expo-router';

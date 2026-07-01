@@ -15,6 +15,8 @@ jest.mock('expo-notifications', () => {
       { content: { data: { type: 'other' } } },
     ]),
     requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+    getPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+    setNotificationHandler: jest.fn(),
     SchedulableTriggerInputTypes,
   };
 });

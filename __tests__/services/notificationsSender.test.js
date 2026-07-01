@@ -1,6 +1,43 @@
 jest.mock('expo-notifications', () => ({
   scheduleNotificationAsync: jest.fn().mockResolvedValue('notif-id'),
+  setNotificationHandler: jest.fn(),
+  getPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+  requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+  getExpoPushTokenAsync: jest.fn().mockResolvedValue({ data: 'ExponentPushToken[test]' }),
+  cancelScheduledNotificationsAsync: jest.fn(),
+  cancelAllScheduledNotificationsAsync: jest.fn(),
+  dismissAllNotificationsAsync: jest.fn(),
+  scheduleNotificationAsync: jest.fn().mockResolvedValue('notif-id'),
+  getAllScheduledNotificationsAsync: jest.fn().mockResolvedValue([]),
+  addNotificationResponseReceivedListener: jest.fn().mockReturnValue({ remove: jest.fn() }),
+  addNotificationReceivedListener: jest.fn().mockReturnValue({ remove: jest.fn() }),
 }));
+
+jest.mock('../../src/config/app', () => ({
+  APP_CONFIG: {
+    notifications: {
+      workoutReminder: { hour: 19, minute: 0 },
+      weeklyPlan: { weekday: 1, hour: 9, minute: 0 },
+      restDay: { weekday: 0, hour: 10, minute: 0 },
+      defaultPrefs: {},
+      streakMessages: { 7: 'Uma semana completa!' },
+      motivationalTips: ['Beba agua!', 'Descanse bem!'],
+      types: {},
+    },
+    apis: { geminiBaseUrl: '' },
+  },
+}));
+
+jest.mock('../../src/config/supabase', () => {
+  const chain = {};
+  chain.from = jest.fn(() => chain);
+  chain.select = jest.fn(() => chain);
+  chain.eq = jest.fn(() => chain);
+  chain.insert = jest.fn(() => Promise.resolve({ data: null, error: null }));
+  chain.update = jest.fn(() => chain);
+  chain.single = jest.fn(() => Promise.resolve({ data: { notification_prefs: {} }, error: null }));
+  return { supabase: chain };
+});
 
 import {
   sendWorkoutCompletedNotification,
@@ -11,7 +48,7 @@ import {
   sendWeeklySummaryNotification,
   sendRestReminder,
   sendMotivationalNotification,
-} from '../../src/services/notifications-sender';
+} from '../../src/services/notifications';
 
 const Notifications = require('expo-notifications');
 

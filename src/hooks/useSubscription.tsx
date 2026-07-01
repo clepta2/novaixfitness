@@ -4,16 +4,20 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
   getPlans,
+} from '../services/monetizationPlans';
+import {
   getUserPlan,
   checkFeatureAccess,
   getUsageStats,
   createSubscription,
   cancelSubscription,
+} from '../services/monetizationSubscription';
+import {
   applyCoupon,
   createReferral,
   getReferralStats,
   applyReferral,
-} from '../services/monetization';
+} from '../services/monetizationCoupons';
 import { Plan } from '../types';
 
 interface UsageStats {

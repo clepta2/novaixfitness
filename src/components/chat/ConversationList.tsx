@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
-import { getUserConversations } from '../../services/chat';
+import { getUserConversations } from '../../services/chatConversations';
 import { useAuth } from '../../context/AuthContext';
 
 export default function ConversationList({ onSelectConversation, onNewChat }) {

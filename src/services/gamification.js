@@ -3,7 +3,7 @@
 
 import { supabase } from '../config/supabase';
 import { XP_VALUES, getLevelForXP, getUnlockedAchievements, checkNewAchievements } from '../constants/gamification';
-import { sendPushToUser } from './pushNotifications';
+import { sendPushToUser } from './notifications';
 import { APP_CONFIG } from '../config/app';
 import { calculateCustomWorkoutXP } from '../config/gamificationConfig';
 

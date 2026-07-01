@@ -1,5 +1,5 @@
 // src/services/analytics.js
-// Servico de analytics e graficos - NOVAIX FITNESS
+// Servico consolidado de analytics - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
 import { getPeriodDateBounds, processWorkoutAnalytics, calculateMuscleBalance } from './analytics-helpers';
