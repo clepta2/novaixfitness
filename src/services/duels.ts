@@ -38,12 +38,12 @@ export async function completeDuel(duelId, userId) {
   const isChallenger = duel.challenger_id === userId;
   const field = isChallenger ? 'challenger_completed' : 'challenged_completed';
 
-  await supabase.from('duels').update({ [field]: true }).eq('id', duelId);
+  await supabase.from(TABLES.DUELS).update({ [field]: true }).eq('id', duelId);
 
   const bothCompleted = (isChallenger && duel.challenged_completed) || (!isChallenger && duel.challenger_completed);
   if (bothCompleted) {
     const winner = duel.challenger_completed ? duel.challenger_id : duel.challenged_id;
-    await supabase.from('duels').update({ status: 'completed', winner_id: winner }).eq('id', duelId);
+    await supabase.from(TABLES.DUELS).update({ status: 'completed', winner_id: winner }).eq('id', duelId);
   }
 }
 

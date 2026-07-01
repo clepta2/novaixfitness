@@ -5,6 +5,7 @@ import { supabase } from '../config/supabase';
 import { XP_VALUES, getLevelForXP, getUnlockedAchievements, checkNewAchievements } from '../constants/gamification';
 import { sendPushToUser } from './pushNotifications';
 import { APP_CONFIG } from '../config/app';
+import { calculateCustomWorkoutXP } from '../config/gamificationConfig';
 
 export async function addXP(userId, type, amount) {
   const xpGain = amount || XP_VALUES[type] || 0;
@@ -95,7 +96,7 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
 
     const workoutXP = workoutData?.id?.length === 36
       ? XP_VALUES.WORKOUT_COMPLETED
-      : Math.min(logs.length * 5 + (workoutData?.exercises?.length || 0) * 10 + Math.floor(duration / 60) * 2, 200);
+      : calculateCustomWorkoutXP(logs, workoutData?.exercises?.length || 0, duration);
 
     await addXP(userId, 'WORKOUT_COMPLETED', workoutXP);
 

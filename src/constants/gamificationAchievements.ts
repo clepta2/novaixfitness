@@ -55,6 +55,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'xp_100', name: 'Primeiros Passos', description: 'Acumule 100 XP', icon: 'flash', color: '#94A3B8', category: 'xp', requirement: 100, xpReward: 25 },
   { id: 'xp_500', name: 'Coletor de XP', description: 'Acumule 500 XP', icon: 'flash', color: '#00E676', category: 'xp', requirement: 500, xpReward: 50 },
   { id: 'xp_1000', name: 'Mestre do XP', description: 'Acumule 1.000 XP', icon: 'flash', color: '#FFD600', category: 'xp', requirement: 1000, xpReward: 100 },
+  { id: 'xp_2500', name: 'Caçador de XP', description: 'Acumule 2.500 XP', icon: 'flash', color: '#FF6B35', category: 'xp', requirement: 2500, xpReward: 200 },
   { id: 'xp_5000', name: 'Lenda do XP', description: 'Acumule 5.000 XP', icon: 'flash', color: '#CCFF00', category: 'xp', requirement: 5000, xpReward: 500 },
   { id: 'xp_10000', name: 'Supremo do XP', description: 'Acumule 10.000 XP', icon: 'star', color: '#CCFF00', category: 'xp', requirement: 10000, xpReward: 1000 },
 ];

@@ -25,14 +25,14 @@ export async function toggleReaction(postId: string, userId: string, type: React
 
   if (existing) {
     if (existing.type === type) {
-      await supabase.from('post_reactions').delete().eq('id', existing.id);
+      await supabase.from(TABLES.POST_REACTIONS).delete().eq('id', existing.id);
       return { action: 'removed', type };
     }
-    await supabase.from('post_reactions').update({ type }).eq('id', existing.id);
+    await supabase.from(TABLES.POST_REACTIONS).update({ type }).eq('id', existing.id);
     return { action: 'changed', type };
   }
 
-  await supabase.from('post_reactions').insert({ post_id: postId, user_id: userId, type });
+  await supabase.from(TABLES.POST_REACTIONS).insert({ post_id: postId, user_id: userId, type });
   return { action: 'added', type };
 }
 

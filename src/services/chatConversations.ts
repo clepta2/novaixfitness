@@ -51,7 +51,7 @@ export async function getOrCreateDirectConversation(userId1: string, userId2: st
     .insert({ type: 'direct' }).select().single();
   if (error) throw error;
 
-  await supabase.from('conversation_members').insert([
+  await supabase.from(TABLES.CONVERSATION_MEMBERS).insert([
     { conversation_id: conv.id, user_id: userId1 },
     { conversation_id: conv.id, user_id: userId2 },
   ]);
@@ -67,7 +67,7 @@ export async function createGroupConversation(name: string, userId: string, memb
     { conversation_id: conv.id, user_id: userId, role: 'admin' },
     ...memberIds.map(id => ({ conversation_id: conv.id, user_id: id })),
   ];
-  await supabase.from('conversation_members').insert(members);
+  await supabase.from(TABLES.CONVERSATION_MEMBERS).insert(members);
   return conv.id;
 }
 
@@ -131,7 +131,7 @@ export async function getUserConversations(userId: string): Promise<Conversation
 }
 
 export async function markAsRead(conversationId: string, userId: string): Promise<void> {
-  await supabase.from('conversation_members')
+  await supabase.from(TABLES.CONVERSATION_MEMBERS)
     .update({ last_read_at: new Date().toISOString() })
     .eq('conversation_id', conversationId)
     .eq('user_id', userId);

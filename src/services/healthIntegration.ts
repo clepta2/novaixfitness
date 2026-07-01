@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { getHealthLibs, syncWeightFromHealth, syncStepsFromHealth, syncCaloriesFromHealth } from './healthSync';
 
 export { syncWeightFromHealth, syncStepsFromHealth, syncCaloriesFromHealth };
@@ -39,11 +40,11 @@ export function isHealthAvailable() {
 }
 
 export async function getHealthSummary(userId) {
-  const { data: weights } = await supabase.from('weight_logs').select('weight')
+  const { data: weights } = await supabase.from(TABLES.WEIGHT_LOGS).select('weight')
     .eq('user_id', userId).order('recorded_at', { ascending: false }).limit(1);
-  const { data: steps } = await supabase.from('step_logs').select('steps')
+  const { data: steps } = await supabase.from(TABLES.STEP_LOGS).select('steps')
     .eq('user_id', userId).gte('recorded_at', new Date(Date.now() - 7 * 86400000).toISOString());
-  const { data: calories } = await supabase.from('calorie_logs').select('calories')
+  const { data: calories } = await supabase.from(TABLES.CALORIE_LOGS).select('calories')
     .eq('user_id', userId).gte('recorded_at', new Date(Date.now() - 7 * 86400000).toISOString());
 
   return {

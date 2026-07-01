@@ -58,10 +58,10 @@ export async function saveOnboardingData(userId: string, data: OnboardingData): 
   };
 
   if (existing) {
-    await supabase.from('onboarding_v2').update(row).eq('id', existing.id);
+    await supabase.from(TABLES.ONBOARDING_V2).update(row).eq('id', existing.id);
   } else {
     row.created_at = new Date().toISOString();
-    await supabase.from('onboarding_v2').insert(row);
+    await supabase.from(TABLES.ONBOARDING_V2).insert(row);
   }
 
   await supabase.from(TABLES.PROFILES).update({ current_step: 'home' }).eq('id', userId);

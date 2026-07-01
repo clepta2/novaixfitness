@@ -1,15 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
+import { STREAK_LEVELS as STREAK_LEVELS_CONFIG } from '../../config/gamificationConfig';
 
-export const STREAK_LEVELS = [
-  { min: 0, label: 'Iniciante', icon: 'flame-outline', color: COLORS.textMuted },
-  { min: 3, label: 'Dedicado', icon: 'flame', color: COLORS.attention },
-  { min: 7, label: 'Consistente', icon: 'flame', color: COLORS.secondary },
-  { min: 14, label: 'Atleta', icon: 'flame', color: COLORS.primary },
-  { min: 30, label: 'Lenda', icon: 'trophy', color: COLORS.primary },
-];
+export const STREAK_LEVELS = STREAK_LEVELS_CONFIG.map(l => ({ ...l, color: COLORS[l.colorKey as keyof typeof COLORS] }));
 
 export function FlameIcon({ level, size = 24 }: any) {
   const pulseAnim = useMemo(() => new Animated.Value(1), []);

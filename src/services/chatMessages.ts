@@ -39,7 +39,7 @@ export async function sendMessage(
 
 export async function editMessage(messageId: string, userId: string, newContent: string): Promise<void> {
   await guard.guard(async () => {
-    const { error } = await supabase.from('messages')
+    const { error } = await supabase.from(TABLES.MESSAGES)
       .update({ content: newContent, edited: true })
       .eq('id', messageId).eq('user_id', userId);
     if (error) throw error;
@@ -48,7 +48,7 @@ export async function editMessage(messageId: string, userId: string, newContent:
 
 export async function deleteMessage(messageId: string, userId: string): Promise<void> {
   await guard.guard(async () => {
-    const { error } = await supabase.from('messages')
+    const { error } = await supabase.from(TABLES.MESSAGES)
       .update({ deleted: true, content: 'Mensagem apagada' })
       .eq('id', messageId).eq('user_id', userId);
     if (error) throw error;

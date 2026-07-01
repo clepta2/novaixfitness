@@ -1,13 +1,23 @@
 // src/services/gamificationLevels.ts
-// XP, niveis e rankings
+// XP, niveis e rankings - re-export de constants + funcoes DB
 
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
+import { XP_VALUES as CANONICAL_XP_VALUES, getLevelForXP } from '../constants/gamificationLevels';
 
-export const XP_VALUES: Record<string, number> = {
-  workout_completed: 50, exercise_completed: 10, meal_logged: 15, water_logged: 5,
-  streak_milestone: 100, achievement_unlocked: 200, daily_login: 5,
-  profile_completed: 100, first_workout: 150, sharing: 25,
+export { XP_VALUES, LEVELS, getLevelForXP, getNextLevel, getXPProgress } from '../constants/gamificationLevels';
+
+export const XP_VALUES_SERVICE: Record<string, number> = {
+  workout_completed: CANONICAL_XP_VALUES.WORKOUT_COMPLETED,
+  exercise_completed: 10,
+  meal_logged: CANONICAL_XP_VALUES.POST_CREATED,
+  water_logged: CANONICAL_XP_VALUES.DAILY_LOGIN,
+  streak_milestone: 100,
+  achievement_unlocked: 200,
+  daily_login: CANONICAL_XP_VALUES.DAILY_LOGIN,
+  profile_completed: CANONICAL_XP_VALUES.PROFILE_COMPLETED,
+  first_workout: CANONICAL_XP_VALUES.FIRST_WORKOUT,
+  sharing: CANONICAL_XP_VALUES.SHARE_WORKOUT,
 };
 
 export const LEVEL_THRESHOLDS: number[] = [
@@ -43,7 +53,7 @@ export function getLevelProgress(currentXP: number): number {
 }
 
 export async function awardXP(userId: string, eventType: string, metadata: Record<string, unknown> = {}): Promise<{ xp: number; totalXP: number; level: number; leveledUp: boolean }> {
-  const xp = XP_VALUES[eventType] || 10;
+  const xp = XP_VALUES_SERVICE[eventType] || 10;
   const { data: profile } = await supabase.from(TABLES.PROFILES).select('xp, level').eq('id', userId).single();
   const newXP = (profile?.xp || 0) + xp;
   const newLevel = calculateLevel(newXP);

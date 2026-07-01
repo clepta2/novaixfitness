@@ -50,7 +50,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
   const rewards = [10, 15, 20, 25, 30, 40, 100];
   const xp = rewards[dayIndex];
 
-  await supabase.from('daily_check_ins').insert({
+  await supabase.from(TABLES.DAILY_CHECK_INS).insert({
     user_id: userId,
     check_in_date: today,
     xp_awarded: xp,

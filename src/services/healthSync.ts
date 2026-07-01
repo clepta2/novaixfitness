@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 
 let HealthKit = null;
 let GoogleFit = null;
@@ -21,7 +22,7 @@ export async function syncWeightFromHealth(userId) {
       const start = new Date(end.getTime() - 30 * 86400000);
       const samples = await HealthKit.getSamplesAsync(HealthKit.HealthkitQuantityTypeIdentifierBodyMass, start, end);
       for (const sample of samples) {
-        await supabase.from('weight_logs').upsert({
+        await supabase.from(TABLES.WEIGHT_LOGS).upsert({
           user_id: userId, weight: sample.quantity, recorded_at: sample.startDate, source: 'apple_health',
         }, { onConflict: 'user_id,recorded_at' });
       }
@@ -36,7 +37,7 @@ export async function syncWeightFromHealth(userId) {
       const opt = { startDate: new Date(Date.now() - 30 * 86400000).toISOString(), endDate: new Date().toISOString() };
       const data = await GoogleFit.getWeightSamples(opt);
       for (const sample of data) {
-        await supabase.from('weight_logs').upsert({
+        await supabase.from(TABLES.WEIGHT_LOGS).upsert({
           user_id: userId, weight: sample.value, recorded_at: sample.date, source: 'google_fit',
         }, { onConflict: 'user_id,recorded_at' });
       }
@@ -61,7 +62,7 @@ export async function syncStepsFromHealth(userId) {
         dailySteps[date] = (dailySteps[date] || 0) + (sample.quantity as number);
       }
       for (const [date, steps] of Object.entries(dailySteps)) {
-        await supabase.from('step_logs').upsert({
+        await supabase.from(TABLES.STEP_LOGS).upsert({
           user_id: userId, steps, recorded_at: new Date(date).toISOString(), source: 'apple_health',
         }, { onConflict: 'user_id,recorded_at' });
       }
@@ -80,7 +81,7 @@ export async function syncStepsFromHealth(userId) {
         if (source.steps) {
           for (const step of source.steps) {
             totalSteps += step.value;
-            await supabase.from('step_logs').upsert({
+            await supabase.from(TABLES.STEP_LOGS).upsert({
               user_id: userId, steps: step.value, recorded_at: step.date, source: 'google_fit',
             }, { onConflict: 'user_id,recorded_at' });
           }
@@ -107,7 +108,7 @@ export async function syncCaloriesFromHealth(userId) {
         dailyCalories[date] = (dailyCalories[date] || 0) + (sample.quantity as number);
       }
       for (const [date, calories] of Object.entries(dailyCalories)) {
-        await supabase.from('calorie_logs').upsert({
+        await supabase.from(TABLES.CALORIE_LOGS).upsert({
           user_id: userId, calories: Math.round(calories), recorded_at: new Date(date).toISOString(), source: 'apple_health',
         }, { onConflict: 'user_id,recorded_at' });
       }
@@ -124,7 +125,7 @@ export async function syncCaloriesFromHealth(userId) {
       let totalCalories = 0;
       for (const sample of data) {
         totalCalories += Math.abs(sample.calorie);
-        await supabase.from('calorie_logs').upsert({
+        await supabase.from(TABLES.CALORIE_LOGS).upsert({
           user_id: userId, calories: Math.round(Math.abs(sample.calorie)), recorded_at: sample.date, source: 'google_fit',
         }, { onConflict: 'user_id,recorded_at' });
       }

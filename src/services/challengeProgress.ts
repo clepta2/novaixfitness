@@ -51,12 +51,12 @@ export async function autoUpdateProgress(challengeId: string) {
 }
 
 async function completeChallenge(challengeId: string, winnerId: string) {
-  const { data: challenge } = await supabase.from('friend_challenges').select('*').eq('id', challengeId).single();
+  const { data: challenge } = await supabase.from(TABLES.FRIEND_CHALLENGES).select('*').eq('id', challengeId).single();
   if (!challenge) return;
 
   const loserId = challenge.challenger_id === winnerId ? challenge.challenged_id : challenge.challenger_id;
 
-  await supabase.from('friend_challenges').update({ status: 'completed', winner_id: winnerId }).eq('id', challengeId);
+  await supabase.from(TABLES.FRIEND_CHALLENGES).update({ status: 'completed', winner_id: winnerId }).eq('id', challengeId);
 
   if (challenge.stake_coins > 0) {
     await supabase.rpc('send_gift', { p_sender_id: loserId, p_receiver_id: winnerId, p_gift_id: null, p_message: 'Aposta de desafio' });

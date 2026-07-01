@@ -18,15 +18,15 @@ export async function getNotifications(userId: string, limit = 30): Promise<Noti
 }
 
 export async function markAsRead(notifId: string): Promise<void> {
-  await supabase.from('notifications').update({ read: true }).eq('id', notifId);
+  await supabase.from(TABLES.NOTIFICATIONS).update({ read: true }).eq('id', notifId);
 }
 
 export async function markAllAsRead(userId: string): Promise<void> {
-  await supabase.from('notifications').update({ read: true }).eq('user_id', userId).eq('read', false);
+  await supabase.from(TABLES.NOTIFICATIONS).update({ read: true }).eq('user_id', userId).eq('read', false);
 }
 
 export async function deleteNotification(notifId: string): Promise<void> {
-  await supabase.from('notifications').delete().eq('id', notifId);
+  await supabase.from(TABLES.NOTIFICATIONS).delete().eq('id', notifId);
 }
 
 export async function getUnreadCount(userId: string): Promise<number> {

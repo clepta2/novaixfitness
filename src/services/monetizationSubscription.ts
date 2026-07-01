@@ -77,7 +77,7 @@ export async function createSubscription(userId: string, planId: string, payment
 }
 
 export async function cancelSubscription(userId: string): Promise<void> {
-  const { error } = await supabase.from('subscriptions')
+  const { error } = await supabase.from(TABLES.SUBSCRIPTIONS)
     .update({ status: 'cancelled', cancelled_at: new Date().toISOString() })
     .eq('user_id', userId).eq('status', 'active');
   if (error) throw error;
@@ -86,7 +86,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
 }
 
 export async function getSubscriptionHistory(userId: string): Promise<Subscription[]> {
-  const { data } = await supabase.from('subscriptions')
+  const { data } = await supabase.from(TABLES.SUBSCRIPTIONS)
     .select('*').eq('user_id', userId).order('created_at', { ascending: false });
   return (data || []) as Subscription[];
 }
