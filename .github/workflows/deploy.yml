@@ -19,12 +19,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: true
-          tags: ghcr.io/${{ github.repository }}/backend:latest
+          tags: ghcr.io/${{ github.repository_owner }}/backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Deploy notification
         run: echo "✅ Docker image pushed to GHCR"

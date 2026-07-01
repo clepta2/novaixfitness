@@ -1,7 +1,7 @@
 // src/utils/memoize.ts
 // Utilitarios de memoizacao - NOVAIX FITNESS
 
-import { useMemo, useCallback, useRef } from 'react';
+import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 
 // Memoizacao profunda para objetos
 export function useDeepMemo<T>(factory: () => T, deps: any[]): T {
@@ -91,5 +91,3 @@ export function useDebouncedValue<T>(value: T, delay: number): T {
 
   return debouncedValue;
 }
-
-import { useState, useEffect } from 'react';

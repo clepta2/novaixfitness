@@ -9,7 +9,7 @@ export function deepMemo<T extends React.ComponentType<any>>(
   Component: T,
   compareFn?: (prevProps: any, nextProps: any) => boolean
 ): React.MemoExoticComponent<T> {
-  return memo(Component, compareProps);
+  return memo(Component, compareFn ?? compareProps);
 }
 
 function compareProps(prevProps: any, nextProps: any): boolean {
