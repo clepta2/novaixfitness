@@ -1,0 +1,63 @@
+Para criar esse limite quando o sistema percebe uma inundação de requisições, você precisa implementar um mecanismo de Rate Limiting (Limitador de Taxa). Essa é a ferramenta que diz: "Olha, você já fez 100 requisições no último minuto, agora vai ter que esperar um pouco antes de tentar de novo".
+
+Como você já está organizando o seu código na estrutura modular da pasta scripts/security-rules/, a lógica do Rate Limiting pode ser dividida em onde você vai aplicar esse limite (na infraestrutura ou no código) e qual algoritmo você vai usar.
+
+Aqui está o passo a passo de como implementar isso no seu ecossistema:
+
+1. A Estratégia de Arquitetura (Onde Barrar?)
+Opção A: No código com Redis (A mais precisa para o Bug Bounty)
+Se você quer que o seu backend controle o limite por usuário logado (usando o ID da conta) ou por IP de forma inteligente, o Redis é a melhor ferramenta. Como ele roda em memória RAM, ele consegue checar milhares de requisições por segundo sem tocar no seu banco de dados principal (Supabase/PostgreSQL), o que evita estourar a memória do servidor.
+
+O Fluxo: A requisição chega -> O middleware pergunta ao Redis: "Quantas vezes esse IP bateu aqui nos últimos 60 segundos?" -> Se for menor que o limite, aceita e soma +1 -> Se passou do limite, responde HTTP 429 Too Many Requests.
+
+Opção B: No Firewall (A mais leve para o Servidor)
+Se o ataque for um DDoS bruto (milhares de requisições por segundo vindas de robôs), processar isso no Node.js — mesmo com Redis — vai gastar CPU. O ideal é barrar isso na camada de rede usando ferramentas como o Cloudflare ou o gateway da sua nuvem.
+
+Você configura uma regra de Rate Limiting no painel deles: "Se um IP bater mais de 60 vezes por minuto na rota /api/auth/login, bloqueie por 1 hora". O tráfego malicioso nem chega a tocar no seu código.
+
+2. Implementação Prática no Backend (Node.js)
+Se você estiver usando o Express, a forma mais rápida e segura de embutir isso no código para proteger rotas críticas (como login, recuperação de senha e os Webhooks do Asaas) é usando pacotes consagrados como express-rate-limit:
+
+JavaScript
+// src/middlewares/rateLimiter.js
+import rateLimit from 'express-rate-limit';
+
+export const limitadorGeral = rateLimit({
+  windowMs: 15 * 60 * 1000, // Janela de 15 minutos
+  max: 100, // Limita cada IP a 100 requisições por janela
+  message: {
+    erro: "Muitas requisições vindas deste IP. Por favor, tente novamente mais tarde."
+  },
+  statusCode: 429, // Código HTTP padrão para limite excedido
+  standardHeaders: true, // Retorna os cabeçalhos RateLimit-* informando o limite
+  legacyHeaders: false, // Desativa os cabeçalhos antigos X-RateLimit-*
+});
+
+// Limitador ULTRA estrito para rotas críticas (Login / Pix do Asaas)
+export const limitadorCritico = rateLimit({
+  windowMs: 1 * 60 * 1000, // Janela de 1 minuto
+  max: 5, // Apenas 5 tentativas por minuto por IP
+  message: {
+    erro: "Bloqueio preventivo por excesso de tentativas. Aguarde 1 minuto."
+  },
+  statusCode: 429,
+});
+Para aplicar no seu arquivo de rotas, você apenas envelopa o endpoint:
+
+JavaScript
+app.post('/api/auth/login', limitadorCritico, (req, res) => {
+  // Sua lógica de login segura...
+});
+3. O Algoritmo por Trás: Token Bucket (Balde de Tokens)
+Grandes APIs (como Stripe e o próprio Asaas) usam um algoritmo chamado Token Bucket para gerenciar esse limite.
+
+Imagine que o usuário tem um "balde" virtual que cabe até 10 tokens. Cada requisição que ele faz gasta 1 token. Se o balde esvaziar, ele é bloqueado. Ao mesmo tempo, o seu servidor pinga tokens novos dentro desse balde a uma taxa constante (por exemplo, 2 tokens por segundo).
+
+A Vantagem: Isso permite que o usuário legítimo faça pequenas rajadas de cliques rápidos (enquanto tiver token no balde) para navegar no app, mas impede que um script automatizado no Burp Suite faça requisições infinitas e contínuas.
+
+4. Nova Regra para o seu enforce-security.js
+Para garantir que nenhum desenvolvedor crie uma rota nova sensível e esqueça de colocar essa trava, você pode adicionar a Regra nº 66 na sua pasta scripts/security-rules/:
+
+Regra 66 (Rate Limit Mandatório): O script varre a pasta de rotas (src/routes/) e dá BLOCK se encontrar métodos de escrita (POST, PUT, DELETE) em endpoints de autenticação ou financeiros que não incluam as funções limitadorGeral ou limitadorCritico como middleware.
+
+Com essa proteção ativa, se um caçador de bugs tentar rodar o Intruder do Burp Suite na sua tela de login para tentar adivinhar senhas, no 6º clique ele receberá um erro 429 na cara e o seu servidor continuará rodando em total paz de espírito.

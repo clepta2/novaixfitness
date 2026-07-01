@@ -1,0 +1,45 @@
+Você foi cirúrgico agora. É exatamente aí que muitos desenvolvedores caem: eles acham que segurança web se resume a fechar a porta contra o Burp Suite e esquecem que o ecossistema de ameaças vai muito além de interceptar requisições HTTP na mão.
+
+O Burp Suite é apenas a ferramenta do atacante para testar a sua API. Mas os vetores reais de invasão — as formas como o seu aplicativo, a sua VPS de 4 GB ou os dados dos seus clientes podem ser comprometidos — se espalham por vertentes completamente diferentes.
+
+Para expandir as defesas da sua fortaleza além das APIs tradicionais, precisamos mapear e fechar o cerco contra os outros meios reais de ataque que os hackers utilizam:
+
+1. Ataques à Cadeia de Suprimentos (Supply Chain Attacks)
+O hacker não tenta invadir a sua VPS ou o seu código diretamente. Ele invade uma biblioteca de código aberto de terceiros que você usa no seu package.json do Node ou React.
+
+O Ataque: Um grupo hacker assume o controle de uma biblioteca simples de tratamento de strings ou datas no npm e injeta uma linha de código maliciosa nela. Quando você dá um npm install ou o Docker monta o container, essa dependência infectada roda dentro do seu servidor e envia as suas variáveis .env (chaves do Asaas e Supabase) para o servidor do hacker.
+
+A Defesa: Rodar ferramentas de auditoria contínua na esteira local, como o npm audit ou usar ferramentas de análise estática de segurança (Snyk, Socket.dev) para bloquear dependências vulneráveis antes que entrem no Docker.
+
+2. Sequestro de Sessão via Lado do Cliente (XSS Avançado & Session Hijacking)
+Mesmo que o seu backend seja perfeito, se o hacker conseguir injetar um script malicioso no navegador do cliente através de um comentário na rede social que passa batido pelo React, ele não precisa quebrar a sua API.
+
+O Ataque: O script rouba o token de sessão que está salvo no localStorage ou nos cookies do navegador do usuário e o envia para o hacker. Com o token em mãos, o hacker simplesmente clona a identidade do usuário sem precisar digitar senha.
+
+A Defesa: Nunca salvar tokens críticos no localStorage. Use Cookies HTTP-Only e Secure. Quando um cookie é configurado como HttpOnly, o JavaScript do navegador fica fisicamente proibido de ler o token, neutralizando ataques de roubo de sessão via scripts maliciosos.
+
+3. Ataques à Infraestrutura e Porta da Frente da VPS (SSH & OS Hardening)
+Sua aplicação Docker pode ser impenetrável, mas a VPS da Hostinger roda um sistema operacional Linux (Ubuntu) que possui portas de rede abertas para você gerenciar o servidor.
+
+O Ataque: Bots automáticos varrem a internet 24h por dia procurando servidores com a porta SSH (22) aberta, tentando adivinhar a senha do usuário root por força bruta (ataque de dicionário). Se entrarem, eles ganham controle total do Linux e destroem os seus containers Docker.
+
+A Defesa: Desativar completamente o login por senha no SSH da VPS, permitindo o acesso estritamente via Chave Criptográfica SSH (Par de Chaves). Mudar a porta padrão do SSH de 22 para uma porta alta e aleatória (ex: 49152) e instalar o Fail2Ban no Linux para banir IPs que errem o login mais de 3 vezes.
+
+4. Engenharia Social e Phishing Direcionado (Spear Phishing)
+O elo mais fraco de qualquer sistema de segurança é o ser humano. O hacker pode criar uma página idêntica à do Asaas ou da Hostinger e enviar um e-mail para você dizendo que a sua VPS vai ser suspensa por falta de pagamento se você não fizer login imediatamente.
+
+O Ataque: Ao clicar no link e digitar as suas credenciais de administrador, você entrega o controle da infraestrutura para o atacante sem que nenhuma linha de código do seu app tenha falhado.
+
+A Defesa: Uso obrigatório de chaves físicas de autenticação ou aplicativos de 2FA em todas as suas contas de provedores (GitHub, Supabase, Asaas, Hostinger) e desconfiar rigorosamente de qualquer e-mail que exija ações urgentes envolvendo chaves de acesso.
+
+5. Ataques de Desparidade de Parser (HTTP Request Smuggling)
+Quando você coloca a Cloudflare ou um proxy reverso (Nginx) na frente do seu servidor Node.js, as requisições passam primeiro por eles e depois são repassadas para o Node.
+
+O Ataque: Se a Cloudflare e o seu servidor Node interpretarem o tamanho de uma requisição HTTP de formas ligeiramente diferentes (por causa de cabeçalhos malformados como Content-Length e Transfer-Encoding enviados de forma simultânea), um hacker consegue "esconder" uma segunda requisição maliciosa dentro de uma requisição legítima. Isso permite burlar o firewall de borda inteiramente.
+
+A Defesa: Garantir que o seu servidor Node.js esteja sempre atualizado para as versões LTS mais recentes (onde essas falhas de parsing de protocolo são corrigidas imediatamente) e manter as configurações de conformidade HTTP estritas no proxy.
+
+🧠 A Visão de 360 Graus
+Você está totalmente certo. Focar apenas no Burp Suite é como trancar a porta da frente com 10 cadeados e deixar a janela aberta, a chave reserva debaixo do tapete e o gerenciador do servidor sem senha.
+
+A verdadeira segurança protege o Código, a Infraestrutura, as Dependências e a Operação Humana. Ao somar o endurecimento do servidor Linux, o isolamento do Docker e os cookies protegidos a tudo o que já estruturamos, você fecha todas as pontas do tabuleiro.

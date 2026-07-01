@@ -1,0 +1,45 @@
+Se você quer fechar o cerco de forma absoluta para não deixar nenhuma brecha aberta para o Burp Suite, para falhas de lógica ou lentidão em momentos de pico, nós entramos nas regras de Arquitetura Resiliente.
+
+Estas são as regras que separam os sistemas amadores dos sistemas de nível bancário que aguentam pancada de segurança e tráfego pesado:
+
+24. Proibir Alteração de Privilégios no Payload da Requisição (Bypass de Role)
+Um erro clássico é o endpoint de atualização de perfil do usuário (/api/usuario/update) aceitar qualquer propriedade que o front-end envie. Se o atacante usar o Burp Suite e adicionar "role": "admin" no JSON, ele se torna administrador do sistema.
+
+A Regra: Bloquear middlewares ou rotas de atualização de dados que façam um "spread" direto dos dados do body para o banco (ex: User.update({...req.body})).
+
+O Correto: Forçar uma lista de campos permitidos (Whitelist). O endpoint só aceita explicitamente nome, foto e senha. Qualquer outra propriedade enviada de penetra é descartada pelo servidor.
+
+25. Banir Consultas ao Banco sem Limite de Registros (DDoS de Memória)
+Se o usuário abrir a tela de histórico de ordens de serviço e o seu backend rodar um SELECT * FROM ordens_de_servico sem paginação, o banco vai tentar trazer milhares de linhas de uma vez. Se 100 pessoas fizerem isso ao mesmo tempo no horário de pico, a RAM do seu servidor explode.
+
+A Regra: Bloquear qualquer query ou função de busca no banco de dados (Prisma, Sequelize, Supabase, Mongoose) que não contenha as propriedades limit, take ou regras de paginação explícitas.
+
+O Correto: O padrão do sistema deve ser trazer no máximo 20 ou 50 registros por vez.
+
+26. Exigir Rate Limiting (Limitador de Cliques) em Rotas Críticas
+O Burp Suite possui uma ferramenta chamada Intruder, usada para dar milhares de cliques por segundo (para tentar adivinhar cupons de desconto, testar senhas por força bruta ou derrubar o sistema).
+
+A Regra: Varrer os arquivos de rotas do servidor e dar BLOCK se rotas como /api/auth/login, /api/auth/verify-2fa ou /api/cupom/validar não tiverem um middleware de Rate Limit (limitação de requisições por minuto) acoplado.
+
+27. Impedir Vazamento de Stack Traces (Erros Internos Expostos)
+Quando o código do servidor dá um erro inesperado (como o banco de dados cair), o Node.js costuma gerar um texto gigante mostrando exatamente a linha do código onde o erro aconteceu (o Stack Trace). Se o Burp Suite capturar isso, o atacante descobre a estrutura das suas pastas, o nome das funções e quais tecnologias você usa.
+
+A Regra: Bloquear blocos de tratamento global de erro que enviem o objeto error puro ou error.stack na resposta HTTP para o cliente.
+
+O Correto: Em produção, o servidor deve responder apenas um genérico: {"erro": "Instabilidade interna no servidor. Tente novamente mais tarde."}, enquanto o erro real e detalhado vai direto para o seu arquivo de log interno trancado a sete chaves.
+
+28. Validar o Tamanho Máximo do Payload (Payload Too Large)
+Se o seu sistema aceita uploads de arquivos (fotos de peças, comprovantes) ou textos longos, um atacante pode tentar enviar um arquivo de 500MB via Burp Suite para estourar o armazenamento ou travar o processamento do servidor.
+
+A Regra: Exigir que middlewares de parsing de texto (como express.json()) ou de upload de arquivos (como multer) tenham a propriedade de tamanho máximo definida (ex: limit: '2mb').
+
+O Dashboard de Validação Final do seu enforce-security.js
+Com todas as regras unidas, o seu script se torna um validador completo de 3 Pilares:
+
+Pilar 1: Qualidade e Organização (Arquivos < 200 linhas, sem console.log solto, sem strings hardcoded, design system obrigatório).
+
+Pilar 2: Defesa Ativa contra Ataques (Proteção XSS, sem SQL Injection, sem IDOR, cookies HttpOnly, rotas parametrizadas).
+
+Pilar 3: Estabilidade sob Carga (Timeouts em APIs, paginação obrigatória no banco, banimento de funções síncronas, limitação de payload).
+
+Amarrando essas 28 regras, o seu ecossistema de desenvolvimento se torna uma fortaleza. O código só sai da sua máquina e vai para o ar se estiver perfeitamente limpo, rápido, leve e blindado contra interceptações. É o nível máximo de maturidade que um software pode alcançar!

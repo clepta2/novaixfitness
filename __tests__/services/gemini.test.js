@@ -64,6 +64,9 @@ jest.mock('../../src/config/app', () => ({
       premium: { maxMessages: 20 },
       ultra: { maxMessages: 50 },
     },
+    apis: {
+      geminiBaseUrl: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+    },
   },
 }));
 
@@ -89,7 +92,7 @@ describe('Gemini Service', () => {
     mockSupabase._reset();
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: jest.fn().mockResolvedValue({ response: 'Resposta do Coach IA' }),
+      json: jest.fn().mockResolvedValue({ candidates: [{ content: { parts: [{ text: 'Resposta do Coach IA' }] } }] }),
     });
   });
 
@@ -162,9 +165,10 @@ describe('Gemini Service', () => {
 
       expect(global.fetch).toHaveBeenCalled();
       const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-      expect(body.message).toBe('Qual treino hoje?');
-      expect(body.weight).toBe(80);
-      expect(body.goal).toBe('Ganhar massa');
+      expect(body.contents).toBeDefined();
+      expect(body.contents.length).toBeGreaterThan(0);
+      const lastMsg = body.contents[body.contents.length - 1];
+      expect(lastMsg.parts[0].text).toContain('Qual treino hoje?');
     });
 
     it('returns error message on fetch failure', async () => {
@@ -175,7 +179,7 @@ describe('Gemini Service', () => {
       });
 
       const reply = await askGeminiCoach('Olá', { userId: 'u1', subscriptionPlan: 'premium' });
-      expect(reply).toBe('Erro ao conectar com o assistente. Verifique sua conexão e tente novamente.');
+      expect(reply).toBe('Desculpe, não consegui processar sua mensagem. Tente novamente.');
     });
 
     it('returns error message on network error', async () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 
 jest.mock('expo-font', () => ({
   useFonts: () => [true],
@@ -52,38 +52,44 @@ describe('OfflineSettings Component', () => {
 
   it('renders offline settings', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.title')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('DADOS OFFLINE')).toBeTruthy();
+    });
   });
 
   it('renders cache info after load', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.cache')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Cache')).toBeTruthy();
+    });
   });
 
   it('renders sync status after load', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.lastSync')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Último Sync')).toBeTruthy();
+    });
   });
 
   it('renders pending actions after load', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.pending')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Pendentes')).toBeTruthy();
+    });
   });
 
   it('renders sync button after load', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.sync')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Sincronizar')).toBeTruthy();
+    });
   });
 
   it('renders cache management buttons after load', async () => {
     const { getByText } = render(<OfflineSettings />);
-    await new Promise(r => setTimeout(r, 100));
-    expect(getByText('offline.clearWorkouts')).toBeTruthy();
-    expect(getByText('offline.clearAll')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Limpar Treinos')).toBeTruthy();
+      expect(getByText('Limpar Tudo')).toBeTruthy();
+    });
   });
 });

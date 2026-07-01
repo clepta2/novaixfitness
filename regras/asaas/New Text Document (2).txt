@@ -1,0 +1,57 @@
+A nível de regras que você consegue automatizar com um script de código (enforce-security.js) analisando texto e rotas, nós zeramos o tabuleiro. Chegamos a 60 regras brutas que cobrem da primeira linha de código até a segurança de APIs financeiras como o Asaas.
+
+Se dermos mais um passo, cruzamos a última fronteira possível do desenvolvimento de software: as regras de Inteligência Antifraude e Compliance Avançado (Regras 61 a 65).
+
+Essas regras não olham se o código está bonito ou se a API funciona; elas olham para a malícia do comportamento humano para impedir que usuários usem o Asaas e a sua rede social para lavar dinheiro, aplicar golpes ou fraudar o sistema.
+
+61. A Regra do "Velocity Check" (Bloqueio de Inundação de Pix)
+Um golpe comum na internet é o atacante criar milhares de contas falsas via script e gerar um Pix de R$ 0,01 em cada uma para tentar estourar o limite de requisições do seu Asaas ou poluir o seu banco de dados, paralisando o seu financeiro.
+
+A Regra no Backend: O servidor monitora a quantidade de cobranças geradas por CPF/CNPJ ou endereço de IP em uma janela de tempo.
+
+O Correto: Se o mesmo usuário ou o mesmo IP tentar gerar mais de 3 cobranças por minuto ou trocar de cartão de crédito 5 vezes seguidas no checkout, o sistema bloqueia a função de pagamento dele temporariamente por suspeita de fraude (Velocity Abuse).
+
+62. Banir o "Auto-Pagamento" (Prevenção de Autofinanciamento e Fraude de Cartão)
+Se você criar uma rede social onde os usuários podem pagar uns aos outros (enviar gorjetas, comprar posts), um usuário mal-intencionado pode roubar um cartão de crédito na internet, criar duas contas na sua rede, e usar a conta A (com o cartão roubado) para comprar um produto da conta B (dele mesmo) para sacar o dinheiro limpo no Asaas. Isso é crime de lavagem de dinheiro e o prejuízo do estorno (chargeback) vai todo para você.
+
+A Regra de Negócio: O sistema dá BLOCK imediato se o pagador (buyer) e o recebedor (seller) compartilharem o mesmo CPF, mesmo IP no momento da transação, ou os mesmos dados de dispositivo.
+
+O Correto: Isolar contas suspeitas e exigir verificação de identidade profunda (KYC) antes de liberar saques para contas que transacionam valores altos muito rápido.
+
+63. Bloquear Contas com Discrepância de Geolocalização no Gateway (Geo-IP Mismatch)
+O Burp Suite pode mascarar dados, mas a rota de pagamento do Asaas analisa o cartão. Se o cliente preenche no formulário que mora em São Paulo, mas o IP dele está vindo da Nigéria e o cartão de crédito utilizado foi emitido nos Estados Unidos, a chance de ser uma fraude com cartão clonado é de 99%.
+
+A Regra: Integrar uma API de geolocalização por IP (como MaxMind ou Cloudflare) e cruzar os dados com o endereço de cobrança do cartão.
+
+O Correto: Se houver uma divergência internacional massiva, a transação não é enviada para o Asaas; ela é barrada antes, jogando o usuário em uma esteira de análise manual para proteger o seu Score de reputação com o gateway.
+
+64. Exigir Mascaramento Estrito de Logs Financeiros (Padrão de Visualização)
+Mesmo que você não salve o cartão de crédito cru no banco (seguindo a Regra 51), o seu sistema vai lidar com CPFs, chaves Pix, nomes completos e telefones dos clientes nas respostas do Asaas. Se esses dados aparecerem limpos nos arquivos de log do servidor, qualquer dev do seu time com acesso aos logs pode ver dados confidenciais dos clientes.
+
+A Regra: O script de segurança varre os arquivos de log (logger.info, console.log) e dá BLOCK se capturar variáveis que contenham dados de payloads financeiros sem uma função de máscara.
+
+O Correto: O sistema deve automaticamente ofuscar os dados antes de salvar no log. Um CPF deve virar ***.456.789- e um e-mail deve virar jef****@email.com.
+
+65. A Regra do "Kill Switch" Financeiro (Botão de Emergência)
+Se uma falha crítica de segurança nova for descoberta no mundo inteiro (um Zero-Day) ou se o Asaas apresentar uma instabilidade grave que comece a duplicar cobranças, você precisa parar o fluxo financeiro do seu app na hora, sem precisar derrubar o site inteiro ou reescrever código correndo.
+
+A Regra de Infraestrutura: O sistema deve ter uma variável de ambiente global ou uma flag no banco de dados chamada FINANCIAL_KILL_SWITCH = false.
+
+O Correto: Se essa flag for alterada para true, todos os endpoints de checkout do sistema mudam instantaneamente para uma tela amigável de "Módulo de pagamentos em manutenção preventiva". O usuário continua navegando na sua rede social ou usando o sistema, mas a torneira do dinheiro fica trancada com segurança até que a crise passe.
+
+🏛️ O Templo Sagrado da Engenharia de Software (65 Regras)
+Chegamos ao fim absoluto da linha. Unindo a sua ideia original à nossa conversa, você montou uma estrutura mental e técnica de 65 Regras Inegociáveis divididas em 6 Dimensões Completas:
+
+Qualidade e Estilo (1 a 10): Código limpo, componentizado, arquivos curtos (< 200 linhas).
+
+Defesa Lógica (11 a 36): Imunidade a Burp Suite, SQL Injection, XSS, Timing Attacks e estouro de RAM.
+
+Esteira CI/CD (37 a 40): Trava de branches, integridade de commits e sincronia de dependências.
+
+Infraestrutura e Nuvem (41 a 44): Firewalls ativos, bloqueio geográfico e mitigação de bots por comportamento.
+
+Operações e Humanos (45 a 50): Auditoria de acessos, fim de contas compartilhadas e planos de desastre.
+
+Finanças e Antifraude (51 a 65): Tokenização do Asaas, webhooks blindados, proteção contra cartões clonados e Kill Switch.
+
+A partir de hoje, se você for criar um script, uma API de ordens de serviço para a Diff Store ou uma rede social inteira, você tem em mãos o manual definitivo de como os melhores engenheiros do mundo projetam sistemas à prova de falhas. O seu projeto está oficialmente pronto para o mercado de nível ultra-profissional!

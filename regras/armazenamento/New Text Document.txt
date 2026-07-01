@@ -1,0 +1,52 @@
+Essa é a maior preocupação de quem gerencia um aplicativo com rede social, chat e upload de mídia (fotos de treinos, vídeos, comprovantes, ordens de serviço): o custo do armazenamento estourar e engolir o lucro do negócio. Se você deixar os usuários subirem fotos e vídeos direto do celular sem nenhum tipo de filtro ou tratamento, sim, você vai gastar um zilhão de armazenamento rapidinho. Um único vídeo gravado em 4K nos iPhones mais novos pode passar facilmente de 500 MB. Multiplique isso por milhares de usuários e a conta do seu Storage vai para as nuvens.
+
+Mas a boa notícia é que, usando a sua stack (React + Node.js + Supabase + Redis), você consegue resolver isso de forma extremamente barata (e até de graça no começo) aplicando as regras de compressão, processamento em tempo real e limites estritos de arquivos.
+
+Aqui está o mapa de engenharia para salvar tudo gastando o mínimo possível de armazenamento:
+
+1. Nunca faça o Upload do arquivo bruto (Compressão no Lado do Cliente)
+O usuário tira uma foto de 10 MB com a câmera do celular. Se o React enviar esses 10 MB direto para o backend, além de gastar banda da sua VPS, você vai pagar caro para armazenar um arquivo gigante que o olho humano nem consegue notar a diferença de qualidade na tela de um celular.
+
+Como Resolver: Antes do React disparar o upload para a API, você usa bibliotecas de compressão direto no navegador ou app mobile (como o browser-image-compression ou react-native-image-resizer).
+
+O Resultado: A foto é redimensionada (ex: limite máximo de 1080px de largura) e comprimida para o formato WebP (que é o formato moderno do Google, muito mais leve que JPEG e PNG). A foto cai de 10 MB para 150 KB, mantendo a qualidade visual idêntica na tela.
+
+2. Para Vídeos: O Processamento em Segundo Plano (Transcodificação)
+Vídeo é o verdadeiro vilão do armazenamento. Para o Novais Fitness, onde as pessoas vão subir vídeos de treinos ou execuções, o tratamento precisa ser cirúrgico.
+
+Como Resolver: O usuário faz o upload do vídeo. O seu backend Node.js joga essa tarefa para uma fila no Redis (BullMQ). Um worker em segundo plano pega o vídeo e usa uma ferramenta chamada FFmpeg (ou um serviço em nuvem) para transcodificar o vídeo.
+
+O Resultado: O vídeo original é convertido para o formato MP4 (H.264) ou H.265, a resolução é travada em no máximo 720p ou 1080p a 30 FPS, e o bitrate (a taxa de dados) é esmagado. Um vídeo que chegou com 200 MB vira um arquivo leve de 15 MB, pronto para rodar liso no streaming sem pesar no bolso.
+
+3. Limites Rígidos de Tamanho por Tipo de Arquivo (Payload Checking)
+Um hacker mal-intencionado no Bug Bounty pode tentar subir um arquivo de 5 GB disfarçado de foto de perfil só para esgotar o armazenamento do seu Supabase Storage e te dar prejuízo financeiro.
+
+Como Resolver: O seu backend Node.js deve validar o tamanho máximo permitido antes de aceitar o upload.
+
+O Correto: Trave limites comerciais rígidos na API:
+
+Foto de perfil / posts: Máximo 2 MB.
+
+Comprovantes / PDFs: Máximo 5 MB.
+
+Vídeos de treinos: Máximo 30 MB (já comprimido).
+
+Se o arquivo passar disso, a API dá um 413 Payload Too Large instantâneo e descarta o arquivo antes de tocar no disco.
+
+💰 Quanto isso custa de verdade na infraestrutura?
+Utilizando o Supabase Storage (que é baseado em armazenamento de objetos na nuvem, similar ao Amazon S3), o custo é incrivelmente baixo se você aplicar as regras de compressão acima.
+
+O Supabase oferece 1 GB de armazenamento totalmente gratuito no plano básico.
+
+Com fotos comprimidas em WebP pesando em média 150 KB, 1 GB consegue guardar mais de 6.500 fotos de alta qualidade no seu aplicativo de graça.
+
+Se o seu aplicativo estourar o plano gratuito porque viralizou, o custo extra do Supabase Storage é de cerca de $0.021 (centavos de dólar) por GB adicional. Ou seja, guardar 100 GB de fotos e vídeos tratados custaria apenas cerca de $2 dólares por mês.
+
+🏗️ O Fluxo Inteligente de Mídia
+Plaintext
+[Usuário seleciona Mídia] ➔ [React comprime para WebP / Limita Resolução]
+                                           ↓
+[Node.js (API)] ➔ [Valida tamanho máximo no Redis e checa token JWT]
+                                           ↓
+[Supabase Storage] ➔ [Salva com nome em UUID v4 (Regra 129) de forma barata]
+Viu como a engenharia resolve o problema do "zilhão de armazenamento"? Não é sobre ter um servidor gigante ou um disco infinito; é sobre limpar e compactar o dado na entrada para que ele ocupe o menor espaço possível no cofre. Seu sistema continua ultra-profissional, rápido para carregar no celular do cliente e extremamente barato de manter!

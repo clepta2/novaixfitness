@@ -5,7 +5,7 @@ const expoConfig = require("eslint-config-expo/flat");
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ["dist/*"],
+    ignores: ["dist/*", "backend/*", "scripts/*", ".storybook/*", "admin/*"],
     rules: {
       "max-lines": ["warn", { "max": 200, "skipBlankLines": true, "skipComments": true }],
       "import/namespace": "off",

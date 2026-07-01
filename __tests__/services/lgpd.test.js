@@ -90,9 +90,9 @@ describe('LGPD Service', () => {
   });
 
   describe('getConsentSettings', () => {
-    it('returns defaults for null userId', async () => {
+    it('returns null for null userId', async () => {
       const result = await getConsentSettings(null);
-      expect(result).toEqual({ marketing: false, analytics: false, thirdParty: false, updatedAt: null });
+      expect(result).toBeNull();
     });
 
     it('returns consent settings with defaults', async () => {

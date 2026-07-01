@@ -53,3 +53,40 @@ export function isSameDay(a, b) {
 export function getDaysBetween(a, b) {
   return Math.floor((new Date(b) - new Date(a)) / 86400000);
 }
+
+export function formatDateShort(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+export function formatDateSmart(dateStr) {
+  if (!dateStr) return '';
+  if (isToday(dateStr)) return 'Hoje ' + formatTimeBR(dateStr);
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
+  if (diff === 1) return 'Ontem ' + formatTimeBR(dateStr);
+  return formatDateBR(dateStr);
+}
+
+export function formatDateWithTime(dateStr) {
+  if (!dateStr) return '';
+  return formatDateBR(dateStr) + ' ' + formatTimeBR(dateStr);
+}
+
+export function formatTimeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+  if (diff < 60) return 'agora';
+  if (diff < 3600) return `${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} h`;
+  return `${Math.floor(diff / 86400)} dias`;
+}
+
+export function formatTimestampAgo(ts) {
+  if (!ts) return 'Nunca';
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'Agora';
+  if (diff < 3600) return `${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} h`;
+  return `${Math.floor(diff / 86400)} dias`;
+}

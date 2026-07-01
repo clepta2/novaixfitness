@@ -1,0 +1,39 @@
+Se você vai colocar o seu sistema na linha de fogo de um programa de Bug Bounty (em plataformas como a HackerOne), o seu nível de preparação precisa ser cirúrgico. Caçadores de recompensas (bug hunters) não procuram apenas por erros comuns; eles combinam falhas, testam limites físicos do servidor e procuram por erros de lógica de negócios que ferramentas automáticas de escaneamento não conseguem pegar.
+
+Como você já tem o código pronto e vai começar a refatorar usando a arquitetura modular que conversamos, aqui está o arsenal avançado de blindagem (Dicas 66 a 75) para garantir que nenhum hacker consiga uma validação de P1 (falha crítica) no seu sistema e que você passe direto pelo crivo deles:
+
+66. Destruição de Sessão no Logout (Full Session Revocation)
+Muitos desenvolvedores apenas apagam o token do navegador do usuário quando ele clica em "Sair" (Logout). O problema é que, se o atacante capturou o token JWT antes via Burp Suite, esse token continua válido no servidor até expirar.
+
+A Dica de Ouro: O seu endpoint de logout deve invalidar o token no backend imediatamente (adicionando-o a uma Blacklist temporária no Redis ou destruindo a sessão no banco de dados). Se o hacker tentar reutilizar o token interceptado um segundo após o logout, o servidor deve recusar.
+
+67. Prevenção de Injeção de Cabeçalhos de Host (Host Header Injection)
+Quando o seu servidor envia um e-mail de recuperação de senha, ele costuma gerar o link baseado no cabeçalho Host que veio na requisição HTTP. Um hacker pode usar o Burp Suite para mudar o cabeçalho para Host: site-do-hacker.com. Se o seu backend aceitar, o e-mail de redefinição de senha do seu cliente vai chegar com um link apontando direto para o servidor do invasor.
+
+A Dica de Ouro: Nunca confie no req.headers.host de forma dinâmica para gerar URLs absolutas em e-mails ou redirecionamentos. Force o uso de uma constante estrita trancada no seu .env (ex: BASE_URL=https://meuapp.com.br).
+
+68. Truncamento de Inputs Longos (Anti-DoS por Processamento)
+Você já limitou o tamanho do payload na Regra 28, mas e o tamanho de um único campo de texto? Se o hacker enviar uma string de 1.000.000 de caracteres no campo nome do formulário, o banco de dados pode aguentar, mas o seu backend pode travar tentando processar ou sanitizar esse texto na memória RAM.
+
+A Dica de Ouro: Use bibliotecas de validação de esquema (como o Zod) para limitar o tamanho máximo de caracteres de cada propriedade do JSON recebido (ex: .max(100) para nomes, .max(255) para e-mails).
+
+69. Proteção contra CSRF (Cross-Site Request Forgery) em APIs com Cookies
+Se você optou por salvar os tokens de sessão em Cookies seguros com a flag HttpOnly (seguindo a Regra 11), você fechou a porta para o roubo via JavaScript, mas abriu uma brecha para ataques CSRF (onde um site malicioso faz o navegador do usuário enviar uma requisição camuflada para a sua API aproveitando que o cookie está salvo).
+
+A Dica de Ouro: Atrele a flag SameSite=Strict ou SameSite=Lax aos seus cookies de sessão. Isso garante que o navegador só envie o cookie se a requisição tiver partido de dentro do seu próprio domínio, ignorando cliques vindos de sites externos de phishing.
+
+70. Ofuscação de Mensagens de Resposta da API (Erro 404 Estrito)
+Se um hacker tentar acessar /api/usuarios/100 e o sistema responder 403 Forbidden (Acesso Negado), ele descobre que o usuário 100 existe, mas ele não tem permissão. Se ele tentar /api/usuarios/999 e o sistema responder 404 Not Found, ele descobre que o usuário 999 não existe. Isso se chama User Enumeration (Enumeração de Usuários).
+
+A Dica de Ouro: Para rotas sensíveis onde o usuário tenta acessar o dado de outra pessoa, o seu servidor deve responder exatamente o mesmo erro de negação (como um 404 Not Found genérico), quer o registro exista ou não. Se o hacker tentar adivinhar IDs com o Burp Suite, ele receberá respostas idênticas, ficando sem saber se bateu em uma parede vazia ou em um dado protegido.
+
+🛡️ O Checklist do Caçador: O que testar antes de abrir o Bug Bounty
+Antes de submeter o seu programa e convidar os pesquisadores de segurança para atacar o seu código, faça você mesmo o papel de atacante (White Hat) rodando esses testes manuais:
+
+O Teste do Preço Modificado: Tente comprar o seu plano ou serviço no Asaas interceptando a requisição e mudando o valor para R$ 0,01. O seu backend precisa retornar um erro de validação.
+
+O Teste do ID Trocado (IDOR): Logue com duas contas diferentes no navegador. Pegue o ID de um post ou de uma ordem de serviço da Conta A e tente ler ou deletar usando o token de acesso da Conta B. O servidor deve bloquear.
+
+O Teste do Replay de Webhook: Pegue um payload de confirmação de pagamento antigo do Asaas e tente reenviar para a sua rota de webhook usando o Burp Suite. O sistema deve ignorar porque aquela chave de idempotência ou ID de transação já foi processado.
+
+Com a sua estrutura modular rodando no enforce-security.js, essas 5 novas proteções avançadas entram como plugins cirúrgicos na sua pasta de segurança. Você está transformando o seu sistema em um ambiente blindado contra técnicas profissionais de invasão. Boa sorte no programa de Bug Bounty — se você aplicar essas travas, os hackers vão suar a camisa para achar qualquer brecha!

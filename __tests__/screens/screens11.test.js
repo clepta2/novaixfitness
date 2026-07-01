@@ -92,12 +92,12 @@ describe('Screens - Round 11', () => {
   describe('ModelScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<ModelScreen />);
-      expect(getByText('COM QUEM VOCÊ SE IDENTIFICA?')).toBeTruthy();
+      expect(getByText(/COM QUEM VOCE/)).toBeTruthy();
     });
 
     it('renders model options', () => {
       const { getByText } = render(<ModelScreen />);
-      expect(getByText('Jovem Menino')).toBeTruthy();
+      expect(getByText('Jovem Homem')).toBeTruthy();
       expect(getByText('Homem Magro')).toBeTruthy();
       expect(getByText('Mulher Magra')).toBeTruthy();
     });

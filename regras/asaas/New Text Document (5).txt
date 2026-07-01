@@ -1,0 +1,33 @@
+Para jogar no nível dos melhores pesquisadores de segurança da HackerOne e fechar as últimas brechas que geram relatórios de recompensa alta (P1 a P2), precisamos olhar para ataques que combinam falhas técnicas com o comportamento do protocolo HTTP e do banco de dados.
+
+Aqui estão as últimas 5 dicas extremas (Dicas 76 a 80) para deixar os bug hunters sem nenhuma ação contra o seu código:
+
+76. Bloquear Poluição de Parâmetros HTTP (HTTP Parameter Pollution - HPP)
+No Burp Suite, um atacante pode enviar uma requisição duplicando variáveis na URL ou no corpo do texto, como: /api/checkout?produtoId=123&produtoId=456. Se o seu backend não estiver preparado, ele pode transformar isso em uma matriz (['123', '456']). Se o seu código esperar uma string simples e receber uma matriz, o sistema pode quebrar, expor dados internos no erro ou processar o produto errado de graça.
+
+A Dica de Ouro: Force o seu script de validação de rotas ou middleware (como o hpp no Node.js) a limpar as requisições, aceitando apenas o último parâmetro enviado ou rejeitando parâmetros duplicados imediatamente.
+
+77. Banir Respostas Condicionais Baseadas em Exceções de Banco
+Quando um hacker tenta um ataque de injeção e o banco de dados falha, o comportamento padrão de muitos frameworks é retornar códigos de erro genéricos, mas com tempos de resposta ligeiramente diferentes se a consulta foi verdadeira ou falsa. Isso permite ataques de SQL Injection Cega Baseada em Tempo ou Erro.
+
+A Dica de Ouro: Certifique-se de que qualquer falha de banco de dados (catch do ORM ou driver do banco) caia exatamente no mesmo formatador genérico de erro, com um atraso artificial padronizado se necessário, para que o comportamento externo do app seja rigorosamente idêntico.
+
+78. Proteção contra Envenenamento de Cache (Web Cache Poisoning)
+Se você utiliza sistemas de cache na nuvem (como Cloudflare ou Varnish) para acelerar a sua rede social ou o carregamento de páginas da sua loja, o Burp Suite pode ser usado para injetar cabeçalhos HTTP customizados (como X-Forwarded-Host) que forçam o servidor de cache a guardar uma versão da página que aponta para scripts maliciosos. O próximo usuário legítimo que acessar o site vai baixar a versão envenenada direto do cache.
+
+A Dica de Ouro: Configure o seu servidor e a sua CDN para ignorar cabeçalhos não padronizados na criação das chaves de cache (Cache Keys) ou desative o cache para qualquer rota que processe dados de entrada dinâmicos de usuários.
+
+79. Limitação de Tamanho de Chaves de Sessão (Anti-DoS de Hash)
+Se o seu sistema usa cookies de sessão assinados ou criptografados baseados em strings complexas, um hacker pode usar o Burp Suite para enviar um cookie com um tamanho colossal (ex: 10MB de texto aleatório). O seu servidor vai gastar ciclos de CPU preciosos tentando descriptografar ou computar o hash daquela string gigante para cada requisição, derrubando o processamento do Node.js por sobrecarga de processador.
+
+A Dica de Ouro: Crie uma trava logo na entrada do seu middleware de cookies/sessões: se o tamanho do cabeçalho Cookie ou Authorization passar de um limite justo (como 4KB ou 8KB), a requisição é rejeitada de imediato sem processar nenhuma função matemática.
+
+80. Validação Estrita de JSON Inválido (Malformed JSON Attacks)
+Muitos parsers de JSON automáticos entram em pânico ou quebram o fluxo de execução assíncrona do Node.js se receberem pacotes de dados corrompidos propositalmente através do Burp Suite, como chaves abertas sem fechamento ({"dados": ) repetidas milhares de vezes. Isso pode travar a thread principal do servidor de backend.
+
+A Dica de Ouro: Envolva o middleware de leitura de JSON em um tratamento de erro customizado global que capture exceções de sintaxe de texto (SyntaxError) antes que elas atinjam o núcleo da sua aplicação, respondendo de forma limpa com um código 400 Bad Request.
+
+🏁 Tabuleiro Limpo: Pronto para o Ataque
+Com essa última rodada, chegamos ao limite absoluto de táticas defensivas que cobrem desde vulnerabilidades de lógica comercial (como as falhas no Asaas) até manipulações profundas do protocolo de rede.
+
+Organizando essas regras na sua pasta modular scripts/security-rules/, o seu código estará blindado de uma forma que pouquíssimas startups no mundo conseguem alcançar. O ambiente está pronto. Configure o escopo do seu programa de Bug Bounty, defina as regras do jogo e deixe os caçadores tentarem a sorte — vai ser muito difícil eles arrancarem uma recompensa do seu sistema!

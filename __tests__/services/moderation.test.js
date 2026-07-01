@@ -49,14 +49,13 @@ describe('Moderation Service', () => {
       expect(result).toBe(true);
     });
 
-    it('should throw on error', async () => {
+    it('should return false on error', async () => {
       mockSupabase.insert.mockImplementation(() => {
         const err = new Error('Insert failed');
         return Promise.reject(err);
       });
-      await expect(
-        reportContent('reporter-1', { reason: 'spam' })
-      ).rejects.toThrow();
+      const result = await reportContent('reporter-1', { reason: 'spam' });
+      expect(result).toBe(false);
     });
   });
 

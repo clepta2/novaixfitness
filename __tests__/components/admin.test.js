@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 
 jest.mock('expo-font', () => ({
   useFonts: () => [true],
@@ -43,17 +43,21 @@ describe('Admin Components', () => {
   });
 
   describe('AdminDashboard', () => {
-    it('renders admin dashboard', () => {
-      const { toJSON } = render(<AdminDashboard />);
-      expect(toJSON()).toBeTruthy();
+    it('renders admin dashboard', async () => {
+      const tree = render(<AdminDashboard />);
+      await waitFor(() => {
+        expect(tree.toJSON()).toBeTruthy();
+      });
     });
 
-    it('renders stats cards', () => {
+    it('renders stats cards', async () => {
       const { getByText } = render(<AdminDashboard />);
-      expect(getByText('admin.dashboard.totalStudents')).toBeTruthy();
-      expect(getByText('admin.dashboard.active')).toBeTruthy();
-      expect(getByText('admin.dashboard.newMonth')).toBeTruthy();
-      expect(getByText('admin.dashboard.workouts')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('TOTAL ALUNOS')).toBeTruthy();
+        expect(getByText('ATIVOS')).toBeTruthy();
+        expect(getByText('NOVOS/MÊS')).toBeTruthy();
+        expect(getByText('TREINOS')).toBeTruthy();
+      });
     });
   });
 });

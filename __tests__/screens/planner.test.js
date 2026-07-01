@@ -72,6 +72,34 @@ jest.mock('../../src/components', () => {
   return new Proxy(base, { get: (t, k) => t[k] || Stub(String(k)) });
 });
 
+jest.mock('../../src/components/planner', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return {
+    WeekCalendar: ({ weekPlan, onDayPress }) => (
+      <View testID="week-calendar">
+        <Text>WeekCalendar</Text>
+      </View>
+    ),
+    AdaptationBanner: () => React.createElement(View, null),
+    DayEditorModal: () => React.createElement(View, null),
+  };
+});
+
+jest.mock('../../src/components/planner/DayDetailView', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  const DayDetailView = (props) => React.createElement(View, null, React.createElement(Text, null, 'DayDetailView'));
+  const TodayCard = (props) => React.createElement(View, null, React.createElement(Text, null, 'TodayCard'));
+  return { __esModule: true, default: DayDetailView, TodayCard };
+});
+
+jest.mock('../../src/components/planner/WeekOverview', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return { __esModule: true, default: (props) => React.createElement(View, null, React.createElement(Text, null, 'WeekOverview')) };
+});
+
 jest.mock('../../src/services/planService', () => ({
   loadWeeklyPlan: jest.fn().mockResolvedValue(null),
   updateDayPlan: jest.fn().mockResolvedValue({}),

@@ -1,0 +1,6 @@
+uas dicas rápidas para blindar ainda mais o seu script enforce-security.js:
+Regex para o __DEV__ (Regra 1): Garanta que o seu script verifique se o console.log está dentro do bloco condicional, e não apenas se a palavra __DEV__ existe em qualquer lugar do arquivo. O jeito mais seguro é forçar o uso de uma função envelopada (ex: logger.dev('mensagem')) e banir a palavra console.log puramente do código de produção.
+
+Ignorar arquivos específicos (Whitelist): Eventualmente, arquivos de configuração automática (como o próprio package-lock.json, rotas geradas automaticamente ou tabelas extensas de constantes de tradução/CNAEs) podem passar de 200 linhas por necessidade extrema. Vale a pena colocar uma linha no seu script enforce-security.js para ignorar caminhos como node_modules/, dist/ ou arquivos .json.
+
+Esse checklist obrigatório antes de criar componentes (reaproveitando o Design System de cores/espaçamentos e exigindo ErrorBoundary) vai economizar dezenas de horas de refatoração no futuro. O projeto está subindo de nível com uma arquitetura extremamente profissional!

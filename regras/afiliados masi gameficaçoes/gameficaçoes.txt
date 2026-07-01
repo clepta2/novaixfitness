@@ -1,0 +1,65 @@
+Para expandir a sua fortaleza e proteger os módulos de Links de Afiliados, Gamificação (pontos, conquistas, recompensas) e Links de Convites na sua stack (Node + React + Redis + Docker + Supabase), o foco muda.
+
+Aqui, o maior inimigo no Bug Bounty não é o roubo de contas, mas sim a Fraude de Lógica (Abuso de Sistema). Os hackers vão tentar usar o Burp Suite e scripts automatizados para forjar convites, inflar pontos de gamificação de graça e desviar comissões de afiliados.
+
+Aqui estão as regras de ouro específicas para blindar esses três módulos:
+
+🔗 1. Segurança para Links de Afiliados (Anti-Churn & Anti-Fraud)
+O maior golpe em sistemas de afiliados é o Cookie Stuffing ou a criação de compras falsas para gerar comissões indevidas que depois serão sacadas no Asaas.
+
+96. Validação de Cliques com Impressão Digital (Click Fingerprinting)
+Se um robô ficar clicando no link de afiliado milhares de vezes para inflar as métricas ou forçar cookies no navegador de usuários legítimos, a sua VPS vai sofrer estresse de CPU desnecessário.
+
+A Regra: Quando alguém clica em um link de afiliado (/ref/jeferson), o backend Node.js não deve apenas salvar o clique. Ele gera um hash combinando o IP, o User-Agent e a data.
+
+O Correto: Salve esse hash temporariamente no Redis com um tempo de expiração curto (TTL de 1 hora). Se o mesmo padrão de clique se repetir em milissegundos, o Redis ignora e não contabiliza o clique repetido no Supabase, matando os bots de automação.
+
+97. Vinculação Estrita de Checkout (Prevenção de Self-Referral)
+O usuário intercepta a requisição com o Burp Suite e coloca o próprio código de afiliado dele na hora de comprar o plano premium para ganhar um "desconto" ou comissão em cima da própria compra.
+
+A Regra: O backend deve dar BLOCK imediato se o afiliado_id dono do link for o mesmo usuario_id que está efetuando o pagamento do produto.
+
+🎮 2. Segurança para Gamificação (Anti-Cheat de Pontos)
+Em sistemas com gamificação (ganhar pontos por completar tarefas, interagir na rede social ou fechar OS na Diff Store), o front-end em React nunca pode ter poder de decisão sobre os pontos.
+
+98. Banir o Envio de Pontos pelo Front-End (Server-Side Authority)
+Um erro fatal: o usuário conclui uma tarefa no React e o front-end envia para a API: POST /api/gamificacao/pontos {"pontos": 100}. O hacker abre o Burp Suite, muda o payload para {"pontos": 999999} e quebra o sistema de recompensas.
+
+A Regra: O front-end envia apenas o ID da ação que foi concluída, por exemplo: POST /api/tarefas/concluir {"tarefaId": "xyz"}.
+
+O Correto: O seu servidor Node.js valida no Supabase se a tarefa "xyz" realmente existia, se ela foi completada agora e, de forma interna e trancada, calcula: "Ok, a tarefa xyz vale 10 pontos". O servidor injeta os pontos direto no banco. O cliente não tem voz nesse cálculo.
+
+99. Trava de Recompensa em Transação Atômica (Anti-Race Condition)
+Se o usuário ganhar pontos suficientes para resgatar um prêmio (ex: um cupom de desconto de R$ 50 no Asaas que custa 1000 pontos), ele pode abrir o Burp Suite e disparar 50 requisições simultâneas de resgate ao mesmo tempo (Race Condition). Se o servidor for lento para processar, ele pode entregar 5 cupons antes de conseguir debitar os primeiros 1000 pontos.
+
+A Regra: Use a Regra 54 (Transações Atômicas) do seu banco de dados Supabase/PostgreSQL.
+
+O Correto: O código de resgate bloqueia a linha do saldo de pontos do usuário durante a checagem (SELECT ... FOR UPDATE). O sistema debita os 1000 pontos e gera o cupom exatamente no mesmo milissegundo. Se as outras 49 requisições tentarem ler o saldo, encontrarão ele zerado e falharão.
+
+✉️ 3. Segurança para Links de Convite (Anti-Spam de Contas)
+Links de convite (ex: para trazer novos membros para a plataforma ou escola) são os alvos favoritos para ataques de criação de contas fantasma em massa.
+
+100. Tokens de Convite Únicos, Criptografados e Assinados
+Se o seu link de convite for previsível, como /convite?id=1, o hacker usa o Intruder do Burp Suite para mudar o ID sequencialmente de 1 a 10000 e descobrir links de salas privadas ou cupons ocultos.
+
+A Regra: Os links de convite devem usar UUID v4 ou tokens assinados criptograficamente com uma chave secreta do seu .env (ex: JWT de convite).
+
+O Correto: O link vira /convite?token=eyJhbGciOi.... O servidor valida a assinatura do token antes de permitir que a pessoa se cadastre usando aquele convite, impedindo a adivinhação de links por força bruta.
+
+101. Limite de Cadastro por Token de Convite (Anti-Inundação)
+Se um link de convite vazar em um fórum de hackers, scripts automatizados podem criar 10.000 contas vinculadas àquele mesmo convite em minutos, derrubando a performance da sua VPS da Hostinger com requisições inúteis.
+
+A Regra: Todo convite gerado deve ter um limite de uso gravado no banco de dados (ex: limite_usos: 5).
+
+O Correto: A cada cadastro feito com sucesso, o Node incrementa o contador. Assim que bater o limite, o token é invalidado no Redis/Supabase e o servidor rejeita os próximos cadastros com erro 400 Bad Request.
+
+🛡️ O Checklist de Validação dos 3 Módulos:
+Para o seu script modular enforce-security.js analisar antes do deploy:
+
+Plaintext
+□ Links de afiliados usam validação de IP/User-Agent no Redis para evitar cliques fakes?
+□ Rotas de ganho de pontos de gamificação calculam o valor estritamente no Backend?
+□ Resgate de recompensas por pontos utiliza Database Transactions (Anti-Race Condition)?
+□ Tokens de convite usam UUID/Criptografia em vez de IDs sequenciais (1, 2, 3...)?
+□ O sistema barra o usuário de usar o próprio link de afiliado/convite?
+Colocando o Redis para segurar a velocidade dos cliques de afiliados, o Supabase travando as transações de pontos com segurança atômica, e o Node.js mandando nas regras de negócio, o seu aplicativo fica completamente imune a fraudadores financeiros e caçadores de recompensa mal-intencionados!

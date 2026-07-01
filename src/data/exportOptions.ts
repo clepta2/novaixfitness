@@ -1,0 +1,51 @@
+export const EXPORT_OPTIONS = [
+  {
+    id: 'all',
+    icon: 'folder-open',
+    title: 'Todos os Meus Dados (LGPD)',
+    desc: 'Exportação completa em JSON com todos os dados pessoais',
+    filename: 'novaix_todos_dados.json',
+  },
+  {
+    id: 'profile',
+    icon: 'person',
+    title: 'Dados do Perfil',
+    desc: 'Informações pessoais, configurações e estatísticas',
+    filename: 'novaix_perfil.csv',
+  },
+  {
+    id: 'workouts',
+    icon: 'barbell',
+    title: 'Histórico de Treinos',
+    desc: 'Todos os treinos concluídos com data, duração e avaliação',
+    filename: 'novaix_historico_treinos.csv',
+  },
+  {
+    id: 'progress',
+    icon: 'trending-up',
+    title: 'Dados de Progresso',
+    desc: 'Perfil, peso ao longo do tempo e estatísticas gerais',
+    filename: 'novaix_progresso.csv',
+  },
+  {
+    id: 'analytics',
+    icon: 'stats-chart',
+    title: 'Analytics Detalhado',
+    desc: 'Treinos por categoria, duração e frequência',
+    filename: 'novaix_analytics.csv',
+  },
+  {
+    id: 'achievements',
+    icon: 'trophy',
+    title: 'Conquistas',
+    desc: 'Todas as conquistas desbloqueadas com datas',
+    filename: 'novaix_conquistas.csv',
+  },
+  {
+    id: 'chat',
+    icon: 'chatbubbles',
+    title: 'Histórico do Chat',
+    desc: 'Todas as conversas com o Coach IA',
+    filename: 'novaix_chat_historico.csv',
+  },
+];

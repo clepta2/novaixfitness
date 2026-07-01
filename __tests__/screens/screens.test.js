@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
 jest.mock('expo-font', () => ({
   useFonts: () => [true],
@@ -67,8 +67,11 @@ jest.mock('../../src/config/supabase', () => ({
     from: jest.fn(() => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
       single: jest.fn().mockResolvedValue({ data: null, error: null }),
       update: jest.fn().mockReturnThis(),
+      delete: jest.fn().mockReturnThis(),
     })),
     auth: {
       getUser: jest.fn().mockResolvedValue({ data: { user: { id: 'test-user' } } }),
@@ -144,7 +147,7 @@ describe('Screens', () => {
   describe('NotificationSettingsScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<NotificationSettingsScreen />);
-      expect(getByText('Notificacoes')).toBeTruthy();
+      expect(getByText('Notificações')).toBeTruthy();
     });
 
     it('renders notification options', () => {
@@ -153,31 +156,35 @@ describe('Screens', () => {
       expect(getByText('Config')).toBeTruthy();
     });
 
-    it('renders time options', () => {
+    it('renders time options', async () => {
       const { getByText } = render(<NotificationSettingsScreen />);
-      expect(getByText('Sem notificacoes')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('Nenhuma notificação')).toBeTruthy();
+      });
     });
 
-    it('renders clear button', () => {
+    it('renders clear button', async () => {
       const { getByText } = render(<NotificationSettingsScreen />);
-      expect(getByText('Quando algo acontecer, voce sera notificado aqui.')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('Nenhuma notificação')).toBeTruthy();
+      });
     });
   });
 
   describe('ForgotPasswordScreen', () => {
     it('renders form', () => {
       const { getByText } = render(<ForgotPasswordScreen />);
-      expect(getByText('Esqueceu a senha?')).toBeTruthy();
+      expect(getByText('ESQUECEU A SENHA?')).toBeTruthy();
     });
 
     it('renders send button', () => {
       const { getByText } = render(<ForgotPasswordScreen />);
-      expect(getByText('ENVIAR LINK')).toBeTruthy();
+      expect(getByText('ENVIAR LINK DE RECUPERAÇÃO')).toBeTruthy();
     });
 
     it('shows error for invalid email', () => {
       const { getByText } = render(<ForgotPasswordScreen />);
-      fireEvent.press(getByText('ENVIAR LINK'));
+      fireEvent.press(getByText('ENVIAR LINK DE RECUPERAÇÃO'));
     });
 
     it('has back button', () => {

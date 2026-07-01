@@ -22,20 +22,20 @@ describe('eventTracker', () => {
     expect(typeof tracker.trackEvent).toBe('function');
   });
 
-  it('trackScreenView is a function', () => {
-    expect(typeof tracker.trackScreenView).toBe('function');
+  it('trackScreen is a function', () => {
+    expect(typeof tracker.trackScreen).toBe('function');
   });
 
-  it('trackWorkoutStarted is a function', () => {
-    expect(typeof tracker.trackWorkoutStarted).toBe('function');
+  it('trackWorkoutStart is a function', () => {
+    expect(typeof tracker.trackWorkoutStart).toBe('function');
   });
 
-  it('trackWorkoutCompleted is a function', () => {
-    expect(typeof tracker.trackWorkoutCompleted).toBe('function');
+  it('trackWorkoutComplete is a function', () => {
+    expect(typeof tracker.trackWorkoutComplete).toBe('function');
   });
 
-  it('EVENT_TYPES object has event names', () => {
-    expect(tracker.EVENT_TYPES).toBeDefined();
-    expect(typeof tracker.EVENT_TYPES).toBe('object');
+  it('Events object has event names', () => {
+    expect(tracker.Events).toBeDefined();
+    expect(typeof tracker.Events).toBe('object');
   });
 });

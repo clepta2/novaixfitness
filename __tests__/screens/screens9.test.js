@@ -231,7 +231,7 @@ describe('Screens - Round 9', () => {
 
     it('renders header', () => {
       const { getByText } = render(<GenderScreen />);
-      expect(getByText('SOBRE VOCE')).toBeTruthy();
+      expect(getByText('SOBRE VOCÊ')).toBeTruthy();
     });
   });
 

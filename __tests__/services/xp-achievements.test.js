@@ -7,7 +7,7 @@ describe('XP Achievements', () => {
   const xpAchievements = ACHIEVEMENTS.filter(a => a.category === 'xp');
 
   it('should have 6 XP achievements', () => {
-    expect(xpAchievements.length).toBe(5);
+    expect(xpAchievements.length).toBe(6);
   });
 
   it('should unlock xp_100 at 100 XP', () => {

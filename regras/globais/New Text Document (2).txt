@@ -1,0 +1,57 @@
+Para criar uma blindagem nível Enterprise (padrão de bancos e sistemas de alta escala) e não deixar passar absolutamente nada no seu script de validação, você pode expandir suas 10 regras com mais barreiras inegociáveis.
+
+Aqui estão as regras de segurança e arquitetura mais brutas do mercado para você adicionar ao seu enforce-security.js:
+
+11. Banir o uso de localStorage para Dados Sensíveis
+O localStorage não tem proteção contra ataques XSS. Se um script malicioso rodar no navegador, ele rouba tudo o que está lá.
+
+A Regra: Bloquear o armazenamento de tokens de acesso (JWT), senhas ou dados de sessão no localStorage.
+
+O Correto: Usar Cookies com a flag HttpOnly e Secure (que o JavaScript do navegador não consegue ler, blindando contra o Burp Suite e roubo de sessão).
+
+12. Proibir Conexões HTTP puras (Forçar HTTPS)
+Qualquer requisição feita sem criptografia pode ser interceptada facilmente em redes Wi-Fi públicas.
+
+A Regra: Bloquear qualquer URL que comece com http:// (permitir apenas https:// ou caminhos relativos como /api/v1), exceto se o ambiente for __DEV__ para rodar no localhost.
+
+13. Bloquear o uso de any no TypeScript (Se usar TS)
+O tipo any desliga as verificações do TypeScript. É o equivalente a programar às cegas, abrindo margem para quebras de contrato de dados e bugs em produção.
+
+A Regra: Proibir a palavra-chave : any.
+
+O Correto: Forçar o uso de tipos estritos ou unknown (que exige uma validação antes de usar o dado).
+
+14. Proibir Métodos HTTP Incorretos para Alteração de Dados
+Um erro clássico é usar rotas do tipo GET para deletar ou alterar dados no banco (ex: /api/deletar-usuario?id=1), porque o GET não exige corpo de requisição e pode ser disparado acidentalmente por um link.
+
+A Regra: Bloquear endpoints que executem mutações no banco de dados através de métodos GET. Alterações só via POST, PUT, PATCH ou DELETE.
+
+15. Forçar Timeout em todas as Requisições de API (fetch / axios)
+Se a sua API tenta conectar a um serviço externo e esse serviço cai, a requisição do seu usuário fica travada esperando para sempre. Multiplique isso por 200 usuários em horário de pico e o seu servidor cai por falta de memória.
+
+A Regra: Bloquear funções de requisição (como fetch ou axios.get) que não tenham uma propriedade de timeout (tempo limite) explicitamente configurada (ex: máximo de 5000ms).
+
+16. Banir "Magia Negra" com Datas (new Date())
+Pegar a data direto da máquina do usuário (new Date()) para salvar no banco gera fuso horários errados e bagunça relatórios (o servidor pode estar nos EUA, você no Brasil e o cliente no Japão).
+
+A Regra: Bloquear a criação de datas locais para salvar no banco.
+
+O Correto: Forçar o uso de UTC isolado (ex: new Date().toISOString()) ou centralizar os fusos através de bibliotecas como date-fns ou dayjs.
+
+17. Proibir Try/Catch Vazios (Engolir Erros)
+Colocar um bloco de código dentro de um try/catch e deixar o catch em branco faz com que o sistema falhe silenciosamente. Você nunca vai saber por que a ordem de serviço não foi salva.
+
+A Regra: Bloquear blocos catch (error) {} que estejam vazios ou que não enviem o erro para um sistema de log (como um logger.error ou Sentry).
+
+Como ficaria o seu script expandido?
+No seu enforce-security.js, você pode categorizar os blocos de validação por gravidade:
+
+JavaScript
+// Exemplo de lógica de validação avançada no script:
+const regrasCriticas = [
+  { nome: "XSS_LOCALSTORAGE", regex: /localStorage\.setItem\((['"`])(token|auth|password|jwt)/i, ação: "BLOCK" },
+  { nome: "HTTP_EXPOSTO", regex: /'http:\/\/(?!localhost)/i, ação: "BLOCK" },
+  { nome: "TRY_CATCH_VAZIO", regex: /catch\s*\([^)]*\)\s*\{\s*\}/g, ação: "WARNING" },
+  { nome: "TIMEOUT_AUSENTE", regex: /axios\.(get|post)\((?![^)]*timeout)/g, ação: "WARNING" }
+];
+Implementando essas validações, você passa a ter um código blindado estaticamente antes mesmo de ele passar perto de ser compilado!

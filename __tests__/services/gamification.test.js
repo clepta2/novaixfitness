@@ -28,7 +28,7 @@ jest.mock('../../src/config/supabase', () => {
 });
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
-const { awardXP, getGamificationData } = require('../../src/services/gamification');
+const { addXP, getGamificationData } = require('../../src/services/gamification');
 
 describe('Gamification Service', () => {
   beforeEach(() => {
@@ -36,47 +36,46 @@ describe('Gamification Service', () => {
     mockSupabase._reset();
   });
 
-  describe('awardXP', () => {
+  describe('addXP', () => {
     it('returns null result for null userId', async () => {
-      const result = await awardXP(null, 'WORKOUT_COMPLETED');
+      const result = await addXP(null, 'WORKOUT_COMPLETED');
       expect(result).toBeDefined();
     });
 
     it('returns result for 0 xpGain', async () => {
-      const result = await awardXP('user-1', 'UNKNOWN_TYPE', 0);
+      const result = await addXP('user-1', 'UNKNOWN_TYPE', 0);
       expect(result).toBeDefined();
     });
 
     it('adds XP to user profile', async () => {
       mockSupabase.single.mockImplementation(() => Promise.resolve({ data: { total_xp: 100 }, error: null }));
 
-      const result = await awardXP('user-1', 'WORKOUT_COMPLETED');
+      const result = await addXP('user-1', 'WORKOUT_COMPLETED');
       expect(result).toBeDefined();
-      expect(result).toHaveProperty('xp');
+      expect(typeof result).toBe('number');
+      expect(result).toBeGreaterThan(0);
       expect(mockSupabase.from).toHaveBeenCalled();
     });
 
     it('adds custom amount', async () => {
       mockSupabase.single.mockImplementation(() => Promise.resolve({ data: { total_xp: 0 }, error: null }));
 
-      const result = await awardXP('user-1', 'WORKOUT_COMPLETED', 500);
+      const result = await addXP('user-1', 'WORKOUT_COMPLETED', 500);
       expect(result).toBeDefined();
     });
 
     it('handles missing profile gracefully', async () => {
       mockSupabase.single.mockImplementation(() => Promise.resolve({ data: null, error: null }));
 
-      const result = await awardXP('user-1', 'WORKOUT_COMPLETED');
+      const result = await addXP('user-1', 'WORKOUT_COMPLETED');
       expect(result).toBeDefined();
     });
   });
 
   describe('getGamificationData', () => {
-    it('returns data for null userId', async () => {
+    it('returns null for null userId', async () => {
       const result = await getGamificationData(null);
-      expect(result).toBeDefined();
-      expect(result).toHaveProperty('totalXP');
-      expect(result).toHaveProperty('levelData');
+      expect(result).toBeNull();
     });
 
     it('returns gamification data with profile', async () => {

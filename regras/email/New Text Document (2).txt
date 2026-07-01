@@ -1,0 +1,49 @@
+Você tocou na ferida aberta de quase todo sistema de autenticação tradicional. Esse é o famoso ataque de Sequestro de Conta via E-mail (Account Takeover via Email Compromise).
+
+Se você optar por usar senhas e o fluxo clássico de "Esqueci minha senha", o e-mail do cliente vira o ponto único de falha. Se o hacker invadir o e-mail do usuário (ou se o usuário deixar o e-mail logado em um computador público), ele simplesmente clica em recuperar senha no seu site, abre o e-mail da vítima, troca a senha e assume o controle de tudo.
+
+Para impedir que um hacker acesse o seu sistema mesmo que ele tenha acesso total ao e-mail do cliente, você precisa implementar as seguintes regras de segurança no seu backend e no banco de dados do Supabase:
+
+1. OBRIGAR o Uso de 2FA/MFA para Ações Críticas (A Barreira Física)
+Essa é a proteção mais eficiente do mundo para esse cenário. Mesmo que o hacker vá no e-mail, clique no link e mude a senha, na hora em que ele tentar fazer o login com a senha nova, o seu sistema React deve abrir a tela exigindo o código de 6 dígitos do aplicativo autenticador (Google Authenticator) ou uma Chave de Acesso (Passkey) cadastrada no celular físico do cliente.
+
+O Resultado: O hacker fica travado. Ele tem o e-mail, ele mudou a senha, mas ele não tem o celular físico do cliente para gerar o código do 2FA. Ele não entra.
+
+2. Derrubar Todas as Sessões Ativas no Redis Após a Troca de Senha
+Se o cliente perceber que o e-mail dele foi invadido e correr no seu sistema para mudar a senha e se proteger, o hacker que já estava logado na conta dele pode continuar lá dentro se a sessão não for destruída.
+
+A Regra: Assim que o endpoint /api/auth/reset-password for executado com sucesso, o seu backend Node.js deve varrer o Redis e deletar imediatamente todos os tokens de sessão ativos daquele usuario_id. Isso desloga o hacker instantaneamente de qualquer dispositivo onde ele estivesse bisbilhotando.
+
+3. Notificação Dupla em Canais Diferentes (Alerta de Invasão)
+Nunca avise sobre uma troca de senha apenas pelo próprio e-mail. Se o hacker está dentro do e-mail da vítima, ele vai ver o aviso e apagá-lo para o cliente não notar.
+
+A Regra: Se o seu sistema tiver o número de telefone do cliente (ou se for a sua rede social/app de gestão), envie uma notificação de "Senha Alterada" via SMS, WhatsApp ou Notificação Push no celular, além do e-mail tradicional.
+
+O Correto: O cliente recebe um WhatsApp do seu sistema: "Sua senha foi alterada agora. Se não foi você, clique aqui para bloquear sua conta imediatamente".
+
+4. Bloqueio Temporário de Retirada de Valores (A Regra do Asaas)
+Imagine que o hacker conseguiu mudar a senha pelo e-mail e, por uma falha do usuário, a conta não tinha 2FA ativo. O hacker entrou na conta administrativa da Diff Store ou da sua rede social e quer transferir o saldo acumulado no Asaas para a conta dele.
+
+A Regra: Sempre que uma senha for alterada, o sistema aplica um Gatilho de Quarentena Financeira no banco de dados.
+
+O Correto: Funções como "Sacar dinheiro", "Alterar chave Pix de recebimento" ou "Mudar dados do cartão" ficam bloqueadas por 48 horas após qualquer troca de senha. O usuário legítimo terá tempo de ver o alerta no celular, notar o golpe e acionar o seu suporte antes que o hacker consiga dar o desfalque financeiro.
+
+5. Enviar o Link de Recuperação com "IP e Dispositivo Lock"
+No momento em que o usuário clica em "Esqueci minha senha" na tela do React, o seu backend captura o IP e o tipo de navegador (User-Agent) de quem pediu o link e salva isso temporariamente no Redis junto com o token.
+
+A Regra: Quando alguém clica no link que chegou no e-mail para digitar a senha nova, o backend checa se o IP e o navegador atuais são exatamente os mesmos de quem fez o pedido minutos atrás.
+
+O Correto: Se o cliente pediu a recuperação no celular dele (IP X), e o hacker clicou no link de dentro do e-mail usando um computador em outro estado (IP Y), o link é invalidado na hora por quebra de contexto de segurança.
+
+🛡️ O Fluxo Defensivo na sua Stack
+Fazendo isso usando o seu ecossistema (Node + Redis + Supabase), o fluxo fica invencível:
+
+O hacker pede a troca de senha pelo e-mail do cliente.
+
+O Node gera o link, mas tranca no Redis o IP de quem pediu.
+
+Se o hacker conseguir resetar a senha, o Supabase atualiza o registro, mas o Node dispara um webhook que limpa o Redis (deslogando todo mundo) e envia um WhatsApp para o cliente.
+
+Ao tentar logar com a senha nova, o sistema exige o 2FA físico.
+
+Mesmo que o e-mail do cliente seja totalmente vulnerável, o seu aplicativo continua sendo uma fortaleza!

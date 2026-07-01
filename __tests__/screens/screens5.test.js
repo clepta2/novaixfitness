@@ -213,7 +213,7 @@ describe('Screens - Round 5', () => {
   describe('AnalyticsScreen', () => {
     it('renders components', () => {
       const { getByText } = render(<AnalyticsScreen />);
-      expect(getByText('Loading')).toBeTruthy();
+      expect(getByText('FilterBar')).toBeTruthy();
     });
   });
 

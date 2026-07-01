@@ -156,7 +156,7 @@ describe('Screens - Round 4', () => {
   describe('NotificationsScreen', () => {
     it('renders and shows empty state', () => {
       const { getByText } = render(<NotificationsScreen />);
-      expect(getByText('Notificacoes')).toBeTruthy();
+      expect(getByText('Notificações')).toBeTruthy();
     });
   });
 

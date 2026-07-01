@@ -196,29 +196,29 @@ describe('Tab Screens', () => {
   describe('HomeScreen', () => {
     it('renders welcome message', () => {
       const { getByText } = render(<HomeScreen />);
-      expect(getByText('HomeSkeleton')).toBeTruthy();
+      expect(getByText('BEM-VINDO,')).toBeTruthy();
     });
 
     it('renders contextual card', () => {
       const { getByText } = render(<HomeScreen />);
-      expect(getByText('HomeSkeleton')).toBeTruthy();
+      expect(getByText('BOM-DIA, ATLETA')).toBeTruthy();
     });
 
     it('renders categories section', () => {
       const { getByText } = render(<HomeScreen />);
-      expect(getByText('HomeSkeleton')).toBeTruthy();
+      expect(getByText('CATEGORIAS DE TREINO')).toBeTruthy();
     });
   });
 
   describe('LibraryScreen', () => {
     it('renders header', () => {
       const { getByText } = render(<LibraryScreen />);
-      expect(getByText('library.title')).toBeTruthy();
+      expect(getByText('Biblioteca')).toBeTruthy();
     });
 
     it('renders search placeholder', () => {
-      const { getByText } = render(<LibraryScreen />);
-      expect(getByText('library.focus')).toBeTruthy();
+      const { getByPlaceholderText } = render(<LibraryScreen />);
+      expect(getByPlaceholderText('Buscar treino, exercício ou grupo...')).toBeTruthy();
     });
   });
 });

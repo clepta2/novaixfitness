@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "isolatedModules": true,
+    "rootDir": "./src",
+    "skipLibCheck": true,
+    "types": ["node"],
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"]
+}

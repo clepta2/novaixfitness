@@ -1,0 +1,1182 @@
+
+🔒 SECURITY GATE - 205 regras (32 BLOCK, 173 WARNING)
+
+📁 701 verificados | 0 ignorados
+🚫 55 BLOCKS | ⚠️ 530 WARNINGS
+
+🚫 BLOQUEADOS:
+
+  src\components\admin\AnalyticsCharts.js:0 [MAX_LEN] 207 linhas (máx: 200)
+
+  src\components\admin\AnalyticsDashboard.js:0 [MAX_LEN] 280 linhas (máx: 200)
+
+  src\components\admin\MonitoringDashboard.js:0 [MAX_LEN] 249 linhas (máx: 200)
+
+  src\components\nutrition\NutritionCoach.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\components\progress\ProgressPhotos.js:0 [R134_UUID_FILENAMES] Arquivos devem usar UUID para nomes (anti-IDOR)
+
+  src\components\social\CreatePostModal.js:0 [MAX_LEN] 222 linhas (máx: 200)
+
+  src\components\social\LiveWorkoutView.js:0 [MAX_LEN] 225 linhas (máx: 200)
+
+  src\components\social\PostCard.js:0 [MAX_LEN] 219 linhas (máx: 200)
+
+  src\components\social\StoryCreateModal.js:0 [R129_UPLOAD_IDOR] Uploads devem usar UUID para nomes de arquivo
+
+  src\config\api.js:0 [R148_PUBLIC_VS_PRIVATE_ENV] Variáveis privadas NÃO devem estar no build do cliente
+
+  src\config\app.js:0 [R135_HELMET] Express deve usar Helmet para security headers
+
+  src\config\app.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\config\app.js:0 [R167_INPUT_FILTERING] Input do chat deve ter filtro antes de enviar para IA
+
+  src\hooks\useAnalytics.js:0 [MAX_LEN] 227 linhas (máx: 200)
+
+  src\hooks\useChatCoach.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\hooks\useChatCoach.js:0 [R169_PII_STRIpping] Dados enviados para IA devem ter PII removido
+
+  src\hooks\useProgressPhotos.js:0 [R134_UUID_FILENAMES] Arquivos devem usar UUID para nomes (anti-IDOR)
+
+  src\security\antiTamper.js:0 [MAX_LEN] 278 linhas (máx: 200)
+
+  src\security\encryption.js:0 [MAX_LEN] 260 linhas (máx: 200)
+
+  src\security\mandatoryPatterns.js:0 [MAX_LEN] 287 linhas (máx: 200)
+
+  src\security\requestSigning.js:0 [R148_PUBLIC_VS_PRIVATE_ENV] Variáveis privadas NÃO devem estar no build do cliente
+
+  src\security\threatDetection.js:0 [MAX_LEN] 350 linhas (máx: 200)
+
+  src\services\aiRecommendations.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\aiRecommendations.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\analyticsAdvanced.js:0 [MAX_LEN] 297 linhas (máx: 200)
+
+  src\services\contentModeration.js:0 [MAX_LEN] 261 linhas (máx: 200)
+
+  src\services\crashReport.js:0 [R128_ERROR_DISCLOSURE] Error handler deve retornar mensagem genérica
+
+  src\services\creator.js:0 [MAX_LEN] 219 linhas (máx: 200)
+
+  src\services\friendChallenges.js:0 [MAX_LEN] 264 linhas (máx: 200)
+
+  src\services\gamification.js:0 [MAX_LEN] 205 linhas (máx: 200)
+
+  src\services\gamification.ts:0 [MAX_LEN] 223 linhas (máx: 200)
+
+  src\services\gemini.js:0 [R148_PUBLIC_VS_PRIVATE_ENV] Variáveis privadas NÃO devem estar no build do cliente
+
+  src\services\gemini.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\gemini.js:0 [R167_INPUT_FILTERING] Input do chat deve ter filtro antes de enviar para IA
+
+  src\services\gemini.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\mealAnalyzer.js:0 [R148_PUBLIC_VS_PRIVATE_ENV] Variáveis privadas NÃO devem estar no build do cliente
+
+  src\services\monetization.ts:0 [MAX_LEN] 318 linhas (máx: 200)
+
+  src\services\monitoring.js:0 [MAX_LEN] 223 linhas (máx: 200)
+
+  src\services\nutritionContent.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\nutritionContent.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\offlineManager.js:0 [MAX_LEN] 269 linhas (máx: 200)
+
+  src\services\planGenerator.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\planGenerator.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\progress-photos.js:0 [R129_UPLOAD_IDOR] Uploads devem usar UUID para nomes de arquivo
+
+  src\services\recipeGenerator.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\recipeGenerator.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\securityAdvanced.js:0 [MAX_LEN] 273 linhas (máx: 200)
+
+  src\services\shoppingList.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\shoppingList.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\social.js:0 [MAX_LEN] 226 linhas (máx: 200)
+
+  src\services\social.ts:0 [MAX_LEN] 256 linhas (máx: 200)
+
+  src\services\tips.js:0 [R166_SYSTEM_INSTRUCTION] IA deve ter system instruction isolada e imutável
+
+  src\services\tips.js:0 [R171_OUTPUT_SANITIZATION] Output da IA deve ser sanitizado antes de enviar ao cliente
+
+  src\services\wearables.js:0 [MAX_LEN] 212 linhas (máx: 200)
+
+  src\utils\performance.js:0 [MAX_LEN] 209 linhas (máx: 200)
+
+⚠️  AVISOS:
+
+  src\components\admin\AdminDashboard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\admin\AdminDashboard.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\admin\campaignData.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\admin\ExerciseManager.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\components\admin\ExerciseManager.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\admin\FinanceStats.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\admin\StudentCard.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\admin\StudentEditForm.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\admin\StudentEditModal.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\admin\StudentExporter.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\admin\StudentExporter.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\admin\StudentExporter.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\admin\UserSecurityPanel.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\components\admin\UserSecurityPanel.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\admin\WorkoutManager.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\components\admin\WorkoutManager.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\auth\AccountExistsCard.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\auth\AccountExistsCard.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\common\AppErrorFallback.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\common\TutorialOverlayHelpers.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\gamification\AchievementGrid.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\gamification\LevelCard.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\gamification\WeeklyChallenges.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\gamification\XpBreakdown.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\home\BodySummary.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\home\GamificationSummary.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\home\WaterLogger.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\home\WaterLogger.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\home\WeeklyProgress.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\home\WeeklyProgress.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\index.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\marketplace\ProductReviews.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\marketplace\ShareProduct.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\nutrition\energyHelpers.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\energyHelpers.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\energyHelpers.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\nutrition\EnergyTracker.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\nutrition\MealHistory.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\NutritionAchievements.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\NutritionCoach.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\components\nutrition\NutritionReports.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\NutritionStreak.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\NutritionStreak.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\components\nutrition\NutritionStreak.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\ProgressPhotos.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\ProgressPhotos.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\components\nutrition\ShoppingList.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\SleepTracker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\SleepTracker.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\nutrition\SupplementTracker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\nutrition\SupplementTracker.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\components\nutrition\WaterTracker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\onboarding\DraggableSlider.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\onboarding\index.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\onboarding\TogglesStep.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\components\planner\WorkoutPicker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\profile\challengeHelpers.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\profile\GamificationBar.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\profile\MuscleMiniRadar.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\profile\ProfileConfigScreen.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\components\profile\ProfileConfigScreen.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\profile\ProfileConfigScreen.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\profile\ProfileHeader.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\profile\ProfileHero.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\profile\ProfileHero.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\profile\RankingCard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\profile\RankingCard.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\profile\WeeklyChallenges.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\profile\WeeklyChallenges.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\components\profile\WeightLogger.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\profile\WeightLogger.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\components\profile\WeightLogger.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\profile\WeightLogger.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\progress\ProgressMeasurements.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\progress\ProgressMeasurements.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\components\progress\ProgressMeasurements.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\components\progress\ProgressPhotos.js:0 [R131_CLIENT_COMPRESSION] Uploads devem ter compressão no lado do cliente
+
+  src\components\progress\ProgressPhotos.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\components\progress\ProgressPhotos.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\progress\ProgressWeekly.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\settings\DataActions.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\components\settings\OfflineSettings.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\components\settings\OfflineSettings.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\components\settings\OfflineSettingsHelpers.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\components\settings\OfflineSettingsHelpers.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\components\settings\ProfileCard.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\social\ChallengesList.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\ChallengesList.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\social\CreatePostModal.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\CreatePostModal.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\social\DuelInvite.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\DuelInvite.js:0 [R137_CODE_OBFUSCATION] Build de produção deve usar ofuscação de código
+
+  src\components\social\DuelInvite.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\components\social\InviteFriends.js:0 [R137_CODE_OBFUSCATION] Build de produção deve usar ofuscação de código
+
+  src\components\social\Leaderboard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\LiveWorkoutView.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\components\social\LiveWorkoutView.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\social\LiveWorkoutView.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\components\social\PersonalRecords.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\PersonalRecords.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\social\PostCard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\ReferralLeaderboard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\SaveButton.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\SaveButton.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\components\social\StoryCreateModal.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\social\StoryRing.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\WorkoutGroups.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\WorkoutShare.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\social\WorkoutStreak.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\social\WorkoutStreak.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\components\ui\DraggableSlider.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\ui\Input.stories.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\components\ui\LazyLoad.js:0 [R153_NO_GLOBALS] Backend deve ser stateless - sem variáveis globais
+
+  src\components\ui\LazyLoad.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\components\ui\LocationSection.js:0 [R142_DTO_PATTERN] Responses devem usar DTOs para não expor dados internos
+
+  src\components\ui\LocationSection.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\wearables\DeviceCard.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\workout\LoadHistory.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\workout\LoadHistory.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\workout\LoadHistory.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\workout\SetsTracker.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\components\workout\SetsTracker.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\components\workout\SetsTracker.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\components\workout\SetsTracker.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\components\workout\WorkoutBuilder.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\components\workout\WorkoutHistory.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\components\workout\WorkoutTimer.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\config\app.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\config\app.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\config\app.js:0 [R179_SEMANTIC_CACHE] Perguntas repetidas devem usar cache semântico
+
+  src\config\appScreens.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\config\appScreens.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\config\bundleAnalyzer.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\config\bundleAnalyzer.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\config\bundleOptimization.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\config\bundleOptimization.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\config\codeSplitting.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\config\secureStorage.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\config\secureStorage.js:0 [R77_POST_QUANTUM] Considere algoritmos pós-quânticos para criptografia
+
+  src\config\sentry.js:0 [R145_SECRET_ROTATION] Chaves .env devem ter rotação programada
+
+  src\config\supabase.js:0 [R154_CONNECTION_POOL] Conexões com banco devem usar pool limitado
+
+  src\config\supabase.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\constants\gamification.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\context\AuthContext.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\context\AuthContext.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\context\AuthContext.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\context\AuthContext.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\data\bannedWords.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\data\bannedWords.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\data\injuryDetails.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\data\onboarding.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\data\onboarding.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\data\onboardingSteps.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\data\onboardingSteps.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\data\settingsOptions.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\data\settingsOptions.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\data\settingsOptions.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\data\tutorials.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\data\workouts.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\helpers\bodyComposition.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\helpers\cpf.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\helpers\cpf.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\helpers\phone.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\helpers\phone.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\helpers\validation.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\hooks\helpers\chatHelpers.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\hooks\helpers\chatHelpers.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\helpers\paymentHelpers.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\helpers\paymentHelpers.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\hooks\useChatCoach.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useChatCoach.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\hooks\useChatCoach.js:0 [R179_SEMANTIC_CACHE] Perguntas repetidas devem usar cache semântico
+
+  src\hooks\useCreateWorkout.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\hooks\useDashboard.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useFeedData.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\hooks\useFeedData.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useFeedData.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\hooks\useFeedData.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useFeedData.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useGamification.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\hooks\useGoals.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useGuidedAssessment.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useIntro.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\hooks\useLibraryData.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\hooks\useLibraryData.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useLibraryData.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\hooks\useLibraryData.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\hooks\useLogin.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useLogin.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\hooks\useLogin.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\hooks\useLogin.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\useNetworkStatus.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useNetworkStatus.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\hooks\useNotificationPrefs.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useNotificationPrefs.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\hooks\useNotificationPrefs.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useNotificationPrefs.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useOfflineData.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\hooks\useOfflineData.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useOfflineData.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\hooks\usePaymentProcessing.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\usePaywallPayment.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\usePlayerList.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\usePlayerList.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\usePlayerList.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\useProcessing.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\useProfile.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useProfile.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useProfile.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\hooks\useProfileEdit.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\hooks\useProfileEdit.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useProfileEdit.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\hooks\useProfileEdit.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useProgressPhotos.js:0 [R131_CLIENT_COMPRESSION] Uploads devem ter compressão no lado do cliente
+
+  src\hooks\useProgressPhotos.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useProgressPhotos.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\hooks\useRealtimeComments.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useRealtimeComments.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\hooks\useRealtimeLikes.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\hooks\useRealtimePosts.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useRealtimePosts.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\hooks\useRegister.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\hooks\useRegister.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\hooks\useSecurity.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\useSocial.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useSocial.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useSupabaseData.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\hooks\useSupabaseData.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useSupabaseData.js:0 [R157_ABORT_CONTROLLER] fetch em useEffect deve usar AbortController
+
+  src\hooks\useTranslation.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\hooks\useWeeklyProgress.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useWorkoutDetail.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\hooks\useWorkoutDetail.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\hooks\useWorkoutDetail.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\hooks\useWorkoutDetail.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\hooks\useWorkoutHistory.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useWorkoutPlayer.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\useWorkoutPlayer.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\hooks\__tests__\useLogin.test.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\hooks\__tests__\useLogin.test.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\hooks\__tests__\usePaymentProcessing.test.js:0 [R50] Testes devem incluir cenários de falha e caos
+
+  src\hooks\__tests__\useWorkoutPlayer.test.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\hooks\__tests__\useWorkoutPlayer.test.js:0 [R50] Testes devem incluir cenários de falha e caos
+
+  src\hooks\__tests__\useWorkoutPlayer.test.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\middleware\auth.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\middleware\errorHandler.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\middleware\rateLimit.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\middleware\rateLimit.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\middleware\validation.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\middleware\validation.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\security\antiTamper.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\security\antiTamper.js:0 [R153_NO_GLOBALS] Backend deve ser stateless - sem variáveis globais
+
+  src\security\antiTamper.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\security\antiTamper.js:0 [R77_POST_QUANTUM] Considere algoritmos pós-quânticos para criptografia
+
+  src\security\antiTamper.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\security\encryption.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\security\encryption.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\security\encryption.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\security\encryption.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\security\encryption.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\security\encryption.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\security\encryption.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\security\index.js:0 [R77_POST_QUANTUM] Considere algoritmos pós-quânticos para criptografia
+
+  src\security\index.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\security\mandatoryPatterns.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\security\mandatoryPatterns.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\security\mandatoryPatterns.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\security\mandatoryPatterns.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\security\mandatoryPatterns.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\security\mandatoryPatterns.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\security\mandatoryPatterns.js:0 [R77_POST_QUANTUM] Considere algoritmos pós-quânticos para criptografia
+
+  src\security\mandatoryPatterns.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\security\requestSigning.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\security\requestSigning.js:0 [R145_SECRET_ROTATION] Chaves .env devem ter rotação programada
+
+  src\security\requestSigning.js:0 [R77_POST_QUANTUM] Considere algoritmos pós-quânticos para criptografia
+
+  src\security\requestSigning.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\security\threatDetection.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\security\threatDetection.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\security\threatDetection.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\security\threatDetection.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\abtest.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\abtest.js:0 [R50] Testes devem incluir cenários de falha e caos
+
+  src\services\abtest.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\aiRecommendations.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\aiRecommendations.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\aiRecommendations.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\aiRecommendations.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\aiRecommendations.js:0 [R176_LLM_JUDGE] Respostas críticas devem passar por validação secundária
+
+  src\services\algorithm.js:0 [R123_CURSOR_PAGINATION] Use paginação baseada em cursor em vez de OFFSET
+
+  src\services\algorithm.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\analytics.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\analytics.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\analytics.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\analytics.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\analyticsAdvanced.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\analyticsAdvanced.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\analyticsTracker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\autoSync.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\body-measurements.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\body-measurements.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\body-measurements.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\cache.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\services\cache.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\services\cache.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\chat.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\chat.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\chat.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\chat.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\checkIn.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\contentModeration.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\contentModeration.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\contentModeration.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\contentModeration.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\contentModeration.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\contentModeration.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\contentModeration.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\coupon.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\coupon.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\coupons.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\coupons.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\coupons.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\creator.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\creator.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\creator.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\creator.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\csv-export.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\csv-export.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\csv-export.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\csv-export.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\csv-export.js:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\services\csv-export.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\csv-export.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\services\duels.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\duels.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\eventTracker.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\featureFlags.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\featureFlags.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\services\featureFlags.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\services\featureFlags.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\featureFlags.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\services\friendChallenges.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\friendChallenges.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\friendChallenges.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\gamification.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\gamification.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\gamification.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\gamification.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\services\gamification.ts:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\gamification.ts:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\gamification.ts:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\gamification.ts:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\services\gemini.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\gemini.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\gemini.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\gemini.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\gemini.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\gemini.js:0 [R176_LLM_JUDGE] Respostas críticas devem passar por validação secundária
+
+  src\services\gemini.js:0 [R179_SEMANTIC_CACHE] Perguntas repetidas devem usar cache semântico
+
+  src\services\groups.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\groups.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\groups.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\gymCheckIn.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\gymCheckIn.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\healthIntegration.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\lgpd.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\lgpd.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\lgpd.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\lgpd.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\lgpd.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\lgpd.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\liveWorkouts.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\liveWorkouts.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\liveWorkouts.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\marketplace.js:0 [R123_CURSOR_PAGINATION] Use paginação baseada em cursor em vez de OFFSET
+
+  src\services\marketplace.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\marketplace.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\mealAnalyzer.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\mealAnalyzer.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\mealAnalyzer.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\moderation.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\moderation.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\monetization.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\monetization.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\monetization.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\monetization.ts:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\monetization.ts:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\monetization.ts:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\monetization.ts:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\monitoring.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\monitoring.js:0 [R145_SECRET_ROTATION] Chaves .env devem ter rotação programada
+
+  src\services\monitoring.js:0 [R150_SESSION_REVOCATION] Logout deve revogar sessão no backend (Redis blacklist)
+
+  src\services\notificationPrefs.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\notifications-sender.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\notifications.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\notificationScheduler.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\nutritionContent.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\services\nutritionContent.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\services\nutritionContent.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\nutritionContent.js:0 [R176_LLM_JUDGE] Respostas críticas devem passar por validação secundária
+
+  src\services\nutritionContent.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\offline.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\offline.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\offline.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\services\offline.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\services\offline.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\offline.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\offlineManager.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\services\offlineManager.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\services\offlineManager.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\onboardingService.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\onboardingService.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\onboardingService.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\payment.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\pdfExport.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\pdfReport.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\pdfReport.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\performanceMonitor.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\planAdaptation.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\planAdaptation.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\planAdaptation.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\planAdaptation.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\planGenerator.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\planGenerator.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\planGenerator.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\planService.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\planService.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\progress-photos.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\progress-photos.js:0 [R131_CLIENT_COMPRESSION] Uploads devem ter compressão no lado do cliente
+
+  src\services\progress-photos.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\progress-photos.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\pushNotifications.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\pushNotifications.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\pushScheduler.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\reactions.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\reactions.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\recipeGenerator.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\recipeGenerator.js:0 [R176_LLM_JUDGE] Respostas críticas devem passar por validação secundária
+
+  src\services\referral.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\referral.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\referral.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\audit.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\audit.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\audit.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\auditHistory.js:0 [R123_CURSOR_PAGINATION] Use paginação baseada em cursor em vez de OFFSET
+
+  src\services\security\auditHistory.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\security\auditHistory.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\security\auditHistory.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\auditHistory.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\auditHistory.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\blocks.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\index.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\index.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\middleware.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\security\middleware.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\middleware.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\middleware.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\moderation.js:0 [R121_REDIS_COUNTERS] Contadores de alta frequência devem usar Redis
+
+  src\services\security\moderation.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\security\moderation.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\moderation.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\moderation.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\rateLimit.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\security\rateLimit.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\trust.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\security\trust.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\security\trust.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security\userBlocks.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\security\userBlocks.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security\userBlocks.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\security\userBlocks.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\security.js:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\security.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\securityAdvanced.js:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\securityAdvanced.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\securityAdvanced.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\securityAdvanced.js:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\securityAdvanced.ts:0 [R139_PII_MASKING] PII deve ser mascarado na UI por padrão
+
+  src\services\securityAdvanced.ts:0 [R144_DYNAMIC_MASKING] PII deve ter toggle de visualização com log
+
+  src\services\securityAdvanced.ts:0 [R147_CHAOS_TESTING] Testes devem incluir cenários de falha deliberada
+
+  src\services\securityAdvanced.ts:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\securityAdvanced.ts:0 [R150_IMMUTABLE_AUDIT] Logs de auditoria devem ser imutáveis (INSERT only)
+
+  src\services\securityAdvanced.ts:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\securityAdvanced.ts:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\securityAdvanced.ts:0 [R78_CONFIDENTIAL_COMPUTING] Para dados ultra-sensíveis, considere Intel SGX ou AMD SEV
+
+  src\services\share.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\shoppingList.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\shoppingList.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\social.js:0 [R123_CURSOR_PAGINATION] Use paginação baseada em cursor em vez de OFFSET
+
+  src\services\social.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\social.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\social.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\social.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\social.ts:0 [R123_CURSOR_PAGINATION] Use paginação baseada em cursor em vez de OFFSET
+
+  src\services\social.ts:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\social.ts:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\social.ts:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\social.ts:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\stories.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\stories.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\stories.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\sync.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\sync.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\tips.js:0 [R174_KEY_MASKING_LOGS] Chaves de API devem ser mascaradas em logs de erro
+
+  src\services\tips.js:0 [R176_LLM_JUDGE] Respostas críticas devem passar por validação secundária
+
+  src\services\totp.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\totp.js:0 [R158_TIMING_SAFE_EQUAL] Verificação de tokens deve usar crypto.timingSafeEqual
+
+  src\services\tutorial.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\tutorial.js:0 [R138_LGPD_COMPLIANCE] Exclusão de conta deve seguir LGPD (anonimização)
+
+  src\services\tutorial.js:0 [R143_RIGHT_TO_FORGET] Exclusão deve usar anonimização para dados obrigatórios
+
+  src\services\tutorial.js:0 [R177_PROMPT_POISONING] Dados de RAG devem ser isolados em tags XML
+
+  src\services\virtualGifting.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\virtualGifting.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\virtualGifting.js:0 [R82_CHANNEL_SCOPE] Canais de chat devem validar permissão do usuário
+
+  src\services\voiceCoach.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\waterReminders.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\waterReminders.js:0 [R138_XSS_SANITIZE] Texto de entrada deve ser sanitizado contra XSS
+
+  src\services\waterReminders.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\wearables.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\wearables.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\wearables.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\workout-reminders.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\workout-reminders.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+  src\services\workoutSaver.js:0 [R125_CACHE_ASIDE] Dados estáticos devem usar cache-aside pattern
+
+  src\services\workoutSaver.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\services\workoutSaver.js:0 [R96_DEVICE_ATTESTATION] Considere device attestation para prevenir emuladores
+
+  src\styles\registerStyles.js:0 [R88_DISPOSABLE_EMAIL] Cadastro deve verificar e-mails descartáveis
+
+  src\utils\logger.js:0 [R160_IMMUTABLE_EXTERNAL_LOGS] Logs críticos devem ser enviados para servidor externo imutável
+
+  src\utils\performance.js:0 [R152_CACHE_CONTROL] Páginas autenticadas devem ter Cache-Control: no-store
+
+  src\utils\performance.js:0 [R159_CACHE_POISONING_PREVENTION] Cache deve ignorar headers não autorizados
+
+  src\utils\rateLimit.js:0 [R148_ADAPTIVE_THROTTLING] Rate limiting deve ser adaptativo à saúde do sistema
+
+❌ BLOQUEADO
+

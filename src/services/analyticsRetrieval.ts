@@ -1,0 +1,187 @@
+// src/services/analyticsRetrieval.ts
+// Funções de recuperação de dados de analytics - NOVAIX FITNESS
+
+import { supabase } from '../config/supabase';
+import { EVENTS } from './analytics';
+import { getPeriodStart } from './analyticsHelpers';
+
+export interface UserMetrics {
+  totalEvents: number;
+  workouts: number;
+  screenViews: number;
+  features: number;
+}
+
+export interface PopularWorkout {
+  id: string;
+  count: number;
+}
+
+export interface ChurnRiskUser {
+  id: string;
+  email: string;
+  last_active_at: string;
+}
+
+export async function getUserMetrics(userId: string, days: number = 30): Promise<UserMetrics> {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', startDate.toISOString());
+
+  if (error) throw error;
+
+  return {
+    totalEvents: data.length,
+    workouts: data.filter(e => e.event_name === EVENTS.WORKOUT_COMPLETE).length,
+    screenViews: data.filter(e => e.event_name === EVENTS.SCREEN_VIEW).length,
+    features: data.filter(e => e.event_name === EVENTS.FEATURE_USE).length,
+  };
+}
+
+
+
+export async function getPopularWorkouts(limit: number = 10): Promise<PopularWorkout[]> {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('properties->>workout_id')
+    .eq('event_name', EVENTS.WORKOUT_COMPLETE)
+    .order('created_at', { ascending: false })
+    .limit(1000);
+
+  if (error) throw error;
+
+  const counts: Record<string, number> = {};
+  data.forEach(row => {
+    const id = (row as Record<string, unknown>).properties as Record<string, unknown> | null;
+    const workoutId = id?.workout_id as string | undefined;
+    if (workoutId) counts[workoutId] = (counts[workoutId] || 0) + 1;
+  });
+
+  const sorted = Object.entries(counts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, limit);
+
+  return sorted.map(([id, count]) => ({ id, count }));
+}
+
+export async function getChurnRiskUsers(): Promise<ChurnRiskUser[]> {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, email, last_active_at')
+    .lt('last_active_at', thirtyDaysAgo.toISOString())
+    .eq('subscription_status', 'active');
+
+  if (error) throw error;
+  return (data || []) as ChurnRiskUser[];
+}
+
+
+
+export async function getWorkoutFrequency(userId: string, days: number = 30): Promise<Record<string, number>> {
+  const startDate = new Date(Date.now() - days * 86400000).toISOString();
+  const { data, error } = await supabase
+    .from('user_workouts')
+    .select('completed_at')
+    .eq('user_id', userId)
+    .eq('completed', true)
+    .gte('completed_at', startDate);
+
+  if (error) throw error;
+  const frequency: Record<string, number> = {};
+  (data || []).forEach(w => {
+    const day = new Date(w.completed_at).toISOString().split('T')[0];
+    frequency[day] = (frequency[day] || 0) + 1;
+  });
+  return frequency;
+}
+
+export async function getMonthlyComparison(userId: string): Promise<Record<string, unknown>> {
+  const thisMonth = new Date();
+  thisMonth.setDate(1);
+  const lastMonth = new Date(thisMonth);
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+  const [thisMonthData, lastMonthData] = await Promise.all([
+    supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+      .eq('user_id', userId).eq('completed', true).gte('completed_at', thisMonth.toISOString()),
+    supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+      .eq('user_id', userId).eq('completed', true).gte('completed_at', lastMonth.toISOString()).lt('completed_at', thisMonth.toISOString()),
+  ]);
+
+  return {
+    thisMonth: thisMonthData.count || 0,
+    lastMonth: lastMonthData.count || 0,
+    change: ((thisMonthData.count || 0) - (lastMonthData.count || 0)),
+  };
+}
+
+export async function getWeeklyConsistencyScore(userId: string): Promise<{ score: number; completedCount: number; targetCount: number }> {
+  if (!userId) return { score: 0, completedCount: 0, targetCount: 0 };
+  try {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    monday.setHours(0, 0, 0, 0);
+
+    const [workouts, obv2] = await Promise.all([
+      supabase.from('user_workouts').select('id').eq('user_id', userId).eq('completed', true).gte('completed_at', monday.toISOString()),
+      supabase.from('onboarding_v2').select('days_per_week').eq('user_id', userId).maybeSingle(),
+    ]);
+
+    const completedCount = workouts.data?.length || 0;
+    const targetDays = (obv2.data?.days_per_week as number[] | undefined) || [1, 3, 5];
+    const targetCount = targetDays.length;
+    const score = targetCount > 0 ? Math.min(100, Math.round((completedCount / targetCount) * 100)) : 0;
+
+    return { score, completedCount, targetCount };
+  } catch (err: unknown) {
+    if (__DEV__) console.error('Erro ao buscar consistência semanal:', err);
+    return { score: 0, completedCount: 0, targetCount: 0 };
+  }
+}
+
+export async function getCalorieBurnSummary(userId: string, period: string = 'month'): Promise<{ totalCalories: number; avgCaloriesPerWorkout: number; history: Array<{ date: string; calories: number }> }> {
+  if (!userId) return { totalCalories: 0, avgCaloriesPerWorkout: 0, history: [] };
+  try {
+    const startDate = getPeriodStart(period);
+    const { data, error } = await supabase
+      .from('user_workouts')
+      .select('completed_at, duration_minutes, calories_burned')
+      .eq('user_id', userId)
+      .eq('completed', true)
+      .gte('completed_at', startDate)
+      .order('completed_at', { ascending: true });
+
+    if (error) throw error;
+
+    const list = data || [];
+    let totalCalories = 0;
+    const history = list.map(w => {
+      let kcal = (w.calories_burned as number) || 0;
+      if (kcal === 0 && w.duration_minutes) {
+        kcal = Math.round((w.duration_minutes as number) * 7.5);
+      }
+      totalCalories += kcal;
+      return {
+        date: new Date(w.completed_at as string).toISOString().split('T')[0],
+        calories: kcal,
+      };
+    });
+
+    const avgCaloriesPerWorkout = list.length > 0 ? Math.round(totalCalories / list.length) : 0;
+
+    return { totalCalories, avgCaloriesPerWorkout, history };
+  } catch (err: unknown) {
+    if (__DEV__) console.error('Erro ao buscar calorias gastas:', err);
+    return { totalCalories: 0, avgCaloriesPerWorkout: 0, history: [] };
+  }
+}

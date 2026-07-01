@@ -25,7 +25,12 @@ jest.mock('../../src/config/supabase', () => {
 });
 
 jest.mock('../../src/services/gamification', () => ({
-  awardXP: jest.fn().mockResolvedValue({ xp: 50, totalXP: 200, level: 3, leveledUp: false }),
+  addXP: jest.fn().mockResolvedValue(50),
+  recordWorkoutCompletion: jest.fn().mockResolvedValue({ xpGained: 50, newAchievements: [], streak: 1 }),
+}));
+
+jest.mock('../../src/services/notifications', () => ({
+  sendWorkoutCompletedNotification: jest.fn().mockResolvedValue({}),
 }));
 
 jest.mock('../../src/services/pushNotifications', () => ({
@@ -33,7 +38,7 @@ jest.mock('../../src/services/pushNotifications', () => ({
 }));
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
-const { awardXP } = require('../../src/services/gamification');
+const { recordWorkoutCompletion } = require('../../src/services/gamification');
 const { sendPushToUser } = require('../../src/services/pushNotifications');
 const { saveCompleteWorkout, savePartialWorkout } = require('../../src/services/workoutSaver');
 
@@ -55,7 +60,7 @@ describe('Workout Saver', () => {
       const result = await saveCompleteWorkout('u1', { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', name: 'Treino A' }, [{ exercise: 'Agachamento' }], 45);
 
       expect(result).not.toBeNull();
-      expect(awardXP).toHaveBeenCalled();
+      expect(recordWorkoutCompletion).toHaveBeenCalled();
     });
   });
 

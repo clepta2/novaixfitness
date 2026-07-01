@@ -53,10 +53,9 @@ describe('Referral Service', () => {
   });
 
   describe('getReferralData', () => {
-    it('returns default data for no userId', async () => {
+    it('returns null for no userId', async () => {
       const result = await getReferralData(null);
-      expect(result).toBeDefined();
-      expect(result).toHaveProperty('referral_code');
+      expect(result).toBeNull();
     });
 
     it('returns default data when no record exists', async () => {
@@ -149,9 +148,9 @@ describe('Referral Service', () => {
   });
 
   describe('applyReferralBonus', () => {
-    it('returns false for missing params', async () => {
-      expect(await applyReferralBonus(null, 'r1')).toBe(false);
-      expect(await applyReferralBonus('u1', null)).toBe(false);
+    it('returns undefined for missing params', async () => {
+      expect(await applyReferralBonus(null, 'r1')).toBeUndefined();
+      expect(await applyReferralBonus('u1', null)).toBeUndefined();
     });
 
     it('updates profiles for both users and referrals', async () => {

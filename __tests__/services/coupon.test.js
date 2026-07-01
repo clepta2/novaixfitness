@@ -1,6 +1,6 @@
 import {
   validateCoupon,
-  applyCouponToPrice,
+  applyCoupon,
   recordCouponUse,
   listCoupons,
 } from '../../src/services/coupon';
@@ -101,33 +101,33 @@ describe('Coupon Service', () => {
     });
   });
 
-  describe('applyCouponToPrice', () => {
+  describe('applyCoupon', () => {
     it('returns original price for null coupon', () => {
-      expect(applyCouponToPrice(100, null)).toBe(100);
+      expect(applyCoupon(100, null)).toBe(100);
     });
 
     it('returns original price for invalid coupon', () => {
-      expect(applyCouponToPrice(100, { valid: false })).toBe(100);
+      expect(applyCoupon(100, { valid: false })).toBe(100);
     });
 
     it('applies percent discount', () => {
-      expect(applyCouponToPrice(100, { valid: true, type: 'percent', discount: 20 })).toBe(80);
+      expect(applyCoupon(100, { valid: true, type: 'percent', discount: 20 })).toBe(80);
     });
 
     it('applies fixed discount', () => {
-      expect(applyCouponToPrice(100, { valid: true, type: 'fixed', discount: 30 })).toBe(70);
+      expect(applyCoupon(100, { valid: true, type: 'fixed', discount: 30 })).toBe(70);
     });
 
     it('does not go below zero with fixed discount', () => {
-      expect(applyCouponToPrice(10, { valid: true, type: 'fixed', discount: 30 })).toBe(0);
+      expect(applyCoupon(10, { valid: true, type: 'fixed', discount: 30 })).toBe(0);
     });
 
     it('applies days type (free)', () => {
-      expect(applyCouponToPrice(100, { valid: true, type: 'days', discount: 7 })).toBe(0);
+      expect(applyCoupon(100, { valid: true, type: 'days', discount: 7 })).toBe(0);
     });
 
     it('rounds to 2 decimals', () => {
-      expect(applyCouponToPrice(99.99, { valid: true, type: 'percent', discount: 33 })).toBe(66.99);
+      expect(applyCoupon(99.99, { valid: true, type: 'percent', discount: 33 })).toBe(66.99);
     });
   });
 

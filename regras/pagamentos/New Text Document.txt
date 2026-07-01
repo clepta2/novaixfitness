@@ -1,0 +1,49 @@
+Para habilitar pagamentos dentro do próprio aplicativo (conhecido como Checkout Transparente), o usuário preenche os dados do cartão de crédito ou gera o Pix sem sair da tela do seu app React. Você não redireciona ele para uma página externa do Asaas.
+
+Isso dobra a conversão de vendas, mas muda drasticamente as regras do jogo no Bug Bounty. Como os dados sensíveis passam pelas suas rotas, você vira o alvo número um de ataques de interceptação e manipulação de payloads.
+
+Para rodar o Checkout Transparente com segurança absoluta na sua VPS de 4 GB usando a API do Asaas, você deve implementar o bloco de Blindagem de Transação Direta (Regras 106 a 110):
+
+106. Proibir a Captura de Token de Cartão no seu Backend (Tokenização Direta via SDK)
+A maior regra de todas: Os dados do cartão do cliente (Número, CVV, Validade) nunca, sob hipótese alguma, devem tocar no seu servidor Node.js ou serem salvos no Supabase. Se o seu servidor processar o cartão cru, você é obrigado a tirar uma certificação de segurança bilionária chamada PCI-DSS.
+
+O Correto: No seu front-end React, você usa o script de tokenização do Asaas. O React envia os dados do cartão direto do navegador do cliente para a API do Asaas. O Asaas devolve um creditCardToken (uma string segura que representa aquele cartão). O React então envia apenas esse token para o seu backend Node.js finalizar a cobrança. Se o seu servidor for invadido no Bug Bounty, não há nenhum cartão para o hacker roubar.
+
+107. Validação Cega de Propriedade do Token do Cartão
+Um ataque clássico no Burp Suite: o hacker usa o front-end para gerar o token de um cartão clonado legítimo. Depois, ele intercepta a requisição de checkout e troca o customer_id ou o ID da conta de destino para transferir o dinheiro daquele cartão para a conta de outro usuário dentro do seu sistema.
+
+A Regra: O backend Node.js precisa validar se o customer_id que está enviando a requisição é o proprietário real atrelado ao token ou se os dados cadastrais batem rigorosamente antes de disparar a cobrança no Asaas.
+
+108. Armadilha de Timeout no Processamento do Gateway (Anti-Duplicação por Espera)
+A API do Asaas pode demorar de 2 a 5 segundos para processar um pagamento de cartão de crédito junto às operadoras (Visa/Mastercard). Se o usuário clicar no botão "Pagar" e a tela demorar a responder, ele pode clicar 5 vezes seguidas. Se o seu backend enviar as 5 requisições para o Asaas, o cliente será cobrado 5 vezes pelo mesmo produto.
+
+A Regra: Use o seu Redis para criar uma trava de processamento com o ID do usuário de no mínimo 30 segundos assim que o botão for clicado.
+
+O Correto: O Node recebe a tentativa de pagamento ➔ Grava no Redis pagamento_em_andamento_usuario_123 = true. Se uma segunda requisição chegar no próximo segundo, ela bate no Redis e toma um erro instantâneo de "Processando, aguarde...". A trava só cai quando o Asaas responder com o sucesso ou a falha do cartão.
+
+109. Webhook Anti-Spoofing com Registro de Logs de Assinatura
+No checkout transparente, o status do pagamento depende 100% do Webhook do Asaas te avisando se o cartão foi aprovado ou se o Pix foi pago. Um hacker focado em Bug Bounty vai tentar forjar um post HTTP fingindo ser o Asaas enviando um payload de PAYMENT_RECEIVED para a sua VPS para liberar o produto de graça.
+
+A Regra: Além de checar o token de acesso (asaas-access-token) que configuramos na Regra 52, você deve configurar o seu middleware para validar o IP de origem do webhook, garantindo que ele veio estritamente dos servidores oficiais do Asaas.
+
+110. O "Filtro de Recusa Estrita" para Cartões Bloqueados (Anti-Carding)
+Hackers usam robôs automatizados em checkouts transparentes para testar listas de milhares de cartões de crédito roubados para ver quais estão ativos (ataque conhecido como Carding). Se o seu sistema deixar passar centenas de cartões recusados por minuto, o Asaas vai bloquear a sua conta jurídica por suspeita de cumplicidade com fraude.
+
+A Regra: O backend deve monitorar o índice de cartões recusados por IP ou por conta usando o Redis.
+
+O Correto: Se o mesmo usuário ou o mesmo IP tentar passar 3 cartões que retornaram "CVC inválido", "Cartão Bloqueado" ou "Saldo Insuficiente" seguidos, o sistema bloqueia o checkout transparente para aquele usuário por 24 horas e exige que ele use exclusivamente Pix para pagar.
+
+🏛️ O Ecossistema de Checkout Transparente na Prática
+Montando isso na sua stack atual, o fluxo de dinheiro e dados fica perfeitamente blindado:
+
+React: Coleta os dados do cartão ➔ Envia direto pro Asaas ➔ Recebe o Token do Cartão.
+
+React ➔ Node: Envia o Token do Cartão + ID do Produto.
+
+Node: Trava o usuário no Redis (impede cliques duplos) ➔ Busca o preço real do produto no Supabase ➔ Envia a ordem de cobrança com o Token para o Asaas.
+
+Asaas: Processa o pagamento de forma segura ➔ Avisa o seu Webhook.
+
+Node (Webhook): Valida a assinatura do Asaas ➔ Atualiza o status no Supabase ➔ Destrava o Redis.
+
+Com essas 5 travas adicionadas ao seu projeto, você tem um checkout transparente nativo de altíssima conversão, rodando leve na VPS e totalmente à prova de fraudes de cartão e manipulação de payloads!

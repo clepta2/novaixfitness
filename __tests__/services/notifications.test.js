@@ -42,7 +42,7 @@ jest.mock('../../src/config/supabase', () => {
 import {
   requestNotificationPermission,
   scheduleWorkoutReminder,
-  cancelAllNotifications,
+  clearAllNotifications,
   getScheduledNotifications,
   getUnreadCount,
 } from '../../src/services/notifications';
@@ -102,9 +102,9 @@ describe('Notifications Service', () => {
     });
   });
 
-  describe('cancelAllNotifications', () => {
+  describe('clearAllNotifications', () => {
     it('cancels all scheduled notifications', async () => {
-      await cancelAllNotifications();
+      await clearAllNotifications();
       expect(Notifications.cancelAllScheduledNotificationsAsync).toHaveBeenCalled();
     });
   });

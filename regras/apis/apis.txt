@@ -1,0 +1,67 @@
+camada de API (a comunicação entre o seu front-end em React e o seu backend em Node.js) é o sistema circulatório do seu aplicativo. Se um hacker quebrar a API, ele ganha as chaves do banco de dados do Supabase e do cofre do Asaas.
+
+Para que a sua API rode de forma indestrutível na VPS de 4 GB, você deve estruturar os endpoints seguindo o padrão de Blindagem de Contratos HTTP (Regras 131 a 135). Essas regras garantem que o Node.js só processe requisições 100% puras.
+
+🩻 1. Validação Estrita de Contrato (Schema Enforcement)
+Um dos maiores erros em APIs é confiar no formato que o usuário envia os dados. Se a rota espera um número no ID do treino e o hacker envia um texto contendo código SQL ou comandos de sistema, a API pode quebrar ou ser invadida.
+
+131. Proibir o uso de req.body Direto (The Shadow Payload Attack)
+Se você receber dados de um formulário e jogar direto no banco de dados (supabase.from('usuarios').insert(req.body)), o hacker pode interceptar a requisição no Burp Suite e adicionar um campo que não estava na tela, como is_admin: true ou saldo: 999999. O seu banco vai aceitar e atualizar o dado malicioso.
+
+A Regra: É terminantemente proibido processar payloads sem filtragem de propriedades.
+
+O Correto: Use a biblioteca Zod para criar esquemas (schemas) rígidos. O Zod analisa o que veio no corpo da requisição, joga fora qualquer campo extra que o hacker tentou injetar e valida se os tipos de dados estão corretos.
+
+JavaScript
+// Seu middleware/rota com Zod:
+const treinoSchema = zod.object({
+  nome: zod.string().min(3).max(50),
+  series: zod.number().int().positive(),
+});
+
+// Se o hacker mandar um campo "id" ou "privilegio", o Zod descarta na hora
+const dadosValidados = treinoSchema.parse(req.body); 
+🚦 2. Gerenciamento e Roteamento de Rotas Inseguras
+132. O Princípio dos Verbos HTTP Corretos (Restful Enforcement)
+Usar o método GET para realizar alterações no sistema (como /api/excluir-conta?id=10) é um perigo massivo. Motores de busca (como o Google) ou robôs de varredura podem clicar nesses links de forma automática indexando o seu site, e acabar apagando os dados dos seus clientes sem querer.
+
+A Regra: Operações de leitura usam estritamente GET. Criação usa POST. Atualização usa PUT ou PATCH. Deleção usa DELETE.
+
+O Correto: Rotas que alteram dados devem exigir métodos com corpo de requisição e tokens de autenticação válidos trancados nos cabeçalhos (Authorization: Bearer token).
+
+133. Banir IDs Sequenciais nas URLs da API (Anti-Bypass de Permissão)
+Se as rotas da sua API usarem números sequenciais para identificar recursos, como /api/treino/1, /api/treino/2, o hacker só precisa criar um script simples que incrementa o número da URL para ler os treinos e dados privados de todos os alunos do sistema. Isso se chama falha de IDOR.
+
+A Regra: Nenhuma rota de API pública deve expor chaves primárias sequenciais do banco de dados.
+
+O Correto: Use UUID v4 (identificadores universais complexos de 36 caracteres, ex: /api/treino/f81d4fae-7dec-11d0-a765-00a0c91e6bf6). Descobrir o ID de outro usuário por adivinhação ou força bruta se torna matematicamente impossível.
+
+🛡️ 3. Cabeçalhos de Segurança Obrigatórios (HTTP Hardening)
+Sua API Node.js não deve apenas responder os dados em JSON; ela precisa enviar cabeçalhos de rede que instruem o navegador do cliente a se proteger contra ataques de injeção e clonagem.
+
+134. Implementação Rígida de CORS (Cross-Origin Resource Sharing)
+Se você deixar o CORS da sua API configurado como origin: * (aceitando requisições de qualquer lugar), qualquer site malicioso na internet pode fazer requisições em segundo plano para a sua API fingindo ser o seu usuário logado.
+
+A Regra: O CORS de produção deve ser trancado estritamente para o domínio do seu aplicativo React.
+
+O Correto: A API Node.js só aceita requisições vindas estritamente de https://novaisfitness.com ou do app mobile legítimo. Requisições vindas de qualquer outro site ou ferramenta externa são rejeitadas na camada de rede.
+
+135. Injeção Automática do Middleware Helmet (Security Headers)
+Navegadores web possuem brechas históricas que podem ser exploradas se o servidor não disser explicitamente como ele deve se comportar.
+
+A Regra: É obrigatório o uso do módulo Helmet na raiz da sua aplicação Express/Node.js.
+
+O Correto: O Helmet injeta automaticamente mais de 10 cabeçalhos de segurança críticos nas respostas HTTP, incluindo:
+
+X-Content-Type-Options: nosniff (impede o navegador de tentar adivinhar o tipo de arquivo, mitigando a execução de scripts disfarçados de imagens).
+
+X-Frame-Options: DENY (impede que o seu site seja renderizado dentro de um iframe de um site hacker, anulando ataques de sequestro de clique / Clickjacking).
+
+🛡️ O Checklist da Camada de API para o seu enforce-security.js:
+Plaintext
+□ Todas as rotas que recebem dados usam validação com Zod/Joi?
+□ Os IDs expostos nas rotas utilizam o formato UUID v4 em vez de sequenciais (1, 2, 3...)?
+□ O CORS está trancado apenas para os domínios oficiais do projeto?
+□ O middleware Helmet está ativo na raiz do servidor Node.js?
+□ Os métodos HTTP (GET, POST, PUT, DELETE) estão alinhados com suas ações reais?
+Essa é a estrutura que garante que a conversa entre as suas telas no React e o motor do Node na VPS aconteça em um canal limpo, tipado, restrito e totalmente imune a manipulações maliciosas!

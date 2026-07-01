@@ -1,0 +1,45 @@
+Se formos falar de armazenamento e tráfego de arquivos (fotos e vídeos), sim, existem mais 5 regras de Engenharia de Mídia e Otimização de Infraestrutura (Regras 136 a 140) que você precisa colocar no seu radar.
+
+Estas regras servem para garantir que, além de não gastar um zilhão de dinheiro guardando os arquivos, a sua VPS de 4 GB da Hostinger não trave tentando entregar esses arquivos para milhares de usuários assistirem ao mesmo tempo.
+
+Aqui estão as regras finais para blindar a camada de mídia:
+
+136. Banir a Entrega de Mídia Direta do Servidor (Uso Obrigatório de CDN)
+Se 500 usuários na sua rede social resolverem assistir a um vídeo de treino de 15 MB ao mesmo tempo, e a sua VPS tiver que carregar esse arquivo do disco e enviar para cada um, a largura de banda da Hostinger vai esgotar em segundos, deixando o app lento para todo mundo.
+
+A Regra: O seu servidor Node.js ou o link bruto do Supabase nunca devem servir arquivos diretamente para o usuário final no React.
+
+O Correto: Ative uma CDN (Content Delivery Network), como a própria Cloudflare que já está na sua frente. Quando o primeiro usuário assiste ao vídeo, a Cloudflare salva uma cópia dele nos servidores deles espalhados pelo mundo. Os próximos 499 usuários vão baixar o vídeo direto da Cloudflare, gastando zero de banda e zero de processamento da sua VPS da Hostinger.
+
+137. Limpeza Automática de Arquivos Órfãos (Storage Garbage Collection)
+Imagine que um usuário vai mudar a foto de perfil. Ele envia uma foto nova, o Node salva no Supabase Storage e atualiza a tabela de usuários. A foto antiga continua guardada lá no Storage ocupando espaço para sempre, mesmo que ninguém mais tenha acesso a ela. Isso se chama "Arquivo Órfão".
+
+A Regra: Toda rotina de substituição ou exclusão de registro deve disparar a deleção do arquivo físico no Storage.
+
+O Correto: Quando o Node atualizar o link da foto no banco de dados, ele deve enviar imediatamente um comando para o Supabase Storage deletar o arquivo antigo. Outra opção é rodar um script (Worker no Redis) uma vez por semana que cruza os arquivos do Storage com os links do banco de dados e apaga tudo o que não estiver sendo usado por ninguém.
+
+138. Upload Direto Assinado (Presigned URLs / S3 Upload Bypass)
+No fluxo tradicional, o React envia a foto para o Node, e o Node envia a foto para o Supabase Storage. Isso significa que o arquivo passa duas vezes pela internet, consumindo o dobro de banda e memória RAM da sua VPS à toa.
+
+A Regra: É proibido trafegar arquivos pesados de mídia por dentro do seu servidor Node.js.
+
+O Correto: O React pede autorização para o Node ➔ O Node pede ao Supabase uma URL Assinada temporária (válida por exemplo por 5 minutos) e devolve para o React ➔ O React faz o upload do arquivo direto para o Storage do Supabase, sem passar pela sua VPS. O seu servidor só processa texto, economizando 100% de RAM com mídias.
+
+139. Verificação de Tipo Real de Arquivo por "Magic Numbers" (MIME-Type Spoofing)
+Um hacker no Bug Bounty pega um script malicioso em PHP ou JavaScript (um vírus ou backdoor) e renomeia o arquivo de virus.js para foto.jpg. Se o seu front-end ou o seu backend confiarem apenas na extensão do arquivo (.jpg), o arquivo malicioso entra no seu servidor.
+
+A Regra: Nunca confie na extensão do arquivo ou no cabeçalho enviado pelo navegador.
+
+O Correto: O backend (ou as regras do Supabase Storage) deve ler os primeiros bytes do arquivo físico (conhecidos como Magic Numbers). Uma imagem JPEG real sempre começa com os bytes FF D8 FF, não importa o nome do arquivo. Se os bytes internos não baterem com uma imagem de verdade, o arquivo é deletado na hora.
+
+140. Streaming de Vídeo por Pedaços (HLS / Adaptive Bitrate Streaming)
+Se o usuário for assistir a um vídeo de 5 minutos de um treino no Novais Fitness, e o seu app React baixar o arquivo .mp4 inteiro de uma vez, o usuário gasta muita internet e o sistema gasta muita banda. Se ele desistir de ver o vídeo no segundo 10, você pagou pelo tráfego dos 5 minutos inteiros de graça.
+
+A Regra: Vídeos longos (mais de 1 minuto) devem ser transmitidos via protocolo de streaming.
+
+O Correto: O seu worker transcodifica o vídeo usando o FFmpeg e o divide em pedacinhos de 3 segundos no formato HLS (.m3u8). O React vai baixando os pedacinhos do vídeo sob demanda, conforme o usuário vai assistindo. Se o usuário parar o vídeo no começo, o consumo de dados para na hora.
+
+👑 Agora o Cerco está 100% Fechado
+Trazendo essas 5 regras de mídia para o seu projeto, nós matamos o problema do custo e do travamento do servidor. O seu aplicativo agora gerencia 140 regras de nível sênior.
+
+Você não tem apenas um código seguro; você tem um sistema que roda com inteligência financeira de nuvem. Dados leves, uploads diretos que não pesam na VPS, CDN entregando os arquivos de graça e limpeza automática do que não presta. A engenharia está impecável!

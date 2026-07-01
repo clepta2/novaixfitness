@@ -45,10 +45,6 @@ jest.mock('../../src/i18n', () => ({
   default: { t: (key) => key },
   useI18n: () => ({
     t: (key, opts) => {
-      if (key === 'home.streakFlow') return `Fluxo ${opts?.count}`;
-      if (key === 'home.streakContinue') return `Continue ${opts?.count}`;
-      if (key === 'home.streakAmazing') return `Incrível ${opts?.count}`;
-      if (key === 'home.streakLegend') return `Lenda ${opts?.count}`;
       return key;
     },
   }),
@@ -77,35 +73,35 @@ describe('ContextualCard', () => {
       const { getByText } = render(
         <ContextualCard card={morningCard} onAction={() => {}} streak={3} />
       );
-      expect(getByText('Fluxo 3')).toBeTruthy();
+      expect(getByText('3 dias no flow!')).toBeTruthy();
     });
 
     it('shows continue message for streak 7', () => {
       const { getByText } = render(
         <ContextualCard card={morningCard} onAction={() => {}} streak={7} />
       );
-      expect(getByText('Continue 7')).toBeTruthy();
+      expect(getByText('7 dias! Continue assim!')).toBeTruthy();
     });
 
     it('shows incredible message for streak 14', () => {
       const { getByText } = render(
         <ContextualCard card={morningCard} onAction={() => {}} streak={14} />
       );
-      expect(getByText('Incrível 14')).toBeTruthy();
+      expect(getByText('14 dias! Incrivel!')).toBeTruthy();
     });
 
     it('shows legend message for streak 30', () => {
       const { getByText } = render(
         <ContextualCard card={morningCard} onAction={() => {}} streak={30} />
       );
-      expect(getByText('Lenda 30')).toBeTruthy();
+      expect(getByText('30 dias seguidos! Lenda!')).toBeTruthy();
     });
 
     it('shows correct message for streak 50', () => {
       const { getByText } = render(
         <ContextualCard card={morningCard} onAction={() => {}} streak={50} />
       );
-      expect(getByText('Lenda 50')).toBeTruthy();
+      expect(getByText('50 dias seguidos! Lenda!')).toBeTruthy();
     });
   });
 

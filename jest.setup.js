@@ -1,3 +1,6 @@
+// Ensure EXPO_PUBLIC env vars are available for tests (Babel inlines them at transform time)
+process.env.EXPO_PUBLIC_GOOGLE_API_KEY = 'mock-api-key';
+
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
   RN.Alert.alert = jest.fn();

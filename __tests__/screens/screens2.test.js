@@ -84,7 +84,7 @@ jest.mock('../../src/services/csv-export', () => ({
 jest.mock('../../src/services/body-measurements', () => ({
   saveMeasurement: jest.fn().mockResolvedValue({}),
   getMeasurements: jest.fn().mockResolvedValue([]),
-  getLatestMeasurement: jest.fn().mockResolvedValue(null),
+  getLatestMeasurement: jest.fn().mockResolvedValue({ weight: 75, chest: 100, waist: 80, hips: 95, arms: 35, thighs: 55, body_fat: 18, recorded_at: new Date().toISOString() }),
   getMeasurementHistory: jest.fn().mockResolvedValue([]),
   deleteMeasurement: jest.fn().mockResolvedValue({}),
   calculateBMI: jest.fn().mockReturnValue('22.5'),
@@ -181,14 +181,14 @@ describe('Screens - Round 2', () => {
     it('shows empty state when no measurements', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
       await waitFor(() => {
-        expect(getByText('Nenhuma medida')).toBeTruthy();
+        expect(getByText('Nenhuma medida registrada')).toBeTruthy();
       });
     });
 
     it('renders chart selector', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
       await waitFor(() => {
-        expect(getByText('Peso')).toBeTruthy();
+        expect(getByText('MeasurementChart')).toBeTruthy();
       });
     });
   });

@@ -1,0 +1,16 @@
+[Cliente: React / App Mobile]
+       ↓ (1. Comprime mídias em WebP/HLS, mascara dados na tela, limpa estado no logout)
+[Borda: Cloudflare WAF]
+       ↓ (2. Bloqueia bots por comportamento JA3, mitiga DDoS, valida HTTPS quântico)
+[VPS: Hostinger Linux / Firewall trancado]
+       ↓ (3. Acesso SSH apenas por chaves; Fail2Ban ativo)
+[Docker Container: Node.js + Redis]
+       ↓ (4. Docker em modo --read-only; PM2 gerenciando clusters e memória Swap)
+[Middleware: Redis]
+       ↓ (5. Rate Limiting por token, travas anti-clique duplo e cache semântico)
+[Validação: Zod + Helmet + Sanitizadores]
+       ↓ (6. Contratos de dados estritos; expurgo de scripts maliciosos e tags de IA)
+[Persistência: Supabase / PostgreSQL]
+       ↓ (7. Transações atômicas, chaves UUID v4, regras RLS e auditoria imutável externa)
+[Destino Externo: Asaas / Gemini API]
+       ↓ (8. Checkout transparente tokenizado e IA blindada por prompts isolados)

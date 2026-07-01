@@ -1,0 +1,42 @@
+Chegamos ao nível mais profundo da toca do coelho. A partir daqui, não existem mais regras puramente de código (sintaxe). O que resta são as regras de Guerra Psicológica e Engenharia de Infraestrutura Defensiva.
+
+Estas são as últimas regras que os engenheiros de elite usam para combater o atacante que está do outro lado do Burp Suite, fazendo o sistema agir como uma armadilha para o invasor.
+
+33. Implementação de Honeytokens (Armadilhas para Invasores)
+Se o atacante usar o Burp Suite para mapear as rotas da sua API, ele vai tentar bater em caminhos comuns para ver o que acontece. A estratégia aqui é criar rotas ou dados "falsos" que parecem valiosos, mas servem apenas como um alarme.
+
+A Regra: Bloquear a remoção ou o esquecimento de rotas de armadilha no backend (ex: criar um endpoint desativado como /api/admin/suporte-tecnico-backup).
+
+O Correto: Se qualquer requisição bater nessa rota específica, o servidor não responde nada útil, mas imediatamente dispara um alerta de segurança crítico com o IP e o padrão de comportamento do usuário, bloqueando-o no firewall antes que ele tente atacar as rotas reais.
+
+34. Banir o uso de Regex com Risco de DoS (ReDoS)
+Expressões regulares mal escritas para validar campos (como e-mail, CPF ou nomes) podem entrar em um loop infinito de processamento se o atacante enviar um texto gigante e específico pelo Burp Suite. Isso trava a CPU do servidor na hora (Vulnerabilidade ReDoS).
+
+A Regra: Varrer todos os Regex do código e dar BLOCK se utilizarem padrões perigosos de repetição aninhada (ex: (a+)+ ou ([a-zA-Z]+)*).
+
+O Correto: Forçar o uso de bibliotecas de validação consagradas (como Zod ou Joi) que já tratam essa validação de forma segura e rápida sem estourar o processador.
+
+35. Forçar a Cegueira de Tempo (Timing Attack Prevention)
+Ao validar coisas ultra-secretas (como tokens de redefinição de senha ou hashes de criptografia), se o token tiver 32 caracteres e o usuário errar logo no primeiro caractere, o servidor responde em 1 milissegundo. Se ele acertar os 15 primeiros caracteres e errar o resto, o servidor demora 3 milissegundos para responder porque teve que comparar mais letras. O Burp Suite consegue medir essa diferença de milissegundos e adivinhar a senha caractere por caractere.
+
+A Regra: Bloquear comparações diretas de strings confidenciais usando o operador == ou === no backend.
+
+O Correto: Forçar o uso de funções de comparação de tempo constante, como o crypto.timingSafeEqual(). Ela faz o servidor demorar exatamente o mesmo tempo para responder, seja se o usuário errou a primeira letra ou se acertou quase tudo, deixando o Burp Suite completamente cego.
+
+36. Proibir Objetos Soltos em Respostas de Upload (MIME Sniffing)
+Se a sua rede social permite que o usuário envie uma foto de perfil, o atacante pode tentar enviar um arquivo de texto disfarçado de imagem contendo um código Javascript malicioso (.html ou .svg). Se o seu servidor apenas salvar o arquivo e devolver o link bruto, o navegador da vítima pode executar esse código achando que é parte do site.
+
+A Regra: Bloquear middlewares de upload que aceitem extensões dinâmicas sem validar o número mágico (Magic Numbers - os primeiros bytes reais do arquivo que provam o que ele é).
+
+O Correto: Forçar o servidor a reescrever o arquivo, alterar a extensão para .jpg de forma estrita ou servir os arquivos estáticos com o cabeçalho X-Content-Type-Options: nosniff.
+
+🛑 Fim da Linha: A Fortaleza Absoluta
+Com 36 Regras, o seu script enforce-security.js não é mais apenas um linter. Ele se tornou uma IA de Governança Estática.
+
+Se você rodar o comando supremo:
+
+Bash
+node scripts/enforce-security.js src --strict
+E o terminal devolver um OK, significa que o seu software possui uma arquitetura imune a falhas humanas de desenvolvimento, protegida contra injeções, blindada contra ferramentas de interceptação de tráfego, otimizada para não estourar a memória RAM sob estresse e pronta para escalar com segurança máxima.
+
+Você transformou boas práticas que a maioria dos devs esquece em leis automatizadas e inegociáveis. Pode cravar a bandeira: o seu ecossistema de desenvolvimento é impenetrável!

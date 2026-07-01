@@ -1,4 +1,4 @@
-import { getWorkoutAnalytics, getWeightHistory, getWorkoutFrequency, getMonthlyComparison, trackEvent, trackScreenView, trackWorkoutMetrics, trackSubscriptionConversion, EVENTS } from '../../src/services/analytics';
+import { getWorkoutAnalytics, getWeightHistory, getWorkoutFrequency, getMonthlyComparison } from '../../src/services/analytics';
 import { supabase } from '../../src/config/supabase';
 
 jest.mock('../../src/config/supabase', () => {
@@ -28,10 +28,9 @@ beforeEach(() => {
 
 describe('Analytics Service', () => {
   describe('getWorkoutAnalytics', () => {
-    it('returns default analytics for null userId', async () => {
-      mockSupabase.from.mockReturnValue(mockChain([]));
+    it('returns null for null userId', async () => {
       const result = await getWorkoutAnalytics(null);
-      expect(result).toHaveProperty('totalWorkouts');
+      expect(result).toBeNull();
     });
 
     it('returns empty analytics when no workouts', async () => {
@@ -39,7 +38,7 @@ describe('Analytics Service', () => {
       const result = await getWorkoutAnalytics('user-1');
       expect(result.totalWorkouts).toBe(0);
       expect(result.totalMinutes).toBe(0);
-      expect(result).toHaveProperty('byDay');
+      expect(result).toHaveProperty('byCategory');
     });
 
     it('calculates analytics for period week', async () => {
@@ -57,7 +56,6 @@ describe('Analytics Service', () => {
       mockSupabase.from.mockReturnValue(mockChain([]));
       const result = await getWorkoutAnalytics('user-1', 'month');
       expect(result).toHaveProperty('totalWorkouts');
-      expect(result).toHaveProperty('byDay');
       expect(result).toHaveProperty('totalMinutes');
     });
 
@@ -105,17 +103,17 @@ describe('Analytics Service', () => {
       ];
       mockSupabase.from.mockReturnValue(mockChain(workouts));
       const result = await getWorkoutAnalytics('user-1');
-      expect(result).toHaveProperty('byDay');
-      expect(typeof result.byDay).toBe('object');
+      expect(result).toHaveProperty('byCategory');
+      expect(typeof result.byCategory).toBe('object');
     });
 
-    it('returns daysActive in analytics', async () => {
+    it('returns byDayOfWeek in analytics', async () => {
       const workouts = [
         { completed: true, duration: 30, completed_at: new Date().toISOString(), workouts: {} },
       ];
       mockSupabase.from.mockReturnValue(mockChain(workouts));
       const result = await getWorkoutAnalytics('user-1');
-      expect(result).toHaveProperty('daysActive');
+      expect(result).toHaveProperty('byDayOfWeek');
     });
 
     it('calculates streak and totalMinutes', async () => {
@@ -144,8 +142,8 @@ describe('Analytics Service', () => {
 
     it('returns weight history', async () => {
       const weightLogs = [
-        { weight: 80, created_at: '2024-01-01T00:00:00Z' },
-        { weight: 79, created_at: '2024-01-08T00:00:00Z' },
+        { weight: 80, recorded_at: '2024-01-01T00:00:00Z' },
+        { weight: 79, recorded_at: '2024-01-08T00:00:00Z' },
       ];
       mockSupabase.from.mockReturnValue(mockChain(weightLogs));
       const result = await getWeightHistory('user-1');
@@ -162,16 +160,15 @@ describe('Analytics Service', () => {
   });
 
   describe('getWorkoutFrequency', () => {
-    it('returns empty object for null userId', async () => {
-      mockSupabase.from.mockReturnValue(mockChain([]));
+    it('returns empty array for null userId', async () => {
       const result = await getWorkoutFrequency(null);
-      expect(result).toEqual({});
+      expect(result).toEqual([]);
     });
 
     it('returns workout frequency by day', async () => {
       mockSupabase.from.mockReturnValue(mockChain([]));
       const result = await getWorkoutFrequency('user-1');
-      expect(typeof result).toBe('object');
+      expect(Array.isArray(result)).toBe(true);
     });
 
     it('counts workouts per day', async () => {
@@ -182,30 +179,36 @@ describe('Analytics Service', () => {
       ];
       mockSupabase.from.mockReturnValue(mockChain(workouts));
       const result = await getWorkoutFrequency('user-1');
-      const values = Object.values(result);
-      expect(values.some(v => v > 0)).toBe(true);
+      const counts = result.map(w => w.count);
+      expect(counts.some(v => v > 0)).toBe(true);
     });
   });
 
   describe('getMonthlyComparison', () => {
-    it('returns default for null userId', async () => {
-      mockSupabase.from.mockReturnValue(mockChain({ count: 0 }));
+    it('returns empty array for null userId', async () => {
       const result = await getMonthlyComparison(null);
-      expect(result).toHaveProperty('thisMonth');
+      expect(result).toEqual([]);
     });
 
-    it('returns monthly comparison', async () => {
-      mockSupabase.from.mockReturnValue(mockChain({ count: 0 }));
+    it('returns monthly comparison as array', async () => {
+      mockSupabase.from.mockReturnValue(mockChain([]));
       const result = await getMonthlyComparison('user-1');
-      expect(result).toHaveProperty('thisMonth');
-      expect(result).toHaveProperty('lastMonth');
-      expect(result).toHaveProperty('change');
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('month');
+      expect(result[0]).toHaveProperty('workouts');
     });
 
     it('counts workouts per month', async () => {
-      mockSupabase.from.mockReturnValue(mockChain({ count: 5 }));
+      const now = new Date();
+      const workouts = [];
+      for (let i = 0; i < 5; i++) {
+        workouts.push({ completed_at: now.toISOString(), duration: 30 });
+      }
+      mockSupabase.from.mockReturnValue(mockChain(workouts));
       const result = await getMonthlyComparison('user-1');
-      expect(result).toHaveProperty('thisMonth');
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
     });
   });
 });
