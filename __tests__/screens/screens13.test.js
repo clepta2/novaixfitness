@@ -73,7 +73,6 @@ jest.mock('../../src/services/mealAnalyzer', () => ({ analyzeMeal: jest.fn().moc
 jest.mock('../../src/services/gemini', () => ({ sendMessage: jest.fn().mockResolvedValue('') }));
 jest.mock('../../src/services/analytics', () => ({ trackEvent: jest.fn() }));
 jest.mock('../../src/services/voiceCoach', () => ({ setVoiceCoachEnabled: jest.fn() }));
-jest.mock('../../src/hooks/usePaywallPayment', () => ({ usePaywallPayment: () => ({}) }));
 
 import LandingScreen from '../../app/landing';
 import AiIndexScreen from '../../app/ai/index';

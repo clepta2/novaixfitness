@@ -1,8 +1,9 @@
-// src/i18n/index.js
-// Sistema de internacionalizacao - NOVAIX FITNESS
+// src/i18n/index.tsx
+// Sistema de internacionalizacao - Integrado com TradNinja
 
 import * as Localization from 'expo-localization';
-import { useState, useCallback, createContext, useContext } from 'react';
+import { useState, useCallback, createContext, useContext, useMemo } from 'react';
+import { createTranslator } from 'tradninja';
 import pt from './pt.json';
 import en from './en.json';
 import es from './es.json';
@@ -13,6 +14,7 @@ interface I18nContextValue {
   locale: string;
   t: (key: string, params?: Record<string, string | number>) => string;
   changeLocale: (locale: string) => void;
+  translator: ReturnType<typeof createTranslator>;
 }
 const I18nContext = createContext<I18nContextValue | null>(null);
 
@@ -28,21 +30,72 @@ function getDeviceLocale() {
   }
 }
 
+// Mapeia chaves do JSON para o dicionario do tradninja
+function buildDictionary(source: Record<string, unknown>, target: Record<string, unknown>): Record<string, Record<string, string>> {
+  const result: Record<string, Record<string, string>> = {};
+  
+  function flatten(obj: Record<string, unknown>, prefix: string) {
+    for (const [key, value] of Object.entries(obj)) {
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+      if (typeof value === 'string') {
+        const targetValue = getNestedValue(target, fullKey);
+        result[value] = {
+          en: typeof targetValue === 'string' ? targetValue : value,
+          es: typeof targetValue === 'string' ? targetValue : value,
+        };
+      } else if (typeof value === 'object' && value !== null) {
+        flatten(value as Record<string, unknown>, fullKey);
+      }
+    }
+  }
+  
+  flatten(source, '');
+  return result;
+}
+
+function getNestedValue(obj: unknown, path: string): unknown {
+  const keys = path.split('.');
+  let value: unknown = obj;
+  for (const k of keys) {
+    if (value === null || value === undefined || typeof value !== 'object') return undefined;
+    value = (value as Record<string, unknown>)[k];
+  }
+  return value;
+}
+
 export function I18nProvider({ children, initialLocale }) {
   const [locale, setLocale] = useState(initialLocale || getDeviceLocale());
+  
+  const dictionary = useMemo(() => buildDictionary(pt, en), []);
+  
+  const translator = useMemo(() => createTranslator({
+    source: 'pt',
+    target: locale as any,
+    dictionary,
+  }), [locale]);
 
-  const t = useCallback((key, params = {}) => {
-    const keys = key.split('.');
-    let value = translations[locale];
-
-    for (const k of keys) {
-      value = value?.[k];
+  const t = useCallback((key: string, params?: Record<string, string | number>) => {
+    // Tenta traduzir via tradninja primeiro
+    const result = translator.translate(key, { target: locale as any });
+    if (result.text !== key) {
+      // Se tem params, substitui
+      if (params) {
+        return result.text.replace(/\{(\w+)\}/g, (_, param) => params[param] !== undefined ? String(params[param]) : `{${param}}`);
+      }
+      return result.text;
     }
-
-    if (typeof value !== 'string') return key;
-
-    return value.replace(/\{(\w+)\}/g, (_, param) => params[param] ?? `{${param}}`);
-  }, [locale]);
+    
+    // Fallback para JSON direto
+    const value = getNestedValue(translations[locale], key);
+    if (typeof value === 'string') {
+      if (params) {
+        return value.replace(/\{(\w+)\}/g, (_, param) => params[param] !== undefined ? String(params[param]) : `{${param}}`);
+      }
+      return value;
+    }
+    
+    return key;
+  }, [locale, translator]);
 
   const changeLocale = useCallback((newLocale) => {
     if (translations[newLocale]) {
@@ -51,7 +104,7 @@ export function I18nProvider({ children, initialLocale }) {
   }, []);
 
   return (
-    <I18nContext.Provider value={{ locale, t, changeLocale }}>
+    <I18nContext.Provider value={{ locale, t, changeLocale, translator }}>
       {children}
     </I18nContext.Provider>
   );

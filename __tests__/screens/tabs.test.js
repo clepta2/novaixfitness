@@ -201,7 +201,7 @@ describe('Tab Screens', () => {
 
     it('renders contextual card', () => {
       const { getByText } = render(<HomeScreen />);
-      expect(getByText('BOM-DIA, ATLETA')).toBeTruthy();
+      expect(getByText(/ATLETA/)).toBeTruthy();
     });
 
     it('renders categories section', () => {

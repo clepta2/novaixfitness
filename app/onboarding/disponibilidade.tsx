@@ -1,6 +1,7 @@
 // app/onboarding/disponibilidade.tsx
 // Tela de Disponibilidade com melhorias visuais - NOVAIX FITNESS
 
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -8,7 +9,7 @@ import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { SHADOWS } from '../../src/constants/shadows';
 import { ErrorBoundary } from '../../src/components';
-import { useDisponibilidade } from '../../src/hooks/useDisponibilidade';
+import { useAuth } from '../../src/context/AuthContext';
 import { useResponsive } from '../../src/hooks/useResponsive';
 import OnboardingLayout from '../../src/components/onboarding/OnboardingLayout';
 import { WEEK_DAYS_LONG, LOCATIONS_EXTENDED } from '../../src/data/onboardingOptions';
@@ -16,11 +17,18 @@ import { WEEK_DAYS_LONG, LOCATIONS_EXTENDED } from '../../src/data/onboardingOpt
 export default function AvailabilityScreen() {
   const router = useRouter();
   const { isSmall } = useResponsive();
-  const {
-    selectedDays, setSelectedDays,
-    selectedLocation, setSelectedLocation,
-    canProceed, handleNext,
-  } = useDisponibilidade();
+  const { saveOnboarding, onboarding, updateProfile } = useAuth();
+  const [selectedDays, setSelectedDays] = useState<number | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
+  const canProceed = !!selectedDays && !!selectedLocation;
+
+  const handleNext = useCallback(async () => {
+    if (!selectedDays || !selectedLocation) return;
+    await saveOnboarding({ ...onboarding, daysPerWeek: selectedDays, location: selectedLocation });
+    await updateProfile({ current_step: 'onboarding' });
+    router.push(selectedLocation === 'gym' ? '/onboarding/tipo-academia' : '/onboarding/experiencia');
+  }, [selectedDays, selectedLocation, onboarding, saveOnboarding, updateProfile, router]);
 
   return (
     <ErrorBoundary screenName="Disponibilidade">
