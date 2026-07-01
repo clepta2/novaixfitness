@@ -138,7 +138,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }) {
         {isHost && (
           <View style={styles.hostControls}>
             <TouchableOpacity style={styles.controlBtn} onPress={handleToggleRest}>
-              <Ionicons name={isResting ? 'play' : 'pause'} size={20} color="#fff" />
+              <Ionicons name={isResting ? 'play' : 'pause'} size={20} color={COLORS.background} />
               <Text style={styles.controlText}>{isResting ? t('live.resume') : t('live.resting')}</Text>
             </TouchableOpacity>
           </View>

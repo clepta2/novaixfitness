@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-const MC = { chest: COLORS.success, back: COLORS.info, legs: COLORS.secondary, shoulders: COLORS.attention, arms: COLORS.primary, abs: '#00E676', cardio: COLORS.rose };
+const MC = { chest: COLORS.success, back: COLORS.info, legs: COLORS.secondary, shoulders: COLORS.attention, arms: COLORS.primary, abs: COLORS.success, cardio: COLORS.rose };
 
 export default memo(function WorkoutPreview({ name, category, level, exercises = [], duration }) {
   const totalSets = exercises.reduce((s, e) => s + (e.sets || 4), 0);

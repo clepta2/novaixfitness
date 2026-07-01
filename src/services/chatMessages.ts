@@ -2,6 +2,7 @@
 // Mensagens do chat
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import type { ChatMessage, MessageType } from '../types';
 import { createServiceGuard } from '../utils/serviceGuard';
 
@@ -9,7 +10,7 @@ const guard = createServiceGuard({ serviceName: 'chatMessages' });
 
 export async function getMessages(conversationId: string, limit: number = 50, before: string | null = null): Promise<ChatMessage[]> {
   let query = supabase
-    .from('messages')
+    .from(TABLES.MESSAGES)
     .select('*, profiles:user_id(name, avatar_url)')
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending: false })
@@ -25,12 +26,12 @@ export async function sendMessage(
 ): Promise<ChatMessage> {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
-      .from('messages')
+      .from(TABLES.MESSAGES)
       .insert({ conversation_id: conversationId, user_id: userId, content, type, reply_to: replyTo })
       .select('*, profiles:user_id(name, avatar_url)')
       .single();
     if (error) throw error;
-    await supabase.from('conversations').update({ updated_at: new Date().toISOString() }).eq('id', conversationId);
+    await supabase.from(TABLES.CONVERSATIONS).update({ updated_at: new Date().toISOString() }).eq('id', conversationId);
     return data as ChatMessage;
   });
   return result.ok ? result.data : null;
@@ -57,7 +58,7 @@ export async function deleteMessage(messageId: string, userId: string): Promise<
 export async function searchMessages(conversationId: string, query: string): Promise<ChatMessage[]> {
   const result = await guard.guard(async () => {
     const { data } = await supabase
-      .from('messages')
+      .from(TABLES.MESSAGES)
       .select('*, profiles:user_id(name, avatar_url)')
       .eq('conversation_id', conversationId)
       .ilike('content', `%${query}%`)

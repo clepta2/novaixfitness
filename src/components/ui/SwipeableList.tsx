@@ -46,7 +46,7 @@ function SwipeableItem({
                   action.onPress();
                 }}
               >
-                <Ionicons name={action.icon as any} size={20} color="#fff" />
+                <Ionicons name={action.icon as any} size={20} color={COLORS.background} />
                 <Text style={styles.actionLabel}>{action.label}</Text>
               </RectButton>
             </Animated.View>
@@ -73,7 +73,7 @@ function SwipeableItem({
                   action.onPress();
                 }}
               >
-                <Ionicons name={action.icon as any} size={20} color="#fff" />
+                <Ionicons name={action.icon as any} size={20} color={COLORS.background} />
                 <Text style={styles.actionLabel}>{action.label}</Text>
               </RectButton>
             </Animated.View>
@@ -175,6 +175,6 @@ const styles = StyleSheet.create({
   actionLabel: {
     fontFamily: 'Inter_500Medium',
     fontSize: 11,
-    color: '#fff',
+    color: COLORS.background,
   },
 });

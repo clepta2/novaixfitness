@@ -8,6 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { supabase } from '../../config/supabase';
+import { COMPOSER } from '../../data/socialTexts';
 import { useRealtimeComments } from '../../hooks/useRealtimeComments';
 import { useRealtimeLikes } from '../../hooks/useRealtimeLikes';
 import CommentSection from './CommentSection';
@@ -79,7 +80,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
       setComments(prev => [...prev, {
         id: Date.now(),
         content: commentText,
-        profiles: { name: 'Você', avatar_url: null },
+        profiles: { name: COMPOSER.selfName, avatar_url: null },
         created_at: new Date().toISOString(),
       }]);
       setCommentText('');

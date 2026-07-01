@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { TIMER_CONTROLS } from '../../data/workoutTexts';
 
 const QUICK_TIMES = [
   { seconds: 15, label: '15s', icon: 'flash' },
@@ -22,7 +23,7 @@ export default function TimerControls({ showQuick, onToggleQuick, onAddTime, onS
         </TouchableOpacity>
         <TouchableOpacity style={styles.quickToggle} onPress={onToggleQuick}>
           <Ionicons name="timer" size={16} color={COLORS.primary} />
-          <Text style={styles.quickToggleText}>Tempo Rápido</Text>
+          <Text style={styles.quickToggleText}>{TIMER_CONTROLS.quickTime}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.timeBtn} onPress={onAddTime}>
           <Ionicons name="add-circle" size={24} color={COLORS.primary} />

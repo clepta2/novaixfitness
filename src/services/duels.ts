@@ -2,13 +2,14 @@
 // Serviço de duelos de treino
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 
 const guard = createServiceGuard({ serviceName: 'duels' });
 
 export async function getDuels(userId) {
   const { data } = await supabase
-    .from('duels')
+    .from(TABLES.DUELS)
     .select('*, challenger:challenger_id(name, avatar_url), challenged:challenged_id(name, avatar_url)')
     .or(`challenger_id.eq.${userId},challenged_id.eq.${userId}`)
     .order('created_at', { ascending: false });
@@ -18,7 +19,7 @@ export async function getDuels(userId) {
 
 export async function acceptDuel(duelId) {
   const { error } = await supabase
-    .from('duels')
+    .from(TABLES.DUELS)
     .update({ status: 'active' })
     .eq('id', duelId);
 
@@ -27,7 +28,7 @@ export async function acceptDuel(duelId) {
 
 export async function completeDuel(duelId, userId) {
   const { data: duel } = await supabase
-    .from('duels')
+    .from(TABLES.DUELS)
     .select('*')
     .eq('id', duelId)
     .single();
@@ -48,7 +49,7 @@ export async function completeDuel(duelId, userId) {
 
 export async function getActiveDuelsCount(userId) {
   const { count } = await supabase
-    .from('duels')
+    .from(TABLES.DUELS)
     .select('id', { count: 'exact', head: true })
     .or(`challenger_id.eq.${userId},challenged_id.eq.${userId}`)
     .eq('status', 'active');

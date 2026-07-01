@@ -70,7 +70,7 @@ export default function ReelItem({ item, isPlaying, onClose, screenHeight }: Ree
   };
 
   return (
-    <Pressable onPress={handleDoubleTap} style={{ width: '100%', height: screenHeight, position: 'relative', backgroundColor: '#000' }}>
+    <Pressable onPress={handleDoubleTap} style={{ width: '100%', height: screenHeight, position: 'relative', backgroundColor: COLORS.background }}>
       <Video
         source={{ uri: item.videoUrl }}
         rate={1.0}

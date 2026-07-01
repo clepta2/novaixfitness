@@ -2,6 +2,7 @@
 // Gerenciamento de assinaturas
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 import { trackEvent, EVENT_TYPES } from './eventTracker';
 import { PLANS, type Plan, type Subscription } from './monetizationPlans';
@@ -10,7 +11,7 @@ const guard = createServiceGuard({ serviceName: 'monetizationSubscription' });
 
 export async function getUserPlan(userId: string): Promise<Plan & { subscription?: Subscription }> {
   const { data: subscription } = await supabase
-    .from('subscriptions')
+    .from(TABLES.SUBSCRIPTIONS)
     .select('*')
     .eq('user_id', userId)
     .eq('status', 'active')
@@ -40,11 +41,11 @@ export async function getUsageStats(userId: string): Promise<{ workoutsThisWeek:
   todayStart.setHours(0, 0, 0, 0);
 
   const [{ count: workoutsThisWeek }, { count: aiChatsToday }, { count: customWorkouts }] = await Promise.all([
-    supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+    supabase.from(TABLES.USER_WORKOUTS).select('id', { count: 'exact', head: true })
       .eq('user_id', userId).eq('completed', true).gte('completed_at', weekStart.toISOString()),
-    supabase.from('ai_chat_logs').select('id', { count: 'exact', head: true })
+    supabase.from(TABLES.AI_CHAT_LOGS).select('id', { count: 'exact', head: true })
       .eq('user_id', userId).gte('created_at', todayStart.toISOString()),
-    supabase.from('custom_workouts').select('id', { count: 'exact', head: true })
+    supabase.from(TABLES.CUSTOM_WORKOUTS).select('id', { count: 'exact', head: true })
       .eq('user_id', userId),
   ]);
 
@@ -63,14 +64,14 @@ export async function createSubscription(userId: string, planId: string, payment
   expiresAt.setMonth(expiresAt.getMonth() + 1);
 
   const { data, error } = await supabase
-    .from('subscriptions')
+    .from(TABLES.SUBSCRIPTIONS)
     .insert({
       user_id: userId, plan_id: planId, status: 'active',
       payment_method: paymentMethod, price: plan.price, expires_at: expiresAt.toISOString(),
     }).select().single();
 
   if (error) throw error;
-  await supabase.from('profiles').update({ subscription_plan: planId }).eq('id', userId);
+  await supabase.from(TABLES.PROFILES).update({ subscription_plan: planId }).eq('id', userId);
   trackEvent(EVENT_TYPES.SUBSCRIPTION_STARTED, { plan_id: planId, price: plan.price }, userId);
   return data as Subscription;
 }
@@ -80,7 +81,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
     .update({ status: 'cancelled', cancelled_at: new Date().toISOString() })
     .eq('user_id', userId).eq('status', 'active');
   if (error) throw error;
-  await supabase.from('profiles').update({ subscription_plan: 'free' }).eq('id', userId);
+  await supabase.from(TABLES.PROFILES).update({ subscription_plan: 'free' }).eq('id', userId);
   trackEvent(EVENT_TYPES.SUBSCRIPTION_CANCELLED, {}, userId);
 }
 

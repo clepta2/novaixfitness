@@ -10,6 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { WEEKLY_CHALLENGES } from '../../constants/gamification';
 import { addXP } from '../../services/gamification';
+import { SECTION_TITLES, LABELS, BUTTONS, MESSAGES } from '../../data/profileTexts';
 
 export default function WeeklyChallenges({ userId, compact = false }) {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function WeeklyChallenges({ userId, compact = false }) {
 
       await addXP(userId, 'CHALLENGE_COMPLETED', challenge.xpReward);
       setClaimed(prev => new Set([...prev, challenge.id]));
-      Alert.alert('Desafio Completo!', `+${challenge.xpReward} XP ganho!`);
+      Alert.alert(MESSAGES.challengeComplete, MESSAGES.challengeReward(challenge.xpReward));
     } catch (err) {
       if (__DEV__) console.error('Erro ao resgatar desafio:', err);
     }
@@ -91,9 +92,9 @@ export default function WeeklyChallenges({ userId, compact = false }) {
     <View style={[styles.container, compact && styles.containerCompact]}>
       <View style={styles.header}>
         <Ionicons name="flash" size={20} color={COLORS.primary} />
-        <Text style={styles.title}>DESAFIOS SEMANAIS</Text>
+        <Text style={styles.title}>{SECTION_TITLES.challenges}</Text>
         <TouchableOpacity onPress={() => router.push('/gamification')} style={styles.seeMore} accessibilityLabel="Ver todos os desafios" accessibilityRole="button">
-          <Text style={styles.seeMoreText}>Ver mais</Text>
+          <Text style={styles.seeMoreText}>{LABELS.seeMore}</Text>
           <Ionicons name="chevron-forward" size={14} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
@@ -123,7 +124,7 @@ export default function WeeklyChallenges({ userId, compact = false }) {
               <Ionicons name="checkmark-circle" size={20} color={COLORS.success} />
             ) : completed ? (
               <TouchableOpacity onPress={() => handleClaim(challenge)} style={styles.claimBtn} accessibilityLabel={`Resgatar ${challenge.name}`} accessibilityRole="button">
-                <Text style={styles.claimText}>RESGATAR</Text>
+                <Text style={styles.claimText}>{BUTTONS.claim}</Text>
               </TouchableOpacity>
             ) : null}
           </View>

@@ -6,6 +6,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { Button } from '../ui/Button';
+import { COMPOSER } from '../../data/socialTexts';
 
 export default function CreatePostModal({ visible, onClose, onSubmit, userId }) {
   const [content, setContent] = useState('');
@@ -16,7 +17,7 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
   const handlePickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permissão', 'Precisamos de acesso à galeria para selecionar fotos.');
+      Alert.alert(COMPOSER.permissionTitle, COMPOSER.permissionMessage);
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -42,7 +43,7 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
       const { data: urlData } = supabase.storage.from('posts').getPublicUrl(fileName);
       return urlData.publicUrl;
     } catch (err) {
-      Alert.alert('Erro', 'Falha ao enviar imagem: ' + err.message);
+      Alert.alert(COMPOSER.errorTitle, COMPOSER.uploadError + err.message);
       return null;
     } finally {
       setUploading(false);
@@ -51,7 +52,7 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
 
   const handleSubmit = async () => {
     if (!content.trim() && !imageUri) {
-      Alert.alert('Erro', 'Escreva algo ou selecione uma imagem');
+      Alert.alert(COMPOSER.errorTitle, COMPOSER.emptyError);
       return;
     }
     setLoading(true);
@@ -71,13 +72,13 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
         <View style={styles.content} onStartShouldSetResponder={() => true}>
           <View style={styles.handle} />
           <View style={styles.header}>
-            <Text style={styles.title}>Novo Post</Text>
+            <Text style={styles.title}>{COMPOSER.title}</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color={COLORS.textMuted} />
             </TouchableOpacity>
           </View>
 
-          <TextInput style={styles.input} placeholder="O que você está sentindo hoje?" placeholderTextColor={COLORS.textMuted} value={content} onChangeText={setContent} multiline textAlignVertical="top" />
+          <TextInput style={styles.input} placeholder={COMPOSER.placeholder} placeholderTextColor={COLORS.textMuted} value={content} onChangeText={setContent} multiline textAlignVertical="top" />
 
           {imageUri && (
             <View style={styles.imagePreview}>
@@ -91,11 +92,11 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
           <View style={styles.options}>
             <TouchableOpacity style={styles.optionBtn} onPress={handlePickImage} disabled={uploading}>
               {uploading ? <ActivityIndicator size="small" color={COLORS.primary} /> : <Ionicons name="image-outline" size={24} color={COLORS.primary} />}
-              <Text style={styles.optionText}>Foto</Text>
+              <Text style={styles.optionText}>{COMPOSER.photoLabel}</Text>
             </TouchableOpacity>
           </View>
 
-          <Button title="PUBLICAR" onPress={() => handleSubmit()} loading={loading || uploading} disabled={(!content.trim() && !imageUri) || uploading} />
+          <Button title={COMPOSER.buttonLabel} onPress={() => handleSubmit()} loading={loading || uploading} disabled={(!content.trim() && !imageUri) || uploading} />
         </View>
       </TouchableOpacity>
     </Modal>

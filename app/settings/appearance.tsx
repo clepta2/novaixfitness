@@ -13,6 +13,7 @@ import { SHADOWS } from '../../src/constants/shadows';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useResponsive } from '../../src/hooks/useResponsive';
 import { ErrorBoundary } from '../../src/components';
+import { APPEARANCE } from '../../src/data/settingsTexts';
 
 export default function AppearanceScreen() {
   const { isDark, toggleTheme } = useTheme();
@@ -38,10 +39,10 @@ export default function AppearanceScreen() {
     <ErrorBoundary screenName="Appearance">
       <ScrollView style={styles.screen} contentContainerStyle={styles.scroll}>
         <Animated.View style={{ opacity: fadeAnim }}>
-          <Text style={[styles.title, { fontSize: isSmall ? 20 : 22 }]}>APARENCIA</Text>
-          <Text style={styles.subtitle}>Personalize o visual do app</Text>
+          <Text style={[styles.title, { fontSize: isSmall ? 20 : 22 }]}>{APPEARANCE.title}</Text>
+          <Text style={styles.subtitle}>{APPEARANCE.subtitle}</Text>
 
-          <Text style={styles.sectionTitle}>TEMA</Text>
+          <Text style={styles.sectionTitle}>{APPEARANCE.themeSection}</Text>
           <View style={styles.themeRow}>
             {/* Tema Claro */}
             <Animated.View style={{ flex: 1, transform: [{ scale: lightScale }] }}>
@@ -54,7 +55,7 @@ export default function AppearanceScreen() {
                   <View style={{ width: 40, height: 4, backgroundColor: '#E2E8F0', borderRadius: 2 }} />
                 </View>
                 <View style={styles.themeLabelRow}>
-                  <Text style={styles.themeLabel}>Claro</Text>
+                  <Text style={styles.themeLabel}>{APPEARANCE.light}</Text>
                   {!isDark && <Ionicons name="checkmark-circle" size={18} color={COLORS.primary} />}
                 </View>
               </TouchableOpacity>
@@ -71,7 +72,7 @@ export default function AppearanceScreen() {
                   <View style={{ width: 40, height: 4, backgroundColor: '#252B34', borderRadius: 2 }} />
                 </View>
                 <View style={styles.themeLabelRow}>
-                  <Text style={styles.themeLabel}>Escuro</Text>
+                  <Text style={styles.themeLabel}>{APPEARANCE.dark}</Text>
                   {isDark && <Ionicons name="checkmark-circle" size={18} color={COLORS.primary} />}
                 </View>
               </TouchableOpacity>
@@ -80,7 +81,7 @@ export default function AppearanceScreen() {
 
           <View style={styles.infoBox}>
             <Ionicons name="information-circle" size={16} color={COLORS.primary} />
-            <Text style={styles.infoText}>O tema escuro ajuda a reduzir o cansaco visual durante treinos noturnos.</Text>
+            <Text style={styles.infoText}>{APPEARANCE.info}</Text>
           </View>
         </Animated.View>
       </ScrollView>

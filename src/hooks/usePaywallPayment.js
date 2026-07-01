@@ -6,6 +6,7 @@ import { Alert, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { createCheckout, getPaymentStatus } from '../services/payment';
 import { getVariant, trackPaywallView, trackPaywallClick, trackPaywallSkip } from '../services/abtest';
+import { canProcessPayment, recordPayment } from '../services/security/paymentProtection';
 
 export default function usePaywallPayment(user) {
   const router = useRouter();
@@ -46,10 +47,17 @@ export default function usePaywallPayment(user) {
       return;
     }
 
+    const payCheck = canProcessPayment(user.id);
+    if (!payCheck.allowed) {
+      Alert.alert('Aguarde', payCheck.reason || 'Aguarde antes de tentar novamente');
+      return;
+    }
+
     trackPaywallClick(user.id, selected);
     setLoading(true);
     try {
       const result = await createCheckout(selected, billingType);
+      recordPayment(user.id, selected, 0);
 
       if (billingType === 'PIX' && result.pixQrCode) {
         setPixData({

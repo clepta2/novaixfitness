@@ -2,6 +2,7 @@
 // Sistema de feature flags para A/B testing - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createServiceGuard } from '../utils/serviceGuard';
 
@@ -42,7 +43,7 @@ export async function getFeatureFlags(userId = null) {
 
   try {
     let query = supabase
-      .from('feature_flags')
+      .from(TABLES.FEATURE_FLAGS)
       .select('*')
       .eq('enabled', true);
 
@@ -75,7 +76,7 @@ export async function isFeatureEnabled(flagKey, userId = null) {
 
 export async function getVariant(flagKey, userId, variants = ['control', 'variant_a', 'variant_b']) {
   const { data } = await supabase
-    .from('ab_test_assignments')
+    .from(TABLES.AB_TEST_ASSIGNMENTS)
     .select('variant')
     .eq('flag_key', flagKey)
     .eq('user_id', userId)
@@ -88,7 +89,7 @@ export async function getVariant(flagKey, userId, variants = ['control', 'varian
   const variant = variants[variantIndex];
 
   await supabase
-    .from('ab_test_assignments')
+    .from(TABLES.AB_TEST_ASSIGNMENTS)
     .insert({
       flag_key: flagKey,
       user_id: userId,
@@ -100,7 +101,7 @@ export async function getVariant(flagKey, userId, variants = ['control', 'varian
 
 export async function trackConversion(flagKey, userId, event) {
   await supabase
-    .from('ab_test_conversions')
+    .from(TABLES.AB_TEST_CONVERSIONS)
     .insert({
       flag_key: flagKey,
       user_id: userId,
@@ -111,7 +112,7 @@ export async function trackConversion(flagKey, userId, event) {
 export async function createFeatureFlag(key, value, description, userId = null) {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
-      .from('feature_flags')
+      .from(TABLES.FEATURE_FLAGS)
       .upsert({
         key,
         value,
@@ -131,7 +132,7 @@ export async function createFeatureFlag(key, value, description, userId = null) 
 export async function toggleFeatureFlag(key, enabled) {
   await guard.guard(async () => {
     const { error } = await supabase
-      .from('feature_flags')
+      .from(TABLES.FEATURE_FLAGS)
       .update({ enabled })
       .eq('key', key);
     if (error) throw error;

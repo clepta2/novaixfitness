@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
+import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
 
 function AchievementCard({ achievement, unlocked }) {
   const color = unlocked ? (achievement.color || COLORS.primary) : COLORS.textMuted;
@@ -21,7 +22,7 @@ function AchievementCard({ achievement, unlocked }) {
       </View>
       {unlocked && <View style={styles.dot} />}
       <Text style={[styles.name, !unlocked && styles.lockedText]} numberOfLines={2}>
-        {unlocked ? achievement.name : 'Bloqueada'}
+        {unlocked ? achievement.name : LABELS.locked}
       </Text>
       {unlocked && achievement.description && (
         <Text style={styles.desc} numberOfLines={2}>{achievement.description}</Text>
@@ -38,7 +39,7 @@ function AchievementsCarousel({ achievements = [], totalAchievements = 25 }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>CONQUISTAS</Text>
+        <Text style={styles.title}>{SECTION_TITLES.achievements}</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{achievements.length}/{totalAchievements}</Text>
         </View>

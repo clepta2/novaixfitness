@@ -2,6 +2,7 @@
 // XP, niveis e rankings
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 
 export const XP_VALUES: Record<string, number> = {
   workout_completed: 50, exercise_completed: 10, meal_logged: 15, water_logged: 5,
@@ -43,25 +44,25 @@ export function getLevelProgress(currentXP: number): number {
 
 export async function awardXP(userId: string, eventType: string, metadata: Record<string, unknown> = {}): Promise<{ xp: number; totalXP: number; level: number; leveledUp: boolean }> {
   const xp = XP_VALUES[eventType] || 10;
-  const { data: profile } = await supabase.from('profiles').select('xp, level').eq('id', userId).single();
+  const { data: profile } = await supabase.from(TABLES.PROFILES).select('xp, level').eq('id', userId).single();
   const newXP = (profile?.xp || 0) + xp;
   const newLevel = calculateLevel(newXP);
 
-  await supabase.from('profiles').update({ xp: newXP, level: newLevel }).eq('id', userId);
+  await supabase.from(TABLES.PROFILES).update({ xp: newXP, level: newLevel }).eq('id', userId);
 
   if (newLevel > (profile?.level || 1)) {
-    await supabase.from('notifications').insert({
+    await supabase.from(TABLES.NOTIFICATIONS).insert({
       user_id: userId, type: 'level_up', title: `Nivel ${newLevel}!`,
       body: `Parabens! Voce alcancou o nivel ${newLevel}!`, data: { level: newLevel },
     });
   }
 
-  await supabase.from('xp_logs').insert({ user_id: userId, event_type: eventType, xp_earned: xp, metadata });
+  await supabase.from(TABLES.XP_LOGS).insert({ user_id: userId, event_type: eventType, xp_earned: xp, metadata });
   return { xp, totalXP: newXP, level: newLevel, leveledUp: newLevel > (profile?.level || 1) };
 }
 
 export async function getRankings(period: string = 'weekly', limit: number = 50): Promise<UserProfile[]> {
-  let query = supabase.from('profiles')
+  let query = supabase.from(TABLES.PROFILES)
     .select('id, name, avatar_url, xp, level, total_workouts')
     .order('xp', { ascending: false }).limit(limit);
   if (period === 'weekly') {
@@ -73,8 +74,8 @@ export async function getRankings(period: string = 'weekly', limit: number = 50)
 }
 
 export async function getUserRank(userId: string): Promise<{ rank: number; xp: number } | null> {
-  const { data: profile } = await supabase.from('profiles').select('xp').eq('id', userId).single();
+  const { data: profile } = await supabase.from(TABLES.PROFILES).select('xp').eq('id', userId).single();
   if (!profile) return null;
-  const { count } = await supabase.from('profiles').select('id', { count: 'exact', head: true }).gt('xp', profile.xp);
+  const { count } = await supabase.from(TABLES.PROFILES).select('id', { count: 'exact', head: true }).gt('xp', profile.xp);
   return { rank: (count || 0) + 1, xp: profile.xp };
 }

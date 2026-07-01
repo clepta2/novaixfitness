@@ -7,14 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useI18n } from '../../i18n';
+import { REPORT } from '../../data/socialTexts';
 
-const REPORT_REASONS = [
-  { id: 'spam', label: 'Spam', icon: 'alert-circle-outline' },
-  { id: 'inappropriate', label: 'Conteúdo inadequado', icon: 'warning-outline' },
-  { id: 'harassment', label: 'Assédio', icon: 'person-remove-outline' },
-  { id: 'fake', label: 'Conta falsa', icon: 'ban-outline' },
-  { id: 'other', label: 'Outro', icon: 'ellipsis-horizontal-outline' },
-];
+const REPORT_REASONS = REPORT.reasons;
 
 export default function ReportModal({ visible, onClose, onSubmit, targetUser, targetPost }) {
   const { t } = useI18n();
@@ -37,8 +32,8 @@ export default function ReportModal({ visible, onClose, onSubmit, targetUser, ta
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
         <View style={styles.content} onStartShouldSetResponder={() => true}>
           <View style={styles.handle} />
-          <Text style={styles.title}>Reportar</Text>
-          <Text style={styles.subtitle}>Por que está reportando?</Text>
+          <Text style={styles.title}>{REPORT.title}</Text>
+          <Text style={styles.subtitle}>{REPORT.subtitle}</Text>
 
           {REPORT_REASONS.map(reason => (
             <TouchableOpacity
@@ -53,7 +48,7 @@ export default function ReportModal({ visible, onClose, onSubmit, targetUser, ta
 
           <TextInput
             style={styles.input}
-            placeholder="Detalhes (opcional)"
+            placeholder={REPORT.detailsPlaceholder}
             placeholderTextColor={COLORS.textMuted}
             value={details}
             onChangeText={setDetails}
@@ -61,7 +56,7 @@ export default function ReportModal({ visible, onClose, onSubmit, targetUser, ta
           />
 
           <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-            <Text style={styles.submitText}>ENVIAR REPORT</Text>
+            <Text style={styles.submitText}>{REPORT.submitButton}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>

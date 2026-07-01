@@ -11,6 +11,7 @@ import { supabase } from '../../config/supabase';
 import { formatDateBR } from '../../helpers/dates';
 import { useAuth } from '../../context/AuthContext';
 import { typography } from '../../styles';
+import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
 
 export default function WeightLogger() {
   const { user } = useAuth();
@@ -81,11 +82,11 @@ export default function WeightLogger() {
 
   return (
     <Card variant="surface" style={styles.card}>
-      <Text style={typography.label}>EVOLUÇÃO CORPORAL</Text>
+      <Text style={typography.label}>{SECTION_TITLES.bodyEvolution}</Text>
       
       <View style={styles.inputRow}>
         <View style={styles.inputContainer}>
-          <Text style={typography.caption}>PESO (KG)</Text>
+          <Text style={typography.caption}>{LABELS.weight}</Text>
           <TextInput
             style={styles.input}
             value={weight}
@@ -97,7 +98,7 @@ export default function WeightLogger() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={typography.caption}>GORDURA (%)</Text>
+          <Text style={typography.caption}>{LABELS.bodyFat}</Text>
           <TextInput
             style={styles.input}
             value={bodyFat}
@@ -119,7 +120,7 @@ export default function WeightLogger() {
 
       {history.length > 0 && (
         <View style={styles.historyContainer}>
-          <Text style={typography.caption}>ÚLTIMOS REGISTROS:</Text>
+          <Text style={typography.caption}>{LABELS.lastRecords}</Text>
           {history.map((log) => (
             <View key={log.id} style={styles.historyRow}>
               <Text style={typography.bodySmall}>{formatDateBR(log.logged_at)}</Text>

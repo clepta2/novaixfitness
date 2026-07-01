@@ -1,9 +1,10 @@
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { PLANS } from '../constants/plans';
 
 export async function applyCoupon(code, planId) {
   const { data: coupon } = await supabase
-    .from('coupons')
+    .from(TABLES.COUPONS)
     .select('*')
     .eq('code', code.toUpperCase())
     .eq('active', true)
@@ -36,7 +37,7 @@ export async function applyCoupon(code, planId) {
 
 export async function recordCouponUsage(couponCode, userId) {
   await supabase
-    .from('coupon_usage')
+    .from(TABLES.COUPON_USAGE)
     .insert({ coupon_code: couponCode, user_id: userId });
 
   await supabase.rpc('increment_coupon_usage', { code: couponCode });
@@ -46,7 +47,7 @@ export async function createReferral(userId) {
   const code = `NOVAIX${userId.slice(0, 8).toUpperCase()}`;
 
   await supabase
-    .from('referrals')
+    .from(TABLES.REFERRALS)
     .upsert({
       user_id: userId,
       code,
@@ -58,7 +59,7 @@ export async function createReferral(userId) {
 
 export async function applyReferral(referralCode, newUserId) {
   const { data: referral } = await supabase
-    .from('referrals')
+    .from(TABLES.REFERRALS)
     .select('*')
     .eq('code', referralCode.toUpperCase())
     .single();
@@ -66,12 +67,12 @@ export async function applyReferral(referralCode, newUserId) {
   if (!referral) return null;
 
   await supabase
-    .from('referrals')
+    .from(TABLES.REFERRALS)
     .update({ referral_count: referral.referral_count + 1 })
     .eq('id', referral.id);
 
   await supabase
-    .from('referral_rewards')
+    .from(TABLES.REFERRAL_REWARDS)
     .insert({
       user_id: referral.user_id,
       referred_user_id: newUserId,
@@ -80,7 +81,7 @@ export async function applyReferral(referralCode, newUserId) {
     });
 
   await supabase
-    .from('notifications')
+    .from(TABLES.NOTIFICATIONS)
     .insert({
       user_id: referral.user_id,
       type: 'referral_reward',
@@ -94,7 +95,7 @@ export async function applyReferral(referralCode, newUserId) {
 
 export async function getReferralStats(userId) {
   const { data } = await supabase
-    .from('referrals')
+    .from(TABLES.REFERRALS)
     .select('*')
     .eq('user_id', userId)
     .single();

@@ -157,11 +157,14 @@ export function generateSecureToken(length: number = 32): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   const array = new Uint8Array(length);
+
+  // REGRA 0: NUNCA usar Math.random() — obrigatorio crypto seguro
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
     crypto.getRandomValues(array);
   } else {
-    for (let i = 0; i < length; i++) array[i] = Math.floor(Math.random() * 256);
+    throw new Error('Crypto nao disponivel — impossivel gerar token seguro');
   }
+
   for (let i = 0; i < length; i++) {
     result += chars.charAt(array[i] % chars.length);
   }

@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
 
 export default memo(function RankingCard({ userId, compact = false }) {
   const router = useRouter();
@@ -81,9 +82,9 @@ export default memo(function RankingCard({ userId, compact = false }) {
     <Animated.View style={[styles.container, compact && styles.containerCompact, { opacity: fadeAnim }]}>
       <View style={styles.header}>
         <Ionicons name="trophy" size={20} color={COLORS.primary} />
-        <Text style={styles.title}>RANKING GLOBAL</Text>
+        <Text style={styles.title}>{SECTION_TITLES.ranking}</Text>
         <TouchableOpacity onPress={() => router.push('/gamification')} style={styles.seeMore} accessibilityLabel="Ver ranking completo" accessibilityRole="button">
-          <Text style={styles.seeMoreText}>Ver mais</Text>
+          <Text style={styles.seeMoreText}>{LABELS.seeMore}</Text>
           <Ionicons name="chevron-forward" size={14} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
@@ -111,7 +112,7 @@ export default memo(function RankingCard({ userId, compact = false }) {
               <Text style={[styles.rankInitials, { color: getMedalColor(item.rank) }]}>{item.initials}</Text>
             </View>
             <View style={styles.rankInfo}>
-              <Text style={styles.rankName} numberOfLines={1}>{item.name || 'Atleta'}</Text>
+              <Text style={styles.rankName} numberOfLines={1}>{item.name || LABELS.athlete}</Text>
               <Text style={styles.rankXP}>{item.total_xp || 0} XP</Text>
             </View>
             {item.rank <= 3 && (

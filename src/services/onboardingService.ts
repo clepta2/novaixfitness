@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { OnboardingData } from '../types';
 
 interface OnboardingRow {
@@ -32,7 +33,7 @@ interface OnboardingRow {
 
 export async function saveOnboardingData(userId: string, data: OnboardingData): Promise<void> {
   const { data: existing } = await supabase
-    .from('onboarding_v2')
+    .from(TABLES.ONBOARDING_V2)
     .select('id')
     .eq('user_id', userId)
     .maybeSingle();
@@ -63,5 +64,5 @@ export async function saveOnboardingData(userId: string, data: OnboardingData): 
     await supabase.from('onboarding_v2').insert(row);
   }
 
-  await supabase.from('profiles').update({ current_step: 'home' }).eq('id', userId);
+  await supabase.from(TABLES.PROFILES).update({ current_step: 'home' }).eq('id', userId);
 }

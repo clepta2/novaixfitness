@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   // Meta Dotted Line
   targetLine: { position: 'absolute', left: 25, right: 0, height: 1, zIndex: 5, justifyContent: 'center' },
   targetDashes: { width: '100%', height: 1, borderStyle: 'dashed', borderWidth: 1, borderColor: 'rgba(255, 45, 85, 0.4)' },
-  targetLabel: { position: 'absolute', right: 4, top: -14, fontFamily: 'Montserrat_700Bold', fontSize: 8, color: '#FF2D55', backgroundColor: '#1E232A', paddingHorizontal: 4, borderRadius: 2 },
+  targetLabel: { position: 'absolute', right: 4, top: -14, fontFamily: 'Montserrat_700Bold', fontSize: 8, color: COLORS.error, backgroundColor: COLORS.surface, paddingHorizontal: 4, borderRadius: 2 },
 
   // Sumário
   summaryRow: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: SPACING.lg, paddingTop: SPACING.md, borderTopWidth: 1, borderTopColor: 'rgba(255, 255, 255, 0.05)' },

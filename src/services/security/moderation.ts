@@ -2,6 +2,7 @@
 // Moderação de conteúdo
 
 import { supabase } from '../../config/supabase';
+import { TABLES } from '../../config/tables';
 import { createServiceGuard } from '../../utils/serviceGuard';
 import { logAction, ACTIONS } from './audit';
 
@@ -16,7 +17,7 @@ interface FlagContentParams {
 }
 
 export async function flagContent(reporterId: string, { targetUserId, contentType, contentId, reason, category }: FlagContentParams) {
-  const { error } = await supabase.from('content_flags').insert({
+  const { error } = await supabase.from(TABLES.CONTENT_FLAGS).insert({
     reporter_id: reporterId,
     target_user_id: targetUserId,
     content_type: contentType,
@@ -32,7 +33,7 @@ export async function flagContent(reporterId: string, { targetUserId, contentTyp
 
 export async function getFlaggedContent(status = 'pending') {
   const { data } = await supabase
-    .from('content_flags')
+    .from(TABLES.CONTENT_FLAGS)
     .select('*, profiles:reporter_id(name), profiles:target_user_id(name)')
     .eq('status', status)
     .order('created_at', { ascending: false });
@@ -41,7 +42,7 @@ export async function getFlaggedContent(status = 'pending') {
 
 export async function reviewFlag(flagId: string, reviewerId: string, status: string, notes: string) {
   const { error } = await supabase
-    .from('content_flags')
+    .from(TABLES.CONTENT_FLAGS)
     .update({ status, reviewed_by: reviewerId, review_notes: notes })
     .eq('id', flagId);
   if (error) throw error;

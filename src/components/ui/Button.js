@@ -25,7 +25,7 @@ export function Button({ title, onPress, variant = 'primary', icon, iconPosition
     ghost: { container: styles.ghost, text: styles.ghostText, iconColor: COLORS.textDescription },
     back: { container: styles.back, text: styles.backText, iconColor: COLORS.textTitle },
     danger: { container: styles.danger, text: styles.dangerText, iconColor: COLORS.textTitle },
-    google: { container: styles.google, text: styles.googleText, iconColor: '#000000' },
+    google: { container: styles.google, text: styles.googleText, iconColor: COLORS.textTitle },
     apple: { container: styles.apple, text: styles.appleText, iconColor: COLORS.textTitle },
   };
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   danger: { backgroundColor: COLORS.error, ...SHADOWS.md },
   dangerText: { color: COLORS.textTitle },
   google: { backgroundColor: COLORS.textTitle, borderWidth: 1, borderColor: COLORS.borderLight, ...SHADOWS.sm },
-  googleText: { color: '#000000' },
-  apple: { backgroundColor: '#000000', ...SHADOWS.sm },
+  googleText: { color: COLORS.textTitle },
+  apple: { backgroundColor: COLORS.textTitle, ...SHADOWS.sm },
   appleText: { color: COLORS.textTitle },
 });

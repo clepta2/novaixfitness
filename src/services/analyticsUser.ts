@@ -2,48 +2,55 @@
 // Analytics por usuario: treino, nutricao, progresso, engajamento
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
+import { createServiceGuard } from '../utils/serviceGuard';
 import { getPeriodStart, calculateStreak, sumField } from './analyticsHelpers';
 
+const guard = createServiceGuard({ serviceName: 'analyticsUser' });
+
 export async function getWorkoutAnalytics(userId: string, period = 'month') {
-  const startDate = getPeriodStart(period);
-  const { data, error } = await supabase
-    .from('user_workouts')
-    .select('completed_at, duration, workout_id')
-    .eq('user_id', userId)
-    .eq('completed', true)
-    .gte('completed_at', startDate)
-    .order('completed_at', { ascending: true });
+  const result = await guard.guard(async () => {
+    const startDate = getPeriodStart(period);
+    const { data, error } = await supabase
+      .from(TABLES.USER_WORKOUTS)
+      .select('completed_at, duration, workout_id')
+      .eq('user_id', userId)
+      .eq('completed', true)
+      .gte('completed_at', startDate)
+      .order('completed_at', { ascending: true });
 
-  if (error) throw error;
-  const workouts = data || [];
-  const totalWorkouts = workouts.length;
-  const totalMinutes = sumField(workouts, 'duration');
-  const byDay: Record<string, number> = {};
-  for (const w of workouts) {
-    const day = new Date(w.completed_at).toISOString().split('T')[0];
-    byDay[day] = (byDay[day] || 0) + 1;
-  }
+    if (error) throw error;
+    const workouts = data || [];
+    const totalWorkouts = workouts.length;
+    const totalMinutes = sumField(workouts, 'duration');
+    const byDay: Record<string, number> = {};
+    for (const w of workouts) {
+      const day = new Date(w.completed_at).toISOString().split('T')[0];
+      byDay[day] = (byDay[day] || 0) + 1;
+    }
 
-  return {
-    totalWorkouts,
-    totalMinutes,
-    avgDuration: totalWorkouts > 0 ? Math.round(totalMinutes / totalWorkouts) : 0,
-    daysActive: Object.keys(byDay).length,
-    streak: calculateStreak(Object.keys(byDay)),
-    byDay,
-  };
+    return {
+      totalWorkouts,
+      totalMinutes,
+      avgDuration: totalWorkouts > 0 ? Math.round(totalMinutes / totalWorkouts) : 0,
+      daysActive: Object.keys(byDay).length,
+      streak: calculateStreak(Object.keys(byDay)),
+      byDay,
+    };
+  });
+  return result.ok ? result.data : { totalWorkouts: 0, totalMinutes: 0, avgDuration: 0, daysActive: 0, streak: 0, byDay: {} };
 }
 
 export async function getNutritionAnalytics(userId: string, period = 'month') {
   const startDate = getPeriodStart(period);
   const { data: meals, error: mealsErr } = await supabase
-    .from('meal_logs')
+    .from(TABLES.MEAL_LOGS)
     .select('logged_at, calories, protein, carbs, fat')
     .eq('user_id', userId)
     .gte('logged_at', startDate);
 
   const { data: water, error: waterErr } = await supabase
-    .from('water_logs')
+    .from(TABLES.WATER_LOGS)
     .select('amount_ml, logged_at')
     .eq('user_id', userId)
     .gte('logged_at', startDate);
@@ -69,13 +76,13 @@ export async function getNutritionAnalytics(userId: string, period = 'month') {
 
 export async function getProgressAnalytics(userId: string) {
   const { data: weight, error: wErr } = await supabase
-    .from('weight_logs')
+    .from(TABLES.WEIGHT_LOGS)
     .select('weight, recorded_at')
     .eq('user_id', userId)
     .order('recorded_at', { ascending: true });
 
   const { data: workouts, error: woErr } = await supabase
-    .from('user_workouts')
+    .from(TABLES.USER_WORKOUTS)
     .select('completed_at')
     .eq('user_id', userId)
     .eq('completed', true)
@@ -102,25 +109,28 @@ export async function getProgressAnalytics(userId: string) {
 }
 
 export async function getEngagementMetrics(userId: string) {
-  const since = new Date(Date.now() - 30 * 86400000).toISOString();
-  const { data: events, error } = await supabase
-    .from('analytics_events')
-    .select('event_name, timestamp, properties')
-    .eq('user_id', userId)
-    .gte('timestamp', since);
+  const result = await guard.guard(async () => {
+    const since = new Date(Date.now() - 30 * 86400000).toISOString();
+    const { data: events, error } = await supabase
+      .from(TABLES.ANALYTICS_EVENTS)
+      .select('event_name, timestamp, properties')
+      .eq('user_id', userId)
+      .gte('timestamp', since);
 
-  if (error) throw error;
-  const list = events || [];
-  const daysActive = new Set(list.map(e => new Date(e.timestamp).toDateString())).size;
+    if (error) throw error;
+    const list = events || [];
+    const daysActive = new Set(list.map(e => new Date(e.timestamp).toDateString())).size;
 
-  return {
-    totalEvents: list.length,
-    screenViews: list.filter(e => e.event_name === 'screen_viewed').length,
-    featuresUsed: new Set(list.filter(e => e.event_name === 'feature_used').map(e => e.properties?.feature)).size,
-    daysActive,
-    engagementRate: (daysActive / 30) * 100,
-    avgEventsPerDay: daysActive > 0 ? Math.round(list.length / daysActive) : 0,
-  };
+    return {
+      totalEvents: list.length,
+      screenViews: list.filter(e => e.event_name === 'screen_viewed').length,
+      featuresUsed: new Set(list.filter(e => e.event_name === 'feature_used').map(e => e.properties?.feature)).size,
+      daysActive,
+      engagementRate: (daysActive / 30) * 100,
+      avgEventsPerDay: daysActive > 0 ? Math.round(list.length / daysActive) : 0,
+    };
+  });
+  return result.ok ? result.data : { totalEvents: 0, screenViews: 0, featuresUsed: 0, daysActive: 0, engagementRate: 0, avgEventsPerDay: 0 };
 }
 
 export async function generateAnalyticsReport(userId: string, period = 'month') {

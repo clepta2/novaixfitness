@@ -2,6 +2,7 @@
 // Servico de moderacao de conteudo - re-exportacao
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { moderateText, moderateImage, moderateUsername } from './moderationFilters';
 export { moderateText, moderateImage, moderateUsername };
 
@@ -29,7 +30,7 @@ export async function preModerateContent(
   });
   if (blockStatus?.blocked) return { allowed: false, blocked: true, message: `Sua conta esta bloqueada: ${blockStatus.reason}` };
 
-  const { data: trust } = await supabase.from('user_trust').select('trust_score').eq('user_id', userId).single();
+  const { data: trust } = await supabase.from(TABLES.USER_TRUST).select('trust_score').eq('user_id', userId).single();
   if (trust && trust.trust_score < 20) return { allowed: false, blocked: true, message: 'Sua conta esta restrita devido a violacoes repetidas.' };
 
   if (typeof content === 'string') return moderateText(content, userId);

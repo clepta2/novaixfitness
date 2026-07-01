@@ -9,7 +9,7 @@ import { EXERCISE_CATALOG } from '../../data/exerciseCatalog';
 
 const MUSCLES = [{ key: 'all', l: 'Todos' }, { key: 'chest', l: 'Peito' }, { key: 'back', l: 'Costas' }, { key: 'legs', l: 'Pernas' }, { key: 'shoulders', l: 'Ombros' }, { key: 'arms', l: 'Braços' }, { key: 'abs', l: 'Abdômen' }, { key: 'cardio', l: 'Cardio' }];
 const EQUIP = [{ key: 'all', l: 'Todos' }, { key: 'none', l: 'Corporal' }, { key: 'barbell', l: 'Barra' }, { key: 'dumbbells', l: 'Halteres' }, { key: 'machine', l: 'Máquina' }, { key: 'cable', l: 'Cabo' }];
-const MC = { chest: COLORS.success, back: COLORS.info, legs: COLORS.secondary, shoulders: COLORS.attention, arms: COLORS.primary, abs: '#00E676', cardio: COLORS.rose };
+const MC = { chest: COLORS.success, back: COLORS.info, legs: COLORS.secondary, shoulders: COLORS.attention, arms: COLORS.primary, abs: COLORS.success, cardio: COLORS.rose };
 
 function flatten(muscleFilter) {
   const list = [];

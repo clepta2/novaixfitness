@@ -2,6 +2,7 @@
 // Serviço de moderação: report e block
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 
 const guard = createServiceGuard({ serviceName: 'moderation' });
@@ -22,7 +23,7 @@ export async function reportContent(
   { reason, details, targetUser, targetPost }: ReportOptions,
 ): Promise<boolean> {
   const result = await guard.guard(async () => {
-    const { error } = await supabase.from('reports').insert({
+    const { error } = await supabase.from(TABLES.REPORTS).insert({
       reporter_id: reporterId,
       reported_user_id: targetUser?.id || null,
       post_id: targetPost?.id || null,
@@ -38,7 +39,7 @@ export async function reportContent(
 
 export async function blockUser(userId: string, blockedId: string): Promise<boolean> {
   const result = await guard.guard(async () => {
-    const { error } = await supabase.from('blocked_users').upsert({
+    const { error } = await supabase.from(TABLES.BLOCKED_USERS).upsert({
       user_id: userId,
       blocked_id: blockedId,
     }, { onConflict: 'user_id,blocked_id' });
@@ -52,7 +53,7 @@ export async function blockUser(userId: string, blockedId: string): Promise<bool
 export async function unblockUser(userId: string, blockedId: string): Promise<boolean> {
   const result = await guard.guard(async () => {
     const { error } = await supabase
-      .from('blocked_users')
+      .from(TABLES.BLOCKED_USERS)
       .delete()
       .eq('user_id', userId)
       .eq('blocked_id', blockedId);
@@ -65,7 +66,7 @@ export async function unblockUser(userId: string, blockedId: string): Promise<bo
 
 export async function getBlockedUsers(userId: string): Promise<string[]> {
   const { data } = await supabase
-    .from('blocked_users')
+    .from(TABLES.BLOCKED_USERS)
     .select('blocked_id')
     .eq('user_id', userId);
 
@@ -74,7 +75,7 @@ export async function getBlockedUsers(userId: string): Promise<string[]> {
 
 export async function isBlockedBy(userId: string, targetId: string): Promise<boolean> {
   const { data } = await supabase
-    .from('blocked_users')
+    .from(TABLES.BLOCKED_USERS)
     .select('id')
     .eq('user_id', targetId)
     .eq('blocked_id', userId)

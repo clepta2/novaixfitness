@@ -90,7 +90,7 @@ export default function ActiveDuelCard({ duel }: ActiveDuelCardProps) {
             onPress={() => handleSupport('challenger')}
             disabled={supportedSide !== null}
           >
-            <Ionicons name="heart" size={14} color={supportedSide === 'challenger' ? '#FF2D55' : 'white'} />
+            <Ionicons name="heart" size={14} color={supportedSide === 'challenger' ? COLORS.error : 'white'} />
             <Text style={styles.supportBtnText}>Apoiar ({challengerVotes})</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -101,7 +101,7 @@ export default function ActiveDuelCard({ duel }: ActiveDuelCardProps) {
             onPress={() => handleSupport('challenged')}
             disabled={supportedSide !== null}
           >
-            <Ionicons name="heart" size={14} color={supportedSide === 'challenged' ? '#FF2D55' : 'white'} />
+            <Ionicons name="heart" size={14} color={supportedSide === 'challenged' ? COLORS.error : 'white'} />
             <Text style={styles.supportBtnText}>Apoiar ({challengedVotes})</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
   progressRight: { height: '100%', backgroundColor: COLORS.info },
   actionsContainer: { flexDirection: 'row', justifyContent: 'space-between', gap: SPACING.md, marginTop: SPACING.xs },
   supportBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: COLORS.surfaceElevated, paddingVertical: SPACING.sm, paddingHorizontal: SPACING.md, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border },
-  supportBtnActive: { borderColor: '#FF2D55', backgroundColor: 'rgba(255, 45, 85, 0.1)' },
+  supportBtnActive: { borderColor: COLORS.error, backgroundColor: 'rgba(255, 45, 85, 0.1)' },
   supportBtnText: { fontFamily: 'Inter_600SemiBold', fontSize: 11, color: COLORS.textTitle },
 });

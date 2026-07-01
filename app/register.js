@@ -16,6 +16,9 @@ import { ALLOWED_DOMAINS } from '../src/data/allowedDomains';
 import { validateCPF, formatCPF } from '../src/helpers/cpf';
 import { layout, typography } from '../src/styles';
 import { styles } from '../src/styles/registerStyles';
+import { canRegister } from '../src/services/security/authProtection';
+import { validatePasswordStrength } from '../src/services/security/authProtection';
+import { useScreenLimits } from '../src/hooks/useScreenLimits';
 
 function formatPhone(v) {
   const c = v.replace(/\D/g, '').slice(0, 11);
@@ -49,6 +52,7 @@ export default function RegisterScreen() {
   const [cpfTaken, setCpfTaken] = useState(false);
   const [emailChecking, setEmailChecking] = useState(false);
   const [cpfChecking, setCpfChecking] = useState(false);
+  const { checkLimit } = useScreenLimits('register');
 
   const isNameValid = name.trim().length > 0 && /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]{2,}(\s+[a-zA-ZÀ-ÖØ-öø-ÿ\s]{2,})+$/.test(name.trim());
   const isEmailFormatValid = email.trim().length > 0 && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.trim());
@@ -105,6 +109,22 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (!isNameValid || !isEmailValid || !isCpfValid || !isPhoneValid || password.length < 8 || password !== confirm) return showAlert('Erro', 'Corrija os erros no formulário.');
     if (accountBlocked) return showAlert('Erro', 'E-mail ou CPF já cadastrado.');
+
+    const regCheck = canRegister(email.trim());
+    if (!regCheck.allowed) {
+      return showAlert('Aguarde', regCheck.reason || 'Muitas tentativas de registro');
+    }
+
+    const screenCheck = checkLimit('submit');
+    if (!screenCheck.allowed) {
+      return showAlert('Aguarde', 'Limite de registros atingido. Aguarde.');
+    }
+
+    const pwdCheck = validatePasswordStrength(password);
+    if (!pwdCheck.valid) {
+      return showAlert('Senha fraca', pwdCheck.issues.join('\n'));
+    }
+
     setLoading(true);
     try {
       const res = await signUpWithEmail(email.trim(), password, { name, cpf: cpf.replace(/\D/g, ''), phone: phone.replace(/\D/g, '') });

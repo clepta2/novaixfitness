@@ -2,6 +2,7 @@
 // Gerenciamento de conversas
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 import type { Conversation, ChatMessage, ConversationMember } from '../types';
 
@@ -29,14 +30,14 @@ export interface ConversationResult extends Conversation {
 
 export async function getOrCreateDirectConversation(userId1: string, userId2: string): Promise<string> {
   const { data: members1 } = await supabase
-    .from('conversation_members')
+    .from(TABLES.CONVERSATION_MEMBERS)
     .select('conversation_id')
     .eq('user_id', userId1);
 
   const convIds = (members1 || []).map(m => m.conversation_id);
   if (convIds.length > 0) {
     const { data: existingMember } = await supabase
-      .from('conversation_members')
+      .from(TABLES.CONVERSATION_MEMBERS)
       .select('conversation_id, conversations!inner(type)')
       .in('conversation_id', convIds)
       .eq('user_id', userId2)
@@ -46,7 +47,7 @@ export async function getOrCreateDirectConversation(userId1: string, userId2: st
     if (existingMember) return existingMember.conversation_id;
   }
 
-  const { data: conv, error } = await supabase.from('conversations')
+  const { data: conv, error } = await supabase.from(TABLES.CONVERSATIONS)
     .insert({ type: 'direct' }).select().single();
   if (error) throw error;
 
@@ -58,7 +59,7 @@ export async function getOrCreateDirectConversation(userId1: string, userId2: st
 }
 
 export async function createGroupConversation(name: string, userId: string, memberIds: string[]): Promise<string> {
-  const { data: conv, error } = await supabase.from('conversations')
+  const { data: conv, error } = await supabase.from(TABLES.CONVERSATIONS)
     .insert({ type: 'group', name }).select().single();
   if (error) throw error;
 
@@ -72,7 +73,7 @@ export async function createGroupConversation(name: string, userId: string, memb
 
 export async function getUserConversations(userId: string): Promise<ConversationResult[]> {
   const { data: memberships } = await supabase
-    .from('conversation_members')
+    .from(TABLES.CONVERSATION_MEMBERS)
     .select('conversation_id, last_read_at')
     .eq('user_id', userId);
 
@@ -80,19 +81,19 @@ export async function getUserConversations(userId: string): Promise<Conversation
   const convIds = memberships.map(m => m.conversation_id);
 
   const { data: conversations } = await supabase
-    .from('conversations')
+    .from(TABLES.CONVERSATIONS)
     .select('*')
     .in('id', convIds)
     .order('updated_at', { ascending: false });
 
   const results = await Promise.all((conversations || []).map(async (conv) => {
     const { data: members } = await supabase
-      .from('conversation_members')
+      .from(TABLES.CONVERSATION_MEMBERS)
       .select('conversation_id, user_id, profiles:user_id(name, avatar_url)')
       .eq('conversation_id', conv.id);
 
     const { data: lastMsg } = await supabase
-      .from('messages')
+      .from(TABLES.MESSAGES)
       .select('id, conversation_id, user_id, content, type, reply_to, edited, deleted, created_at, profiles:user_id(name, avatar_url)')
       .eq('conversation_id', conv.id)
       .order('created_at', { ascending: false })
@@ -101,7 +102,7 @@ export async function getUserConversations(userId: string): Promise<Conversation
 
     const membership = memberships.find(m => m.conversation_id === conv.id);
     const { count: unread } = await supabase
-      .from('messages')
+      .from(TABLES.MESSAGES)
       .select('id', { count: 'exact', head: true })
       .eq('conversation_id', conv.id)
       .gt('created_at', membership?.last_read_at || '1970-01-01')
@@ -140,8 +141,8 @@ export function subscribeToConversation(conversationId: string, callbacks: Conve
   const channel = supabase.channel(`chat-${conversationId}`);
   const anyChannel = channel as any;
   anyChannel
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` }, callbacks.onNewMessage)
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` }, callbacks.onMessageUpdate)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: TABLES.MESSAGES, filter: `conversation_id=eq.${conversationId}` }, callbacks.onNewMessage)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: TABLES.MESSAGES, filter: `conversation_id=eq.${conversationId}` }, callbacks.onMessageUpdate)
     .on('presence', { event: 'sync' }, callbacks.onPresenceSync)
     .on('presence', { event: 'join' }, callbacks.onPresenceJoin)
     .on('presence', { event: 'leave' }, callbacks.onPresenceLeave)

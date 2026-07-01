@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { REST, COMPLETION } from '../../data/workoutTexts';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { formatTimeShort, CIRCLE_CONSTANTS } from '../../helpers/timer';
 
@@ -67,7 +68,7 @@ function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, 
           <View style={styles.timerOverlay}>
             <View style={[styles.phaseBadge, { backgroundColor: timerColor + '20' }]}>
               <Ionicons name="moon" size={12} color={timerColor} />
-              <Text style={[styles.phaseText, { color: timerColor }]}>DESCANSO</Text>
+              <Text style={[styles.phaseText, { color: timerColor }]}>{REST.phaseLabel}</Text>
             </View>
             <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
               <Text style={[styles.timer, { color: timerColor }]}>{formatTimeShort(timeRemaining)}</Text>
@@ -81,7 +82,7 @@ function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, 
             <>
               <View style={styles.nextHeader}>
                 <Ionicons name="arrow-forward-circle" size={20} color={COLORS.primary} />
-                <Text style={styles.nextLabel}>PRÓXIMO EXERCÍCIO</Text>
+                <Text style={styles.nextLabel}>{REST.nextExerciseLabel}</Text>
               </View>
               <Text style={styles.nextName}>{nextExercise.name}</Text>
               <View style={styles.nextMeta}>
@@ -109,14 +110,14 @@ function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, 
                   <View style={[styles.progressFill, { width: `${((nextIndex + 1) / totalExercises) * 100}%` }]} />
                 </View>
               )}
-              <Text style={styles.progressText}>{nextIndex + 1}/{totalExercises} exercícios</Text>
+              <Text style={styles.progressText}>{nextIndex + 1}/{totalExercises} {COMPLETION.exercisesUnit}</Text>
             </>
           )}
         </Animated.View>
 
         <TouchableOpacity style={styles.skipBtn} onPress={onSkip} activeOpacity={0.8}>
           <Ionicons name="play-skip-forward" size={20} color={COLORS.background} />
-          <Text style={styles.skipText}>PULAR DESCANSO</Text>
+          <Text style={styles.skipText}>{REST.skipRest}</Text>
         </TouchableOpacity>
       </Animated.View>
     </Animated.View>

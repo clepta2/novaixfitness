@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { APP_CONFIG } from '../config/app';
 import {
   buildWorkoutPrompt, buildNutritionPrompt, buildAnalysisPrompt,
@@ -80,12 +81,12 @@ async function callGemini(prompt: string, forceRegenerate: boolean) {
 }
 
 async function getUserProfile(userId: string) {
-  const { data } = await supabase.from('profiles').select('*, onboarding_v2 (*)').eq('id', userId).single();
+  const { data } = await supabase.from(TABLES.PROFILES).select('*, onboarding_v2 (*)').eq('id', userId).single();
   return data;
 }
 
 async function getRecentWorkouts(userId: string, limit = 10) {
-  const { data } = await supabase.from('user_workouts').select('*, workouts (name, category, level, exercises)')
+  const { data } = await supabase.from(TABLES.USER_WORKOUTS).select('*, workouts (name, category, level, exercises)')
     .eq('user_id', userId).eq('completed', true).order('completed_at', { ascending: false }).limit(limit);
   return data || [];
 }
@@ -96,12 +97,12 @@ async function getUserStats(userId: string) {
 }
 
 async function getMealHistory(userId: string) {
-  const { data } = await supabase.from('meal_logs').select('*').eq('user_id', userId).order('logged_at', { ascending: false }).limit(14);
+  const { data } = await supabase.from(TABLES.MEAL_LOGS).select('*').eq('user_id', userId).order('logged_at', { ascending: false }).limit(14);
   return data || [];
 }
 
 async function getWeightHistory(userId: string) {
-  const { data } = await supabase.from('weight_logs').select('weight, recorded_at')
+  const { data } = await supabase.from(TABLES.WEIGHT_LOGS).select('weight, recorded_at')
     .eq('user_id', userId).order('recorded_at', { ascending: true }).limit(30);
   return data || [];
 }

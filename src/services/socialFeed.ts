@@ -2,6 +2,7 @@
 // Feed, posts e comentarios
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 import { trackEvent, EVENT_TYPES } from './eventTracker';
 import type { Post as PostType, PostComment } from '../types';
@@ -16,7 +17,7 @@ export async function getFeed(userId: string, page: number = 0, limit: number = 
   const result = await guard.guard(async () => {
     const offset = page * limit;
     const { data, error } = await supabase
-      .from('posts')
+      .from(TABLES.POSTS)
       .select(`*, profiles:user_id (name, avatar_url, level), post_likes!left (user_id), post_comments (id)`)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
@@ -34,7 +35,7 @@ export async function getFeed(userId: string, page: number = 0, limit: number = 
 export async function createPost(userId: string, content: string, imageUrl: string | null = null, workoutId: string | null = null): Promise<Post | null> {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
-      .from('posts')
+      .from(TABLES.POSTS)
       .insert({ user_id: userId, content, image_url: imageUrl, workout_id: workoutId })
       .select('*, profiles:user_id (name, avatar_url, level)')
       .single();
@@ -47,21 +48,21 @@ export async function createPost(userId: string, content: string, imageUrl: stri
 
 export async function deletePost(postId: string, userId: string): Promise<void> {
   await guard.guard(async () => {
-    const { error } = await supabase.from('posts').delete().eq('id', postId).eq('user_id', userId);
+    const { error } = await supabase.from(TABLES.POSTS).delete().eq('id', postId).eq('user_id', userId);
     if (error) throw error;
   });
 }
 
 export async function toggleLike(postId: string, userId: string): Promise<boolean> {
   const result = await guard.guard(async () => {
-    const { data: existing } = await supabase.from('post_likes')
+    const { data: existing } = await supabase.from(TABLES.POST_LIKES)
       .select('id').eq('post_id', postId).eq('user_id', userId).single();
     if (existing) {
-      await supabase.from('post_likes').delete().eq('id', existing.id);
+      await supabase.from(TABLES.POST_LIKES).delete().eq('id', existing.id);
       await supabase.rpc('decrement_likes', { post_id: postId });
       return false;
     } else {
-      await supabase.from('post_likes').insert({ post_id: postId, user_id: userId });
+      await supabase.from(TABLES.POST_LIKES).insert({ post_id: postId, user_id: userId });
       await supabase.rpc('increment_likes', { post_id: postId });
       return true;
     }
@@ -73,7 +74,7 @@ export async function getComments(postId: string, page: number = 0, limit: numbe
   const result = await guard.guard(async () => {
     const offset = page * limit;
     const { data, error } = await supabase
-      .from('post_comments')
+      .from(TABLES.POST_COMMENTS)
       .select('*, profiles:user_id (name, avatar_url)')
       .eq('post_id', postId)
       .order('created_at', { ascending: true })
@@ -87,7 +88,7 @@ export async function getComments(postId: string, page: number = 0, limit: numbe
 export async function addComment(postId: string, userId: string, content: string): Promise<Comment | null> {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
-      .from('post_comments')
+      .from(TABLES.POST_COMMENTS)
       .insert({ post_id: postId, user_id: userId, content })
       .select('*, profiles:user_id (name, avatar_url)')
       .single();
@@ -100,7 +101,7 @@ export async function addComment(postId: string, userId: string, content: string
 
 export async function deleteComment(commentId: string, userId: string): Promise<void> {
   await guard.guard(async () => {
-    const { error } = await supabase.from('post_comments').delete().eq('id', commentId).eq('user_id', userId);
+    const { error } = await supabase.from(TABLES.POST_COMMENTS).delete().eq('id', commentId).eq('user_id', userId);
     if (error) throw error;
   });
 }

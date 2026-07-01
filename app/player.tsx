@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../src/constants/spacing';
 import { useI18n } from '../src/i18n';
+import { EXERCISE, COMPLETION } from '../src/data/workoutTexts';
 import { 
   WorkoutTimer, ExerciseProgress, RestOverlay, WorkoutControls, 
   RatingModal, TutorialOverlay, XPFloating, ErrorBoundary, ExerciseVideo,
@@ -62,10 +63,10 @@ export default function PlayerScreen() {
               <ProgressRing progress={0} size={64} strokeWidth={6} label="0%" />
               <View style={styles.summaryInfo}>
                 <Text style={typography.h3}>{workout?.exercises?.length || 0}</Text>
-                <Text style={typography.caption}>Exercicios</Text>
+                <Text style={typography.caption}>{EXERCISE.label}</Text>
                 <View style={styles.summaryDivider} />
                 <Text style={typography.h3}>{workout?.duration || 30}</Text>
-                <Text style={typography.caption}>Minutos</Text>
+                <Text style={typography.caption}>{COMPLETION.minutesUnit}</Text>
               </View>
             </View>
           </GlassCard>

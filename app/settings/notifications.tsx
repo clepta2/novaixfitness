@@ -9,6 +9,7 @@ import { SPACING } from '../../src/constants/spacing';
 import { useAuth } from '../../src/context/AuthContext';
 import { getNotificationPrefs, setNotificationPref, getPrefsForSettings } from '../../src/services/notificationPrefs';
 import { ErrorBoundary } from '../../src/components';
+import { NOTIFICATIONS } from '../../src/data/settingsTexts';
 
 export default function NotificationsSettingsScreen() {
   const { user } = useAuth();
@@ -31,8 +32,8 @@ export default function NotificationsSettingsScreen() {
   return (
     <ErrorBoundary screenName="NotificationsSettings">
       <ScrollView style={styles.screen} contentContainerStyle={styles.scroll}>
-        <Text style={styles.title}>NOTIFICAÇÕES</Text>
-        <Text style={styles.subtitle}>Escolha quais notificações deseja receber</Text>
+        <Text style={styles.title}>{NOTIFICATIONS.title}</Text>
+        <Text style={styles.subtitle}>{NOTIFICATIONS.subtitle}</Text>
 
         {groups.map((group) => (
           <View key={group.title}>

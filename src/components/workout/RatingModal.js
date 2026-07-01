@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { RATING } from '../../data/workoutTexts';
 import { RATING_CONFIG, QUICK_TAGS } from '../../data/ratingModal';
 
 function StarRating({ rating, onSelect }) {
@@ -61,8 +62,8 @@ export default function RatingModal({ visible, onClose, onSubmit }) {
           <View style={styles.handle} />
 
           <View style={styles.header}>
-            <Text style={styles.title}>AVALIE ESTE TREINO</Text>
-            <Text style={styles.subtitle}>Sua opinião ajuda outros atletas</Text>
+            <Text style={styles.title}>{RATING.title}</Text>
+            <Text style={styles.subtitle}>{RATING.subtitle}</Text>
           </View>
 
           <StarRating rating={rating} onSelect={setRating} />
@@ -75,7 +76,7 @@ export default function RatingModal({ visible, onClose, onSubmit }) {
           )}
 
           <View style={styles.tagsSection}>
-            <Text style={styles.tagsLabel}>COMO FOI?</Text>
+            <Text style={styles.tagsLabel}>{RATING.howWas}</Text>
             <View style={styles.tagsRow}>
               {QUICK_TAGS.map(tag => (
                 <TouchableOpacity
@@ -91,7 +92,7 @@ export default function RatingModal({ visible, onClose, onSubmit }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Comentário opcional..."
+            placeholder={RATING.optionalComment}
             placeholderTextColor={COLORS.textMuted}
             value={comment}
             onChangeText={setComment}
@@ -105,11 +106,11 @@ export default function RatingModal({ visible, onClose, onSubmit }) {
             disabled={rating === 0}
           >
             <Ionicons name="send" size={18} color={COLORS.background} />
-            <Text style={styles.submitText}>ENVIAR AVALIAÇÃO</Text>
+            <Text style={styles.submitText}>{RATING.submit}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>Pular por agora</Text>
+            <Text style={styles.cancelText}>{RATING.skipForNow}</Text>
           </TouchableOpacity>
         </Animated.View>
       </TouchableOpacity>

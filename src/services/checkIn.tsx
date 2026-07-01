@@ -2,6 +2,7 @@
 // Serviço de check-in diário
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import type { DailyCheckIn } from '../types';
 
 interface CheckInResult {
@@ -14,7 +15,7 @@ interface CheckInResult {
 export async function getTodayCheckIn(userId: string): Promise<DailyCheckIn | null> {
   const today = new Date().toISOString().split('T')[0];
   const { data } = await supabase
-    .from('daily_check_ins')
+    .from(TABLES.DAILY_CHECK_INS)
     .select('*')
     .eq('user_id', userId)
     .eq('check_in_date', today)
@@ -30,7 +31,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
   if (existing) return { alreadyCheckedIn: true, xp: existing.xp_awarded };
 
   const { data: lastCheckIn } = await supabase
-    .from('daily_check_ins')
+    .from(TABLES.DAILY_CHECK_INS)
     .select('check_in_date, streak_day')
     .eq('user_id', userId)
     .order('check_in_date', { ascending: false })
@@ -57,13 +58,13 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
   });
 
   const { data: profile } = await supabase
-    .from('profiles')
+    .from(TABLES.PROFILES)
     .select('xp')
     .eq('id', userId)
     .single();
 
   await supabase
-    .from('profiles')
+    .from(TABLES.PROFILES)
     .update({ xp: (profile?.xp || 0) + xp })
     .eq('id', userId);
 
@@ -72,7 +73,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
 
 export async function getCheckInStreak(userId: string): Promise<number> {
   const { data } = await supabase
-    .from('daily_check_ins')
+    .from(TABLES.DAILY_CHECK_INS)
     .select('check_in_date, streak_day')
     .eq('user_id', userId)
     .order('check_in_date', { ascending: false })

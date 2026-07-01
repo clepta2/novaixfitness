@@ -18,10 +18,11 @@ import { getActiveStories } from '../../src/services/stories';
 import { useAuth } from '../../src/context/AuthContext';
 import { useSecurity } from '../../src/hooks/useSecurity';
 import { useI18n } from '../../src/i18n';
+import { COMPOSER, SOCIAL_FEED } from '../../src/data/socialTexts';
 import { layout, typography } from '../../src/styles';
 import { useResponsive } from '../../src/hooks/useResponsive';
-import { MOCK_REELS } from '../../src/data/reels';
 import { MOCK_DUELS } from '../../src/data/duels';
+import { useReelsFeed } from '../../src/hooks/useReelsFeed';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -51,6 +52,7 @@ export default function FeedScreen() {
   const [activeReelIndex, setActiveReelIndex] = useState<number | null>(null);
   const [showReelsModal, setShowReelsModal] = useState(false);
   const { checkAndPerform, log, ACTIONS } = useSecurity();
+  const { reels: feedReels } = useReelsFeed();
 
   // Animacao do FAB
   const fabAnim = useMemo(() => new Animated.Value(0), []);
@@ -136,7 +138,7 @@ export default function FeedScreen() {
             <Avatar name={user?.name || 'User'} size="md" />
             <TouchableOpacity style={styles.composerInputMock} onPress={() => setShowCreatePost(true)}>
               <Text style={styles.composerInputText}>
-                No que você está pensando, {user?.name?.split(' ')[0] || 'Atleta'}?
+                {COMPOSER.feedPlaceholder.replace('{name}', user?.name?.split(' ')[0] || 'Atleta')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -144,15 +146,15 @@ export default function FeedScreen() {
           <View style={styles.composerActions}>
             <TouchableOpacity style={styles.composerActionBtn} onPress={() => { setShowCreatePost(true); }}>
               <Ionicons name="image" size={18} color="#45BD62" />
-              <Text style={styles.composerActionLabel}>Foto</Text>
+              <Text style={styles.composerActionLabel}>{COMPOSER.photoLabel}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.composerActionBtn} onPress={() => { setShowCreatePost(true); }}>
               <Ionicons name="videocam" size={18} color="#F02849" />
-              <Text style={styles.composerActionLabel}>Vídeo</Text>
+              <Text style={styles.composerActionLabel}>{COMPOSER.videoLabel}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.composerActionBtn} onPress={() => { setShowCheckIn(true); }}>
               <Ionicons name="flame" size={18} color="#F7B928" />
-              <Text style={styles.composerActionLabel}>Check-in</Text>
+              <Text style={styles.composerActionLabel}>{COMPOSER.checkInLabel}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -168,9 +170,9 @@ export default function FeedScreen() {
 
         {/* Reels Bar */}
         <View style={styles.reelsSection}>
-          <Text style={styles.reelsSectionTitle}>Reels / Vídeos Curtos</Text>
+          <Text style={styles.reelsSectionTitle}>{SOCIAL_FEED.reelsSectionTitle}</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScroll}>
-            {MOCK_REELS.map((reel, index) => (
+            {feedReels.map((reel, index) => (
               <TouchableOpacity key={reel.id} style={styles.reelCard} onPress={() => { setActiveReelIndex(index); setShowReelsModal(true); }}>
                 <Image source={{ uri: reel.thumbnail }} style={styles.reelThumbnail} />
                 <View style={styles.reelOverlay}>
@@ -185,7 +187,7 @@ export default function FeedScreen() {
 
         {/* Duelos de Treino */}
         <View style={styles.duelsSection}>
-          <Text style={styles.duelsSectionTitle}>Duelos de Treino Ativos</Text>
+          <Text style={styles.duelsSectionTitle}>{SOCIAL_FEED.duelsSectionTitle}</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.duelsScroll}>
             {MOCK_DUELS.map((duel) => (
               <View key={duel.id} style={{ width: 285 }}>
@@ -259,7 +261,7 @@ export default function FeedScreen() {
         <Modal visible={showReelsModal} animationType="slide" transparent>
           <View style={styles.reelsModalContainer}>
             <FlatList
-              data={MOCK_REELS}
+              data={feedReels}
               keyExtractor={(item) => item.id}
               initialScrollIndex={activeReelIndex}
               getItemLayout={(data, index) => ({ length: SCREEN_HEIGHT, offset: SCREEN_HEIGHT * index, index })}

@@ -45,7 +45,7 @@ describe('Profile Components', () => {
     it('renders progress info', () => {
       const { getByText } = render(<GamificationBar xp={200} />);
       expect(getByText('200 / 500 XP')).toBeTruthy();
-      expect(getByText('Próximo: Aprendiz')).toBeTruthy();
+      expect(getByText(/Proximo: Aprendiz/)).toBeTruthy();
     });
 
     it('renders with 0 xp', () => {
@@ -64,7 +64,7 @@ describe('Profile Components', () => {
         xpNeeded: 1000,
       });
       const { getByText } = render(<GamificationBar xp={5000} />);
-      expect(getByText('Nível máximo atingido!')).toBeTruthy();
+      expect(getByText('Nivel maximo atingido!')).toBeTruthy();
     });
   });
 });

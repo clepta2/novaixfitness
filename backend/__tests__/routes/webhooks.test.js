@@ -19,6 +19,12 @@ jest.mock('../../src/services/subscriptionHandlers', () => ({
   handleSubscriptionInactivated: jest.fn(),
   handleSubscriptionReactivated: jest.fn(),
 }));
+jest.mock('../../src/services/webhookIdempotency', () => ({
+  isEventProcessed: jest.fn().mockResolvedValue(false),
+  markEventProcessing: jest.fn().mockResolvedValue(),
+  markEventCompleted: jest.fn().mockResolvedValue(),
+  markEventFailed: jest.fn().mockResolvedValue(),
+}));
 
 const asaas = require('../../src/services/asaas');
 const paymentHandlers = require('../../src/services/paymentHandlers');

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   tabText: { fontFamily: 'Inter_500Medium', fontSize: 13, color: COLORS.textMuted },
   tabTextActive: { fontFamily: 'Montserrat_700Bold', color: COLORS.primary },
   tabBadge: { backgroundColor: COLORS.error, borderRadius: 10, minWidth: 18, height: 18, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 4 },
-  tabBadgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 9, color: '#FFF' },
+  tabBadgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 9, color: COLORS.background },
   indicator: { position: 'absolute', bottom: 0, height: 3, backgroundColor: COLORS.primary, borderRadius: 2 },
   content: { flex: 1 },
   contentContainer: { padding: SPACING.lg },

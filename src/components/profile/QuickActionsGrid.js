@@ -8,16 +8,17 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
+import { SECTION_TITLES, QUICK_ACTIONS } from '../../data/profileTexts';
 
-const ACTIONS = [
-  { icon: 'stats-chart', color: COLORS.info, label: 'Analytics', route: '/analytics', bg: COLORS.info + '22' },
-  { icon: 'grid', color: COLORS.slateBlue, label: 'Dashboard', route: '/dashboard', bg: COLORS.slateBlue + '22' },
-  { icon: 'body', color: COLORS.secondary, label: 'Medidas', route: '/body-measures', bg: COLORS.secondary + '22' },
-  { icon: 'camera', color: COLORS.success, label: 'Progresso', route: '/progress-photos', bg: COLORS.success + '22' },
-  { icon: 'time', color: COLORS.attention, label: 'Histórico', route: '/(tabs)/perfil/history', bg: COLORS.attention + '22' },
-  { icon: 'download', color: COLORS.primary, label: 'Exportar', route: '/export-data', bg: COLORS.primary + '22' },
-  { icon: 'card', color: COLORS.error, label: 'Assinatura', route: '/subscription', bg: COLORS.error + '22' },
-];
+const ACTION_COLORS = {
+  '/analytics': COLORS.info,
+  '/dashboard': COLORS.slateBlue,
+  '/body-measures': COLORS.secondary,
+  '/progress-photos': COLORS.success,
+  '/(tabs)/perfil/history': COLORS.attention,
+  '/export-data': COLORS.primary,
+  '/subscription': COLORS.error,
+};
 
 function ActionBtn({ icon, color, bg, label, onPress }) {
   return (
@@ -34,10 +35,10 @@ function QuickActionsGrid() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>AÇÕES RÁPIDAS</Text>
+      <Text style={styles.title}>{SECTION_TITLES.quickActions}</Text>
       <View style={styles.grid}>
-        {ACTIONS.map((a) => (
-          <ActionBtn key={a.route} {...a} onPress={() => router.push(a.route)} />
+        {QUICK_ACTIONS.map((a) => (
+          <ActionBtn key={a.route} icon={a.icon} color={ACTION_COLORS[a.route]} bg={ACTION_COLORS[a.route] + '22'} label={a.label} onPress={() => router.push(a.route)} />
         ))}
       </View>
     </View>

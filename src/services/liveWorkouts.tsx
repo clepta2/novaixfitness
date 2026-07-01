@@ -2,6 +2,7 @@
 // Serviço de lives de treino
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import type { LiveWorkout, LiveParticipant, LiveMessage, LiveWorkoutState, LiveStatus } from '../types';
 
 type RealtimePayload = { new: Record<string, unknown> };
@@ -22,7 +23,7 @@ interface CreateLiveParams {
 
 export async function createLive(hostId: string, { title, description, workoutType, isPublic }: CreateLiveParams): Promise<LiveWorkout> {
   const { data, error } = await supabase
-    .from('live_workouts')
+    .from(TABLES.LIVE_WORKOUTS)
     .insert({
       host_id: hostId,
       title,
@@ -35,13 +36,13 @@ export async function createLive(hostId: string, { title, description, workoutTy
 
   if (error) throw error;
 
-  await supabase.from('live_participants').insert({
+  await supabase.from(TABLES.LIVE_PARTICIPANTS).insert({
     live_id: data.id,
     user_id: hostId,
     role: 'host',
   });
 
-  await supabase.from('live_workout_state').insert({
+  await supabase.from(TABLES.LIVE_WORKOUT_STATE).insert({
     live_id: data.id,
     timer_seconds: 0,
   });
@@ -51,7 +52,7 @@ export async function createLive(hostId: string, { title, description, workoutTy
 
 export async function startLive(liveId: string): Promise<void> {
   const { error } = await supabase
-    .from('live_workouts')
+    .from(TABLES.LIVE_WORKOUTS)
     .update({ status: 'live', started_at: new Date().toISOString() })
     .eq('id', liveId);
 
@@ -60,7 +61,7 @@ export async function startLive(liveId: string): Promise<void> {
 
 export async function endLive(liveId: string): Promise<void> {
   const { error } = await supabase
-    .from('live_workouts')
+    .from(TABLES.LIVE_WORKOUTS)
     .update({ status: 'ended', ended_at: new Date().toISOString() })
     .eq('id', liveId);
 
@@ -69,7 +70,7 @@ export async function endLive(liveId: string): Promise<void> {
 
 export async function joinLive(liveId: string, userId: string): Promise<LiveParticipant> {
   const { data: existing } = await supabase
-    .from('live_participants')
+    .from(TABLES.LIVE_PARTICIPANTS)
     .select('id')
     .eq('live_id', liveId)
     .eq('user_id', userId)
@@ -78,7 +79,7 @@ export async function joinLive(liveId: string, userId: string): Promise<LivePart
   if (existing) return existing as LiveParticipant;
 
   const { data, error } = await supabase
-    .from('live_participants')
+    .from(TABLES.LIVE_PARTICIPANTS)
     .insert({ live_id: liveId, user_id: userId, role: 'participant' })
     .select()
     .single();
@@ -96,7 +97,7 @@ export async function joinLive(liveId: string, userId: string): Promise<LivePart
 
 export async function leaveLive(liveId: string, userId: string): Promise<void> {
   await supabase
-    .from('live_participants')
+    .from(TABLES.LIVE_PARTICIPANTS)
     .update({ left_at: new Date().toISOString() })
     .eq('live_id', liveId)
     .eq('user_id', userId);
@@ -110,7 +111,7 @@ export async function leaveLive(liveId: string, userId: string): Promise<void> {
 
 export async function getActiveLives(): Promise<LiveWorkout[]> {
   const { data } = await supabase
-    .from('live_workouts')
+    .from(TABLES.LIVE_WORKOUTS)
     .select('*, profiles:host_id(name, avatar_url), live_participants(count)')
     .in('status', ['live', 'scheduled'])
     .order('created_at', { ascending: false });
@@ -120,7 +121,7 @@ export async function getActiveLives(): Promise<LiveWorkout[]> {
 
 export async function getLiveById(liveId: string): Promise<LiveWorkout | null> {
   const { data } = await supabase
-    .from('live_workouts')
+    .from(TABLES.LIVE_WORKOUTS)
     .select('*, profiles:host_id(name, avatar_url)')
     .eq('id', liveId)
     .single();
@@ -130,7 +131,7 @@ export async function getLiveById(liveId: string): Promise<LiveWorkout | null> {
 
 export async function getLiveParticipants(liveId: string): Promise<LiveParticipant[]> {
   const { data } = await supabase
-    .from('live_participants')
+    .from(TABLES.LIVE_PARTICIPANTS)
     .select('*, profiles:user_id(name, avatar_url)')
     .eq('live_id', liveId)
     .is('left_at', null)
@@ -141,7 +142,7 @@ export async function getLiveParticipants(liveId: string): Promise<LiveParticipa
 
 export async function sendMessage(liveId: string, userId: string, message: string, type: string = 'chat'): Promise<LiveMessage> {
   const { data, error } = await supabase
-    .from('live_messages')
+    .from(TABLES.LIVE_MESSAGES)
     .insert({ live_id: liveId, user_id: userId, message, type })
     .select('*, profiles:user_id(name, avatar_url)')
     .single();
@@ -152,7 +153,7 @@ export async function sendMessage(liveId: string, userId: string, message: strin
 
 export async function getLiveMessages(liveId: string, limit: number = 50): Promise<LiveMessage[]> {
   const { data } = await supabase
-    .from('live_messages')
+    .from(TABLES.LIVE_MESSAGES)
     .select('*, profiles:user_id(name, avatar_url)')
     .eq('live_id', liveId)
     .order('created_at', { ascending: true })
@@ -163,7 +164,7 @@ export async function getLiveMessages(liveId: string, limit: number = 50): Promi
 
 export async function updateWorkoutState(liveId: string, state: Partial<LiveWorkoutState>): Promise<void> {
   const { error } = await supabase
-    .from('live_workout_state')
+    .from(TABLES.LIVE_WORKOUT_STATE)
     .update({ ...state, updated_at: new Date().toISOString() })
     .eq('live_id', liveId);
 
@@ -172,7 +173,7 @@ export async function updateWorkoutState(liveId: string, state: Partial<LiveWork
 
 export async function getWorkoutState(liveId: string): Promise<LiveWorkoutState | null> {
   const { data } = await supabase
-    .from('live_workout_state')
+    .from(TABLES.LIVE_WORKOUT_STATE)
     .select('*')
     .eq('live_id', liveId)
     .single();
@@ -183,10 +184,10 @@ export async function getWorkoutState(liveId: string): Promise<LiveWorkoutState 
 export function subscribeToLive(liveId: string, callbacks: LiveCallbacks): () => void {
   const channel = supabase
     .channel(`live-${liveId}`)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'live_messages', filter: `live_id=eq.${liveId}` }, callbacks.onMessage)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'live_participants', filter: `live_id=eq.${liveId}` }, callbacks.onParticipant)
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'live_workout_state', filter: `live_id=eq.${liveId}` }, callbacks.onState)
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'live_workouts', filter: `id=eq.${liveId}` }, callbacks.onLiveUpdate)
+    .on('postgres_changes', { event: '*', schema: 'public', table: TABLES.LIVE_MESSAGES, filter: `live_id=eq.${liveId}` }, callbacks.onMessage)
+    .on('postgres_changes', { event: '*', schema: 'public', table: TABLES.LIVE_PARTICIPANTS, filter: `live_id=eq.${liveId}` }, callbacks.onParticipant)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: TABLES.LIVE_WORKOUT_STATE, filter: `live_id=eq.${liveId}` }, callbacks.onState)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: TABLES.LIVE_WORKOUTS, filter: `id=eq.${liveId}` }, callbacks.onLiveUpdate)
     .subscribe();
 
   return () => supabase.removeChannel(channel);

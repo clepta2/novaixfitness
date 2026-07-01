@@ -6,6 +6,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { LABELS } from '../../data/profileTexts';
 
 function AchievementsList({ achievements = [], totalAchievements = 25 }) {
   const unlockedIds = new Set(achievements.map(a => a.id));
@@ -17,7 +18,7 @@ function AchievementsList({ achievements = [], totalAchievements = 25 }) {
   return (
     <View>
       <View style={styles.counter}>
-        <Text style={styles.counterText}>{achievements.length}/{totalAchievements} desbloqueadas</Text>
+        <Text style={styles.counterText}>{achievements.length}/{totalAchievements} {LABELS.unlockedCount}</Text>
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

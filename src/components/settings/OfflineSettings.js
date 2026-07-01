@@ -7,6 +7,7 @@ import { getCacheInfo, clearAllCache, clearWorkoutCache } from '../../services/c
 import { getLastSync, getPendingActions } from '../../services/offline';
 import { forceSyncNow } from '../../services/autoSync';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
+import { OFFLINE } from '../../data/settingsTexts';
 
 function formatSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -15,9 +16,9 @@ function formatSize(bytes) {
 }
 
 function formatTime(timestamp) {
-  if (!timestamp) return 'Nunca';
+  if (!timestamp) return OFFLINE.never;
   const diff = Date.now() - timestamp;
-  if (diff < 60000) return 'Agora';
+  if (diff < 60000) return OFFLINE.justNow;
   if (diff < 3600000) return `${Math.floor(diff / 60000)} min`;
   if (diff < 86400000) return `${Math.floor(diff / 3600000)} h`;
   return `${Math.floor(diff / 86400000)} dias`;
@@ -45,32 +46,32 @@ export default function OfflineSettings() {
 
   const handleForceSync = async () => {
     if (!isOnline) {
-      Alert.alert('Offline', 'Sem conexão. Tente quando estiver online.');
+      Alert.alert(OFFLINE.offlineTitle, OFFLINE.offlineMessage);
       return;
     }
     setSyncing(true);
     try {
       const result = await forceSyncNow();
-      Alert.alert('Sync', `Sincronizado: ${result.synced}\nFalhou: ${result.failed}`);
+      Alert.alert(OFFLINE.syncTitle, OFFLINE.syncMessage.replace('{synced}', result.synced).replace('{failed}', result.failed));
       await loadInfo();
     } catch {
-      Alert.alert('Erro', 'Falha ao sincronizar.');
+      Alert.alert(OFFLINE.errorTitle, OFFLINE.syncError);
     } finally {
       setSyncing(false);
     }
   };
 
   const handleClearWorkouts = () => {
-    Alert.alert('Limpar cache de treinos', 'Remove treinos salvos offline.', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Limpar', style: 'destructive', onPress: async () => { await clearWorkoutCache(); loadInfo(); } },
+    Alert.alert(OFFLINE.clearWorkoutsTitle, OFFLINE.clearWorkoutsMessage, [
+      { text: OFFLINE.cancel, style: 'cancel' },
+      { text: OFFLINE.clear, style: 'destructive', onPress: async () => { await clearWorkoutCache(); loadInfo(); } },
     ]);
   };
 
   const handleClearAll = () => {
-    Alert.alert('Limpar todo o cache', 'Remove todos os dados offline.', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Limpar Tudo', style: 'destructive', onPress: async () => { await clearAllCache(); loadInfo(); } },
+    Alert.alert(OFFLINE.clearAllTitle, OFFLINE.clearAllMessage, [
+      { text: OFFLINE.cancel, style: 'cancel' },
+      { text: OFFLINE.clearAllButton, style: 'destructive', onPress: async () => { await clearAllCache(); loadInfo(); } },
     ]);
   };
 
@@ -78,7 +79,7 @@ export default function OfflineSettings() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="cloud-offline-outline" size={18} color={COLORS.primary} />
-        <Text style={styles.title}>DADOS OFFLINE</Text>
+        <Text style={styles.title}>{OFFLINE.title}</Text>
         <View style={[styles.statusDot, isOnline ? styles.online : styles.offline]} />
       </View>
 
@@ -86,17 +87,17 @@ export default function OfflineSettings() {
         <>
           <View style={styles.statsRow}>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>Cache</Text>
+              <Text style={styles.statLabel}>{OFFLINE.cache}</Text>
               <Text style={[styles.statValue, !info.withinLimit && styles.warning]}>
                 {formatSize(info.totalSize)}
               </Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>Último Sync</Text>
+              <Text style={styles.statLabel}>{OFFLINE.lastSync}</Text>
               <Text style={styles.statValue}>{formatTime(lastSync)}</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>Pendentes</Text>
+              <Text style={styles.statLabel}>{OFFLINE.pending}</Text>
               <Text style={[styles.statValue, pendingCount > 0 && styles.warning]}>{pendingCount}</Text>
             </View>
           </View>
@@ -119,15 +120,15 @@ export default function OfflineSettings() {
               disabled={!isOnline || syncing}
             >
               <Ionicons name="sync" size={16} color={COLORS.primary} />
-              <Text style={styles.btnTextSync}>{syncing ? 'Sincronizando...' : 'Sincronizar'}</Text>
+              <Text style={styles.btnTextSync}>{syncing ? OFFLINE.syncing : OFFLINE.sync}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={handleClearWorkouts}>
               <Ionicons name="fitness-outline" size={16} color={COLORS.attention} />
-              <Text style={styles.btnText}>Limpar Treinos</Text>
+              <Text style={styles.btnText}>{OFFLINE.clearWorkouts}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.btn, styles.btnDanger]} onPress={handleClearAll}>
               <Ionicons name="trash-outline" size={16} color={COLORS.error} />
-              <Text style={[styles.btnText, styles.btnDangerText]}>Limpar Tudo</Text>
+              <Text style={[styles.btnText, styles.btnDangerText]}>{OFFLINE.clearAll}</Text>
             </TouchableOpacity>
           </View>
         </>

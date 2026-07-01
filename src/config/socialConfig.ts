@@ -1,0 +1,35 @@
+// src/config/socialConfig.ts
+// Limites e configuracoes de social
+
+export const SOCIAL_LIMITS = {
+  // Posts
+  MAX_POST_LENGTH: 2000,
+  MAX_HASHTAGS_PER_POST: 10,
+  POST_IMAGE_QUALITY: 0.8,
+
+  // Comentarios
+  MAX_COMMENT_LENGTH: 500,
+  MAX_COMMENT_DEPTH: 3, // niveis de reply
+
+  // Stories
+  MAX_STORY_CAPTION: 200,
+  MAX_STORY_ITEMS: 15,
+
+  // Mensagens
+  MAX_MESSAGE_LENGTH: 1000,
+  MAX_ATTACHMENTS: 5,
+
+  // Busca
+  MIN_SEARCH_LENGTH: 2,
+  MAX_SEARCH_RESULTS: 50,
+} as const;
+
+export const SOCIAL_FEATURES = {
+  ENABLE_REACTIONS: true,
+  ENABLE_BOOKMARKS: true,
+  ENABLE_SHARING: true,
+  ENABLE_REPORTING: true,
+  ENABLE_BLOCKING: true,
+} as const;
+
+export type SocialLimits = typeof SOCIAL_LIMITS;

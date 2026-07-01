@@ -9,13 +9,9 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 import { getXPProgress } from '../../constants/gamification';
+import { LABELS, STAT_DEFS } from '../../data/profileTexts';
 
-const STAT_DEFS = [
-  { key: 'streak', icon: 'flame', color: COLORS.secondary, label: 'Streak', unit: 'd' },
-  { key: 'workouts', icon: 'barbell', color: COLORS.primary, label: 'Treinos', unit: '' },
-  { key: 'time', icon: 'time-outline', color: COLORS.info, label: 'Horas', unit: 'h' },
-  { key: 'favorites', icon: 'heart', color: COLORS.error, label: 'Favoritos', unit: '' },
-];
+const STAT_COLORS = { streak: COLORS.secondary, workouts: COLORS.primary, time: COLORS.info, favorites: COLORS.error };
 
 function StatChip({ icon, color, label, value, unit }) {
   return (
@@ -44,7 +40,7 @@ function ProfileHero({ name, email, memberSince, uri, onPressAvatar, onEditName,
         <TouchableOpacity onPress={onPressAvatar} activeOpacity={0.8}>
           <Avatar name={name} uri={uri} size="xl" />
           <View style={styles.editAvatar}>
-            <Ionicons name="camera" size={12} color="#000" />
+            <Ionicons name="camera" size={12} color={COLORS.textTitle} />
           </View>
         </TouchableOpacity>
 
@@ -56,7 +52,7 @@ function ProfileHero({ name, email, memberSince, uri, onPressAvatar, onEditName,
             </TouchableOpacity>
           </View>
           <Text style={styles.email} numberOfLines={1}>{email}</Text>
-          <Text style={styles.member}>Membro desde {memberSince}</Text>
+          <Text style={styles.member}>{LABELS.memberSince} {memberSince}</Text>
 
           {/* Level badge + XP bar */}
           <View style={styles.levelRow}>
@@ -75,9 +71,9 @@ function ProfileHero({ name, email, memberSince, uri, onPressAvatar, onEditName,
       {/* Stats horizontais */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.statsRow} contentContainerStyle={styles.statsContent}>
         {STAT_DEFS.map((s) => (
-          <StatChip key={s.key} icon={s.icon} color={s.color} label={s.label} value={stats?.[s.key] ?? 0} unit={s.unit} />
+          <StatChip key={s.key} icon={s.icon} color={STAT_COLORS[s.key]} label={s.label} value={stats?.[s.key] ?? 0} unit={s.unit} />
         ))}
-        <StatChip icon="star" color={COLORS.attention} label="XP Total" value={xp} unit=" pts" />
+        <StatChip icon="star" color={COLORS.attention} label={LABELS.xpTotal} value={xp} unit=" pts" />
       </ScrollView>
     </Animated.View>
   );

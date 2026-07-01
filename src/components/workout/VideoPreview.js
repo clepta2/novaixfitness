@@ -29,7 +29,7 @@ function VideoPreview({ videoId, showVideo, onToggle }) {
 export default memo(VideoPreview);
 
 const styles = StyleSheet.create({
-  container: { borderRadius: BORDER_RADIUS.lg, overflow: 'hidden', marginBottom: SPACING.xl, backgroundColor: '#000', ...SHADOWS.md },
+  container: { borderRadius: BORDER_RADIUS.lg, overflow: 'hidden', marginBottom: SPACING.xl, backgroundColor: COLORS.background, ...SHADOWS.md },
   placeholder: { height: 220, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surface },
   label: { fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, marginTop: SPACING.md },
 });

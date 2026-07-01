@@ -15,6 +15,8 @@ import { useAuth } from '../src/context/AuthContext';
 import { useTheme } from '../src/context/ThemeContext';
 import { supabase } from '../src/config/supabase';
 import { layout, typography } from '../src/styles';
+import { canAttemptLogin, recordFailedLogin, recordSuccessfulLogin } from '../src/services/security/authProtection';
+import { useScreenLimits } from '../src/hooks/useScreenLimits';
 
 export default function LoginScreen() {
   const { isDark } = useTheme();
@@ -24,6 +26,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { checkLimit } = useScreenLimits('login');
 
   useEffect(() => {
     if (paramEmail) setEmail(paramEmail);
@@ -38,7 +41,18 @@ export default function LoginScreen() {
     const inputVal = email.trim();
     if (!inputVal) return showAlert('Erro', 'Insira seu E-mail ou CPF');
     if (!password.trim() || password.length < 6) return showAlert('Erro', 'Mínimo 6 caracteres');
-    
+
+    const loginCheck = checkLimit('submit');
+    if (!loginCheck.allowed) {
+      const mins = Math.ceil(loginCheck.retryAfterMs / 60000);
+      return showAlert('Aguarde', `Muitas tentativas. Tente em ${mins} minuto(s).`);
+    }
+
+    const rateCheck = canAttemptLogin(inputVal);
+    if (!rateCheck.allowed) {
+      return showAlert('Aguarde', rateCheck.reason || 'Muitas tentativas');
+    }
+
     setLoading(true);
     let resolvedEmail = inputVal;
 
@@ -71,7 +85,9 @@ export default function LoginScreen() {
 
     try {
       await signInWithEmail(resolvedEmail, password);
+      recordSuccessfulLogin(inputVal);
     } catch (e) {
+      recordFailedLogin(inputVal);
       showAlert('Erro', e.message || 'Falha ao fazer login');
     } finally {
       setLoading(false);

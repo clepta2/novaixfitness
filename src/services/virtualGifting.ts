@@ -2,6 +2,7 @@
 // Sistema de Virtual Gifting: moeda interna, presentes, ranking
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 
 const guard = createServiceGuard({ serviceName: 'virtualGifting' });
@@ -12,7 +13,7 @@ const guard = createServiceGuard({ serviceName: 'virtualGifting' });
 
 export async function getWallet(userId: string): Promise<Record<string, unknown>> {
   const { data } = await supabase
-    .from('wallet')
+    .from(TABLES.WALLET)
     .select('*')
     .eq('user_id', userId)
     .single();
@@ -26,7 +27,7 @@ export async function getWallet(userId: string): Promise<Record<string, unknown>
 
 export async function getGiftCatalog(): Promise<Record<string, unknown>[]> {
   const { data } = await supabase
-    .from('gift_catalog')
+    .from(TABLES.GIFT_CATALOG)
     .select('*')
     .eq('is_active', true)
     .order('coin_value', { ascending: true });
@@ -58,7 +59,7 @@ export async function sendGift(senderId: string, receiverId: string, giftId: str
 
 export async function getCoinPackages(): Promise<Record<string, unknown>[]> {
   const { data } = await supabase
-    .from('coin_packages')
+    .from(TABLES.COIN_PACKAGES)
     .select('*')
     .eq('is_active', true)
     .order('price_brl', { ascending: true });
@@ -84,7 +85,7 @@ export async function buyCoins(userId: string, packageId: string): Promise<Recor
 export async function getGiftHistory(userId: string, type: string = 'sent', limit: number = 20): Promise<Record<string, unknown>[]> {
   const column = type === 'sent' ? 'sender_id' : 'receiver_id';
   const { data } = await supabase
-    .from('gift_transactions')
+    .from(TABLES.GIFT_TRANSACTIONS)
     .select('*, gift_catalog(name, emoji, coin_value), profiles:sender_id(name, avatar_url), profiles:receiver_id(name, avatar_url)')
     .eq(column, userId)
     .order('created_at', { ascending: false })
@@ -99,7 +100,7 @@ export async function getGiftHistory(userId: string, type: string = 'sent', limi
 
 export async function getTopGifters(limit: number = 10): Promise<Record<string, unknown>[]> {
   const { data } = await supabase
-    .from('gift_rankings')
+    .from(TABLES.GIFT_RANKINGS)
     .select('*, profiles:user_id(name, avatar_url)')
     .order('total_coins_sent', { ascending: false })
     .limit(limit);
@@ -109,7 +110,7 @@ export async function getTopGifters(limit: number = 10): Promise<Record<string, 
 
 export async function getTopReceivers(limit: number = 10): Promise<Record<string, unknown>[]> {
   const { data } = await supabase
-    .from('gift_rankings')
+    .from(TABLES.GIFT_RANKINGS)
     .select('*, profiles:user_id(name, avatar_url)')
     .order('total_coins_received', { ascending: false })
     .limit(limit);
@@ -119,13 +120,13 @@ export async function getTopReceivers(limit: number = 10): Promise<Record<string
 
 export async function getUserRanking(userId: string): Promise<{ rank: number; coinsSent: number }> {
   const { data: senderRank } = await supabase
-    .from('gift_rankings')
+    .from(TABLES.GIFT_RANKINGS)
     .select('total_coins_sent')
     .eq('user_id', userId)
     .single();
 
   const { count } = await supabase
-    .from('gift_rankings')
+    .from(TABLES.GIFT_RANKINGS)
     .select('id', { count: 'exact', head: true })
     .gt('total_coins_sent', senderRank?.total_coins_sent || 0);
 
@@ -142,7 +143,7 @@ export function subscribeToGifts(liveId: string, onGift: (gift: Record<string, u
     .on('postgres_changes', {
       event: 'INSERT',
       schema: 'public',
-      table: 'gift_transactions',
+      table: TABLES.GIFT_TRANSACTIONS,
       filter: `live_id=eq.${liveId}`,
     }, (payload) => {
       onGift(payload.new);

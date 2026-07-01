@@ -2,6 +2,7 @@
 // Conquistas do usuario
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { awardXP } from './gamificationLevels';
 
 export interface Achievement {
@@ -43,7 +44,7 @@ function checkAchievementCondition(achievementId: string, stats: Record<string, 
 export function getAchievements(): Achievement[] { return ACHIEVEMENTS; }
 
 export async function getUserAchievements(userId: string): Promise<(Achievement & { unlocked_at: string })[]> {
-  const { data } = await supabase.from('user_achievements')
+  const { data } = await supabase.from(TABLES.USER_ACHIEVEMENTS)
     .select('achievement_id, unlocked_at').eq('user_id', userId);
   return (data || []).map(ua => ({
     ...ACHIEVEMENTS.find(a => a.id === ua.achievement_id)!,
@@ -56,11 +57,11 @@ export async function checkAchievements(userId: string): Promise<Achievement[]> 
   if (!stats) return [];
   const newAchievements: Achievement[] = [];
   for (const ach of ACHIEVEMENTS) {
-    const { data: existing } = await supabase.from('user_achievements')
+    const { data: existing } = await supabase.from(TABLES.USER_ACHIEVEMENTS)
       .select('id').eq('user_id', userId).eq('achievement_id', ach.id).single();
     if (existing) continue;
     if (checkAchievementCondition(ach.id, stats)) {
-      await supabase.from('user_achievements').insert({ user_id: userId, achievement_id: ach.id });
+      await supabase.from(TABLES.USER_ACHIEVEMENTS).insert({ user_id: userId, achievement_id: ach.id });
       await awardXP(userId, 'achievement_unlocked', { achievement_id: ach.id });
       newAchievements.push(ach);
     }

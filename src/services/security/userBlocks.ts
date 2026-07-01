@@ -2,6 +2,7 @@
 // Bloquear/desbloquear usuários
 
 import { supabase } from '../../config/supabase';
+import { TABLES } from '../../config/tables';
 import { createServiceGuard } from '../../utils/serviceGuard';
 import { logAction, ACTIONS } from './audit';
 
@@ -18,7 +19,7 @@ export async function blockUser(userId: string, blockedBy: string, { reason, sev
   const expiresAt = severity === 'permanent' ? null
     : new Date(Date.now() + (durationHours || 24) * 3600000).toISOString();
 
-  const { error } = await supabase.from('user_blocks').insert({
+  const { error } = await supabase.from(TABLES.USER_BLOCKS).insert({
     user_id: userId,
     blocked_by: blockedBy,
     reason,
@@ -35,7 +36,7 @@ export async function blockUser(userId: string, blockedBy: string, { reason, sev
 
 export async function unblockUser(blockId: string, unblockedBy: string) {
   const { error } = await supabase
-    .from('user_blocks')
+    .from(TABLES.USER_BLOCKS)
     .update({ is_active: false })
     .eq('id', blockId);
   if (error) throw error;
@@ -45,7 +46,7 @@ export async function unblockUser(blockId: string, unblockedBy: string) {
 
 export async function getUserBlocks(userId: string) {
   const { data } = await supabase
-    .from('user_blocks')
+    .from(TABLES.USER_BLOCKS)
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
@@ -54,7 +55,7 @@ export async function getUserBlocks(userId: string) {
 
 export async function getActiveBlocks(userId: string) {
   const { data } = await supabase
-    .from('user_blocks')
+    .from(TABLES.USER_BLOCKS)
     .select('*')
     .eq('user_id', userId)
     .eq('is_active', true)

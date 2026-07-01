@@ -6,6 +6,10 @@ import { getVariant, trackPaywallView, trackPaywallClick } from '../../src/servi
 jest.mock('expo-router', () => ({ useRouter: () => ({ replace: jest.fn() }) }));
 jest.mock('../../src/services/payment');
 jest.mock('../../src/services/abtest');
+jest.mock('../../src/services/security/paymentProtection', () => ({
+  canProcessPayment: jest.fn().mockReturnValue({ allowed: true, reason: null, retryAfterMs: 0 }),
+  recordPayment: jest.fn(),
+}));
 jest.mock('react-native', () => ({
   Alert: { alert: jest.fn() },
   Linking: { openURL: jest.fn() },

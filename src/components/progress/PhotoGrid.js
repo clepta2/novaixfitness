@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
   itemSelected: { borderWidth: 2, borderColor: COLORS.primary },
   thumb: { width: PHOTO_SIZE, height: PHOTO_SIZE * 1.33, backgroundColor: COLORS.surface },
   dateOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.6)', paddingVertical: 4, paddingHorizontal: SPACING.xs },
-  dateText: { fontFamily: 'Inter_400Regular', fontSize: 10, color: '#fff', textAlign: 'center' },
+  dateText: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.background, textAlign: 'center' },
   checkBadge: { position: 'absolute', top: SPACING.xs, right: SPACING.xs },
 });

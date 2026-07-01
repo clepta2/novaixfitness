@@ -2,19 +2,20 @@
 // Progresso e completacao de desafios entre amigos
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
 
 const guard = createServiceGuard({ serviceName: 'challengeProgress' });
 
 export async function updateProgress(challengeId: string, userId: string, value: number) {
   const { error } = await supabase
-    .from('challenge_progress')
+    .from(TABLES.CHALLENGE_PROGRESS)
     .upsert({ challenge_id: challengeId, user_id: userId, current_value: value, last_updated: new Date().toISOString() },
       { onConflict: 'challenge_id,user_id' });
   if (error) throw error;
 
   const { data: challenge } = await supabase
-    .from('friend_challenges')
+    .from(TABLES.FRIEND_CHALLENGES)
     .select('target_value, stake_coins, challenger_id, challenged_id')
     .eq('id', challengeId).single();
 
@@ -25,23 +26,23 @@ export async function updateProgress(challengeId: string, userId: string, value:
 
 export async function autoUpdateProgress(challengeId: string) {
   const { data: challenge } = await supabase
-    .from('friend_challenges').select('*').eq('id', challengeId).single();
+    .from(TABLES.FRIEND_CHALLENGES).select('*').eq('id', challengeId).single();
   if (!challenge || challenge.status !== 'active') return;
 
   const { data: progress } = await supabase
-    .from('challenge_progress').select('user_id, current_value').eq('challenge_id', challengeId);
+    .from(TABLES.CHALLENGE_PROGRESS).select('user_id, current_value').eq('challenge_id', challengeId);
 
   for (const p of progress || []) {
     let newValue = p.current_value;
     if (challenge.challenge_type === 'streak_30') {
-      const { data: profile } = await supabase.from('profiles').select('streak').eq('id', p.user_id).single();
+      const { data: profile } = await supabase.from(TABLES.PROFILES).select('streak').eq('id', p.user_id).single();
       newValue = profile?.streak || 0;
     } else if (challenge.challenge_type === 'workout_count') {
-      const { count } = await supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+      const { count } = await supabase.from(TABLES.USER_WORKOUTS).select('id', { count: 'exact', head: true })
         .eq('user_id', p.user_id).gte('completed_at', challenge.start_date);
       newValue = count || 0;
     } else if (challenge.challenge_type === 'minutes') {
-      const { data: workouts } = await supabase.from('user_workouts').select('duration_minutes')
+      const { data: workouts } = await supabase.from(TABLES.USER_WORKOUTS).select('duration_minutes')
         .eq('user_id', p.user_id).gte('completed_at', challenge.start_date);
       newValue = (workouts || []).reduce((sum, w) => sum + (w.duration_minutes || 0), 0);
     }
@@ -61,11 +62,11 @@ async function completeChallenge(challengeId: string, winnerId: string) {
     await supabase.rpc('send_gift', { p_sender_id: loserId, p_receiver_id: winnerId, p_gift_id: null, p_message: 'Aposta de desafio' });
   }
 
-  await supabase.from('challenge_history').insert({
+  await supabase.from(TABLES.CHALLENGE_HISTORY).insert({
     challenge_id: challengeId, winner_id: winnerId, loser_id: loserId, stake_coins: challenge.stake_coins,
   });
 
-  await supabase.from('notifications').insert([
+  await supabase.from(TABLES.NOTIFICATIONS).insert([
     { user_id: winnerId, type: 'challenge_won', title: 'Desafio Ganho!', body: `Parabens! Voce venceu o desafio "${challenge.title}"!` },
     { user_id: loserId, type: 'challenge_lost', title: 'Desafio Perdido', body: `Voce perdeu o desafio "${challenge.title}". Tente novamente!` },
   ]);

@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.sm, gap: SPACING.xs, borderWidth: 1, borderColor: COLORS.border,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 8,
+    shadowColor: COLORS.textTitle, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 8,
   },
   reactionBtn: { alignItems: 'center', padding: SPACING.sm, minWidth: 48 },
   emoji: { fontSize: 28 },

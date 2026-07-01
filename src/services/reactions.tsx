@@ -2,6 +2,7 @@
 // Serviço de reações para posts
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
 import type { ReactionType } from '../types';
 
 interface ReactionResult {
@@ -16,7 +17,7 @@ interface PostReactions {
 
 export async function toggleReaction(postId: string, userId: string, type: ReactionType): Promise<ReactionResult> {
   const { data: existing } = await supabase
-    .from('post_reactions')
+    .from(TABLES.POST_REACTIONS)
     .select('id, type')
     .eq('post_id', postId)
     .eq('user_id', userId)
@@ -37,7 +38,7 @@ export async function toggleReaction(postId: string, userId: string, type: React
 
 export async function getPostReactions(postId: string): Promise<PostReactions> {
   const { data } = await supabase
-    .from('post_reactions')
+    .from(TABLES.POST_REACTIONS)
     .select('type, user_id')
     .eq('post_id', postId);
 
@@ -54,7 +55,7 @@ export async function getPostReactions(postId: string): Promise<PostReactions> {
 
 export async function getUserReaction(postId: string, userId: string): Promise<ReactionType | null> {
   const { data } = await supabase
-    .from('post_reactions')
+    .from(TABLES.POST_REACTIONS)
     .select('type')
     .eq('post_id', postId)
     .eq('user_id', userId)

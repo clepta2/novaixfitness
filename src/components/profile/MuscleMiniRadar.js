@@ -4,15 +4,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { useState, useEffect, useRef } from 'react';
-
-const MUSCLES = [
-  { key: 'chest', label: 'Peito', icon: 'body' },
-  { key: 'back', label: 'Costas', icon: 'body' },
-  { key: 'legs', label: 'Pernas', icon: 'walk' },
-  { key: 'shoulders', label: 'Ombros', icon: 'body' },
-  { key: 'arms', label: 'Braços', icon: 'barbell' },
-  { key: 'core', label: 'Abdômen', icon: 'fitness' },
-];
+import { SECTION_TITLES, MUSCLES } from '../../data/profileTexts';
 
 export default function MuscleMiniRadar({ userId }) {
   const [data, setData] = useState(null);
@@ -73,7 +65,7 @@ export default function MuscleMiniRadar({ userId }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="pulse" size={16} color={COLORS.primary} />
-        <Text style={styles.title}>EQUILÍBRIO MUSCULAR</Text>
+        <Text style={styles.title}>{SECTION_TITLES.muscleBalance}</Text>
         <View style={styles.legend}>
           <View style={styles.legendItem}><View style={[styles.legendDot, { backgroundColor: COLORS.success }]} /><Text style={styles.legendText}>↑</Text></View>
           <View style={styles.legendItem}><View style={[styles.legendDot, { backgroundColor: COLORS.attention }]} /><Text style={styles.legendText}>↓</Text></View>

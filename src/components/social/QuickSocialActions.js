@@ -35,6 +35,6 @@ const styles = StyleSheet.create({
   card: { flex: 1, alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
   iconCircle: { width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.sm },
   badge: { position: 'absolute', top: -4, right: -4, backgroundColor: COLORS.error, borderRadius: 10, minWidth: 20, height: 20, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5 },
-  badgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: '#FFF' },
+  badgeText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.background },
   label: { fontFamily: 'Inter_500Medium', fontSize: 11, color: COLORS.textDescription, textAlign: 'center' },
 });

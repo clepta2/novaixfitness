@@ -4,42 +4,43 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
+import { COMMENTS } from '../../data/socialTexts';
 
 function CommentSection({ comments, loading, onSubmit, commentText, onCommentTextChange }) {
   return (
     <View style={styles.container}>
       {loading ? (
-        <Text style={styles.loadingText}>Carregando...</Text>
+        <Text style={styles.loadingText}>{COMMENTS.loading}</Text>
       ) : comments.length > 0 ? (
         <View style={styles.list}>
           {comments.map((comment) => (
             <View key={comment.id} style={styles.item}>
-              <Avatar name={comment.profiles?.name || 'Anônimo'} size="sm" />
+              <Avatar name={comment.profiles?.name || COMMENTS.anonymous} size="sm" />
               <View style={styles.content}>
-                <Text style={styles.author}>{comment.profiles?.name || 'Anônimo'}</Text>
+                <Text style={styles.author}>{comment.profiles?.name || COMMENTS.anonymous}</Text>
                 <Text style={styles.text}>{comment.content}</Text>
               </View>
             </View>
           ))}
         </View>
       ) : (
-        <Text style={styles.noComments}>Nenhum comentário ainda</Text>
+        <Text style={styles.noComments}>{COMMENTS.empty}</Text>
       )}
 
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
-          placeholder="Comentário..."
+          placeholder={COMMENTS.inputPlaceholder}
           placeholderTextColor={COLORS.textMuted}
           value={commentText}
           onChangeText={onCommentTextChange}
-          accessibilityLabel="Escrever comentario"
+          accessibilityLabel={COMMENTS.writeLabel}
         />
         <TouchableOpacity
           style={[styles.sendBtn, !commentText.trim() && styles.sendBtnDisabled]}
           onPress={onSubmit}
           disabled={!commentText.trim()}
-          accessibilityLabel="Enviar comentario"
+          accessibilityLabel={COMMENTS.sendLabel}
           accessibilityRole="button"
         >
           <Ionicons name="send" size={18} color={commentText.trim() ? COLORS.primary : COLORS.textMuted} />

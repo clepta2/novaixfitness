@@ -1,26 +1,59 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, FlatList, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, FlatList, KeyboardAvoidingView, Platform, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
+import { getMessages, sendMessage, subscribeToConversation } from '../../services/chat';
+import { useAuth } from '../../context/AuthContext';
+import type { ChatMessage } from '../../types';
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'me' | 'other';
-  time: string;
+interface DirectChatDrawerProps {
+  visible: boolean;
+  onClose: () => void;
+  conversationId?: string;
+  userName?: string;
+  userAvatar?: string | null;
 }
 
-export default function DirectChatDrawer({ visible, onClose, userName = 'Atleta', userAvatar = null }) {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: '1', text: 'E aí! Como estão indo os treinos?', sender: 'other', time: '10:30' },
-    { id: '2', text: 'Tudo ótimo, acabei de fechar a rotina diária!', sender: 'me', time: '10:32' },
-    { id: '3', text: 'Excelente! Mantenha a constância! 💪', sender: 'other', time: '10:33' }
-  ]);
+export default function DirectChatDrawer({ visible, onClose, conversationId, userName = 'Atleta', userAvatar = null }: DirectChatDrawerProps) {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
+  const [loading, setLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const convIdRef = useRef(conversationId);
+  convIdRef.current = conversationId;
+
+  useEffect(() => {
+    if (!visible || !conversationId) return;
+    setLoading(true);
+    getMessages(conversationId).then(data => {
+      setMessages(data);
+      setLoading(false);
+    });
+  }, [visible, conversationId]);
+
+  useEffect(() => {
+    if (!visible || !conversationId) return;
+    const unsub = subscribeToConversation(conversationId, {
+      onNewMessage: (payload) => {
+        const msg = payload.new as ChatMessage;
+        if (msg.user_id !== user?.id) {
+          setMessages(prev => [...prev, msg]);
+        }
+      },
+      onMessageUpdate: (payload) => {
+        const updated = payload.new as ChatMessage;
+        setMessages(prev => prev.map(m => m.id === updated.id ? updated : m));
+      },
+      onPresenceSync: () => {},
+      onPresenceJoin: () => {},
+      onPresenceLeave: () => {},
+    });
+    return unsub;
+  }, [visible, conversationId, user?.id]);
 
   useEffect(() => {
     if (visible && flatListRef.current) {
@@ -28,41 +61,22 @@ export default function DirectChatDrawer({ visible, onClose, userName = 'Atleta'
     }
   }, [visible, messages]);
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: inputText,
-      sender: 'me',
-      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-    };
-    setMessages(prev => [...prev, newMessage]);
+  const handleSend = useCallback(async () => {
+    if (!inputText.trim() || !conversationId || !user?.id) return;
+    const text = inputText.trim();
     setInputText('');
 
-    // Trigger mock response after 1s
-    setTimeout(() => {
-      const mockReplies = [
-        'Mandou bem demais!',
-        'Que top! Bora pra cima! 🚀',
-        'Foco total! Qual o próximo objetivo?',
-        'Incrível! Vambora treinar!'
-      ];
-      const randomReply = mockReplies[Math.floor(Math.random() * mockReplies.length)];
-      const responseMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: randomReply,
-        sender: 'other',
-        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, responseMessage]);
-    }, 1200);
-  };
+    const sent = await sendMessage(conversationId, user.id, text);
+    if (sent) {
+      setMessages(prev => [...prev, sent]);
+    }
+  }, [inputText, conversationId, user?.id]);
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.drawerContainer}
         >
           {/* Header */}
@@ -81,25 +95,34 @@ export default function DirectChatDrawer({ visible, onClose, userName = 'Atleta'
           </View>
 
           {/* Messages list */}
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.messagesList}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-              const isMe = item.sender === 'me';
-              return (
-                <View style={[styles.messageWrapper, isMe ? styles.messageSent : styles.messageReceived]}>
-                  {!isMe && <Avatar name={userName} uri={userAvatar} size="xs" style={{ marginRight: 6 }} />}
-                  <View style={[styles.bubble, isMe ? styles.bubbleSent : styles.bubbleReceived]}>
-                    <Text style={[styles.messageText, isMe ? styles.textSent : styles.textReceived]}>{item.text}</Text>
-                    <Text style={styles.messageTime}>{item.time}</Text>
+          {loading ? (
+            <ActivityIndicator color={COLORS.primary} style={{ flex: 1 }} />
+          ) : (
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              keyExtractor={item => item.id}
+              contentContainerStyle={styles.messagesList}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => {
+                const isMe = item.user_id === user?.id;
+                const profile = item.profiles;
+                return (
+                  <View style={[styles.messageWrapper, isMe ? styles.messageSent : styles.messageReceived]}>
+                    {!isMe && <Avatar name={profile?.name || userName} uri={profile?.avatar_url || userAvatar} size="xs" style={{ marginRight: 6 }} />}
+                    <View style={[styles.bubble, isMe ? styles.bubbleSent : styles.bubbleReceived]}>
+                      <Text style={[styles.messageText, isMe ? styles.textSent : styles.textReceived]}>
+                        {item.deleted ? 'Mensagem apagada' : item.content}
+                      </Text>
+                      <Text style={styles.messageTime}>
+                        {new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              );
-            }}
-          />
+                );
+              }}
+            />
+          )}
 
           {/* Input field */}
           <SafeAreaView style={styles.inputArea}>

@@ -2,8 +2,12 @@
 // Funções de recuperação de dados de analytics - NOVAIX FITNESS
 
 import { supabase } from '../config/supabase';
+import { TABLES } from '../config/tables';
+import { createServiceGuard } from '../utils/serviceGuard';
 import { EVENTS } from './analytics';
 import { getPeriodStart } from './analyticsHelpers';
+
+const guard = createServiceGuard({ serviceName: 'analyticsRetrieval' });
 
 export interface UserMetrics {
   totalEvents: number;
@@ -24,83 +28,93 @@ export interface ChurnRiskUser {
 }
 
 export async function getUserMetrics(userId: string, days: number = 30): Promise<UserMetrics> {
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
+  const result = await guard.guard(async () => {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
 
-  const { data, error } = await supabase
-    .from('analytics_events')
-    .select('*')
-    .eq('user_id', userId)
-    .gte('created_at', startDate.toISOString());
+    const { data, error } = await supabase
+      .from(TABLES.ANALYTICS_EVENTS)
+      .select('*')
+      .eq('user_id', userId)
+      .gte('created_at', startDate.toISOString());
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return {
-    totalEvents: data.length,
-    workouts: data.filter(e => e.event_name === EVENTS.WORKOUT_COMPLETE).length,
-    screenViews: data.filter(e => e.event_name === EVENTS.SCREEN_VIEW).length,
-    features: data.filter(e => e.event_name === EVENTS.FEATURE_USE).length,
-  };
+    return {
+      totalEvents: data.length,
+      workouts: data.filter(e => e.event_name === EVENTS.WORKOUT_COMPLETE).length,
+      screenViews: data.filter(e => e.event_name === EVENTS.SCREEN_VIEW).length,
+      features: data.filter(e => e.event_name === EVENTS.FEATURE_USE).length,
+    };
+  });
+  return result.ok ? result.data : { totalEvents: 0, workouts: 0, screenViews: 0, features: 0 };
 }
 
 
 
 export async function getPopularWorkouts(limit: number = 10): Promise<PopularWorkout[]> {
-  const { data, error } = await supabase
-    .from('analytics_events')
-    .select('properties->>workout_id')
-    .eq('event_name', EVENTS.WORKOUT_COMPLETE)
-    .order('created_at', { ascending: false })
-    .limit(1000);
+  const result = await guard.guard(async () => {
+    const { data, error } = await supabase
+      .from(TABLES.ANALYTICS_EVENTS)
+      .select('properties->>workout_id')
+      .eq('event_name', EVENTS.WORKOUT_COMPLETE)
+      .order('created_at', { ascending: false })
+      .limit(1000);
 
-  if (error) throw error;
+    if (error) throw error;
 
-  const counts: Record<string, number> = {};
-  data.forEach(row => {
-    const id = (row as Record<string, unknown>).properties as Record<string, unknown> | null;
-    const workoutId = id?.workout_id as string | undefined;
-    if (workoutId) counts[workoutId] = (counts[workoutId] || 0) + 1;
+    const counts: Record<string, number> = {};
+    data.forEach(row => {
+      const id = (row as Record<string, unknown>).properties as Record<string, unknown> | null;
+      const workoutId = id?.workout_id as string | undefined;
+      if (workoutId) counts[workoutId] = (counts[workoutId] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, limit);
+
+    return sorted.map(([id, count]) => ({ id, count }));
   });
-
-  const sorted = Object.entries(counts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, limit);
-
-  return sorted.map(([id, count]) => ({ id, count }));
+  return result.ok ? result.data : [];
 }
 
 export async function getChurnRiskUsers(): Promise<ChurnRiskUser[]> {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const result = await guard.guard(async () => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id, email, last_active_at')
-    .lt('last_active_at', thirtyDaysAgo.toISOString())
-    .eq('subscription_status', 'active');
+    const { data, error } = await supabase
+      .from(TABLES.PROFILES)
+      .select('id, email, last_active_at')
+      .lt('last_active_at', thirtyDaysAgo.toISOString())
+      .eq('subscription_status', 'active');
 
-  if (error) throw error;
-  return (data || []) as ChurnRiskUser[];
+    if (error) throw error;
+    return (data || []) as ChurnRiskUser[];
+  });
+  return result.ok ? result.data : [];
 }
 
-
-
 export async function getWorkoutFrequency(userId: string, days: number = 30): Promise<Record<string, number>> {
-  const startDate = new Date(Date.now() - days * 86400000).toISOString();
-  const { data, error } = await supabase
-    .from('user_workouts')
-    .select('completed_at')
-    .eq('user_id', userId)
-    .eq('completed', true)
-    .gte('completed_at', startDate);
+  const result = await guard.guard(async () => {
+    const startDate = new Date(Date.now() - days * 86400000).toISOString();
+    const { data, error } = await supabase
+      .from(TABLES.USER_WORKOUTS)
+      .select('completed_at')
+      .eq('user_id', userId)
+      .eq('completed', true)
+      .gte('completed_at', startDate);
 
-  if (error) throw error;
-  const frequency: Record<string, number> = {};
-  (data || []).forEach(w => {
-    const day = new Date(w.completed_at).toISOString().split('T')[0];
-    frequency[day] = (frequency[day] || 0) + 1;
+    if (error) throw error;
+    const frequency: Record<string, number> = {};
+    (data || []).forEach(w => {
+      const day = new Date(w.completed_at).toISOString().split('T')[0];
+      frequency[day] = (frequency[day] || 0) + 1;
+    });
+    return frequency;
   });
-  return frequency;
+  return result.ok ? result.data : {};
 }
 
 export async function getMonthlyComparison(userId: string): Promise<Record<string, unknown>> {
@@ -110,9 +124,9 @@ export async function getMonthlyComparison(userId: string): Promise<Record<strin
   lastMonth.setMonth(lastMonth.getMonth() - 1);
 
   const [thisMonthData, lastMonthData] = await Promise.all([
-    supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+    supabase.from(TABLES.USER_WORKOUTS).select('id', { count: 'exact', head: true })
       .eq('user_id', userId).eq('completed', true).gte('completed_at', thisMonth.toISOString()),
-    supabase.from('user_workouts').select('id', { count: 'exact', head: true })
+    supabase.from(TABLES.USER_WORKOUTS).select('id', { count: 'exact', head: true })
       .eq('user_id', userId).eq('completed', true).gte('completed_at', lastMonth.toISOString()).lt('completed_at', thisMonth.toISOString()),
   ]);
 
@@ -133,8 +147,8 @@ export async function getWeeklyConsistencyScore(userId: string): Promise<{ score
     monday.setHours(0, 0, 0, 0);
 
     const [workouts, obv2] = await Promise.all([
-      supabase.from('user_workouts').select('id').eq('user_id', userId).eq('completed', true).gte('completed_at', monday.toISOString()),
-      supabase.from('onboarding_v2').select('days_per_week').eq('user_id', userId).maybeSingle(),
+      supabase.from(TABLES.USER_WORKOUTS).select('id').eq('user_id', userId).eq('completed', true).gte('completed_at', monday.toISOString()),
+      supabase.from(TABLES.ONBOARDING_V2).select('days_per_week').eq('user_id', userId).maybeSingle(),
     ]);
 
     const completedCount = workouts.data?.length || 0;
@@ -154,7 +168,7 @@ export async function getCalorieBurnSummary(userId: string, period: string = 'mo
   try {
     const startDate = getPeriodStart(period);
     const { data, error } = await supabase
-      .from('user_workouts')
+      .from(TABLES.USER_WORKOUTS)
       .select('completed_at, duration_minutes, calories_burned')
       .eq('user_id', userId)
       .eq('completed', true)

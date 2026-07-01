@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import { SOCIAL_FEED } from '../../data/socialTexts';
 import ActivityItem from './ActivityItem';
 
 function filterPosts(posts, filter) {
@@ -45,8 +46,8 @@ export default function SocialFeed({ userId }) {
       const formatted = workouts.map(w => ({
         id: `${w.user_id}-${w.completed_at}`,
         type: 'workout',
-        user: { name: profileMap[w.user_id] || 'Atleta' },
-        text: `Completou "${w.workouts?.name || 'Treino'}"`,
+        user: { name: profileMap[w.user_id] || SOCIAL_FEED.defaultUser },
+        text: SOCIAL_FEED.completedPrefix + `"${w.workouts?.name || 'Treino'}"`,
         xp: Math.floor(Math.random() * 100) + 50,
         timeAgo: formatTimeAgo(w.completed_at),
       }));
@@ -62,16 +63,16 @@ export default function SocialFeed({ userId }) {
   const filtered = filterPosts(activities, filter);
 
   const filters = [
-    { key: 'all', label: 'Todos' },
-    { key: 'workouts', label: 'Treinos' },
-    { key: 'achievements', label: 'Conquistas' },
+    { key: 'all', label: SOCIAL_FEED.filterAll },
+    { key: 'workouts', label: SOCIAL_FEED.filterWorkouts },
+    { key: 'achievements', label: SOCIAL_FEED.filterAchievements },
   ];
 
   if (loading) {
     return (
       <View style={styles.loading}>
         <Ionicons name="sync" size={20} color={COLORS.textMuted} />
-        <Text style={styles.loadingText}>Carregando...</Text>
+        <Text style={styles.loadingText}>{SOCIAL_FEED.loading}</Text>
       </View>
     );
   }
@@ -80,7 +81,7 @@ export default function SocialFeed({ userId }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="people" size={18} color={COLORS.primary} />
-        <Text style={styles.title}>ATIVIDADE DOS AMIGOS</Text>
+        <Text style={styles.title}>{SOCIAL_FEED.title}</Text>
       </View>
 
       <View style={styles.filterRow}>
@@ -94,7 +95,7 @@ export default function SocialFeed({ userId }) {
       {filtered.length === 0 ? (
         <View style={styles.empty}>
           <Ionicons name="people-outline" size={32} color={COLORS.textMuted} />
-          <Text style={styles.emptyText}>Nenhuma atividade recente</Text>
+          <Text style={styles.emptyText}>{SOCIAL_FEED.emptyState}</Text>
         </View>
       ) : (
         <FlatList

@@ -151,5 +151,5 @@ const styles = StyleSheet.create({
   confirmBtn: { flex: 1, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, backgroundColor: COLORS.primary, alignItems: 'center' },
   confirmBtnText: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.background },
   dangerBtn: { backgroundColor: COLORS.error },
-  dangerBtnText: { color: '#fff' },
+  dangerBtnText: { color: COLORS.background },
 });

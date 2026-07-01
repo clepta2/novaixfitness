@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { COMPLETION } from '../../data/workoutTexts';
 import WorkoutComparison from './WorkoutComparison';
 import WorkoutAchievements from './WorkoutAchievements';
 import MuscleGroupBar from './MuscleGroupBar';
@@ -33,7 +34,13 @@ export default function WorkoutSummary({
 
   const handleShare = async () => {
     const prText = personalRecords?.length > 0 ? `\n🏆 ${personalRecords.length} record(s)!` : '';
-    const message = `💪 Treino concluído no NOVAIX!\n\n🏋️ ${workout?.name || 'Treino'}\n⏱️ ${duration || 0} min\n🔥 ${calories || 0} kcal\n⭐ +${xpEarned || 0} XP\n🎯 ${exercisesCompleted || 0} exercícios${prText}\n\nBaixe o NOVAIX Fitness!`;
+    const message = COMPLETION.shareMessage
+      .replace('{name}', workout?.name || 'Treino')
+      .replace('{duration}', String(duration || 0))
+      .replace('{calories}', String(calories || 0))
+      .replace('{xp}', String(xpEarned || 0))
+      .replace('{exercises}', String(exercisesCompleted || 0))
+      .replace('{records}', prText);
     try { await Share.share({ message }); onShare?.(); } catch {}
   };
 
@@ -43,7 +50,7 @@ export default function WorkoutSummary({
         <Animated.View style={[styles.content, { opacity: headerFade, transform: [{ scale: headerScale }] }]}>
           <View style={styles.header}>
             <Ionicons name="checkmark-circle" size={72} color={COLORS.success} />
-            <Text style={styles.title}>TREINO CONCLUÍDO!</Text>
+            <Text style={styles.title}>{COMPLETION.title}</Text>
             <Text style={styles.subtitle}>{workout?.name || 'Treino'}</Text>
           </View>
 
@@ -51,14 +58,14 @@ export default function WorkoutSummary({
             <AnimatedStat icon="time" value={`${duration || 0}`} label="min" color={COLORS.primary} delay={100} />
             <AnimatedStat icon="flame" value={`${calories || 0}`} label="kcal" color={COLORS.secondary} delay={200} />
             <AnimatedStat icon="star" value={`+${xpEarned || 0}`} label="XP" color={COLORS.primary} delay={300} />
-            <AnimatedStat icon="barbell" value={`${exercisesCompleted || 0}`} label="exercícios" color={COLORS.success} delay={400} />
+            <AnimatedStat icon="barbell" value={`${exercisesCompleted || 0}`} label={COMPLETION.exercisesUnit} color={COLORS.success} delay={400} />
           </View>
 
           {personalRecords?.length > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="trophy" size={16} color={COLORS.primary} />
-                <Text style={styles.sectionTitle}>RECORDES QUEBRADOS</Text>
+                <Text style={styles.sectionTitle}>{COMPLETION.recordsBroken}</Text>
               </View>
               {personalRecords.map((pr, i) => (
                 <View key={i} style={styles.prCard}>
@@ -80,7 +87,7 @@ export default function WorkoutSummary({
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="body" size={16} color={COLORS.success} />
-                <Text style={styles.sectionTitle}>MÚSCULOS TRABALHADOS</Text>
+                <Text style={styles.sectionTitle}>{COMPLETION.musclesWorked}</Text>
               </View>
               <View style={styles.muscleCard}>
                 {muscleGroups.slice(0, 5).map((muscle, i) => (
@@ -94,10 +101,10 @@ export default function WorkoutSummary({
 
           <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
             <Ionicons name="share-social" size={20} color={COLORS.background} />
-            <Text style={styles.shareText}>COMPARTILHAR</Text>
+            <Text style={styles.shareText}>{COMPLETION.shareButton}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeText}>VOLTAR AO INÍCIO</Text>
+            <Text style={styles.closeText}>{COMPLETION.backToHome}</Text>
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>

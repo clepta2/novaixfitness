@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getXPProgress } from '../../constants/gamification';
+import { LABELS } from '../../data/profileTexts';
 
 export default memo(function GamificationBar({ xp = 0 }) {
   const { current, next, progress, xpInLevel, xpNeeded } = getXPProgress(xp);
@@ -40,12 +41,12 @@ export default memo(function GamificationBar({ xp = 0 }) {
       {next ? (
         <View style={styles.footer}>
           <Text style={styles.footerText}>{xpInLevel} / {xpNeeded} XP</Text>
-          <Text style={styles.footerText}>Próximo: {next.name}</Text>
+          <Text style={styles.footerText}>{LABELS.nextLevel}: {next.name}</Text>
         </View>
       ) : (
         <View style={styles.footer}>
           <Ionicons name="trophy" size={14} color={COLORS.primary} />
-          <Text style={[styles.footerText, { color: COLORS.primary }]}>Nível máximo atingido!</Text>
+          <Text style={[styles.footerText, { color: COLORS.primary }]}>{LABELS.maxLevel}</Text>
         </View>
       )}
     </Animated.View>

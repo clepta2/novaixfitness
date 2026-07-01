@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { layout, typography } from '../../styles';
 import { THEME_OPTIONS } from '../../data/settingsOptions';
+import { SECTION_TITLES } from '../../data/profileTexts';
 import { useResponsive } from '../../hooks/useResponsive';
 
 const QUICK_LINKS = [
@@ -166,13 +167,13 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
           {/* Tabs estilo Facebook */}
           <View style={styles.tabsContainer}>
             <TouchableOpacity style={[styles.tabButton, activeTab === 'posts' && styles.tabButtonActive]} onPress={() => setActiveTab('posts')}>
-              <Text style={[styles.tabButtonText, activeTab === 'posts' && styles.tabButtonTextActive]}>Posts</Text>
+                    <Text style={[styles.tabButtonText, activeTab === 'posts' && styles.tabButtonTextActive]}>{SECTION_TITLES.posts}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.tabButton, activeTab === 'sobre' && styles.tabButtonActive]} onPress={() => setActiveTab('sobre')}>
-              <Text style={[styles.tabButtonText, activeTab === 'sobre' && styles.tabButtonTextActive]}>Sobre</Text>
+              <Text style={[styles.tabButtonText, activeTab === 'sobre' && styles.tabButtonTextActive]}>{SECTION_TITLES.about}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.tabButton, activeTab === 'opcoes' && styles.tabButtonActive]} onPress={() => setActiveTab('opcoes')}>
-              <Text style={[styles.tabButtonText, activeTab === 'opcoes' && styles.tabButtonTextActive]}>Opções</Text>
+              <Text style={[styles.tabButtonText, activeTab === 'opcoes' && styles.tabButtonTextActive]}>{SECTION_TITLES.options}</Text>
             </TouchableOpacity>
           </View>
 
@@ -183,18 +184,18 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
                 <View style={styles.composerRow}>
                   <Avatar name={userName} uri={profile?.avatar_url} size="md" />
                   <TouchableOpacity style={styles.composerInputMock} onPress={() => setShowCreatePost(true)}>
-                    <Text style={styles.composerInputText}>No que você está pensando, {userName?.split(' ')[0]}?</Text>
+                    <Text style={styles.composerInputText}>{SECTION_TITLES.composerPlaceholder.replace('{name}', userName?.split(' ')[0] || '')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* User posts */}
               {loadingPosts ? (
-                <Text style={styles.centerText}>Carregando publicações...</Text>
+                <Text style={styles.centerText}>{SECTION_TITLES.loadingPosts}</Text>
               ) : posts.length === 0 ? (
                 <View style={styles.emptyFeed}>
                   <Ionicons name="chatbox-ellipses-outline" size={40} color={COLORS.textMuted} />
-                  <Text style={styles.emptyFeedText}>Nenhum post publicado ainda.</Text>
+                  <Text style={styles.emptyFeedText}>{SECTION_TITLES.emptyPosts}</Text>
                 </View>
               ) : (
                 posts.map(p => (
@@ -224,7 +225,7 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
                   <Ionicons name="color-palette" size={18} color={COLORS.primary} />
-                  <Text style={styles.sectionTitle}>APARÊNCIA</Text>
+                  <Text style={styles.sectionTitle}>{SECTION_TITLES.appearance}</Text>
                 </View>
                 <View style={styles.themeRow}>
                   {THEME_OPTIONS.map((opt) => (
@@ -244,7 +245,7 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
                   <Ionicons name="grid" size={18} color={COLORS.primary} />
-                  <Text style={styles.sectionTitle}>ATALHOS</Text>
+                  <Text style={styles.sectionTitle}>{SECTION_TITLES.shortcuts}</Text>
                 </View>
                 {(profile?.role === 'creator' || profile?.role === 'admin'
                   ? [...QUICK_LINKS, { icon: 'analytics-outline', color: COLORS.primary, label: 'Painel do Coach', route: '/coach-dashboard' }]
@@ -263,9 +264,9 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
               </View>
 
               {/* Logout */}
-              <TouchableOpacity style={styles.logoutBtn} onPress={() => Alert.alert('Sair', 'Tem certeza?', [{ text: 'Cancelar', style: 'cancel' }, { text: 'Sair', style: 'destructive', onPress: signOut }])}>
+              <TouchableOpacity style={styles.logoutBtn} onPress={() => Alert.alert(SECTION_TITLES.logoutTitle, SECTION_TITLES.logoutMessage, [{ text: SECTION_TITLES.logoutCancel, style: 'cancel' }, { text: SECTION_TITLES.logoutConfirm, style: 'destructive', onPress: signOut }])}>
                 <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
-                <Text style={styles.logoutText}>Sair da conta</Text>
+                <Text style={styles.logoutText}>{SECTION_TITLES.logoutConfirm}</Text>
               </TouchableOpacity>
             </View>
           )}
