@@ -18,7 +18,37 @@ web-build/
 .env.test.local
 .env.production.local
 npm-debug.*
-*.orig.*
 *.map
 coverage/
 NUL
+
+# Logs
+*.log
+*.jsonl
+backend/logs/
+logs/
+
+# MimoCode internal
+.mimocode/
+
+# Temp files from development
+test-errors.txt
+test-output.txt
+failing-suites.txt
+fix-tests.js
+fix-service-tests.js
+find-collisions.js
+find-collisions.cjs
+categorize-errors.js
+parse-errors.js
+lint-output.json
+map-errors.js
+
+# Storybook
+storybook-static/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

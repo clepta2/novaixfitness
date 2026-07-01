@@ -1,123 +1,188 @@
 // src/services/offlineCache.ts
-// Cache de treinos, favoritos e perfil
+// Cache inteligente para funcionamento offline
+// Armazena dados essenciais localmente para acesso sem internet
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Workout } from '../types';
 
-const CACHE_KEYS = {
-  WORKOUTS: '@novaix:workouts',
-  WORKOUT_DETAILS: '@novaix:workout_details',
-  FAVORITES: '@novaix:favorites',
-  PROFILE: '@novaix:profile',
-  LAST_SYNC: '@novaix:last_sync',
-};
+const CACHE_PREFIX = '@novaix:cache:';
+const CACHE_META_KEY = '@novaix:cache_meta';
 
-const CACHE_EXPIRY = 24 * 60 * 60 * 1000;
-const MAX_CACHED_DETAILS = 30;
-
-interface CachedEntry<T> {
+type CacheEntry<T> = {
   data: T;
   timestamp: number;
-}
+  ttlMs: number;
+};
 
-export async function cacheWorkouts(workouts: Workout[]): Promise<void> {
+type CacheMeta = Record<string, { timestamp: number; size: number }>;
+
+// Tempo de vida padrao por tipo de dado
+const DEFAULT_TTL: Record<string, number> = {
+  workouts: 24 * 60 * 60 * 1000,      // 24h
+  exercises: 7 * 24 * 60 * 60 * 1000,  // 7 dias
+  profile: 60 * 60 * 1000,              // 1h
+  feed: 30 * 60 * 1000,                 // 30min
+  notifications: 15 * 60 * 1000,        // 15min
+  categories: 7 * 24 * 60 * 60 * 1000,  // 7 dias
+  achievements: 24 * 60 * 60 * 1000,    // 24h
+  plans: 60 * 60 * 1000,                // 1h
+};
+
+// Salva dados no cache
+export async function cacheData<T>(key: string, data: T, ttlMs?: number): Promise<void> {
   try {
-    await AsyncStorage.setItem(CACHE_KEYS.WORKOUTS, JSON.stringify({ data: workouts, timestamp: Date.now() }));
+    const entry: CacheEntry<T> = {
+      data,
+      timestamp: Date.now(),
+      ttlMs: ttlMs || DEFAULT_TTL[key.split(':')[0]] || 60 * 60 * 1000,
+    };
+    await AsyncStorage.setItem(`${CACHE_PREFIX}${key}`, JSON.stringify(entry));
+
+    // Atualiza meta
+    const meta = await getCacheMeta();
+    meta[key] = { timestamp: Date.now(), size: JSON.stringify(data).length };
+    await AsyncStorage.setItem(CACHE_META_KEY, JSON.stringify(meta));
   } catch (err) {
-    if (__DEV__) console.error('Erro ao cachear workouts:', err);
+    if (__DEV__) console.warn('[offlineCache] Erro ao cachear:', key, err);
   }
 }
 
-export async function getCachedWorkouts(): Promise<Workout[] | null> {
+// Recupera dados do cache (null se expirado ou inexistente)
+export async function getCachedData<T>(key: string): Promise<T | null> {
   try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.WORKOUTS);
+    const raw = await AsyncStorage.getItem(`${CACHE_PREFIX}${key}`);
     if (!raw) return null;
-    const { data, timestamp } = JSON.parse(raw) as CachedEntry<Workout[]>;
-    if (Date.now() - timestamp > CACHE_EXPIRY) return null;
-    return data;
-  } catch { return null; }
-}
 
-export async function cacheFavorites(favorites: string[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(CACHE_KEYS.FAVORITES, JSON.stringify({ data: favorites, timestamp: Date.now() }));
-  } catch (err) {
-    if (__DEV__) console.error('Erro ao cachear favoritos:', err);
-  }
-}
+    const entry: CacheEntry<T> = JSON.parse(raw);
+    const now = Date.now();
 
-export async function getCachedFavorites(): Promise<string[] | null> {
-  try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.FAVORITES);
-    if (!raw) return null;
-    const { data, timestamp } = JSON.parse(raw) as CachedEntry<string[]>;
-    if (Date.now() - timestamp > CACHE_EXPIRY) return null;
-    return data;
-  } catch { return null; }
-}
-
-export async function cacheProfile(profile: Record<string, unknown>): Promise<void> {
-  try {
-    await AsyncStorage.setItem(CACHE_KEYS.PROFILE, JSON.stringify({ data: profile, timestamp: Date.now() }));
-  } catch (err) {
-    if (__DEV__) console.error('Erro ao cachear perfil:', err);
-  }
-}
-
-export async function getCachedProfile(): Promise<Record<string, unknown> | null> {
-  try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.PROFILE);
-    if (!raw) return null;
-    const { data, timestamp } = JSON.parse(raw) as CachedEntry<Record<string, unknown>>;
-    if (Date.now() - timestamp > CACHE_EXPIRY) return null;
-    return data;
-  } catch { return null; }
-}
-
-export async function cacheWorkoutDetail(workout: Workout): Promise<void> {
-  try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.WORKOUT_DETAILS);
-    const cache: Record<string, CachedEntry<Workout>> = raw ? JSON.parse(raw) : {};
-    cache[workout.id] = { data: workout, timestamp: Date.now() };
-    const ids = Object.keys(cache);
-    if (ids.length > MAX_CACHED_DETAILS) {
-      const sorted = ids.sort((a, b) => cache[a].timestamp - cache[b].timestamp);
-      for (let i = 0; i < ids.length - MAX_CACHED_DETAILS; i++) delete cache[sorted[i]];
+    if (now - entry.timestamp > entry.ttlMs) {
+      await removeCachedData(key);
+      return null;
     }
-    await AsyncStorage.setItem(CACHE_KEYS.WORKOUT_DETAILS, JSON.stringify(cache));
-  } catch (err) {
-    if (__DEV__) console.error('Erro ao cachear detalhe do treino:', err);
+
+    return entry.data;
+  } catch {
+    return null;
   }
 }
 
-export async function getCachedWorkoutDetail(workoutId: string): Promise<Workout | null> {
+// Recupera dados ou retorna fallback se offline/cache miss
+export async function getCachedOrFallback<T>(
+  key: string,
+  fetchFn: () => Promise<T>,
+  ttlMs?: number
+): Promise<T> {
+  // Tenta cache primeiro
+  const cached = await getCachedData<T>(key);
+  if (cached !== null) return cached;
+
+  // Tenta buscar da rede
   try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.WORKOUT_DETAILS);
-    if (!raw) return null;
-    const cache: Record<string, CachedEntry<Workout>> = JSON.parse(raw);
-    const entry = cache[workoutId];
-    if (!entry || Date.now() - entry.timestamp > CACHE_EXPIRY) return null;
-    return entry.data;
-  } catch { return null; }
+    const data = await fetchFn();
+    await cacheData(key, data, ttlMs);
+    return data;
+  } catch (err) {
+    // Se falhar, tenta cache expirado como ultima opcao
+    try {
+      const raw = await AsyncStorage.getItem(`${CACHE_PREFIX}${key}`);
+      if (raw) {
+        const entry: CacheEntry<T> = JSON.parse(raw);
+        if (__DEV__) console.warn(`[offlineCache] Usando cache expirado para: ${key}`);
+        return entry.data;
+      }
+    } catch { /* ok */ }
+    throw err;
+  }
 }
 
-export async function isWorkoutCached(workoutId: string): Promise<boolean> {
+// Remove item do cache
+export async function removeCachedData(key: string): Promise<void> {
   try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.WORKOUT_DETAILS);
-    if (!raw) return false;
-    const cache: Record<string, CachedEntry<Workout>> = JSON.parse(raw);
-    return !!cache[workoutId] && (Date.now() - cache[workoutId].timestamp <= CACHE_EXPIRY);
-  } catch { return false; }
+    await AsyncStorage.removeItem(`${CACHE_PREFIX}${key}`);
+    const meta = await getCacheMeta();
+    delete meta[key];
+    await AsyncStorage.setItem(CACHE_META_KEY, JSON.stringify(meta));
+  } catch {}
 }
 
-export async function updateLastSync(): Promise<void> {
-  try { await AsyncStorage.setItem(CACHE_KEYS.LAST_SYNC, Date.now().toString()); }
-  catch (err) { if (__DEV__) console.error('Erro ao atualizar ultimo sync:', err); }
+// Limpa todo o cache
+export async function clearAllCache(): Promise<number> {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const cacheKeys = keys.filter(k => k.startsWith(CACHE_PREFIX));
+    await AsyncStorage.multiRemove(cacheKeys);
+    await AsyncStorage.removeItem(CACHE_META_KEY);
+    return cacheKeys.length;
+  } catch {
+    return 0;
+  }
 }
 
-export async function getLastSync(): Promise<number | null> {
+// Limpa cache expirado
+export async function cleanExpiredCache(): Promise<number> {
   try {
-    const raw = await AsyncStorage.getItem(CACHE_KEYS.LAST_SYNC);
-    return raw ? parseInt(raw, 10) : null;
-  } catch { return null; }
+    const keys = await AsyncStorage.getAllKeys();
+    const cacheKeys = keys.filter(k => k.startsWith(CACHE_PREFIX));
+    let cleaned = 0;
+    const now = Date.now();
+
+    for (const key of cacheKeys) {
+      try {
+        const raw = await AsyncStorage.getItem(key);
+        if (!raw) continue;
+        const entry: CacheEntry<unknown> = JSON.parse(raw);
+        if (now - entry.timestamp > entry.ttlMs) {
+          await AsyncStorage.removeItem(key);
+          cleaned++;
+        }
+      } catch {}
+    }
+
+    return cleaned;
+  } catch {
+    return 0;
+  }
+}
+
+// Obtem metadados do cache
+async function getCacheMeta(): Promise<CacheMeta> {
+  try {
+    const raw = await AsyncStorage.getItem(CACHE_META_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+// Obtem estatisticas do cache
+export async function getCacheStats(): Promise<{
+  itemCount: number;
+  totalSizeKB: number;
+  oldestItem: number | null;
+  newestItem: number | null;
+  byType: Record<string, number>;
+}> {
+  try {
+    const meta = await getCacheMeta();
+    const entries = Object.values(meta);
+    const byType: Record<string, number> = {};
+
+    for (const [key] of Object.entries(meta)) {
+      const type = key.split(':')[0];
+      byType[type] = (byType[type] || 0) + 1;
+    }
+
+    const timestamps = entries.map(e => e.timestamp);
+    const totalSize = entries.reduce((sum, e) => sum + e.size, 0);
+
+    return {
+      itemCount: entries.length,
+      totalSizeKB: Math.round(totalSize / 1024),
+      oldestItem: timestamps.length > 0 ? Math.min(...timestamps) : null,
+      newestItem: timestamps.length > 0 ? Math.max(...timestamps) : null,
+      byType,
+    };
+  } catch {
+    return { itemCount: 0, totalSizeKB: 0, oldestItem: null, newestItem: null, byType: {} };
+  }
 }
