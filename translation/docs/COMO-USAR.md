@@ -1,4 +1,4 @@
-# Como Usar - Novaix Translation
+# Como Usar - TradNinja
 
 Guia passo a passo para integrar a plataforma de tradução no seu projeto.
 
@@ -6,7 +6,7 @@ Guia passo a passo para integrar a plataforma de tradução no seu projeto.
 
 ### Opção A: npm install
 ```bash
-npm install novaix-translation
+npm install tradninja
 ```
 
 ### Opção B: Cópia manual
@@ -16,7 +16,7 @@ cp -r translation/src/ /seu/projeto/src/translation/
 
 ### Opção C: git submodule
 ```bash
-git submodule add https://github.com/novaix/translation.git translation
+git submodule add https://github.com/Seu App/translation.git translation
 ```
 
 ## 2. Configuração do Provider
@@ -25,7 +25,7 @@ Envolva sua aplicação com o `TranslationProvider`:
 
 ```tsx
 // App.tsx
-import { TranslationProvider } from 'novaix-translation';
+import { TranslationProvider } from 'tradninja';
 
 export default function App() {
   return (
@@ -41,7 +41,7 @@ export default function App() {
 Acesse as funções de tradução via `useTranslation`:
 
 ```tsx
-import { useTranslation } from 'novaix-translation';
+import { useTranslation } from 'tradninja';
 
 function MinhaTela() {
   const { t, locale, changeLocale } = useTranslation();
@@ -61,7 +61,7 @@ function MinhaTela() {
 
 ### T - Componente simples
 ```tsx
-import { T } from 'novaix-translation';
+import { T } from 'tradninja';
 
 // Uso básico
 <T k="Configurações" />
@@ -75,7 +75,7 @@ import { T } from 'novaix-translation';
 
 ### Trans - Com parâmetros
 ```tsx
-import { Trans } from 'novaix-translation';
+import { Trans } from 'tradninja';
 
 // Interpolação simples
 <Trans k="{name} fez {count} treinos" name="João" count={10} />
@@ -90,7 +90,7 @@ import { Trans } from 'novaix-translation';
 Encontre strings não traduzidas no projeto:
 
 ```typescript
-import { scanForStrings } from 'novaix-translation';
+import { scanForStrings } from 'tradninja';
 
 const strings = scanForStrings('./app');
 console.log(`Encontradas ${strings.length} strings para traduzir`);
@@ -105,10 +105,10 @@ strings.forEach(s => {
 Traduza meta tags para todas as línguas:
 
 ```typescript
-import { translateSEO } from 'novaix-translation';
+import { translateSEO } from 'tradninja';
 
 const seo = translateSEO('home', {
-  title: 'Novaix Fitness - Treine em Casa',
+  title: 'Seu App - Treine em Casa',
   description: 'App de treinos personalizados para você',
   keywords: ['fitness', 'treino', 'exercício'],
 });
@@ -136,7 +136,7 @@ for (const [pt, en, es] of EXTRA_CUSTOM) {
 Todas as traduções são cached automaticamente. Para configuração avançada:
 
 ```typescript
-import { configure } from 'novaix-translation';
+import { configure } from 'tradninja';
 
 configure({
   maxSize: 10000,   // máximo de entradas em cache

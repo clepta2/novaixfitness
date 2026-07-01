@@ -1,15 +1,15 @@
-# Novaix Translation
+# TradNinja
 
-Plataforma de tradução offline para o Novaix Fitness.
+Plataforma de tradução offline para o Seu App.
 
 [![Tests](https://img.shields.io/badge/tests-159+-brightgreen)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](#)
 [![Offline](https://img.shields.io/badge/100%25-offline-brightgreen)](#)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](#)
 
-## Por que Novaix Translation?
+## Por que TradNinja?
 
-| Feature | API Tradução | Novaix Translation |
+| Feature | API Tradução | TradNinja |
 |---------|-------------|-------------------|
 | Velocidade | ~300ms | **~0.02ms** |
 | Custo | $20+/10k chars | **Grátis** |
@@ -21,10 +21,10 @@ Plataforma de tradução offline para o Novaix Fitness.
 
 ```bash
 # npm
-npm install novaix-translation
+npm install tradninja
 
 # git clone
-git clone https://github.com/novaix/translation.git
+git clone https://github.com/Seu App/translation.git
 
 # cópia manual
 cp -r translation/ /seu/projeto/src/translation/
@@ -33,7 +33,7 @@ cp -r translation/ /seu/projeto/src/translation/
 ## Quick Start
 
 ```tsx
-import { TranslationProvider, useTranslation } from 'novaix-translation';
+import { TranslationProvider, useTranslation } from 'tradninja';
 
 // Provider (App.js)
 function App() {
@@ -56,11 +56,11 @@ function Header() {
 }
 
 // Componente T
-import { T } from 'novaix-translation';
+import { T } from 'tradninja';
 <Text>T k="Configurações" locale={locale} />
 
 // Componente Trans
-import { Trans } from 'novaix-translation';
+import { Trans } from 'tradninja';
 <Trans k="Parabéns! Você subiu para o nível {level}!" level={5} />
 ```
 

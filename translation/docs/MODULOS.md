@@ -1,4 +1,4 @@
-# Módulos - Novaix Translation
+# Módulos - TradNinja
 
 Cada módulo resolve um problema específico da tradução.
 
@@ -29,7 +29,7 @@ translation/src/
 - Retorna localização exata (arquivo, linha, coluna)
 
 ```typescript
-import { scanForStrings } from 'novaix-translation';
+import { scanForStrings } from 'tradninja';
 
 const results = scanForStrings('./app');
 // Resultado: [{ file, line, column, original, context }]
@@ -52,7 +52,7 @@ const results = scanForStrings('./app');
 - Substitui no arquivo original
 
 ```typescript
-import { translateComments } from 'novaix-translation';
+import { translateComments } from 'tradninja';
 
 const result = translateComments('./src/utils.ts', 'en');
 // result.translated = comentários traduzidos
@@ -75,10 +75,10 @@ const result = translateComments('./src/utils.ts', 'en');
 - Suporta múltiplas telas
 
 ```typescript
-import { translateSEO } from 'novaix-translation';
+import { translateSEO } from 'tradninja';
 
 const seo = translateSEO('home', {
-  title: 'Novaix Fitness - Treine em Casa',
+  title: 'Seu App - Treine em Casa',
   description: 'App de treinos personalizados',
   keywords: ['fitness', 'treino', 'exercício'],
 });
@@ -102,7 +102,7 @@ const seo = translateSEO('home', {
 - Gera tags traduzidas
 
 ```typescript
-import { translateVideoMetadata } from 'novaix-translation';
+import { translateVideoMetadata } from 'tradninja';
 
 const result = translateVideoMetadata({
   title: 'Treino de Peito e Tríceps',
@@ -128,7 +128,7 @@ const result = translateVideoMetadata({
 - Fallback inteligente
 
 ```typescript
-import { translateContent } from 'novaix-translation';
+import { translateContent } from 'tradninja';
 
 const result = translateContent('3 séries de 12 reps', { target: 'en' });
 // { text: '3 sets of 12 reps', matched: true, confidence: 0.8 }

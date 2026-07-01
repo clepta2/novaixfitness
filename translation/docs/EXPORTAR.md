@@ -1,4 +1,4 @@
-# Exportar - Novaix Translation
+# Exportar - TradNinja
 
 Três métodos para compartilhar a plataforma de tradução entre projetos.
 
@@ -30,18 +30,18 @@ npm link
 
 # No projeto que vai usar
 cd /outro/projeto/
-npm link novaix-translation
+npm link tradninja
 ```
 
 ### Usar no código
 ```tsx
-import { TranslationProvider, useTranslation } from 'novaix-translation';
+import { TranslationProvider, useTranslation } from 'tradninja';
 ```
 
 ### Desfazer link
 ```bash
 # No projeto consumidor
-npm unlink novaix-translation
+npm unlink tradninja
 npm install
 
 # No projeto translation
@@ -69,7 +69,7 @@ npm publish
 package.json já vem configurado:
 ```json
 {
-  "name": "novaix-translation",
+  "name": "tradninja",
   "version": "1.0.0",
   "main": "src/index.ts",
   "files": ["src/"],
@@ -79,7 +79,7 @@ package.json já vem configurado:
 
 ### Usar em qualquer projeto
 ```bash
-npm install novaix-translation
+npm install tradninja
 ```
 
 ### Versionamento

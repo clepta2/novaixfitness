@@ -1,4 +1,4 @@
-# API Reference - Novaix Translation
+# API Reference - TradNinja
 
 Referência completa de todas as funções e componentes.
 
