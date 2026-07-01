@@ -119,6 +119,9 @@ jest.mock('../../src/components', () => {
     TutorialOverlay: 'TutorialOverlay',
     ErrorBoundary: (props) => React.createElement(View, null, props.children),
     OfflineIndicator: mock('OfflineIndicator'),
+    SearchBar: mock('SearchBar'),
+    Loading: mock('Loading'),
+    EmptyState: mock('EmptyState'),
   };
 });
 
@@ -131,6 +134,12 @@ jest.mock('../../src/hooks/useTutorial', () => ({
   }),
 }));
 
+jest.mock('../../src/hooks/useNetworkStatus', () => ({
+  __esModule: true,
+  default: () => ({ isOffline: false }),
+  useNetworkStatus: () => ({ isOffline: false }),
+}));
+
 jest.mock('../../src/styles/libraryStyles', () => ({
   styles: {
     searchRow: {},
@@ -140,6 +149,18 @@ jest.mock('../../src/styles/libraryStyles', () => ({
     favScroll: {},
     statsCard: {},
   },
+}));
+
+jest.mock('../../src/i18n', () => ({
+  __esModule: true,
+  default: { t: (key) => key },
+  useI18n: () => ({ t: (key, opts) => { if (key === 'library.title') return 'Biblioteca'; if (key === 'library.focus') return 'Foco: ' + (opts?.level || ''); if (key === 'library.exploreAll') return 'Explorar tudo'; return key; } }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
 }));
 
 import LibraryScreen from '../../app/(tabs)/library';
@@ -164,23 +185,14 @@ describe('Library Screen', () => {
     expect(toJSON()).toBeTruthy();
   });
 
-  it('renders favorites section', () => {
+  it('renders categories', () => {
     const { getByText } = render(<LibraryScreen />);
-    expect(getByText('MEUS FAVORITOS')).toBeTruthy();
+    expect(getByText('MUSCULACAO')).toBeTruthy();
   });
 
-  it('renders popular workouts', () => {
-    const { getByText } = render(<LibraryScreen />);
-    expect(getByText('MAIS POPULARES')).toBeTruthy();
-  });
-
-  it('renders recent workouts', () => {
-    const { getByText } = render(<LibraryScreen />);
-    expect(getByText('USADOS RECENTEMENTE')).toBeTruthy();
-  });
-
-  it('renders stats section', () => {
-    const { getByText } = render(<LibraryScreen />);
-    expect(getByText('SUAS ESTATÍSTICAS')).toBeTruthy();
+  it('renders workout list', () => {
+    const { toJSON } = render(<LibraryScreen />);
+    const json = JSON.stringify(toJSON());
+    expect(json).toContain('WorkoutCard');
   });
 });

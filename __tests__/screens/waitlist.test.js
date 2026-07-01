@@ -47,6 +47,18 @@ jest.mock('../../src/components', () => {
         <Text>{title}</Text>
       </TouchableOpacity>
     ),
+    WaitlistFeature: ({ feature, onJoin }) => {
+      const { View } = require('react-native');
+      return (
+        <View testID={`waitlist-feature-${feature.id}`}>
+          <Text>{feature.title}</Text>
+          <TouchableOpacity testID={`join-button-${feature.id}`} onPress={onJoin}>
+            <Text>ENTRAR NA LISTA</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    ErrorBoundary: ({ children }) => children,
   };
 });
 

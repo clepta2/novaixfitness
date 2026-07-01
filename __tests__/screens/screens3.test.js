@@ -28,6 +28,15 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   openURL: jest.fn().mockResolvedValue({}),
 }));
 
+jest.mock('../../src/constants/colors', () => ({
+  COLORS: { background: '#12161A', surface: '#1E232A', primary: '#CCFF00', textTitle: '#FFFFFF', textMuted: '#8A8F98', textDescription: '#A0A5AD', border: '#2A2F36', attention: '#FFD700', gold: '#FFD700', secondary: '#FF6B35', success: '#00E676', cyan: '#00BCD4', error: '#FF5252', rose: '#FF4081', fuchsia: '#E040FB', amber: '#FFC107', purple: '#9C27B0', warning: '#FF9800', successLight: '#69F0AE', info: '#42A5F5' },
+}));
+
+jest.mock('../../src/constants/spacing', () => ({
+  SPACING: { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32 },
+  BORDER_RADIUS: { sm: 4, md: 8, lg: 12, xl: 16, full: 999 },
+}));
+
 jest.mock('../../src/utils/responsive', () => ({
   scale: (n) => n,
 }));
@@ -89,6 +98,7 @@ jest.mock('../../src/components', () => {
   const mock = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
   const base = {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
+    ErrorBoundary: ({ children }) => children,
     ReferralCard: () => React.createElement(View, null, React.createElement(Text, null, 'ReferralCard')),
     CompareView: mock('CompareView'),
     PhotoGrid: mock('PhotoGrid'),

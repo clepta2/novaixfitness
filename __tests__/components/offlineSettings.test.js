@@ -53,37 +53,37 @@ describe('OfflineSettings Component', () => {
   it('renders offline settings', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('DADOS OFFLINE')).toBeTruthy();
+    expect(getByText('offline.title')).toBeTruthy();
   });
 
   it('renders cache info after load', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('Cache')).toBeTruthy();
+    expect(getByText('offline.cache')).toBeTruthy();
   });
 
   it('renders sync status after load', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('Último Sync')).toBeTruthy();
+    expect(getByText('offline.lastSync')).toBeTruthy();
   });
 
   it('renders pending actions after load', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('Pendentes')).toBeTruthy();
+    expect(getByText('offline.pending')).toBeTruthy();
   });
 
   it('renders sync button after load', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('Sincronizar')).toBeTruthy();
+    expect(getByText('offline.sync')).toBeTruthy();
   });
 
   it('renders cache management buttons after load', async () => {
     const { getByText } = render(<OfflineSettings />);
     await new Promise(r => setTimeout(r, 100));
-    expect(getByText('Limpar Treinos')).toBeTruthy();
-    expect(getByText('Limpar Tudo')).toBeTruthy();
+    expect(getByText('offline.clearWorkouts')).toBeTruthy();
+    expect(getByText('offline.clearAll')).toBeTruthy();
   });
 });

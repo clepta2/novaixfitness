@@ -72,8 +72,33 @@ jest.mock('../../src/components', () => {
         placeholder={placeholder}
       />
     ),
+    ErrorBoundary: ({ children }) => children,
+    GradientButton: ({ title, onPress }) => (
+      <TouchableOpacity onPress={onPress}>
+        <Text>{title}</Text>
+      </TouchableOpacity>
+    ),
+    ProcessingModal: () => <View />,
   };
 });
+
+jest.mock('../../src/hooks/usePaymentProcessing', () => ({
+  __esModule: true,
+  default: () => ({
+    selected: 'intermediate', setSelected: jest.fn(),
+    coupon: '', setCoupon: jest.fn(),
+    processing: false, processStep: 0, paymentId: null, isWeb: false,
+    handleLogout: jest.fn(), handleSkip: jest.fn(),
+    getButtonTitle: () => 'LIBERAR MEU CRONOGRAMA',
+    handleSubscribe: jest.fn(), cancelProcessing: jest.fn(),
+  }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
+}));
 
 // Mock abtest service (no longer used, but guard against import error)
 jest.mock('../../src/services/abtest', () => ({

@@ -2,6 +2,7 @@
 // Sistema de espaçamentos NOVAIX FITNESS com tipagem estrita
 
 import { scale } from '../utils/responsive';
+export { SHADOWS } from './shadows';
 
 export interface SpacingTokens {
   xs: number;

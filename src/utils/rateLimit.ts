@@ -1,7 +1,7 @@
 // src/utils/rateLimit.js
 // Utilitarios de rate limiting para chamadas de API - NOVAIX FITNESS
 
-const callTimestamps = new Map();
+const callTimestamps = new Map<string, number>();
 
 export function throttle(key, intervalMs = 1000) {
   const now = Date.now();
@@ -15,9 +15,9 @@ export function throttle(key, intervalMs = 1000) {
   return true;
 }
 
-export function debounce(fn, delayMs = 300) {
-  let timer = null;
-  return (...args) => {
+export function debounce<T extends (...args: any[]) => void>(fn: T, delayMs = 300) {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delayMs);
   };

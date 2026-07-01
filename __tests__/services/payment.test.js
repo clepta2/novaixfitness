@@ -1,16 +1,11 @@
 import { PLANS, isSubscribed, getPlanById } from '../../src/services/payment';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    auth: { getSession: jest.fn().mockResolvedValue({ data: { session: null } }) },
-    from: jest.fn(() => ({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: null }),
-    })),
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 describe('Payment Service', () => {
   describe('PLANS', () => {
     it('has all plan tiers', () => {

@@ -5,22 +5,12 @@ import {
   MEASUREMENT_TYPES,
 } from '../../src/services/body-measurements';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      insert: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: null, error: null }),
-      delete: jest.fn().mockReturnThis(),
-      not: jest.fn().mockReturnThis(),
-      gte: jest.fn().mockReturnThis(),
-    })),
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 describe('Body Measurements Service', () => {
   describe('calculateBMI', () => {
     it('returns null for missing inputs', () => {

@@ -50,10 +50,10 @@ describe('Admin Components', () => {
 
     it('renders stats cards', () => {
       const { getByText } = render(<AdminDashboard />);
-      expect(getByText('TOTAL ALUNOS')).toBeTruthy();
-      expect(getByText('ATIVOS')).toBeTruthy();
-      expect(getByText('NOVOS/MÊS')).toBeTruthy();
-      expect(getByText('TREINOS')).toBeTruthy();
+      expect(getByText('admin.dashboard.totalStudents')).toBeTruthy();
+      expect(getByText('admin.dashboard.active')).toBeTruthy();
+      expect(getByText('admin.dashboard.newMonth')).toBeTruthy();
+      expect(getByText('admin.dashboard.workouts')).toBeTruthy();
     });
   });
 });

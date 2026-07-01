@@ -1,16 +1,12 @@
 import { exportUserData, deleteAccount, getConsentSettings, updateConsentSettings, requestDataDeletion } from '../../src/services/lgpd';
 import { supabase } from '../../src/config/supabase';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    from: jest.fn(),
-    auth: {
-      admin: { deleteUser: jest.fn() },
-      signOut: jest.fn(),
-    },
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 jest.mock('expo-sharing', () => ({
   isAvailableAsync: jest.fn().mockResolvedValue(true),
   shareAsync: jest.fn(),
@@ -38,6 +34,11 @@ const mockChain = (data = null, error = null) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockSupabase._reset();
+  mockSupabase.auth = {
+    admin: { deleteUser: jest.fn().mockResolvedValue({ error: null }) },
+    signOut: jest.fn().mockResolvedValue({ error: null }),
+  };
 });
 
 describe('LGPD Service', () => {
@@ -89,9 +90,9 @@ describe('LGPD Service', () => {
   });
 
   describe('getConsentSettings', () => {
-    it('returns null for null userId', async () => {
+    it('returns defaults for null userId', async () => {
       const result = await getConsentSettings(null);
-      expect(result).toBeNull();
+      expect(result).toEqual({ marketing: false, analytics: false, thirdParty: false, updatedAt: null });
     });
 
     it('returns consent settings with defaults', async () => {

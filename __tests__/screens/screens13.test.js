@@ -13,10 +13,13 @@ jest.mock('expo-router', () => ({
 jest.mock('../../src/context/AuthContext', () => ({
   useAuth: () => ({ user: { id: 'u1', email: 't@t.com' }, profile: {}, onboarding: {}, signOut: jest.fn() }),
 }));
-jest.mock('../../src/config/supabase', () => {
-  const { createMockSupabase } = require('../__mocks__/supabase');
-  return { supabase: createMockSupabase() };
-});
+jest.mock('../../src/config/supabase', () => ({
+  supabase: {
+    from: jest.fn(() => ({ select: jest.fn().mockReturnThis(), insert: jest.fn().mockReturnThis(), update: jest.fn().mockReturnThis(), delete: jest.fn().mockReturnThis(), upsert: jest.fn().mockReturnThis(), eq: jest.fn().mockReturnThis(), neq: jest.fn().mockReturnThis(), gt: jest.fn().mockReturnThis(), gte: jest.fn().mockReturnThis(), order: jest.fn().mockReturnThis(), limit: jest.fn().mockReturnThis(), single: jest.fn().mockResolvedValue({ data: null, error: null }), then: (resolve) => resolve({ data: null, error: null }) })),
+    auth: { getUser: jest.fn().mockResolvedValue({ data: { user: { id: 'u1' } }, error: null }), getSession: jest.fn().mockResolvedValue({ data: { session: { access_token: 'mock-token' } }, error: null }) },
+    rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
+  },
+}));
 jest.mock('../../src/styles', () => ({
   typography: { h2: {}, h3: {}, h4: {}, h5: {}, bodyMuted: {}, caption: {}, label: {} },
   layout: { screen: { flex: 1 }, scroll: { padding: 24 }, header: {}, section: {} },
@@ -64,7 +67,7 @@ jest.mock('../../src/services/body-measurements', () => ({ getMeasurements: jest
 jest.mock('../../src/services/progress-photos', () => ({ getPhotos: jest.fn().mockResolvedValue([]), addPhoto: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/notifications', () => ({ getNotifications: jest.fn().mockResolvedValue([]), markAsRead: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/hooks/useRealtimePosts', () => ({ useRealtimePosts: () => ({ posts: [], loading: false }) }));
-jest.mock('../../src/data/settingsOptions', () => ({ THEME_OPTIONS: [], SETTINGS_GROUPS: [], ACCOUNT_OPTIONS: [], INFO_OPTIONS: [] }));
+jest.mock('../../src/data/settingsOptions', () => ({ THEME_OPTIONS: [], SETTINGS_GROUPS: [], ACCOUNT_OPTIONS: [], INFO_OPTIONS: [], AI_TABS: [{ id: 'dados', label: 'Dados', icon: 'document-text' }, { id: 'insights', label: 'Insights', icon: 'bulb' }, { id: 'progresso', label: 'Progresso', icon: 'trending-up' }], ACCESSIBILITY_OPTIONS: [{ id: 'large_text', label: 'Fonte Grande', description: 'Aumenta o tamanho do texto', icon: 'text' }, { id: 'high_contrast', label: 'Alto Contraste', description: 'Cores mais fortes e visíveis', icon: 'contrast' }, { id: 'reduce_motion', label: 'Reduzir Movimento', description: 'Remove animações desnecessárias', icon: 'pause' }, { id: 'bold_text', label: 'Texto em Negrito', description: 'Torna todo o texto mais grosso', icon: 'bold' }] }));
 jest.mock('../../src/data/onboarding', () => ({ ONBOARDING_STEPS: [] }));
 jest.mock('../../src/services/mealAnalyzer', () => ({ analyzeMeal: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/gemini', () => ({ sendMessage: jest.fn().mockResolvedValue('') }));

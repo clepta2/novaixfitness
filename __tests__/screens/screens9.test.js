@@ -41,6 +41,8 @@ jest.mock('../../src/components/onboarding/StatePickerModal', () => {
 jest.mock('expo-keep-awake', () => ({
   activateKeepAwakeAsync: jest.fn(),
   deactivateKeepAwakeAsync: jest.fn(),
+  deactivateKeepAwake: jest.fn(),
+  default: { activateKeepAwakeAsync: jest.fn(), deactivateKeepAwakeAsync: jest.fn(), deactivateKeepAwake: jest.fn() },
 }));
 
 jest.mock('../../src/utils/responsive', () => ({
@@ -72,6 +74,43 @@ jest.mock('../../src/styles', () => ({
     section: { marginBottom: 24 },
     footer: { padding: 24 },
   },
+}));
+
+jest.mock('../../src/i18n', () => ({
+  __esModule: true,
+  default: { t: (key) => key },
+  useI18n: () => ({
+    t: (key) => {
+      const map = {
+        'onboarding.goalTitle': 'O QUE VOCÊ BUSCA HOJE?',
+        'onboarding.goalSubtitle': 'Escolha seu objetivo',
+        'onboarding.goalOptions.weight_loss': 'Emagrecimento',
+        'onboarding.goalOptions.weight_loss_desc': 'Perder peso de forma saudável',
+        'onboarding.goalOptions.muscle_gain': 'Ganho de Massa',
+        'onboarding.goalOptions.muscle_gain_desc': 'Construir músculos',
+        'onboarding.goalOptions.fitness': 'Condicionamento',
+        'onboarding.goalOptions.fitness_desc': 'Melhorar resistência',
+        'onboarding.goalOptions.flexibility': 'Flexibilidade',
+        'onboarding.goalOptions.flexibility_desc': 'Alongamento e mobilidade',
+        'onboarding.goalNext': 'PRÓXIMO',
+        'onboarding.levelStep': 'PASSO 3 DE 3',
+        'onboarding.levelTitle': 'QUAL SEU NÍVEL ATUAL?',
+        'onboarding.levelSubtitle': 'Escolha seu nível',
+        'onboarding.levelFinalize': 'PRÓXIMO',
+      };
+      return map[key] || key;
+    },
+  }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
+}));
+
+jest.mock('../../src/utils/animations', () => ({
+  useStaggeredEntry: () => [0, 1, 2, 3],
 }));
 
 jest.mock('../../src/context/AuthContext', () => ({
@@ -131,7 +170,7 @@ jest.mock('../../src/hooks/useWorkoutTimer', () => {
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
@@ -192,7 +231,7 @@ describe('Screens - Round 9', () => {
 
     it('renders header', () => {
       const { getByText } = render(<GenderScreen />);
-      expect(getByText('SOBRE VOCÊ')).toBeTruthy();
+      expect(getByText('SOBRE VOCE')).toBeTruthy();
     });
   });
 

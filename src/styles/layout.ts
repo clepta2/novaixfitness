@@ -2,7 +2,7 @@
 // Estilos de layout compartilhados - NOVAIX FITNESS com tipagem estrita e tema dinâmico
 // NOTA: Telas devem usar useSafeAreaInsets() para top padding dinâmico
 
-import { Platform, ViewStyle, TextStyle } from 'react-native';
+import { Platform, ViewStyle, TextStyle, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../constants/spacing';
 
@@ -31,37 +31,28 @@ export interface LayoutStyles {
   footerLink: TextStyle;
 }
 
-export const layout: LayoutStyles = {
-  // Containers
-  get screen(): ViewStyle { return { flex: 1, backgroundColor: COLORS.background }; },
-  get scroll(): ViewStyle { return { padding: SPACING.xl, paddingTop: SAFE_TOP }; },
-  get centered(): ViewStyle { return { flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' }; },
+// Pre-computed styles to avoid creating new objects on each access
+const baseLayout = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.background },
+  scroll: { padding: SPACING.xl, paddingTop: SAFE_TOP },
+  centered: { flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xxl },
+  headerTitle: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, lineHeight: 36, color: COLORS.textTitle },
+  headerBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center' },
+  section: { marginBottom: SPACING.xxl },
+  sectionTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, lineHeight: 16, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.md },
+  card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
+  cardActive: { borderColor: COLORS.primary, backgroundColor: COLORS.primary + '08' },
+  divider: { flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.xl },
+  dividerLine: { flex: 1, height: 1, backgroundColor: COLORS.border },
+  dividerText: { fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, color: COLORS.textMuted, marginHorizontal: SPACING.md },
+  btnPrimary: { backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md },
+  btnText: { fontFamily: 'Montserrat_700Bold', fontSize: 14, lineHeight: 20, color: COLORS.background, letterSpacing: 1 },
+  footer: { flexDirection: 'row', gap: SPACING.md, padding: SPACING.xl, paddingBottom: 40 },
+  footerText: { fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, color: COLORS.textDescription },
+  footerLink: { fontFamily: 'Montserrat_700Bold', fontSize: 14, lineHeight: 20, color: COLORS.primary },
+});
 
-  // Headers
-  get header(): ViewStyle { return { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.xxl }; },
-  get headerTitle(): TextStyle { return { fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, lineHeight: 36, color: COLORS.textTitle }; },
-  get headerBtn(): ViewStyle { return { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center' }; },
-
-  // Sections
-  get section(): ViewStyle { return { marginBottom: SPACING.xxl }; },
-  get sectionTitle(): TextStyle { return { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, lineHeight: 16, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md }; },
-  get sectionHeader(): ViewStyle { return { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.md }; },
-
-  // Cards
-  get card(): ViewStyle { return { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border }; },
-  get cardActive(): ViewStyle { return { borderColor: COLORS.primary, backgroundColor: COLORS.primary + '08' }; },
-
-  // Dividers
-  get divider(): ViewStyle { return { flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.xl }; },
-  get dividerLine(): ViewStyle { return { flex: 1, height: 1, backgroundColor: COLORS.border }; },
-  get dividerText(): TextStyle { return { fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, color: COLORS.textMuted, marginHorizontal: SPACING.md }; },
-
-  // Buttons
-  get btnPrimary(): ViewStyle { return { backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md }; },
-  get btnText(): TextStyle { return { fontFamily: 'Montserrat_700Bold', fontSize: 14, lineHeight: 20, color: COLORS.background, letterSpacing: 1 }; },
-
-  // Footer
-  get footer(): ViewStyle { return { flexDirection: 'row', gap: SPACING.md, padding: SPACING.xl, paddingBottom: 40 }; },
-  get footerText(): TextStyle { return { fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 22, color: COLORS.textDescription }; },
-  get footerLink(): TextStyle { return { fontFamily: 'Montserrat_700Bold', fontSize: 14, lineHeight: 20, color: COLORS.primary }; },
-};
+// Export as a static object - no getters
+export const layout: LayoutStyles = baseLayout;

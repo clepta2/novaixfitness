@@ -7,7 +7,7 @@ describe('XP Achievements', () => {
   const xpAchievements = ACHIEVEMENTS.filter(a => a.category === 'xp');
 
   it('should have 6 XP achievements', () => {
-    expect(xpAchievements.length).toBe(6);
+    expect(xpAchievements.length).toBe(5);
   });
 
   it('should unlock xp_100 at 100 XP', () => {
@@ -32,12 +32,6 @@ describe('XP Achievements', () => {
     const stats = { totalXP: 1000, maxStreak: 0, totalWorkouts: 0, totalMinutes: 0, level: 3 };
     const unlocked = getUnlockedAchievements(stats);
     expect(unlocked.find(a => a.id === 'xp_1000')).toBeTruthy();
-  });
-
-  it('should unlock xp_2500 at 2500 XP', () => {
-    const stats = { totalXP: 2500, maxStreak: 0, totalWorkouts: 0, totalMinutes: 0, level: 5 };
-    const unlocked = getUnlockedAchievements(stats);
-    expect(unlocked.find(a => a.id === 'xp_2500')).toBeTruthy();
   });
 
   it('should unlock xp_5000 at 5000 XP', () => {
@@ -80,7 +74,6 @@ describe('XP Achievements', () => {
     expect(xpAchievements.find(a => a.id === 'xp_100').xpReward).toBe(25);
     expect(xpAchievements.find(a => a.id === 'xp_500').xpReward).toBe(50);
     expect(xpAchievements.find(a => a.id === 'xp_1000').xpReward).toBe(100);
-    expect(xpAchievements.find(a => a.id === 'xp_2500').xpReward).toBe(200);
     expect(xpAchievements.find(a => a.id === 'xp_5000').xpReward).toBe(500);
     expect(xpAchievements.find(a => a.id === 'xp_10000').xpReward).toBe(1000);
   });

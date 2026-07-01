@@ -13,6 +13,11 @@ jest.mock('../../src/middleware/auth', () => ({
     next();
   }
 }));
+jest.mock('node-fetch', () => {
+  const fn = jest.fn().mockResolvedValue({ json: () => Promise.resolve({ data: { status: 'ok' } }) });
+  fn.default = fn;
+  return fn;
+});
 
 global.fetch = jest.fn().mockResolvedValue({ json: () => Promise.resolve({ data: { status: 'ok' } }) });
 

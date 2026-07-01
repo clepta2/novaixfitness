@@ -3,12 +3,12 @@ import { supabase } from '../../src/config/supabase';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    from: jest.fn(),
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 jest.mock('expo-file-system', () => ({
   documentDirectory: 'file:///documents/',
   writeAsStringAsync: jest.fn(),
@@ -37,7 +37,9 @@ beforeEach(() => {
   FileSystem.writeAsStringAsync.mockResolvedValue();
   Sharing.isAvailableAsync.mockResolvedValue(true);
   Sharing.shareAsync.mockResolvedValue();
-});
+
+    mockSupabase._reset();
+  });
 
 describe('CSV Export Service', () => {
   describe('exportWorkoutHistory', () => {

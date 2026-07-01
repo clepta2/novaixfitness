@@ -97,7 +97,7 @@ jest.mock('../../src/data/filters', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     HistoryCard: (props) => React.createElement(View, null, React.createElement(Text, null, 'HistoryCard')),

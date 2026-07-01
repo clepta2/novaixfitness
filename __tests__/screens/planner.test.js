@@ -52,18 +52,24 @@ jest.mock('../../src/styles', () => ({
   },
 }));
 
-jest.mock('../../src/components/planner', () => {
+jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  return {
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const base = {
+    ErrorBoundary: ({ children }) => children,
     WeekCalendar: ({ weekPlan, onDayPress }) => (
       <View testID="week-calendar">
-        <Text>Seg Ter Qua Qui Sex Sab Dom</Text>
+        <Text>WeekCalendar</Text>
       </View>
     ),
     AdaptationBanner: () => React.createElement(View, null),
     DayEditorModal: () => React.createElement(View, null),
+    DayDetailView: Stub('DayDetailView'),
+    TodayCard: Stub('TodayCard'),
+    WeekOverview: Stub('WeekOverview'),
   };
+  return new Proxy(base, { get: (t, k) => t[k] || Stub(String(k)) });
 });
 
 jest.mock('../../src/services/planService', () => ({
@@ -126,11 +132,11 @@ describe('PlannerScreen', () => {
 
   it('renders weekly overview section', () => {
     const { getByText } = render(<PlannerScreen />);
-    expect(getByText('RESUMO DA SEMANA')).toBeTruthy();
+    expect(getByText('WeekOverview')).toBeTruthy();
   });
 
   it('renders today section', () => {
     const { getByText } = render(<PlannerScreen />);
-    expect(getByText('HOJE')).toBeTruthy();
+    expect(getByText('TodayCard')).toBeTruthy();
   });
 });

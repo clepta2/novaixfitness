@@ -94,6 +94,24 @@ jest.mock('../../src/services/abtest', () => ({
   trackPaywallSkip: jest.fn(),
 }));
 
+jest.mock('../../src/hooks/usePaymentProcessing', () => ({
+  __esModule: true,
+  default: () => ({
+    selected: 'intermediate', setSelected: jest.fn(),
+    coupon: '', setCoupon: jest.fn(),
+    processing: false, processStep: 0, paymentId: null, isWeb: false,
+    handleLogout: jest.fn(), handleSkip: jest.fn(),
+    getButtonTitle: () => 'LIBERAR MEU CRONOGRAMA',
+    handleSubscribe: jest.fn(), cancelProcessing: jest.fn(),
+  }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
+}));
+
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
@@ -107,11 +125,14 @@ jest.mock('../../src/components', () => {
     VariantBView: (props) => React.createElement(View, null, React.createElement(Text, null, 'VariantBView')),
     GuaranteeSection: (props) => React.createElement(View, null, React.createElement(Text, null, 'GuaranteeSection')),
     DiscountBanner: (props) => React.createElement(View, null, React.createElement(Text, null, 'DiscountBanner')),
+    GradientButton: (props) => React.createElement(View, null, React.createElement(Text, null, props.title || 'GradientButton')),
+    ProcessingModal: (props) => React.createElement(View, null),
     FaqItem: (props) => React.createElement(View, null, React.createElement(Text, null, props.item?.question || 'FAQ')),
     ContactCard: (props) => React.createElement(View, null, React.createElement(Text, null, props.label || 'Contact')),
     PostCard: (props) => React.createElement(View, null, React.createElement(Text, null, 'PostCard')),
     CreatePostModal: (props) => React.createElement(View, null),
     NotificationModal: (props) => React.createElement(View, null),
+    ErrorBoundary: ({ children }) => children,
   };
 });
 

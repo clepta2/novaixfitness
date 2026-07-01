@@ -20,11 +20,11 @@ export function useFadeInUp(delay = 0) {
   return { opacity, translateY };
 }
 
-export function useStaggeredEntry(index, baseDelay = 80) {
+export function useStaggeredEntry(index: number, baseDelay = 80) {
   return useFadeInUp(index * baseDelay);
 }
 
-export function useAnimatedNumber(targetValue, duration = 800) {
+export function useAnimatedNumber(targetValue: number, duration = 800) {
   const [animValue] = useState(() => new Animated.Value(0));
   useEffect(() => {
     Animated.timing(animValue, { toValue: targetValue, duration, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
@@ -32,7 +32,7 @@ export function useAnimatedNumber(targetValue, duration = 800) {
   return animValue;
 }
 
-export function useAnimatedProgress(percentage, duration = 1000) {
+export function useAnimatedProgress(percentage: number, duration = 1000) {
   const [progress] = useState(() => new Animated.Value(0));
   useEffect(() => {
     progress.setValue(0);
@@ -71,7 +71,7 @@ export function useCardPress() {
   return { scaleAnim, onPressIn, onPressOut };
 }
 
-export function useCountUp(target, duration = 800) {
+export function useCountUp(target: number, duration = 800) {
   const [display, setDisplay] = useState(0);
   const animValue = useRef(new Animated.Value(0)).current;
 

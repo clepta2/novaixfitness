@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 
 jest.mock('expo-font', () => ({
   useFonts: () => [true],
@@ -76,6 +76,9 @@ jest.mock('../../src/services/csv-export', () => ({
   exportProgressData: jest.fn().mockResolvedValue({}),
   exportAnalyticsData: jest.fn().mockResolvedValue({}),
   exportAchievements: jest.fn().mockResolvedValue({}),
+  exportProfileData: jest.fn().mockResolvedValue({}),
+  exportChatHistory: jest.fn().mockResolvedValue({}),
+  exportAllData: jest.fn().mockResolvedValue({}),
 }));
 
 jest.mock('../../src/services/body-measurements', () => ({
@@ -168,19 +171,25 @@ describe('Screens - Round 2', () => {
   });
 
   describe('BodyMeasuresScreen', () => {
-    it('renders header', () => {
+    it('renders header', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
-      expect(getByText('Medidas Corporais')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('Medidas Corporais')).toBeTruthy();
+      });
     });
 
-    it('shows empty state when no measurements', () => {
+    it('shows empty state when no measurements', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
-      expect(getByText('Nenhuma medida registrada')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('Nenhuma medida')).toBeTruthy();
+      });
     });
 
-    it('renders MeasurementHistory', () => {
+    it('renders chart selector', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
-      expect(getByText('MeasurementHistory')).toBeTruthy();
+      await waitFor(() => {
+        expect(getByText('Peso')).toBeTruthy();
+      });
     });
   });
 

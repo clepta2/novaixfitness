@@ -77,7 +77,7 @@ jest.mock('../../src/services/share', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     DashboardStats: 'DashboardStats',
   };

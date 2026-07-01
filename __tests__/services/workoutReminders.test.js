@@ -1,23 +1,34 @@
-jest.mock('expo-notifications', () => ({
-  cancelScheduledNotificationsAsync: jest.fn().mockResolvedValue({}),
-  scheduleNotificationAsync: jest.fn().mockResolvedValue('notif-id'),
-  cancelAllScheduledNotificationsAsync: jest.fn().mockResolvedValue({}),
-  getAllScheduledNotificationsAsync: jest.fn().mockResolvedValue([
-    { content: { data: { type: 'workout_reminder' } } },
-    { content: { data: { type: 'rest_day' } } },
-    { content: { data: { type: 'other' } } },
-  ]),
-}));
+jest.mock('expo-notifications', () => {
+  const SchedulableTriggerInputTypes = {
+    CALENDAR: 1,
+    TIME_INTERVAL: 2,
+    DAILY: 3,
+    DATE: 4,
+  };
+  return {
+    cancelScheduledNotificationsAsync: jest.fn().mockResolvedValue({}),
+    scheduleNotificationAsync: jest.fn().mockResolvedValue('notif-id'),
+    cancelAllScheduledNotificationsAsync: jest.fn().mockResolvedValue({}),
+    getAllScheduledNotificationsAsync: jest.fn().mockResolvedValue([
+      { content: { data: { type: 'workout_reminder' } } },
+      { content: { data: { type: 'rest_day' } } },
+      { content: { data: { type: 'other' } } },
+    ]),
+    requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+    SchedulableTriggerInputTypes,
+  };
+});
 
 jest.mock('../../src/config/supabase', () => {
   const chain = {
     select: jest.fn(() => chain),
     eq: jest.fn(() => chain),
     gte: jest.fn(() => chain),
-    single: jest.fn().mockResolvedValue({ data: null, error: null }),
+    single: jest.fn().mockResolvedValue({ data: { notification_settings: { workout_reminder: false } } }),
     maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
     limit: jest.fn(() => chain),
   };
+  chain.then = jest.fn((resolve) => resolve({ data: null, error: null }));
   return { supabase: { from: jest.fn(() => chain) } };
 });
 
@@ -55,9 +66,11 @@ describe('Workout Reminders', () => {
       const chain = supabase.from();
       chain.single.mockResolvedValue({
         data: {
-          onboarding: { daysPerWeek: [1, 3, 5] },
           notification_settings: { workout_reminder: true, reminder_time: '19:30' },
         },
+      });
+      chain.maybeSingle.mockResolvedValue({
+        data: { days_per_week: [1, 3, 5] },
       });
       await setupWorkoutReminders('u1');
       expect(Notifications.scheduleNotificationAsync).toHaveBeenCalledTimes(3);

@@ -1,24 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addPendingAction, getPendingActions } from '../../src/services/offline';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      insert: jest.fn().mockResolvedValue({ error: null }),
-      delete: jest.fn(() => ({
-        eq: jest.fn().mockResolvedValue({ error: null }),
-      })),
-      upsert: jest.fn().mockResolvedValue({ error: null }),
-    })),
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 const { syncPendingActions } = require('../../src/services/sync');
 
 beforeEach(() => {
   AsyncStorage.clear();
   jest.clearAllMocks();
-});
+
+    mockSupabase._reset();
+  });
 
 describe('Sync Service', () => {
   describe('syncPendingActions', () => {

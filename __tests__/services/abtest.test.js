@@ -1,12 +1,12 @@
 import { getVariant, trackConversion, trackPaywallView, trackPaywallClick, trackPaywallSkip } from '../../src/services/abtest';
 import { supabase } from '../../src/config/supabase';
 
-jest.mock('../../src/config/supabase', () => ({
-  supabase: {
-    from: jest.fn(),
-  },
-}));
+jest.mock('../../src/config/supabase', () => {
+  const { createServiceMock } = require('../../__mocks__/supabase-test');
+  return { supabase: createServiceMock() };
+});
 
+const { supabase: mockSupabase } = require('../../src/config/supabase');
 const mockChain = (data = null, error = null) => {
   const chain = {
     select: jest.fn().mockReturnThis(),
@@ -21,7 +21,9 @@ const mockChain = (data = null, error = null) => {
 beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(Math, 'random').mockReturnValue(0.3);
-});
+
+    mockSupabase._reset();
+  });
 
 afterEach(() => {
   Math.random.mockRestore();

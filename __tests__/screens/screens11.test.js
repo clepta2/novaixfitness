@@ -67,7 +67,7 @@ jest.mock('../../src/helpers/navigation', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),

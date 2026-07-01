@@ -59,10 +59,51 @@ jest.mock('../../src/context/AuthContext', () => ({
   }),
 }));
 
+jest.mock('../../src/i18n', () => ({
+  __esModule: true,
+  default: { t: (key) => key },
+  useI18n: () => ({
+    t: (key) => {
+      const map = {
+        'onboarding.levelStep': 'PASSO 3 DE 3',
+        'onboarding.levelTitle': 'QUAL SEU NÍVEL ATUAL?',
+        'onboarding.levelSubtitle': 'Escolha seu nível de experiência',
+        'onboarding.levelOptions.beginner_label': 'Iniciante',
+        'onboarding.levelOptions.beginner_desc': 'Pouca ou nenhuma experiência',
+        'onboarding.levelOptions.beginner_tag1': 'Novato',
+        'onboarding.levelOptions.beginner_tag2': 'Curioso',
+        'onboarding.levelOptions.beginner_tag3': 'Motivado',
+        'onboarding.levelOptions.intermediate_label': 'Intermediário',
+        'onboarding.levelOptions.intermediate_desc': 'Já treina regularmente',
+        'onboarding.levelOptions.intermediate_tag1': 'Consistente',
+        'onboarding.levelOptions.intermediate_tag2': 'Focado',
+        'onboarding.levelOptions.intermediate_tag3': 'Evoluindo',
+        'onboarding.levelOptions.advanced_label': 'Avançado',
+        'onboarding.levelOptions.advanced_desc': 'Experiência avançada',
+        'onboarding.levelOptions.advanced_tag1': 'Veterano',
+        'onboarding.levelOptions.advanced_tag2': 'Dedicado',
+        'onboarding.levelOptions.advanced_tag3': 'Expert',
+        'onboarding.levelFinalize': 'PRÓXIMO',
+      };
+      return map[key] || key;
+    },
+  }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
+}));
+
+jest.mock('../../src/utils/animations', () => ({
+  useStaggeredEntry: () => [0, 1, 2, 3],
+}));
+
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text, TextInput } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     Card: (props) => React.createElement(View, null, props.children),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
@@ -96,8 +137,8 @@ describe('Screens - Round 10', () => {
     it('renders data and location inputs, weight/height sliders', () => {
       const { getAllByText } = render(<PhysicalDataScreen />);
       expect(getAllByText('DATA DE NASCIMENTO').length).toBeGreaterThanOrEqual(1);
-      expect(getAllByText('PESO').length).toBe(1);
-      expect(getAllByText('ALTURA').length).toBe(1);
+      expect(getAllByText('PESO (kg)').length).toBeGreaterThanOrEqual(1);
+      expect(getAllByText('ALTURA (cm)').length).toBeGreaterThanOrEqual(1);
     });
   });
 

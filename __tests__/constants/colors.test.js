@@ -47,7 +47,7 @@ describe('Colors Constants', () => {
     });
 
     it('has textMuted color', () => {
-      expect(COLORS.textMuted).toBe('#666666');
+      expect(COLORS.textMuted).toBe('#8899AA');
     });
 
     it('has all required colors', () => {
@@ -60,13 +60,13 @@ describe('Colors Constants', () => {
       });
     });
 
-    it('all colors are valid hex', () => {
-      const hexRegex = /^#[0-9A-F]{6}([0-9A-F]{2})?$/i;
+    it('all colors are valid hex or rgba', () => {
+      const validColorRegex = /^(#[0-9A-F]{6}([0-9A-F]{2})?|rgba?\(.+\))$/i;
       Object.values(COLORS).forEach(color => {
         if (Array.isArray(color)) {
-          color.forEach(c => expect(c).toMatch(hexRegex));
+          color.forEach(c => expect(c).toMatch(validColorRegex));
         } else {
-          expect(color).toMatch(hexRegex);
+          expect(color).toMatch(validColorRegex);
         }
       });
     });

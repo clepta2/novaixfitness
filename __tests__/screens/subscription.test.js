@@ -86,8 +86,28 @@ jest.mock('../../src/styles/subscriptionStyles', () => ({
   },
 }));
 
+jest.mock('../../src/hooks/useSubscription', () => ({
+  useSubscription: () => ({
+    payments: [],
+    loading: false,
+    status: { label: 'Gratuito', color: '#94A3B8', icon: 'person' },
+    currentPlan: null,
+    isSubscribed: false,
+    handleCancel: jest.fn(),
+  }),
+}));
+
+jest.mock('../../src/hooks/useResponsive', () => ({
+  __esModule: true,
+  default: () => ({ isSmall: false, horizontalPadding: 20 }),
+  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
+}));
+
 jest.mock('../../src/components', () => ({
   Button: 'Button',
+  GradientButton: 'GradientButton',
+  Loading: 'Loading',
+  ErrorBoundary: ({ children }) => children,
 }));
 
 import SubscriptionScreen from '../../app/subscription';

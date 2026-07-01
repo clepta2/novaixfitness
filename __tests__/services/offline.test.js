@@ -44,7 +44,7 @@ describe('Offline Service', () => {
 
     it('returns workouts when cache is fresh', async () => {
       const workouts = [{ id: '1', name: 'Treino A' }];
-      const fresh = { workouts, timestamp: Date.now() - 1000 };
+      const fresh = { data: workouts, timestamp: Date.now() - 1000 };
       await AsyncStorage.setItem('@novaix:workouts', JSON.stringify(fresh));
       const result = await getCachedWorkouts();
       expect(result).toEqual(workouts);

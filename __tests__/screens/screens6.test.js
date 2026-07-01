@@ -71,7 +71,7 @@ const mockChain = {
   order: jest.fn(() => mockChain),
   limit: jest.fn(() => Promise.resolve({ data: [], error: null })),
   gte: jest.fn(() => mockChain),
-  single: jest.fn(() => Promise.resolve({ data: { subscription_status: 'free', onboarding: { level: 'intermediate' } }, error: null })),
+  single: jest.fn(() => Promise.resolve({ data: { subscription_status: 'free', onboarding: { level: 'intermediate' }, role: 'superadmin' }, error: null })),
   update: jest.fn(() => mockChain),
   delete: jest.fn(() => mockChain),
 };
@@ -96,6 +96,10 @@ jest.mock('../../src/services/totp', () => ({
   is2FAEnabled: jest.fn().mockResolvedValue(true),
 }));
 
+jest.mock('../../src/services/offlineManager', () => ({
+  queueWorkoutCompletion: jest.fn(),
+}));
+
 jest.mock('../../src/data/dailyWorkouts', () => ({
   dailyWorkouts: [{ id: '1', name: 'Treino A', category: 'Musculacao' }],
   activeWorkout: { id: '1', name: 'Treino A' },
@@ -113,7 +117,7 @@ jest.mock('../../src/styles/subscriptionStyles', () => ({
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name));
+  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
   const base = {
     Header: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
     Button: (props) => React.createElement(View, null, React.createElement(Text, null, props.title)),
@@ -174,7 +178,7 @@ import AdminScreen from '../../app/admin';
 describe('Screens - Round 6', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockChain.single.mockResolvedValue({ data: { subscription_status: 'free', onboarding: { level: 'intermediate' } }, error: null });
+    mockChain.single.mockResolvedValue({ data: { subscription_status: 'free', onboarding: { level: 'intermediate' }, role: 'superadmin' }, error: null });
     mockChain.limit.mockResolvedValue({ data: [], error: null });
   });
 
