@@ -6,11 +6,11 @@ name: Backend Tests
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, main, develop]
     paths:
       - 'backend/**'
   pull_request:
-    branches: [main, develop]
+    branches: [master, main, develop]
     paths:
       - 'backend/**'
 

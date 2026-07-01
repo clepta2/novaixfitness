@@ -1,0 +1,189 @@
+# ============================================
+# NOVAIX FITNESS - EAS Build (Expo)
+# ============================================
+
+name: EAS Build
+
+on:
+  push:
+    branches: [master, main, develop]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ========================================
+  # Pre-build Checks
+  # ========================================
+  pre-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test -- --forceExit
+
+  # ========================================
+  # EAS Build - iOS
+  # ========================================
+  build-ios:
+    runs-on: macos-latest
+    needs: pre-build
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios'))
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build iOS (Development)
+        run: eas build --platform ios --profile development --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build iOS (Production)
+        if: github.ref == 'refs/heads/main'
+        run: eas build --platform ios --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+  # ========================================
+  # EAS Build - Android
+  # ========================================
+  build-android:
+    runs-on: ubuntu-latest
+    needs: pre-build
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android'))
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Android (Development)
+        run: eas build --platform android --profile development --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android (Production)
+        if: github.ref == 'refs/heads/main'
+        run: eas build --platform android --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+  # ========================================
+  # EAS Submit (apenas no push para main)
+  # ========================================
+  submit:
+    runs-on: ubuntu-latest
+    needs: [build-ios, build-android]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Submit to App Store
+        run: eas submit --platform ios --latest --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+      - name: Submit to Play Store
+        run: eas submit --platform android --latest --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+
+  # ========================================
+  # Deploy Notification
+  # ========================================
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-ios, build-android, submit]
+    if: always()
+
+    steps:
+      - name: Deploy Summary
+        run: |
+          echo "🚀 NOVAIX FITNESS Build Complete"
+          echo "📱 iOS: ${{ needs.build-ios.result }}"
+          echo "🤖 Android: ${{ needs.build-android.result }}"
+          echo "📦 Submit: ${{ needs.submit.result }}"

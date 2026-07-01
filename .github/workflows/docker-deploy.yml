@@ -6,7 +6,7 @@ name: Docker Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
 
 env:
   IMAGE_NAME: novaix-fitness/backend
