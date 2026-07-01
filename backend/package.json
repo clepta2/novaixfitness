@@ -2,10 +2,10 @@
   "name": "novaix-backend",
   "version": "1.0.0",
   "description": "Backend API - NOVAIX FITNESS",
-  "main": "src/server.ts",
+  "main": "src/server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "dev": "nodemon src/server.ts",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
     "backup": "node scripts/backup.js",
     "backup:daily": "node scripts/daily-backup.js",
     "test:webhook": "node test_webhooks.js",
@@ -33,5 +33,21 @@
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/setup/"
+    ],
+    "testTimeout": 10000
   }
 }

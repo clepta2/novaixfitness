@@ -1,5 +1,19 @@
+export { default as ProfileHeader } from './ProfileHeader';
 export { default as ProfileHero } from './ProfileHero';
 export { default as StatsGrid } from './StatsGrid';
+export { default as PhysicalData } from './PhysicalData';
+export { default as BadgesRow } from './BadgesRow';
+export { default as GamificationBar } from './GamificationBar';
+export { default as AchievementsList } from './AchievementsList';
+export { default as AchievementsCarousel } from './AchievementsCarousel';
 export { default as QuickActionsGrid } from './QuickActionsGrid';
+export { default as ProfileMenuGroup } from './ProfileMenuGroup';
+export { default as RankingCard } from './RankingCard';
 export { default as WeeklyChallenges } from './WeeklyChallenges';
+export { default as WeightLogger } from './WeightLogger';
 export { default as EditNameModal } from './EditNameModal';
+export { default as CoachCommissionsPanel } from './CoachCommissionsPanel';
+export { default as ProfileConfigScreen } from './ProfileConfigScreen';
+export { default as ConsistencyHeatmap } from './ConsistencyHeatmap';
+export { default as WeightProgressChart } from './WeightProgressChart';
+

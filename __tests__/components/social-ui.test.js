@@ -33,11 +33,57 @@ jest.mock('../../src/context/AuthContext', () => ({
   useAuth: () => ({ user: { id: 'test-user' } }),
 }));
 
+import ChallengesList from '../../src/components/social/ChallengesList';
+import WorkoutStreak from '../../src/components/social/WorkoutStreak';
 import SocialFeed from '../../src/components/social/SocialFeed';
+import PersonalRecords from '../../src/components/social/PersonalRecords';
+import WorkoutShare from '../../src/components/social/WorkoutShare';
 
 describe('Social Components', () => {
+  it('ChallengesList imports correctly', () => {
+    expect(ChallengesList).toBeDefined();
+  });
+
+  it('WorkoutStreak imports correctly', () => {
+    expect(WorkoutStreak).toBeDefined();
+  });
+
   it('SocialFeed imports correctly', () => {
     expect(SocialFeed).toBeDefined();
+  });
+
+  it('PersonalRecords imports correctly', () => {
+    expect(PersonalRecords).toBeDefined();
+  });
+
+  it('WorkoutShare imports correctly', () => {
+    expect(WorkoutShare).toBeDefined();
+  });
+
+  describe('WorkoutStreak', () => {
+    it('imports correctly', () => {
+      expect(WorkoutStreak).toBeDefined();
+    });
+  });
+
+  describe('SocialFeed', () => {
+    it('imports correctly', () => {
+      expect(SocialFeed).toBeDefined();
+    });
+  });
+
+  describe('PersonalRecords', () => {
+    it('renders', () => {
+      const { toJSON } = render(<PersonalRecords userId="user1" />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('WorkoutShare', () => {
+    it('renders', () => {
+      const { toJSON } = render(<WorkoutShare workout={{ name: 'Test' }} xp={100} duration={30} exercises={5} />);
+      expect(toJSON()).toBeTruthy();
+    });
   });
 });
 

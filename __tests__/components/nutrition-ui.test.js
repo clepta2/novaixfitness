@@ -32,7 +32,7 @@ jest.mock('../../src/config/supabase', () => ({
 jest.mock('../../src/context/AuthContext', () => ({
   useAuth: () => ({ user: { id: 'test-user' } }),
 }));
-jest.mock('../../src/services/mealAnalyzerService', () => ({
+jest.mock('../../src/services/mealAnalyzer', () => ({
   getDailySummary: jest.fn().mockResolvedValue({ calories: 1500, protein: 100, carbs: 200, fat: 50, fiber: 15, meals: 3 }),
   calculateNutritionGoals: jest.fn().mockReturnValue({ calories: 2000, protein: 150, carbs: 250, fat: 70, fiber: 30 }),
   getMealLogs: jest.fn().mockResolvedValue([]),
@@ -46,10 +46,70 @@ jest.mock('../../src/services/autoSync', () => ({
 }));
 
 import NutritionTracker from '../../src/components/nutrition/NutritionTracker';
+import MacroChart from '../../src/components/nutrition/MacroChart';
+import MealHistory from '../../src/components/nutrition/MealHistory';
+import FoodDatabase from '../../src/components/nutrition/FoodDatabase';
+import FoodSwaps from '../../src/components/nutrition/FoodSwaps';
+import NutritionTips from '../../src/components/nutrition/NutritionTips';
+import NutritionChallenges from '../../src/components/nutrition/NutritionChallenges';
+import NutritionMyths from '../../src/components/nutrition/NutritionMyths';
+import BodyComposition from '../../src/components/nutrition/BodyComposition';
+import BudgetMealPlanner from '../../src/components/nutrition/BudgetMealPlanner';
+import CalorieCycling from '../../src/components/nutrition/CalorieCycling';
+import EnergyTracker from '../../src/components/nutrition/EnergyTracker';
+import MealPrepGuide from '../../src/components/nutrition/MealPrepGuide';
 
 describe('Nutrition Components', () => {
   it('NutritionTracker imports correctly', () => {
     expect(NutritionTracker).toBeDefined();
+  });
+
+  it('MacroChart imports correctly', () => {
+    expect(MacroChart).toBeDefined();
+  });
+
+  it('MealHistory imports correctly', () => {
+    expect(MealHistory).toBeDefined();
+  });
+
+  it('FoodDatabase imports correctly', () => {
+    expect(FoodDatabase).toBeDefined();
+  });
+
+  it('FoodSwaps imports correctly', () => {
+    expect(FoodSwaps).toBeDefined();
+  });
+
+  it('NutritionTips imports correctly', () => {
+    expect(NutritionTips).toBeDefined();
+  });
+
+  it('NutritionChallenges imports correctly', () => {
+    expect(NutritionChallenges).toBeDefined();
+  });
+
+  it('NutritionMyths imports correctly', () => {
+    expect(NutritionMyths).toBeDefined();
+  });
+
+  it('BodyComposition imports correctly', () => {
+    expect(BodyComposition).toBeDefined();
+  });
+
+  it('BudgetMealPlanner imports correctly', () => {
+    expect(BudgetMealPlanner).toBeDefined();
+  });
+
+  it('CalorieCycling imports correctly', () => {
+    expect(CalorieCycling).toBeDefined();
+  });
+
+  it('EnergyTracker imports correctly', () => {
+    expect(EnergyTracker).toBeDefined();
+  });
+
+  it('MealPrepGuide imports correctly', () => {
+    expect(MealPrepGuide).toBeDefined();
   });
 });
 

@@ -1,4 +1,11 @@
 export { default as ErrorBoundary } from './ErrorBoundary';
-export { default as AchievementPopup } from '../social/AchievementPopup';
+export { default as AppErrorFallback } from './AppErrorFallback';
+export { default as AchievementPopup } from './AchievementPopup';
 export { default as TutorialOverlay } from './TutorialOverlay';
+export { default as CommonOfflineBanner } from './OfflineBanner';
+export { default as OfflineIndicator } from './OfflineIndicator';
+export { default as XPFloating } from './XPFloating';
 export { injectWebStyles } from './WebStyles';
+export { default as CircularProgress } from './CircularProgress';
+export { default as ErrorCard } from './ErrorCard';
+export { default as ModalOverlay } from './ModalOverlay';

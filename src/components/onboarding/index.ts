@@ -16,7 +16,6 @@ export { default as MiniCalendar } from './MiniCalendar';
 export { default as MultiSectionStep } from './MultiSectionStep';
 export { default as MuscleStep } from './MuscleStep';
 export { default as OnboardingNavButtons } from './OnboardingNavButtons';
-export { default as OnboardingLayout } from './OnboardingLayout';
 export { default as OnboardingStep } from './OnboardingStep';
 export { default as PlanTypeStep } from './PlanTypeStep';
 export { default as RestStep } from './RestStep';

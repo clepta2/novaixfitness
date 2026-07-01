@@ -11,8 +11,6 @@ import {
   toggleLike,
   getComments,
   addComment,
-} from '../services/socialFeed';
-import {
   followUser,
   unfollowUser,
   isFollowing,
@@ -20,7 +18,7 @@ import {
   shareWorkout,
   getTrendingPosts,
   searchUsers,
-} from '../services/socialFollow';
+} from '../services/social';
 
 interface UserSearchResult {
   id: string;

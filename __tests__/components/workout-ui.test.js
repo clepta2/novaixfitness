@@ -54,8 +54,13 @@ jest.mock('../../src/services/voiceCoach', () => ({
 import WorkoutTimer from '../../src/components/workout/WorkoutTimer';
 import WorkoutControls from '../../src/components/workout/WorkoutControls';
 import RestOverlay from '../../src/components/workout/RestOverlay';
+import RestTimer from '../../src/components/workout/RestTimer';
 import WorkoutSummary from '../../src/components/workout/WorkoutSummary';
+import WorkoutBuilder from '../../src/components/workout/WorkoutBuilder';
 import WorkoutForm from '../../src/components/workout/WorkoutForm';
+import ExerciseLibrary from '../../src/components/workout/ExerciseLibrary';
+import TimerModeSelector from '../../src/components/workout/TimerModeSelector';
+import WorkoutHistory from '../../src/components/workout/WorkoutHistory';
 
 describe('Workout UI Components', () => {
   it('WorkoutTimer imports correctly', () => {
@@ -70,6 +75,10 @@ describe('Workout UI Components', () => {
     expect(RestOverlay).toBeDefined();
   });
 
+  it('RestTimer imports correctly', () => {
+    expect(RestTimer).toBeDefined();
+  });
+
   describe('WorkoutSummary', () => {
     it('renders', () => {
       const { toJSON } = render(<WorkoutSummary workout={{ name: 'Test' }} duration={30} calories={300} xpEarned={100} exercisesCompleted={5} />);
@@ -77,9 +86,37 @@ describe('Workout UI Components', () => {
     });
   });
 
+  describe('WorkoutBuilder', () => {
+    it('renders', () => {
+      const { toJSON } = render(<WorkoutBuilder />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
   describe('WorkoutForm', () => {
     it('renders', () => {
       const { toJSON } = render(<WorkoutForm />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('ExerciseLibrary', () => {
+    it('renders', () => {
+      const { toJSON } = render(<ExerciseLibrary />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('TimerModeSelector', () => {
+    it('renders', () => {
+      const { toJSON } = render(<TimerModeSelector selectedMode="countdown" onModeChange={() => {}} selectedDuration={45} onDurationChange={() => {}} />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('WorkoutHistory', () => {
+    it('renders', () => {
+      const { toJSON } = render(<WorkoutHistory userId="user1" />);
       expect(toJSON()).toBeTruthy();
     });
   });

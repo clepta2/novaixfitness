@@ -8,7 +8,7 @@ import { supabase } from '../../src/config/supabase';
 import { useTutorial } from '../../src/hooks/useTutorial';
 import { calculateLevel } from '../../src/services/gamification';
 import { useNetworkStatus } from '../../src/hooks/useNetworkStatus';
-import { syncPendingActions, hasPendingActions } from '../../src/services/offlineSync';
+import { syncPendingActions, getPendingActionsCount } from '../../src/services/sync';
 import { isWorkoutCached } from '../../src/services/offline';
 import { performCheckIn, getTodayCheckIn, getCheckInStreak } from '../../src/services/checkIn';
 import { useStaggeredEntry } from '../../src/utils/animations';
@@ -123,7 +123,7 @@ export default function HomeScreen() {
       fetchData();
     }
   };
-  useEffect(() => { if (isConnected) hasPendingActions().then(has => setPendingCount(has ? 1 : 0)); }, [isConnected]);
+  useEffect(() => { if (isConnected) getPendingActionsCount().then(setPendingCount); }, [isConnected]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

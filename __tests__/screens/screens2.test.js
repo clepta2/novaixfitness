@@ -91,44 +91,6 @@ jest.mock('../../src/services/body-measurements', () => ({
   getBMICategory: jest.fn().mockReturnValue({ label: 'Normal', color: '#00E676' }),
 }));
 
-jest.mock('../../src/components/body-measures/BmiCard', () => {
-  const React = require('react');
-  return (props) => React.createElement('BmiCard', props);
-});
-jest.mock('../../src/components/body-measures/LatestMeasurements', () => {
-  const React = require('react');
-  return (props) => React.createElement('LatestMeasurements', props);
-});
-jest.mock('../../src/components/body-measures/MeasurementHistory', () => {
-  const React = require('react');
-  return (props) => React.createElement('MeasurementHistory', props);
-});
-
-jest.mock('../../src/components', () => {
-  const React = require('react');
-  const { View, Text } = require('react-native');
-  const Stub = (name) => (props) => React.createElement(View, null, React.createElement(Text, null, name), props.children);
-  return new Proxy({}, { get: (_, key) => key === 'ErrorBoundary' ? (props) => React.createElement(View, null, props.children) : Stub(key) });
-});
-
-jest.mock('../../src/hooks/useResponsive', () => ({
-  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
-}));
-
-jest.mock('../../src/i18n', () => ({
-  useI18n: () => ({
-    locale: 'pt',
-    t: (key) => {
-      const map = {
-        'common.error': 'Erro', 'common.save': 'Salvar', 'common.cancel': 'Cancelar',
-        'bodyMeasures.title': 'Medidas Corporais', 'bodyMeasures.noMeasurements': 'Nenhuma medida',
-      };
-      return map[key] || key;
-    },
-    changeLocale: jest.fn(),
-  }),
-}));
-
 jest.mock('../../src/services/lgpd', () => ({
   downloadUserData: jest.fn().mockResolvedValue({}),
   deleteAccount: jest.fn().mockResolvedValue({}),
@@ -219,15 +181,14 @@ describe('Screens - Round 2', () => {
     it('shows empty state when no measurements', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
       await waitFor(() => {
-        expect(getByText('EmptyState')).toBeTruthy();
+        expect(getByText('Nenhuma medida registrada')).toBeTruthy();
       });
     });
 
     it('renders chart selector', async () => {
       const { getByText } = render(<BodyMeasuresScreen />);
       await waitFor(() => {
-        expect(getByText('Peso')).toBeTruthy();
-        expect(getByText('Peito')).toBeTruthy();
+        expect(getByText('MeasurementChart')).toBeTruthy();
       });
     });
   });

@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../config/supabase';
-import { searchUsers } from '../../services/socialFollow';
+import { searchUsers } from '../../services/social';
 
 export default function NewChatModal({ visible, onClose, onSelectUser }) {
   const { user } = useAuth();

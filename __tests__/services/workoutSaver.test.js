@@ -31,12 +31,15 @@ jest.mock('../../src/services/gamification', () => ({
 
 jest.mock('../../src/services/notifications', () => ({
   sendWorkoutCompletedNotification: jest.fn().mockResolvedValue({}),
+}));
+
+jest.mock('../../src/services/pushNotifications', () => ({
   sendPushToUser: jest.fn().mockResolvedValue({}),
 }));
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
 const { recordWorkoutCompletion } = require('../../src/services/gamification');
-const { sendPushToUser } = require('../../src/services/notifications');
+const { sendPushToUser } = require('../../src/services/pushNotifications');
 const { saveCompleteWorkout, savePartialWorkout } = require('../../src/services/workoutSaver');
 
 describe('Workout Saver', () => {

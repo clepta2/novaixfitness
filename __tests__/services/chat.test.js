@@ -34,8 +34,7 @@ jest.mock('../../src/config/supabase', () => {
 });
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
-const { sendMessage, getMessages } = require('../../src/services/chatMessages');
-const { markAsRead } = require('../../src/services/chatConversations');
+const { sendMessage, getMessages, markAsRead } = require('../../src/services/chat');
 
 describe('Chat Service', () => {
   beforeEach(() => {

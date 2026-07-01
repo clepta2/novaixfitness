@@ -1,9 +1,9 @@
-﻿// app/onboarding/loading.tsx
+// app/onboarding/loading.tsx
 // Tela de loading com animacoes premium - NOVAIX FITNESS
 
 
             ;
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, Animated, Alert, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

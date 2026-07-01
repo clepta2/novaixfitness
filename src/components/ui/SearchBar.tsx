@@ -1,7 +1,7 @@
 // src/components/ui/SearchBar.tsx
 // Barra de busca com autocomplete - NOVAIX FITNESS
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';

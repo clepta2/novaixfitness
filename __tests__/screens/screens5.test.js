@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render, waitFor } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 
 jest.mock('expo-font', () => ({
   useFonts: () => [true],
@@ -194,35 +194,6 @@ jest.mock('../../src/components/chat/QuickTips', () => {
   return (props) => React.createElement(View, null, React.createElement(Text, null, 'QuickTips'));
 });
 
-jest.mock('../../src/hooks/useDashboard', () => ({
-  useDashboard: () => ({
-    data: { workouts: [], stats: {} },
-    refreshing: false,
-    bmi: null,
-    freqChartData: [],
-    monthlyChartData: [],
-    weightChartData: [],
-    onRefresh: jest.fn(),
-  }),
-}));
-
-jest.mock('../../src/hooks/useChatCoach', () => ({
-  useChatCoach: () => ({
-    messages: [],
-    inputText: '',
-    setInputText: jest.fn(),
-    loading: false,
-    historyLoaded: true,
-    flatListRef: { current: null },
-    handleSend: jest.fn(),
-    handleClearChat: jest.fn(),
-  }),
-}));
-
-jest.mock('../../src/hooks/useResponsive', () => ({
-  useResponsive: () => ({ isSmall: false, horizontalPadding: 20 }),
-}));
-
 jest.mock('../../src/data/filters', () => ({
   DAY_NAMES: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
   DAY_FULL: ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
@@ -240,11 +211,9 @@ describe('Screens - Round 5', () => {
   });
 
   describe('AnalyticsScreen', () => {
-    it('renders components', async () => {
+    it('renders components', () => {
       const { getByText } = render(<AnalyticsScreen />);
-      await waitFor(() => {
-        expect(getByText('FilterBar')).toBeTruthy();
-      });
+      expect(getByText('FilterBar')).toBeTruthy();
     });
   });
 

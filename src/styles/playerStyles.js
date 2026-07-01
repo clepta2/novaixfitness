@@ -25,6 +25,4 @@ export const styles = StyleSheet.create({
   bottomSpacer: { height: 100 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   voiceToggle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
-  videoSection: { marginBottom: SPACING.md },
-  fullscreenBtn: { position: 'absolute', bottom: 12, right: 12, width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', zIndex: 5 },
 });

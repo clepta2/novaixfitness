@@ -1,10 +1,10 @@
-﻿
+
 // app/challenges/index.tsx
 // Desafios diarios com cards animados - NOVAIX FITNESS
 
 
             ;
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

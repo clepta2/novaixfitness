@@ -1,10 +1,10 @@
-﻿
+
 // app/assessment/index.tsx
 // Avaliacao com animacoes de entrada - NOVAIX FITNESS
 
 
             ;
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

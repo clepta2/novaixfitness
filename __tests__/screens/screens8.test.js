@@ -79,51 +79,6 @@ jest.mock('../../src/config/supabase', () => ({
   },
 }));
 
-jest.mock('../../src/i18n', () => ({
-  useI18n: () => ({
-    locale: 'pt',
-    t: (key) => {
-      const map = {
-        'auth.heroTitle': 'Sua Nova Evolução no Treino',
-        'auth.forgotPassword': 'Esqueceu a senha?',
-        'auth.noAccountYet': 'Ainda não tem conta?',
-        'auth.signup': 'Cadastre-se',
-        'auth.orContinueWith': 'ou',
-        'auth.login': 'ENTRAR',
-        'common.error': 'Erro',
-        'common.loading': 'Carregando...',
-        'common.save': 'Salvar',
-        'common.cancel': 'Cancelar',
-      };
-      return map[key] || key;
-    },
-    changeLocale: jest.fn(),
-  }),
-}));
-
-jest.mock('../../src/context/ThemeContext', () => ({
-  useTheme: () => ({ isDark: false }),
-}));
-
-jest.mock('../../src/hooks/useLogin', () => ({
-  __esModule: true,
-  default: () => ({
-    router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
-    email: '', setEmail: jest.fn(),
-    password: '', setPassword: jest.fn(),
-    loading: false,
-    handleLogin: jest.fn(),
-    handleGoogle: jest.fn(),
-    handleApple: jest.fn(),
-    handleBiometrics: jest.fn(),
-    error: null,
-  }),
-}));
-
-jest.mock('../../src/hooks/useResponsive', () => ({
-  useResponsive: () => ({ isSmall: false }),
-}));
-
 jest.mock('../../src/components', () => {
   const React = require('react');
   const { View, Text } = require('react-native');

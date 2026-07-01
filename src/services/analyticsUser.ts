@@ -4,7 +4,7 @@
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
-import { getPeriodStart, calculateStreak, sumField } from './analytics-helpers';
+import { getPeriodStart, calculateStreak, sumField } from './analyticsHelpers';
 
 const guard = createServiceGuard({ serviceName: 'analyticsUser' });
 

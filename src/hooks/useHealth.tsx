@@ -11,7 +11,7 @@ import {
   syncCaloriesFromHealth,
   isHealthAvailable,
   getHealthSummary,
-} from '../services/healthSync';
+} from '../services/healthIntegration';
 
 interface HealthSummary {
   weight?: number;

@@ -1,9 +1,9 @@
-﻿// app/landing.tsx
+// app/landing.tsx
 // Landing Page com animacoes de entrada - NOVAIX FITNESS
 
 
             ;
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../src/config/supabase';
@@ -50,7 +50,7 @@ export default function LandingScreen() {
   const stats = [
     { value: dbStats.loading ? '...' : `+${dbStats.users}`, label: 'Alunos Ativos' },
     { value: dbStats.loading ? '...' : `+${dbStats.workouts}`, label: 'Video Treinos' },
-    { value: dbStats.loading ? '...' : `${dbStats.rating}â˜…`, label: 'Avaliacao' },
+    { value: dbStats.loading ? '...' : `${dbStats.rating}★`, label: 'Avaliacao' },
   ];
 
   const goToRegister = () => router.push('/register');

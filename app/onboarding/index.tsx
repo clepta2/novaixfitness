@@ -2,7 +2,7 @@
 // app/onboarding/index.js
 // Tela principal do onboarding - 2 Fases
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Platform, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../../src/constants/colors';

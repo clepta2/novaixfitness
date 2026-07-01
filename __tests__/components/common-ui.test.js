@@ -40,9 +40,11 @@ import { Header } from '../../src/components/ui/Header';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import Badge from '../../src/components/ui/Badge';
-import SearchBar from '../../src/components/ui/SearchBar';
-import ProgressBar from '../../src/components/ui/ProgressBar';
-import BottomSheet from '../../src/components/ui/BottomSheet';
+import SearchBar from '../../src/components/common/SearchBar';
+import ProgressBar from '../../src/components/common/ProgressBar';
+import ErrorCard from '../../src/components/common/ErrorCard';
+import BottomSheet from '../../src/components/common/BottomSheet';
+import { SkeletonCard, SkeletonList, SkeletonGrid, SkeletonChart } from '../../src/components/common/SkeletonLoader';
 
 describe('UI Components', () => {
   describe('Card', () => {
@@ -118,10 +120,34 @@ describe('UI Components', () => {
     });
   });
 
+  describe('ErrorCard', () => {
+    it('imports correctly', () => {
+      expect(ErrorCard).toBeDefined();
+    });
+  });
+
   describe('BottomSheet', () => {
     it('imports correctly', () => {
       expect(BottomSheet).toBeDefined();
     });
   });
 
+  describe('SkeletonLoader', () => {
+    it('renders SkeletonCard', () => {
+      const { toJSON } = render(<SkeletonCard />);
+      expect(toJSON()).toBeTruthy();
+    });
+    it('renders SkeletonList', () => {
+      const { toJSON } = render(<SkeletonList count={3} />);
+      expect(toJSON()).toBeTruthy();
+    });
+    it('renders SkeletonGrid', () => {
+      const { toJSON } = render(<SkeletonGrid columns={2} count={4} />);
+      expect(toJSON()).toBeTruthy();
+    });
+    it('renders SkeletonChart', () => {
+      const { toJSON } = render(<SkeletonChart />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
 });

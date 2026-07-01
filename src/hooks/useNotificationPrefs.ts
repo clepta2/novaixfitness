@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../config/supabase';
-import { getPrefsForSettings, setNotificationPref, getNotificationPrefs } from '../services/notifications-real';
-import { registerForPushNotificationsAsync } from '../services/notifications';
+import { getPrefsForSettings, setNotificationPref, getNotificationPrefs } from '../services/notificationPrefs';
+import { registerForPushNotificationsAsync } from '../services/pushNotifications';
 import { Notification } from '../types';
 
 interface QuietHoursOption {

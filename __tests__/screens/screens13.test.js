@@ -54,7 +54,7 @@ jest.mock('../../src/services/marketplace', () => ({
 }));
 jest.mock('../../src/data/marketplaceCategories', () => ({ MARKETPLACE_CATEGORIES: [] }));
 jest.mock('../../src/services/payment', () => ({ PLANS: {} }));
-jest.mock('../../src/services/notifications-real', () => ({ getPrefsForSettings: jest.fn().mockResolvedValue({}), setNotificationPref: jest.fn() }));
+jest.mock('../../src/services/notificationPrefs', () => ({ getPrefsForSettings: jest.fn().mockResolvedValue({}), setNotificationPref: jest.fn() }));
 jest.mock('../../src/services/tutorial', () => ({ resetAllTutorials: jest.fn(), hasCompletedTutorial: jest.fn().mockResolvedValue(true), completeTutorial: jest.fn().mockResolvedValue(true), markTutorialSkipped: jest.fn().mockResolvedValue(true), getTutorialSteps: jest.fn().mockReturnValue([]) }));
 jest.mock('../../src/services/share', () => ({ shareProgress: jest.fn() }));
 jest.mock('../../src/services/voiceCoach', () => ({ setVoiceCoachEnabled: jest.fn() }));
@@ -69,7 +69,7 @@ jest.mock('../../src/services/notifications', () => ({ getNotifications: jest.fn
 jest.mock('../../src/hooks/useRealtimePosts', () => ({ useRealtimePosts: () => ({ posts: [], loading: false }) }));
 jest.mock('../../src/data/settingsOptions', () => ({ THEME_OPTIONS: [], SETTINGS_GROUPS: [], ACCOUNT_OPTIONS: [], INFO_OPTIONS: [], AI_TABS: [{ id: 'dados', label: 'Dados', icon: 'document-text' }, { id: 'insights', label: 'Insights', icon: 'bulb' }, { id: 'progresso', label: 'Progresso', icon: 'trending-up' }], ACCESSIBILITY_OPTIONS: [{ id: 'large_text', label: 'Fonte Grande', description: 'Aumenta o tamanho do texto', icon: 'text' }, { id: 'high_contrast', label: 'Alto Contraste', description: 'Cores mais fortes e visíveis', icon: 'contrast' }, { id: 'reduce_motion', label: 'Reduzir Movimento', description: 'Remove animações desnecessárias', icon: 'pause' }, { id: 'bold_text', label: 'Texto em Negrito', description: 'Torna todo o texto mais grosso', icon: 'bold' }] }));
 jest.mock('../../src/data/onboarding', () => ({ ONBOARDING_STEPS: [] }));
-jest.mock('../../src/services/mealAnalyzerService', () => ({ analyzeMeal: jest.fn().mockResolvedValue({}) }));
+jest.mock('../../src/services/mealAnalyzer', () => ({ analyzeMeal: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/gemini', () => ({ sendMessage: jest.fn().mockResolvedValue('') }));
 jest.mock('../../src/services/analytics', () => ({ trackEvent: jest.fn() }));
 jest.mock('../../src/services/voiceCoach', () => ({ setVoiceCoachEnabled: jest.fn() }));

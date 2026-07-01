@@ -1,10 +1,9 @@
 // src/services/moderation.ts
-// Serviço de moderação: report, block e pre-moderação
+// Serviço de moderação: report e block
 
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
-import { moderateText, moderateImage } from './moderationFilters';
 
 const guard = createServiceGuard({ serviceName: 'moderation' });
 
@@ -83,35 +82,4 @@ export async function isBlockedBy(userId: string, targetId: string): Promise<boo
     .single();
 
   return !!data;
-}
-
-// Pre-moderation (moved from contentModeration.ts)
-
-interface PreModResult {
-  allowed: boolean;
-  blocked?: boolean;
-  message?: string;
-}
-
-interface ContentInput {
-  uri?: string;
-}
-
-export async function preModerateContent(
-  userId: string,
-  contentType: 'post' | 'message' | 'story',
-  content: string | ContentInput,
-): Promise<PreModResult> {
-  const { data: blockStatus } = await supabase.rpc('is_user_blocked', {
-    p_user_id: userId,
-    p_block_type: contentType === 'post' ? 'post' : contentType === 'message' ? 'chat' : 'all',
-  });
-  if (blockStatus?.blocked) return { allowed: false, blocked: true, message: `Sua conta esta bloqueada: ${blockStatus.reason}` };
-
-  const { data: trust } = await supabase.from(TABLES.USER_TRUST).select('trust_score').eq('user_id', userId).single();
-  if (trust && trust.trust_score < 20) return { allowed: false, blocked: true, message: 'Sua conta esta restrita devido a violacoes repetidas.' };
-
-  if (typeof content === 'string') return moderateText(content, userId);
-  if (content?.uri) return moderateImage(content, userId);
-  return { allowed: true };
 }

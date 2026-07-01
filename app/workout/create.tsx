@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { ALL_CATEGORIES } from '../../src/data/categories';
 import { 
   Input, ErrorBoundary, ExerciseSearch, ExerciseConfigurator, 
-  WorkoutPreview, GradientButton, Stepper
+  WorkoutPreview, GradientButton
 } from '../../src/components';
 import { useResponsive } from '../../src/hooks/useResponsive';
 import { useCreateWorkout, STEPS, LEVELS, LEVEL_COLORS } from '../../src/hooks/useCreateWorkout';

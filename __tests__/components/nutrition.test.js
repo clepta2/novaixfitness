@@ -50,17 +50,33 @@ jest.mock('../../src/context/AuthContext', () => ({
   }),
 }));
 
-jest.mock('../../src/services/mealAnalyzerService', () => ({
+jest.mock('../../src/services/mealAnalyzer', () => ({
   getDailySummary: jest.fn().mockResolvedValue({ calories: 1800, protein: 120, carbs: 200, fat: 60 }),
   calculateNutritionGoals: jest.fn().mockReturnValue({ calories: 2200, protein: 150, carbs: 250, fat: 70 }),
 }));
 
 import NutritionTracker from '../../src/components/nutrition/NutritionTracker';
+import NutritionCalculator from '../../src/components/nutrition/NutritionCalculator';
+import NutritionTips from '../../src/components/nutrition/NutritionTips';
 
 describe('Nutrition Components', () => {
   describe('NutritionTracker', () => {
     it('renders without crashing', () => {
       const { toJSON } = render(<NutritionTracker userId="u1" />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('NutritionCalculator', () => {
+    it('renders without crashing', () => {
+      const { toJSON } = render(<NutritionCalculator />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+
+  describe('NutritionTips', () => {
+    it('renders without crashing', () => {
+      const { toJSON } = render(<NutritionTips />);
       expect(toJSON()).toBeTruthy();
     });
   });

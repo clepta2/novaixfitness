@@ -4,7 +4,7 @@
 
 
             ;
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';

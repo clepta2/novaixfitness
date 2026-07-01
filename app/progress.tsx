@@ -1,10 +1,10 @@
-﻿
+
 // app/progress.tsx
 // Progresso com timeline animado - NOVAIX FITNESS
 
 
             ;
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

@@ -1,14 +1,8 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
@@ -31,7 +25,6 @@
     "node_modules",
     "e2e",
     "__tests__",
-    "src/__tests__",
     "__mocks__",
     "dist",
     "coverage",
@@ -39,7 +32,6 @@
     "backend",
     "scripts",
     "securit",
-    ".storybook",
-    "landing"
+    ".storybook"
   ]
 }

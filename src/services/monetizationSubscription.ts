@@ -4,7 +4,7 @@
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
-import { trackEvent, EVENT_TYPES } from './analyticsTracker';
+import { trackEvent, EVENT_TYPES } from './eventTracker';
 import { PLANS, type Plan, type Subscription } from './monetizationPlans';
 
 const guard = createServiceGuard({ serviceName: 'monetizationSubscription' });
