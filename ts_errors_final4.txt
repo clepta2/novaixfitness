@@ -1,0 +1,39 @@
+﻿app/(tabs)/library.tsx(142,218): error TS2322: Type '{ visible: boolean; onClose: () => void; level: string; setLevel: () => void; duration: string; setDuration: () => void; category: string; setCategory: () => void; equipment: string; setEquipment: () => void; sort: string; setSort: () => void; muscles: undefined[]; setMuscles: () => void; }' is not assignable to type 'IntrinsicAttributes & FilterModalProps'.
+  Property 'sort' does not exist on type 'IntrinsicAttributes & FilterModalProps'.
+app/_layout.tsx(40,54): error TS2322: Type '{ key: string; name: string; as: true; any: true; }' is not assignable to type 'IntrinsicAttributes & StackScreenProps'.
+  Property 'as' does not exist on type 'IntrinsicAttributes & StackScreenProps'.
+app/assessment/guided.tsx(29,71): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: TextProps): Text', gave the following error.
+    Type 'unknown' is not assignable to type 'ReactNode'.
+  Overload 2 of 2, '(props: TextProps, context: any): Text', gave the following error.
+    Type 'unknown' is not assignable to type 'ReactNode'.
+app/body-measures.tsx(91,50): error TS2322: Type '{ form: { weight: string; chest: string; waist: string; hips: string; arms: string; thighs: string; body_fat: string; notes: string; }; setForm: any; onSave: () => Promise<void>; saving: boolean; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & MeasurementFormProps'.
+  Property 'setForm' does not exist on type 'IntrinsicAttributes & MeasurementFormProps'.
+app/coach-dashboard.tsx(79,133): error TS2322: Type '{ title: any; category: any; duration: any; level: any; onDelete: () => void; }' is not assignable to type 'IntrinsicAttributes & WorkoutListItemProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & WorkoutListItemProps'.
+app/intro.tsx(47,21): error TS2322: Type '{ scrollX: Value; }' is not assignable to type 'IntrinsicAttributes & StepPillProps'.
+  Property 'scrollX' does not exist on type 'IntrinsicAttributes & StepPillProps'.
+app/marketplace.tsx(46,16): error TS2739: Type '{ icon: string; title: string; description: string; }' is missing the following properties from type '{ icon?: string; title: any; description: any; actionLabel: any; onAction: any; iconColor: any; }': actionLabel, onAction, iconColor
+app/marketplace.tsx(48,16): error TS2741: Property 'onProductPress' is missing in type '{ products: any[]; favorites: any; onToggleFavorite: (productId: string) => Promise<void>; loading: boolean; }' but required in type 'ProductListProps'.
+app/notifications.tsx(77,14): error TS2739: Type '{ icon: string; title: string; description: string; }' is missing the following properties from type '{ icon?: string; title: any; description: any; actionLabel: any; onAction: any; iconColor: any; }': actionLabel, onAction, iconColor
+app/onboarding/dados-fisicos.tsx(81,68): error TS2322: Type '{ value: number; min: number; max: number; step: number; onValueChange: Dispatch<SetStateAction<number>>; }' is not assignable to type 'IntrinsicAttributes & DraggableSliderProps'.
+  Property 'step' does not exist on type 'IntrinsicAttributes & DraggableSliderProps'.
+app/onboarding/dados-fisicos.tsx(86,69): error TS2322: Type '{ value: number; min: number; max: number; step: number; onValueChange: Dispatch<SetStateAction<number>>; }' is not assignable to type 'IntrinsicAttributes & DraggableSliderProps'.
+  Property 'step' does not exist on type 'IntrinsicAttributes & DraggableSliderProps'.
+app/onboarding/dados-fisicos.tsx(99,15): error TS2322: Type '{ onLocationChange: (loc: any) => void; initialLocation: { state: string; city: string; cep: string; street: string; neighborhood: string; number: string; nearTo: string; }; }' is not assignable to type 'IntrinsicAttributes & LocationSectionProps'.
+  Property 'onLocationChange' does not exist on type 'IntrinsicAttributes & LocationSectionProps'.
+app/onboarding/localizacao.tsx(51,13): error TS2322: Type '{ onLocationChange: (loc: any) => void; initialLocation: { state: any; city: any; cep: any; street: any; neighborhood: any; number: any; nearTo: any; }; }' is not assignable to type 'IntrinsicAttributes & LocationSectionProps'.
+  Property 'onLocationChange' does not exist on type 'IntrinsicAttributes & LocationSectionProps'.
+app/planner.tsx(98,127): error TS2339: Property 'name' does not exist on type 'WeekPlanDay'.
+app/player.tsx(68,256): error TS2322: Type '{ timeRemaining: number; totalTime: number; nextExercise: Exercise; onSkip: () => void; nextSet: number; nextIndex: number; totalExercises: number; onRestart: () => void; }' is not assignable to type 'IntrinsicAttributes & RestOverlayProps'.
+  Property 'onRestart' does not exist on type 'IntrinsicAttributes & RestOverlayProps'.
+app/player.tsx(144,13): error TS2322: Type 'number' is not assignable to type 'string'.
+app/player.tsx(145,13): error TS2322: Type 'string' is not assignable to type 'number'.
+app/social.tsx(42,23): error TS2322: Type '{ posts: any[]; loading: boolean; currentUserId: string; onLike: (postId: string) => Promise<void>; onComment: (postId: string, text: string) => Promise<void>; recentCheckIns: any[]; userId: string; }' is not assignable to type 'IntrinsicAttributes & { userId: any; }'.
+  Property 'posts' does not exist on type 'IntrinsicAttributes & { userId: any; }'.
+app/workout/create.tsx(63,21): error TS2322: Type '{ key: number; exercise: ExerciseItem; config: unknown; onUpdate: (config: any) => void; onRemove: () => void; }' is not assignable to type 'IntrinsicAttributes & ExerciseConfiguratorProps'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & ExerciseConfiguratorProps'.
+app/workout/create.tsx(63,59): error TS2554: Expected 1 arguments, but got 2.
+node_modules/react-native-view-shot/src/index.tsx(219,7): error TS2322: Type 'number | HostElement | Component<{}, {}, any> | RefObject<HostElement | Component<{}, {}, any>>' is not assignable to type 'number | HostElement | Component<{}, {}, any>'.
+  Type 'RefObject<HostElement | Component<{}, {}, any>>' is not assignable to type 'number | HostElement | Component<{}, {}, any>'.
+src/components/workout/BasicInfoStep.tsx(22,8): error TS2739: Type '{ label: string; value: any; onChangeText: (v: string) => void; placeholder: string; icon: string; error: any; }' is missing the following properties from type '{ label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }': secureTextEntry, keyboardType, autoCapitalize, style

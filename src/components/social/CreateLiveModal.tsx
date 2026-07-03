@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/CreateLiveModal.js
+// src/components/social/CreateLiveModal.tsx
 // Modal de criação de live de treino
 
 import { useState } from 'react';
@@ -11,14 +10,20 @@ import { Button } from '../ui/Button';
 import { useI18n } from '../../i18n';
 
 const WORKOUT_TYPES = [
-  { id: 'general', label: 'Geral', icon: 'barbell' },
-  { id: 'hiit', label: 'HIIT', icon: 'flash' },
-  { id: 'yoga', label: 'Yoga', icon: 'body' },
-  { id: 'cardio', label: 'Cardio', icon: 'heart' },
-  { id: 'strength', label: 'Força', icon: 'fitness' },
+  { id: 'general', label: 'Geral', icon: 'barbell' as const },
+  { id: 'hiit', label: 'HIIT', icon: 'flash' as const },
+  { id: 'yoga', label: 'Yoga', icon: 'body' as const },
+  { id: 'cardio', label: 'Cardio', icon: 'heart' as const },
+  { id: 'strength', label: 'Força', icon: 'fitness' as const },
 ];
 
-export default function CreateLiveModal({ visible, onClose, onCreate }) {
+interface CreateLiveModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onCreate: (data: { title: string; description?: string; workoutType: string; isPublic: boolean }) => void;
+}
+
+export default function CreateLiveModal({ visible, onClose, onCreate }: CreateLiveModalProps) {
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -84,7 +89,7 @@ export default function CreateLiveModal({ visible, onClose, onCreate }) {
             <Switch value={isPublic} onValueChange={setIsPublic} trackColor={{ true: COLORS.primary }} />
           </View>
 
-          <Button title="INICIAR LIVE" onPress={handleCreate} loading={loading} disabled={!title.trim() || loading} />
+          <Button title="INICIAR LIVE" onPress={handleCreate} loading={loading} disabled={!title.trim() || loading} icon="play" style={{}} />
         </View>
       </TouchableOpacity>
     </Modal>

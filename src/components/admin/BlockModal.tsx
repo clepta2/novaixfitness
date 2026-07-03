@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
@@ -20,7 +19,13 @@ const BLOCK_TYPES = [
   { id: 'all', label: 'Tudo' },
 ];
 
-export default function BlockModal({ visible, onClose, onConfirm }) {
+interface BlockModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onConfirm: (data: { reason: string; severity: string; blockType: string; durationHours: number | null }) => void;
+}
+
+export default function BlockModal({ visible, onClose, onConfirm }: BlockModalProps) {
   const [reason, setReason] = useState('');
   const [severity, setSeverity] = useState('temporary');
   const [blockType, setBlockType] = useState('all');
@@ -111,7 +116,7 @@ export default function BlockModal({ visible, onClose, onConfirm }) {
 }
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
+  overlay: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
   modal: { width: '90%', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.xl },
   title: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, marginBottom: SPACING.xl },
   label: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.sm, marginTop: SPACING.md },

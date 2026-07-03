@@ -1,6 +1,5 @@
-// @ts-nocheck
-// src/components/common/TutorialOverlayHelpers.js
-// Constantes de spotlight e funções de renderização do overlay - NOVAIX FITNESS
+// src/components/common/TutorialOverlayHelpers.tsx
+// Constantes de spotlight e funções de renderização do overlay
 
 import React from 'react';
 import { View, Dimensions, Animated, StyleSheet } from 'react-native';
@@ -9,7 +8,15 @@ import { COLORS } from '../../constants/colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-export const SPOTLIGHTS = {
+interface Spotlight {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  cardPosition: 'top' | 'bottom';
+}
+
+export const SPOTLIGHTS: Record<string, Spotlight> = {
   contextualCard: { left: 16, top: 130, width: SCREEN_WIDTH - 32, height: 180, cardPosition: 'bottom' },
   categories: { left: 16, top: 380, width: SCREEN_WIDTH - 32, height: 120, cardPosition: 'top' },
   header: { left: SCREEN_WIDTH - 120, top: 50, width: 110, height: 44, cardPosition: 'bottom' },
@@ -28,7 +35,7 @@ export const SPOTLIGHTS = {
   list: { left: 16, top: 120, width: SCREEN_WIDTH - 32, height: 400, cardPosition: 'top' },
 };
 
-export function renderMask(spotlight) {
+export function renderMask(spotlight: Spotlight | null) {
   if (!spotlight) return <View style={h.darkBackdrop} />;
   const { left, top, width, height } = spotlight;
   return (<>
@@ -40,7 +47,7 @@ export function renderMask(spotlight) {
   </>);
 }
 
-export function renderPointer(spotlight, bounceAnim) {
+export function renderPointer(spotlight: Spotlight | null, bounceAnim: Animated.Value) {
   if (!spotlight) return null;
   const { left, top, width, height, cardPosition } = spotlight;
   const isTop = cardPosition === 'top';
@@ -52,7 +59,7 @@ export function renderPointer(spotlight, bounceAnim) {
 }
 
 const h = StyleSheet.create({
-  darkBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(18, 22, 26, 0.65)' },
+  darkBackdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(18, 22, 26, 0.65)' },
   maskPanel: { position: 'absolute', backgroundColor: 'rgba(18, 22, 26, 0.65)' },
   glowBorder: {
     position: 'absolute', borderWidth: 2, borderColor: COLORS.primary, borderRadius: 12,

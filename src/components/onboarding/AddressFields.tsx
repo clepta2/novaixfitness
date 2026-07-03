@@ -1,6 +1,5 @@
-// @ts-nocheck
-// src/components/onboarding/AddressFields.js
-// Campos de endereço (rua, bairro, número, referência) - NOVAIX FITNESS
+// src/components/onboarding/AddressFields.tsx
+// Campos de endereço (rua, bairro, número, referência)
 
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
@@ -14,10 +13,12 @@ const inputStyle = {
 
 const labelStyle = {
   fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.textMuted,
-  textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: SPACING.sm,
+  textTransform: 'uppercase' as const, letterSpacing: 1.2, marginBottom: SPACING.sm,
 };
 
-export function StreetField({ street, setStreet }) {
+interface FieldProps { value: string; onChange: (v: string) => void; }
+
+export function StreetField({ street, setStreet }: { street: string; setStreet: (v: string) => void }) {
   return (
     <View>
       <Text style={[labelStyle, { marginTop: SPACING.md }]}>RUA / LOGRADOURO</Text>
@@ -26,7 +27,7 @@ export function StreetField({ street, setStreet }) {
   );
 }
 
-export function NeighborhoodField({ neighborhood, setNeighborhood }) {
+export function NeighborhoodField({ neighborhood, setNeighborhood }: { neighborhood: string; setNeighborhood: (v: string) => void }) {
   return (
     <View>
       <Text style={[labelStyle, { marginTop: SPACING.md }]}>BAIRRO</Text>
@@ -35,7 +36,7 @@ export function NeighborhoodField({ neighborhood, setNeighborhood }) {
   );
 }
 
-export function NumberNearRow({ number, setNumber, nearTo, setNearTo }) {
+export function NumberNearRow({ number, setNumber, nearTo, setNearTo }: { number: string; setNumber: (v: string) => void; nearTo?: string; setNearTo?: (v: string) => void }) {
   return (
     <View style={s.row}>
       <View style={{ flex: 1 }}>

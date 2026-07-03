@@ -15,7 +15,7 @@ import { useResponsive } from '../src/hooks/useResponsive';
 import { supabase } from '../src/config/supabase';
 import { getUnreadCount } from '../src/services/notifications';
 import { useServiceCall } from '../src/hooks/useServiceCall';
-import { ErrorBoundary, ChallengesList, Leaderboard, CreatePostModal, NotificationModal, SocialHub, QuickSocialActions, StoryRing, StoryViewer, StoryCreateModal, GymCheckIn, WorkoutGroups, SocialFeed } from '../src/components';
+import { ErrorBoundary, ChallengesList, Leaderboard, CreatePostModal, NotificationModal, SocialHub, QuickSocialActions, StoryRing, FeedStoryViewer, StoryCreateModal, GymCheckIn, WorkoutGroups, SocialFeed } from '../src/components';
 import { getActiveStories } from '../src/services/stories';
 import { checkIn, getRecentCheckIns } from '../src/services/gymCheckIn';
 import { formatRelativeDate } from '../src/helpers/dates';
@@ -173,7 +173,7 @@ export default function SocialScreen() {
         <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} userId={user?.id} />
         <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
         <GymCheckIn visible={showGymCheckIn} onClose={() => setShowGymCheckIn(false)} onCheckIn={handleGymCheckIn} recentCheckIns={recentCheckIns} />
-        <StoryViewer visible={showStoryViewer} stories={stories} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
+        <FeedStoryViewer visible={showStoryViewer} stories={stories} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
         <StoryCreateModal visible={showStoryCreate} onClose={() => { setShowStoryCreate(false); loadStories(); }} userId={user?.id} />
       </View>
     </ErrorBoundary>

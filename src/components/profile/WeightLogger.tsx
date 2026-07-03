@@ -1,4 +1,4 @@
-// src/components/profile/WeightLogger.js
+// src/components/profile/WeightLogger.tsx
 // Registro de Medidas Corporais - NOVAIX FITNESS
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -10,8 +10,10 @@ import { Card } from '../ui/Card';
 import { supabase } from '../../config/supabase';
 import { formatDateBR } from '../../helpers/dates';
 import { useAuth } from '../../context/AuthContext';
+import { useAbortController } from '../../hooks/useAbortController';
 import { typography } from '../../styles';
 import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
+import { sanitizeInput, validateWeight } from '../../utils/validation';
 
 export default function WeightLogger() {
   const { user } = useAuth();
@@ -20,6 +22,8 @@ export default function WeightLogger() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const { signal } = useAbortController();
 
   const fetchHistory = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
@@ -35,38 +39,54 @@ export default function WeightLogger() {
         setHistory(data);
       }
     } catch (err) {
-      console.error('Erro ao buscar histórico de peso:', err);
+      if (__DEV__) console.error('Erro ao buscar histórico de peso:', err);
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, signal]);
 
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
 
-  const handleSave = async () => {
-    const parsedWeight = parseFloat(weight);
-    if (isNaN(parsedWeight) || parsedWeight <= 0) return;
+  const handleWeightChange = (text: string) => {
+    const sanitized = text.replace(/[^0-9.,]/g, '').replace(',', '.');
+    setWeight(sanitized);
+    setError('');
+  };
 
+  const handleBodyFatChange = (text: string) => {
+    const sanitized = text.replace(/[^0-9.,]/g, '').replace(',', '.');
+    setBodyFat(sanitized);
+  };
+
+  const handleSave = async () => {
+    const validation = validateWeight(weight);
+    if (!validation.valid) {
+      setError(validation.error || 'Peso inválido');
+      return;
+    }
+
+    const parsedWeight = parseFloat(weight);
     setSaving(true);
     try {
-      const parsedFat = parseFloat(bodyFat);
+      const parsedFat = bodyFat ? parseFloat(bodyFat) : null;
       const { error } = await supabase
         .from('physical_progress')
         .insert({
           user_id: user.id,
           weight: parsedWeight,
-          body_fat: isNaN(parsedFat) ? null : parsedFat,
+          body_fat: parsedFat && !isNaN(parsedFat) ? parsedFat : null,
         });
 
       if (!error) {
         setWeight('');
         setBodyFat('');
+        setError('');
         await fetchHistory();
       }
     } catch (err) {
-      console.error('Erro ao registrar peso:', err);
+      if (__DEV__) console.error('Erro ao registrar peso:', err);
     } finally {
       setSaving(false);
     }

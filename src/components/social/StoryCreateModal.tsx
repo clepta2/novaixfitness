@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Image, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as Crypto from 'expo-crypto';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
@@ -36,7 +37,8 @@ export default function StoryCreateModal({ visible, onClose, userId }) {
     if (!imageUri) { Alert.alert(t('common.error'), t('social.storySelectImageError')); return; }
     setLoading(true);
     try {
-      const fileName = `${userId}/stories/${Date.now()}.jpg`;
+      const uuid = Crypto.randomUUID();
+      const fileName = `${userId}/stories/${uuid}.jpg`;
       const formData = new FormData();
       formData.append('file', { uri: imageUri, type: 'image/jpeg', name: fileName } as any);
       const { error: uploadError } = await supabase.storage.from('stories').upload(fileName, formData, { contentType: 'image/jpeg' });

@@ -1,12 +1,18 @@
-// @ts-nocheck
-// src/components/auth/PasswordStrength.js
 import { View, Text } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { styles } from '../../styles/registerStyles';
 
-export default function PasswordStrength({ strength, label, color, password, isDark }) {
-  const rules = [
+interface PasswordStrengthProps {
+  strength: number;
+  label: string;
+  color: string;
+  password: string;
+  isDark: boolean;
+}
+
+export default function PasswordStrength({ strength, label, color, password, isDark }: PasswordStrengthProps) {
+  const rules: [string, boolean][] = [
     ['Mínimo 8 caracteres', password.length >= 8],
     ['Maiúscula (A-Z)', /[A-Z]/.test(password)],
     ['Minúscula (a-z)', /[a-z]/.test(password)],

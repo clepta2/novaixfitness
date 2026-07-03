@@ -1,110 +1,192 @@
-// src/components/social/StoryViewer.js
-// Visualizador de stories em tela cheia
+// src/components/social/StoryViewer.tsx
+// Full-screen story viewer overlay with progress bars and navigation
 
-
-            ;
-import { useMemo } from 'react';
-import { View, Text, TouchableOpacity, Image, Modal, StyleSheet, Dimensions, Animated } from 'react-native';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { useI18n } from '../../i18n';
+import { useColors } from '../../context/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const STORY_DURATION = 5000;
 
-export default function StoryViewer({ visible, stories, initialIndex = 0, onClose }) {
-  const { t } = useI18n();
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [currentStory, setCurrentStory] = useState(0);
-  const progressAnim = useMemo(() => new Animated.Value(0), []);
-  const timerRef = useRef(null);
+interface WorkoutStory {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  workoutName: string;
+  workoutThumbnail: string;
+  duration: number;
+  exercises: number;
+  seen: boolean;
+}
 
-  useEffect(() => {
-    if (visible) startProgress();
-    return () => clearTimeout(timerRef.current);
-  }, [visible, currentIndex, currentStory]);
+interface StoryViewerProps {
+  stories: WorkoutStory[];
+  selectedStory: WorkoutStory;
+  currentIndex: number;
+  onClose: () => void;
+  onNavigate: (index: number) => void;
+}
 
-  const startProgress = () => {
-    progressAnim.setValue(0);
-    Animated.timing(progressAnim, { toValue: 1, duration: STORY_DURATION, useNativeDriver: false }).start();
-    timerRef.current = setTimeout(() => goNext(), STORY_DURATION);
-  };
+export default function StoryViewer({
+  stories, selectedStory, currentIndex, onClose, onNavigate,
+}: StoryViewerProps) {
+  const colors = useColors();
+  const [progressAnim] = useState(() => new Animated.Value(0));
+  const autoAdvanceTimer = useRef<any>(null);
 
-  const goNext = () => {
-    const storyGroup = stories[currentIndex];
-    if (currentStory < storyGroup.stories.length - 1) {
-      setCurrentStory(prev => prev + 1);
-    } else if (currentIndex < stories.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-      setCurrentStory(0);
+  const goToNextStory = useCallback(() => {
+    if (currentIndex < stories.length - 1) {
+      onNavigate(currentIndex + 1);
+    } else {
       onClose();
     }
-  };
+  }, [currentIndex, stories, onClose, onNavigate]);
 
-  const goPrev = () => {
-    if (currentStory > 0) {
-      setCurrentStory(prev => prev - 1);
-    } else if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
-      setCurrentStory(0);
+  const goToPreviousStory = useCallback(() => {
+    if (currentIndex > 0) {
+      onNavigate(currentIndex - 1);
     }
-  };
+  }, [currentIndex, onNavigate]);
 
-  const storyGroup = stories[currentIndex];
-  if (!storyGroup) return null;
-  const story = storyGroup.stories[currentStory];
-  if (!story) return null;
+  const startAutoAdvance = useCallback(() => {
+    progressAnim.setValue(0);
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    Animated.timing(progressAnim, {
+      toValue: 1,
+      duration: STORY_DURATION,
+      useNativeDriver: false,
+    }).start();
+    autoAdvanceTimer.current = setTimeout(goToNextStory, STORY_DURATION);
+  }, [progressAnim, goToNextStory]);
 
-  const progressWidth = progressAnim.interpolate({
-    inputRange: [0, 1], outputRange: ['0%', '100%'],
-  });
+  useEffect(() => {
+    startAutoAdvance();
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    };
+  }, [currentIndex, startAutoAdvance]);
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.container}>
+    <View style={styles.viewerOverlay}>
+      <View style={styles.viewerContainer}>
         <View style={styles.progressContainer}>
-          {storyGroup.stories.map((_, i) => (
-            <View key={i} style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: i < currentStory ? '100%' : i === currentStory ? progressWidth : '0%' }]} />
+          {stories.map((_, index) => (
+            <View key={index} style={styles.progressBarBackground}>
+              <Animated.View
+                style={[
+                  styles.progressBarFill,
+                  {
+                    width: index === currentIndex
+                      ? progressAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: ['0%', '100%'],
+                        })
+                      : index < currentIndex ? '100%' : '0%',
+                  },
+                ]}
+              />
             </View>
           ))}
         </View>
-
-        <View style={styles.header}>
-          <Image source={{ uri: storyGroup.avatar || undefined }} style={styles.avatar} />
-          <Text style={styles.name}>{storyGroup.name}</Text>
+        <View style={styles.viewerHeader}>
+          <View style={styles.userInfo}>
+            <Image source={{ uri: selectedStory.userAvatar }} style={styles.viewerAvatar} />
+            <View>
+              <Text style={styles.viewerUserName}>{selectedStory.userName}</Text>
+              <Text style={styles.viewerTime}>Agora</Text>
+            </View>
+          </View>
           <TouchableOpacity onPress={onClose}>
-            <Ionicons name="close" size={24} color={COLORS.textTitle} />
+            <Ionicons name="close" size={28} color={colors.textTitle} />
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.touchLeft} onPress={goPrev} />
-        <TouchableOpacity style={styles.touchRight} onPress={goNext} />
-
-        <Image source={{ uri: story.image_url }} style={styles.image} resizeMode="contain" />
-
-        {story.caption && (
-          <View style={styles.captionContainer}>
-            <Text style={styles.caption}>{story.caption}</Text>
+        <View style={styles.viewerContent}>
+          <Image source={{ uri: selectedStory.workoutThumbnail }} style={styles.workoutImage} />
+          <View style={styles.workoutOverlay}>
+            <View style={styles.workoutInfo}>
+              <Text style={styles.workoutTitle}>{selectedStory.workoutName}</Text>
+              <View style={styles.workoutStats}>
+                <View style={styles.statItem}>
+                  <Ionicons name="time" size={14} color={colors.primary} />
+                  <Text style={styles.statText}>{selectedStory.duration} min</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Ionicons name="fitness" size={14} color={colors.primary} />
+                  <Text style={styles.statText}>{selectedStory.exercises} exercícios</Text>
+                </View>
+              </View>
+            </View>
           </View>
-        )}
+        </View>
+        <TouchableOpacity style={styles.navLeft} onPress={goToPreviousStory} activeOpacity={1} />
+        <TouchableOpacity style={styles.navRight} onPress={goToNextStory} activeOpacity={1} />
       </View>
-    </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  progressContainer: { flexDirection: 'row', gap: 4, paddingHorizontal: SPACING.md, paddingTop: SPACING.xl + 20 },
-  progressTrack: { flex: 1, height: 2, backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: 1 },
-  progressFill: { height: 2, backgroundColor: COLORS.textTitle, borderRadius: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, gap: SPACING.sm },
-  avatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: COLORS.surfaceElevated },
-  name: { flex: 1, fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },
-  touchLeft: { position: 'absolute', left: 0, top: 100, bottom: 100, width: '40%' },
-  touchRight: { position: 'absolute', right: 0, top: 100, bottom: 100, width: '40%' },
-  image: { flex: 1, width: SCREEN_WIDTH },
-  captionContainer: { position: 'absolute', bottom: 40, left: SPACING.lg, right: SPACING.lg },
-  caption: { fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textTitle, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: SPACING.sm, borderRadius: BORDER_RADIUS.sm },
+  viewerOverlay: {
+    ...(StyleSheet as any).absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.95)', zIndex: 1000,
+  },
+  viewerContainer: {
+    flex: 1,
+  },
+  progressContainer: {
+    flexDirection: 'row', paddingHorizontal: SPACING.md, paddingTop: SPACING.xl, gap: 4,
+  },
+  progressBarBackground: {
+    flex: 1, height: 3, backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: 2, overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%', backgroundColor: '#B8FF00', borderRadius: 2,
+  },
+  viewerHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: SPACING.md, paddingVertical: SPACING.md,
+  },
+  userInfo: {
+    flexDirection: 'row', alignItems: 'center', gap: SPACING.sm,
+  },
+  viewerAvatar: {
+    width: 40, height: 40, borderRadius: 20, borderWidth: 2, borderColor: '#B8FF00',
+  },
+  viewerUserName: {
+    fontFamily: 'Montserrat_700Bold', fontSize: 14, color: '#FFFFFF',
+  },
+  viewerTime: {
+    fontFamily: 'Inter_400Regular', fontSize: 12, color: '#8892A0',
+  },
+  viewerContent: {
+    flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: SPACING.lg,
+  },
+  workoutImage: {
+    width: SCREEN_WIDTH - SPACING.xl * 2, height: SCREEN_WIDTH - SPACING.xl * 2, borderRadius: BORDER_RADIUS.lg, backgroundColor: '#121820',
+  },
+  workoutOverlay: {
+    position: 'absolute', bottom: 0, left: SPACING.lg, right: SPACING.lg, backgroundColor: 'rgba(0, 0, 0, 0.7)', borderRadius: BORDER_RADIUS.md, padding: SPACING.lg,
+  },
+  workoutInfo: {
+    alignItems: 'center',
+  },
+  workoutTitle: {
+    fontFamily: 'Montserrat_700Bold', fontSize: 18, color: '#FFFFFF', marginBottom: SPACING.sm,
+  },
+  workoutStats: {
+    flexDirection: 'row', gap: SPACING.lg,
+  },
+  statItem: {
+    flexDirection: 'row', alignItems: 'center', gap: SPACING.xs,
+  },
+  statText: {
+    fontFamily: 'Inter_500Medium', fontSize: 13, color: '#FFFFFF',
+  },
+  navLeft: {
+    position: 'absolute', left: 0, top: 100, bottom: 100, width: '30%',
+  },
+  navRight: {
+    position: 'absolute', right: 0, top: 100, bottom: 100, width: '30%',
+  },
 });

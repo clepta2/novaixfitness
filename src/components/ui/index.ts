@@ -35,3 +35,4 @@ export { default as AvatarGroup } from './AvatarGroup';
 export { default as FeatureGrid } from './FeatureGrid';
 export { default as WorkoutCardEnhanced } from './WorkoutCardEnhanced';
 export { default as StatsCard, HorizontalStatsCard } from './StatsCard';
+export { MaskedText } from './MaskedText';

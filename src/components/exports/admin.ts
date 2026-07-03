@@ -1,0 +1,12 @@
+// src/components/exports/admin.ts
+// Re-exports de componentes admin - NOVAIX FITNESS
+
+export { default as StudentCard } from '../admin/StudentCard';
+export { default as FinanceStats } from '../admin/FinanceStats';
+export { default as WorkoutManager } from '../admin/WorkoutManager';
+export { default as ExerciseManager } from '../admin/ExerciseManager';
+export { default as TwoFactorSetup } from '../admin/TwoFactorSetup';
+export { default as TwoFactorPrompt } from '../admin/TwoFactorPrompt';
+export { default as AdminDashboard } from '../admin/AdminDashboard';
+export { default as StudentEditModal } from '../admin/StudentEditModal';
+export { default as ReferralCard } from '../referral/ReferralCard';

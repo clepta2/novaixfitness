@@ -18,7 +18,7 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const { saveOnboarding, onboarding } = useAuth();
   const { t } = useI18n();
-  const [currentStepId, setCurrentStepId] = useState('welcome');
+  const [currentStepId, setCurrentStepId] = useState('goal');
   const [data, setData] = useState(onboarding || {});
 
   useEffect(() => {

@@ -1,153 +1,141 @@
 // src/utils/performance.ts
-// Utilitarios de performance e otimizacao - NOVAIX FITNESS
+// Utilitários de performance - NOVAIX FITNESS
 
-import React, { memo, useCallback, useMemo, useRef, useEffect } from 'react';
-import { InteractionManager } from 'react-native';
-
-// ─── Memoizacao Profunda ───────────────────────────────────
-export function deepMemo<T extends React.ComponentType<any>>(
-  Component: T,
-  compareFn?: (prevProps: any, nextProps: any) => boolean
-): React.MemoExoticComponent<T> {
-  return memo(Component, compareFn ?? compareProps);
+interface PerformanceEntry {
+  name: string;
+  duration: number;
+  timestamp: number;
 }
 
-function compareProps(prevProps: any, nextProps: any): boolean {
-  if (prevProps === nextProps) return true;
-  if (!prevProps || !nextProps) return false;
+class PerformanceMonitor {
+  private entries: PerformanceEntry[] = [];
+  private marks: Map<string, number> = new Map();
 
-  const keys1 = Object.keys(prevProps);
-  const keys2 = Object.keys(nextProps);
+  mark(name: string): void {
+    this.marks.set(name, performance.now());
+  }
 
-  if (keys1.length !== keys2.length) return false;
+  measure(name: string, startMark: string): number {
+    const startTime = this.marks.get(startMark);
+    if (startTime === undefined) {
+      console.warn(`Mark "${startMark}" not found`);
+      return 0;
+    }
 
-  for (const key of keys1) {
-    const val1 = prevProps[key];
-    const val2 = nextProps[key];
+    const duration = performance.now() - startTime;
+    this.entries.push({
+      name,
+      duration,
+      timestamp: Date.now(),
+    });
 
-    if (typeof val1 === 'function' || typeof val2 === 'function') continue;
-    if (val1 === val2) continue;
-    if (typeof val1 !== typeof val2) return false;
-    if (typeof val1 === 'object') {
-      if (JSON.stringify(val1) !== JSON.stringify(val2)) return false;
-    } else {
-      return false;
+    this.marks.delete(startMark);
+    return duration;
+  }
+
+  getEntries(name?: string): PerformanceEntry[] {
+    if (name) {
+      return this.entries.filter(e => e.name === name);
+    }
+    return [...this.entries];
+  }
+
+  getAverageDuration(name: string): number {
+    const entries = this.getEntries(name);
+    if (entries.length === 0) return 0;
+    const total = entries.reduce((sum, e) => sum + e.duration, 0);
+    return total / entries.length;
+  }
+
+  clear(): void {
+    this.entries = [];
+    this.marks.clear();
+  }
+
+  logSlowOperations(threshold: number = 100): void {
+    const slowOps = this.entries.filter(e => e.duration > threshold);
+    if (slowOps.length > 0) {
+      console.warn(`[Performance] ${slowOps.length} slow operations detected:`);
+      slowOps.forEach(op => {
+        console.warn(`  ${op.name}: ${op.duration.toFixed(2)}ms`);
+      });
     }
   }
-
-  return true;
 }
 
-// ─── Cache de Dados ────────────────────────────────────────
-const dataCache = new Map<string, { data: any; timestamp: number }>();
+export const performanceMonitor = new PerformanceMonitor();
 
-export function getCachedData<T>(key: string, ttl: number = 5 * 60 * 1000): T | null {
-  const cached = dataCache.get(key);
-  if (cached && Date.now() - cached.timestamp < ttl) {
-    return cached.data as T;
-  }
-  return null;
-}
-
-export function setCachedData(key: string, data: any): void {
-  dataCache.set(key, { data, timestamp: Date.now() });
-}
-
-export function clearCache(key?: string): void {
-  if (key) {
-    dataCache.delete(key);
-  } else {
-    dataCache.clear();
-  }
-}
-
-// ─── Lazy Loading ──────────────────────────────────────────
-export function runAfterInteractions(fn: () => void): void {
-  InteractionManager.runAfterInteractions(fn);
-}
-
-// ─── Throttle ──────────────────────────────────────────────
-export function throttle<T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let lastCall = 0;
-  let timeoutId: ReturnType<typeof setTimeout>;
-
-  return (...args: Parameters<T>) => {
-    const now = Date.now();
-    if (now - lastCall >= delay) {
-      lastCall = now;
-      fn(...args);
-    } else {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        lastCall = Date.now();
-        fn(...args);
-      }, delay - (now - lastCall));
+// Helper para medir tempo de funções
+export function measureAsync<T>(
+  name: string,
+  fn: () => Promise<T>
+): Promise<T> {
+  return new Promise(async (resolve, reject) => {
+    const start = performance.now();
+    try {
+      const result = await fn();
+      const duration = performance.now() - start;
+      performanceMonitor['entries'].push({
+        name,
+        duration,
+        timestamp: Date.now(),
+      });
+      resolve(result);
+    } catch (error) {
+      reject(error);
     }
-  };
+  });
 }
 
-// ─── Debounce ──────────────────────────────────────────────
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout>;
-
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// ─── Batch Updates ─────────────────────────────────────────
-export function batchUpdates(updates: (() => void)[]): void {
-  updates.forEach(update => update());
-}
-
-// ─── Prefetch de Imagens ───────────────────────────────────
-const prefetchedImages = new Set<string>();
-
-export async function prefetchImages(urls: string[]): Promise<void> {
-  try {
-    const { Image } = require('expo-image');
-    await Promise.allSettled(
-      urls
-        .filter(url => url && !prefetchedImages.has(url))
-        .map(url => {
-          prefetchedImages.add(url);
-          return Image.prefetch(url);
-        })
-    );
-  } catch {}
-}
-
-// ─── Preload de Telas ──────────────────────────────────────
-const preloadedScreens = new Set<string>();
-
-export function preloadScreen(name: string, importFn: () => Promise<any>): void {
-  if (preloadedScreens.has(name)) return;
-  preloadedScreens.add(name);
-  importFn().catch(() => preloadedScreens.delete(name));
-}
-
-// ─── Hook: useStableCallback ───────────────────────────────
-export function useStableCallback<T extends (...args: any[]) => any>(
-  callback: T
+// Helper para medir tempo de funções síncronas
+export function measureSync<T>(
+  name: string,
+  fn: () => T
 ): T {
-  const callbackRef = useRef(callback);
-  callbackRef.current = callback;
-
-  return useCallback((...args: any[]) => {
-    return callbackRef.current(...args);
-  }, []) as T;
+  const start = performance.now();
+  const result = fn();
+  const duration = performance.now() - start;
+  performanceMonitor['entries'].push({
+    name,
+    duration,
+    timestamp: Date.now(),
+  });
+  return result;
 }
 
-// ─── Hook: useLatest ──────────────────────────────────────
-export function useLatest<T>(value: T): { readonly current: T } {
-  const ref = useRef(value);
-  ref.current = value;
-  return ref;
+// Debounce para otimização
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+// Throttle para otimização
+export function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
+  let inThrottle: boolean;
+  let lastArgs: Parameters<T> | null = null;
+  
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => {
+        inThrottle = false;
+        if (lastArgs) {
+          func(...lastArgs);
+          lastArgs = null;
+        }
+      }, limit);
+    } else {
+      lastArgs = args;
+    }
+  };
 }

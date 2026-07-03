@@ -1,0 +1,5 @@
+﻿app/(tabs)/library.tsx(142,8): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+app/body-measures.tsx(91,20): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+app/coach-dashboard.tsx(79,115): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+app/intro.tsx(47,8): error TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+app/workout/create.tsx(62,64): error TS2554: Expected 1 arguments, but got 2.

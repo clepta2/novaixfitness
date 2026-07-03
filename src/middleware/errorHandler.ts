@@ -1,22 +1,29 @@
-// src/middleware/errorHandler.js
+// src/middleware/errorHandler.ts
 // Middleware de tratamento de erros
 
-export function handleApiError(error: Error | { message?: string }, context = ''): { status: number; message: string } {
+interface ApiErrorResult {
+  status: number;
+  message: string;
+}
+
+export function handleApiError(error: any, context: string = ''): ApiErrorResult {
   if (__DEV__) console.error(`[ERROR] ${context}:`, error.message);
   
-  if (error.message?.includes('JWT')) {
+  const msg = error.message || '';
+  
+  if (msg.includes('JWT')) {
     return { status: 401, message: 'Sessão expirada. Faça login novamente.' };
   }
-  if (error.message?.includes('permission denied') || error.message?.includes('RLS')) {
+  if (msg.includes('permission denied') || msg.includes('RLS')) {
     return { status: 403, message: 'Sem permissão para esta ação.' };
   }
-  if (error.message?.includes('not found')) {
+  if (msg.includes('not found')) {
     return { status: 404, message: 'Recurso não encontrado.' };
   }
-  if (error.message?.includes('duplicate')) {
+  if (msg.includes('duplicate')) {
     return { status: 409, message: 'Registro já existe.' };
   }
-  if (error.message?.includes('validation') || error.message?.includes('invalid')) {
+  if (msg.includes('validation') || msg.includes('invalid')) {
     return { status: 400, message: 'Dados inválidos. Verifique as informações.' };
   }
   

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -137,8 +137,6 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps): React.J
     </View>
   );
 }
-
-const ScrollView = require('react-native').ScrollView;
 
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.md },

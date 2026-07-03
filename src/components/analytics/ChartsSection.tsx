@@ -7,13 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { CATEGORY_COLORS } from '../../constants/categoryColors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const CATEGORY_COLORS = {
-  'Musculação': COLORS.primary, 'Cardio': COLORS.secondary, 'Calistenia': COLORS.success,
-  'Flexibilidade': COLORS.attention, 'HIIT': COLORS.error, 'Yoga': COLORS.info,
-};
 
 const chartConfig = {
   backgroundColor: COLORS.surface,

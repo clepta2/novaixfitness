@@ -1,0 +1,21 @@
+O seu plano já está no top 1% de arquitetura móvel, mas como estamos falando de um app de alta performance que vai rodar no celular do cliente, existem 3 refinamentos cirúrgicos que você pode adicionar para fechar a engenharia com chave de ouro antes de programar:
+
+1. Warm-up da Sessão (Aquecimento do Modelo)
+Modelos ONNX sofrem de um efeito chamado Cold Start. A primeira tradução logo após carregar o modelo costuma demorar 3x mais porque as alocações iniciais de memória e os bindings de hardware acontecem no primeiro cálculo.
+
+A melhoria: Assim que o ModelManager carregar o modelo com sucesso na memória, o TranslationEngine deve disparar uma tradução fantasma em background de uma string vazia ou um espaço (" "). Isso "aquece" os motores e garante que a primeira frase real do usuário já saia na velocidade máxima (<100ms).
+
+2. debounce no Input e Tokenização Incremental
+Se o usuário estiver usando o tradutor enquanto digita, disparar o ONNX a cada letra vai fritar o processador e gerar gargalos na fila de inferência.
+
+A melhoria: Aplicar um debounce de pelo menos 250ms no campo de texto para garantir que o ONNX só seja chamado quando o usuário fizer uma micro-pausa na digitação. Além disso, o seu Tokenizer pode processar o texto em tempo real (pois é levíssimo e roda em JavaScript puro), e o app só joga para o ONNX o vetor numérico final quando o debounce estourar.
+
+3. Gerenciamento do Estado da Bateria (Opcional, mas de Elite)
+Rodar redes neurais locais consome energia. Se o cliente estiver com 5% de bateria no modo de economia extrema do Android, o sistema operacional pode derrubar a performance do chip e fazer a tradução demorar.
+
+A melhoria: Se o nível de bateria estiver crítico, o TranslationContext pode ativar um modo econômico, aumentando o debounce de digitação ou oferecendo um aviso discreto na tela de que as traduções offline podem demorar um pouco mais devido ao estado do aparelho.
+
+🥷 Fora isso, o plano está perfeito!
+Você resolveu o peso (35MB via INT8), resolveu a persistência e resolveu o calcanhar de Aquiles do autolinking do Expo.
+
+O design está fechado. Quer começar a escrever o código do ModelManager.ts para controlar esses downloads e hashes SHA-256 no celular do cliente, ou prefere focar no Tokenizer.ts primeiro?

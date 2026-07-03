@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/chat/ChatView.js
+// src/components/chat/ChatView.tsx
 // Tela de chat individual ou grupo
 
 import { useState, useEffect, useRef } from 'react';
@@ -14,7 +13,12 @@ import { moderateText } from '../../services/contentModeration';
 import { getMessages, sendMessage, markAsRead, subscribeToConversation } from '../../services/chat';
 import { useI18n } from '../../i18n';
 
-export default function ChatView({ conversation, onBack }) {
+interface ChatViewProps {
+  conversation: { id: string; name?: string; avatar_url?: string; [key: string]: any };
+  onBack: () => void;
+}
+
+export default function ChatView({ conversation, onBack }: ChatViewProps) {
   const { t } = useI18n();
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
@@ -27,7 +31,7 @@ export default function ChatView({ conversation, onBack }) {
   useEffect(() => {
     loadMessages();
     const unsub = subscribeToConversation(conversation.id, {
-      onNewMessage: (payload) => {
+      onNewMessage: (payload: any) => {
         if (payload.eventType === 'INSERT') {
           setMessages(prev => [...prev, payload.new]);
           markAsRead(conversation.id, user.id);

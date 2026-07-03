@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/PostTypeSelector.js
+// src/components/social/PostTypeSelector.tsx
 // Seletor de tipo de post: Texto / Foto Progresso / Antes/Depois
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -8,12 +7,17 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 const POST_TYPES = [
-  { id: 'text', label: 'Post', icon: 'chatbubble-ellipses-outline' },
-  { id: 'progress', label: 'Foto Progresso', icon: 'camera-outline' },
-  { id: 'before_after', label: 'Antes/Depois', icon: 'swap-horizontal-outline' },
+  { id: 'text', label: 'Post', icon: 'chatbubble-ellipses-outline' as const },
+  { id: 'progress', label: 'Foto Progresso', icon: 'camera-outline' as const },
+  { id: 'before_after', label: 'Antes/Depois', icon: 'swap-horizontal-outline' as const },
 ];
 
-export default function PostTypeSelector({ selected, onSelect }) {
+interface PostTypeSelectorProps {
+  selected: string;
+  onSelect: (id: string) => void;
+}
+
+export default function PostTypeSelector({ selected, onSelect }: PostTypeSelectorProps) {
   return (
     <View style={styles.container}>
       {POST_TYPES.map(type => (

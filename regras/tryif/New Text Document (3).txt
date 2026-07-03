@@ -1,0 +1,80 @@
+Sim, para fechar a arquitetura desse motor de analytics com nível de produção de grandes aplicativos, existem três proteções finais que evitam o colapso do app em cenários extremos.
+
+No mundo real, se o usuário ficar semanas sem internet usando o app, ou se o app crashar no meio de um envio, você pode enfrentar estouro de memória ou loops infinitos.
+
+Aqui estão os três últimos pilares de segurança que você deve adicionar:
+
+1. Proteção contra Estouro de Memória (Limite de Fila)
+Se o app ficar offline por muito tempo, a fila pode acumular milhares de eventos. Isso pesa no AsyncStorage (que tem limite de tamanho por padrão no React Native) e consome a memória RAM do celular. Precisamos definir um teto (ex: 1000 eventos). Se passar disso, descartamos os mais velhos.
+
+2. Gerenciamento do Ciclo de Vida do App (AppState)
+Se o usuário fechar o aplicativo ou colocá-lo em segundo plano, o seu setInterval de 30 segundos morre, e os eventos que estão na memória se perdem se não forem processados. Precisamos forçar um flushQueue quando o app vai para o background.
+
+3. Implementação Completa e Finalizada
+Aqui está o código com essas regras de ouro aplicadas:
+
+TypeScript
+import { AppState, AppStateStatus } from 'react-native';
+
+const MAX_QUEUE_SIZE = 1000; // Proteção contra estouro de memória
+
+/**
+ * Registra um novo evento na fila de forma ultra-segura
+ */
+export async function trackEvent(eventName: string, properties?: Record<string, any>): Promise<void> {
+  if (!isLoaded) {
+    await loadQueue();
+  }
+
+  const newEvent: AnalyticsEvent = {
+    event_name: eventName,
+    properties: properties || {},
+    timestamp: new Date().toISOString(),
+    session_id: sessionId,
+    platform: Platform.OS,
+  };
+
+  EVENT_QUEUE.push(newEvent);
+
+  // 1. PROTEÇÃO: Evita que a fila cresça infinitamente se o usuário ficar offline por meses
+  if (EVENT_QUEUE.length > MAX_QUEUE_SIZE) {
+    EVENT_QUEUE.shift(); // Remove o evento mais antigo (política FIFO)
+    console.warn('[Analytics] Limite máximo da fila atingido. Descartando evento antigo.');
+  }
+
+  await saveQueue();
+}
+
+/**
+ * Inicializa os ouvintes do sistema (Chame isso na inicialização do App)
+ */
+export function initAnalytics(): void {
+  // 2. CICLO DE VIDA: Força o envio dos dados se o usuário sair do app
+  AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+    if (nextAppState === 'background' || nextAppState === 'inactive') {
+      // Dispara o flush imediatamente antes do sistema suspender o app
+      flushQueue();
+    }
+  });
+
+  // Inicializa o timer padrão de 30 segundos
+  if (!flushTimer) {
+    flushTimer = setInterval(() => {
+      flushQueue();
+    }, FLUSH_INTERVAL);
+  }
+}
+🛠️ Resumo da sua Nova Arquitetura de Analytics
+Com toda essa refatoração que fizemos nos últimos passos, o módulo de rastreamento do NOVAIX FITNESS agora resolve os seguintes problemas:
+
+Sem Erros de Sintaxe: Corrigido o conflito de declaração de variáveis duplicadas.
+
+Imune a Corrupção de Dados: Tratamento estrito de erros com try/catch ao ler e salvar dados locais.
+
+Economia de Dados e Bateria: Envio em lotes (bulk) a cada 30 segundos, em vez de bombardear o Supabase a cada clique.
+
+Resistência a Quedas de Conexão: Se a rede falhar, os dados persistem no celular até que o sinal volte.
+
+Prevenção de Duplicidade: Flags de controle impedem o envio do mesmo lote duas vezes.
+
+Segurança de Memória: Limite rígido de eventos guardados para não travar aparelhos mais antigos.

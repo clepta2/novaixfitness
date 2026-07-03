@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/chat/ConversationList.js
+// src/components/chat/ConversationList.tsx
 // Lista de conversas do chat
 
 import { useState, useEffect } from 'react';
@@ -11,7 +10,12 @@ import { Avatar } from '../ui/Avatar';
 import { getUserConversations } from '../../services/chat';
 import { useAuth } from '../../context/AuthContext';
 
-export default function ConversationList({ onSelectConversation, onNewChat }) {
+interface ConversationListProps {
+  onSelectConversation: (conversation: any) => void;
+  onNewChat: () => void;
+}
+
+export default function ConversationList({ onSelectConversation, onNewChat }: ConversationListProps) {
   const { user } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,11 +54,11 @@ export default function ConversationList({ onSelectConversation, onNewChat }) {
     return other?.user_id;
   };
 
-  const formatTime = (dateStr) => {
+  const formatTime = (dateStr: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     const now = new Date();
-    const diff = now - date;
+    const diff = now.getTime() - date.getTime();
     if (diff < 86400000) return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     if (diff < 604800000) return date.toLocaleDateString('pt-BR', { weekday: 'short' });
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });

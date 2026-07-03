@@ -1,0 +1,66 @@
+interface CardioOption {
+  id: string;
+  label: string;
+  icon: string;
+  description: string;
+  benefits: string[];
+  intensity: string[];
+  duration: string[];
+}
+
+export const CARDIO_OPTIONS: CardioOption[] = [
+  {
+    id: 'corrida',
+    label: 'Corrida',
+    icon: 'walk',
+    description: 'Correr na rua ou esteira',
+    benefits: ['Queima gordura', 'Melhora condicionamento', 'Fortalece pernas'],
+    intensity: ['Leve', 'Moderada', 'Intensa'],
+    duration: ['15min', '30min', '45min', '60min'],
+  },
+  {
+    id: 'ciclismo',
+    label: 'Ciclismo',
+    icon: 'bicycle',
+    description: 'Bike estática ou outdoor',
+    benefits: ['Baixo impacto', 'Fortalece pernas', 'Diversão'],
+    intensity: ['Leve', 'Moderada', 'Intensa'],
+    duration: ['20min', '30min', '45min', '60min'],
+  },
+  {
+    id: 'natacao',
+    label: 'Natação',
+    icon: 'water',
+    description: 'Piscina ou mar',
+    benefits: ['Corpo todo', 'Baixo impacto', 'Respiração'],
+    intensity: ['Leve', 'Moderada', 'Intensa'],
+    duration: ['20min', '30min', '45min', '60min'],
+  },
+  {
+    id: 'hiit',
+    label: 'HIIT',
+    icon: 'flash',
+    description: 'Intervalado de alta intensidade',
+    benefits: ['Queima muita caloria', 'Rápido', 'Eficaz'],
+    intensity: ['Moderada', 'Intensa', 'Máxima'],
+    duration: ['15min', '20min', '30min'],
+  },
+  {
+    id: 'eliptico',
+    label: 'Elíptico',
+    icon: 'fitness',
+    description: 'Máquina de academia',
+    benefits: ['Baixo impacto', 'Corpo todo', 'Fácil'],
+    intensity: ['Leve', 'Moderada', 'Intensa'],
+    duration: ['20min', '30min', '45min'],
+  },
+  {
+    id: 'escada',
+    label: 'Escada',
+    icon: 'trending-up',
+    description: 'Escada rolante ou fixa',
+    benefits: ['Fortalece pernas', 'Queima caloria', 'Cardiovascular'],
+    intensity: ['Leve', 'Moderada', 'Intensa'],
+    duration: ['10min', '15min', '20min'],
+  },
+];

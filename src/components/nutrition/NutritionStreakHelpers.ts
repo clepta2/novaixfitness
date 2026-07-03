@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { COLORS } from '../../constants/colors';
 
 export const STREAK_BADGES = [
@@ -9,7 +8,7 @@ export const STREAK_BADGES = [
   { days: 60, label: 'Lenda', icon: 'star', color: COLORS.primary },
 ];
 
-export function calculateCurrentStreak(uniqueDays) {
+export function calculateCurrentStreak(uniqueDays: string[]): number {
   let streak = 0;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -23,7 +22,7 @@ export function calculateCurrentStreak(uniqueDays) {
   return streak;
 }
 
-export function calculateBestStreak(uniqueDays) {
+export function calculateBestStreak(uniqueDays: string[]): number {
   let best = 0;
   let current = 0;
   for (let i = uniqueDays.length - 1; i >= 0; i--) {
@@ -32,7 +31,7 @@ export function calculateBestStreak(uniqueDays) {
     } else {
       const curr = new Date(uniqueDays[i]);
       const prev = new Date(uniqueDays[i + 1]);
-      const diff = (prev - curr) / 86400000;
+      const diff = (prev.getTime() - curr.getTime()) / 86400000;
       if (diff === 1) {
         current++;
       } else {
@@ -44,7 +43,7 @@ export function calculateBestStreak(uniqueDays) {
   return Math.max(best, current);
 }
 
-export function generateWeekDots(uniqueDays) {
+export function generateWeekDots(uniqueDays: string[]): Array<{ day: string; active: boolean; isToday: boolean }> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const last7 = [];

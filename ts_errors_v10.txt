@@ -1,0 +1,133 @@
+﻿app/(tabs)/home.tsx(92,12): error TS2741: Property 'children' is missing in type '{ elevation: number; glowColor: string; }' but required in type 'FloatingCardProps'.
+app/(tabs)/library.tsx(109,54): error TS2322: Type '{ categories: any; selected: string; onSelect: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & { categories: any; categoryCounts: any; onPress: any; }'.
+  Property 'selected' does not exist on type 'IntrinsicAttributes & { categories: any; categoryCounts: any; onPress: any; }'.
+app/(tabs)/library.tsx(128,50): error TS2345: Argument of type 'string' is not assignable to parameter of type 'WorkoutItem'.
+app/(tabs)/library.tsx(139,179): error TS2322: Type '{ visible: boolean; onClose: () => void; level: string; setLevel: () => void; duration: string; setDuration: () => void; category: string; setCategory: () => void; intensity: string; setIntensity: () => void; ... 5 more ...; setMuscles: () => void; }' is not assignable to type 'IntrinsicAttributes & FilterModalProps'.
+  Property 'intensity' does not exist on type 'IntrinsicAttributes & FilterModalProps'.
+app/_layout.tsx(13,60): error TS2305: Module '"../src/components"' has no exported member 'CacheProvider'.
+app/_layout.tsx(13,75): error TS2305: Module '"../src/components"' has no exported member 'NotificationManager'.
+app/_layout.tsx(40,54): error TS2322: Type '{ key: string; name: string; component: () => Element; as: true; any: true; }' is not assignable to type 'IntrinsicAttributes & StackScreenProps'.
+  Property 'component' does not exist on type 'IntrinsicAttributes & StackScreenProps'.
+app/assessment/guided.tsx(29,71): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: TextProps): Text', gave the following error.
+    Type 'unknown' is not assignable to type 'ReactNode'.
+  Overload 2 of 2, '(props: TextProps, context: any): Text', gave the following error.
+    Type 'unknown' is not assignable to type 'ReactNode'.
+app/body-measures.tsx(91,49): error TS2322: Type '{ form: { weight: string; chest: string; waist: string; hips: string; arms: string; thighs: string; body_fat: string; notes: string; }; setForm: any; onSave: () => Promise<void>; saving: boolean; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & MeasurementFormProps'.
+  Property 'setForm' does not exist on type 'IntrinsicAttributes & MeasurementFormProps'.
+app/intro.tsx(47,21): error TS2322: Type '{ scrollX: Value; }' is not assignable to type 'IntrinsicAttributes & StepPillProps'.
+  Property 'scrollX' does not exist on type 'IntrinsicAttributes & StepPillProps'.
+app/marketplace.tsx(33,54): error TS2322: Type '{ categories: any; selected: any; onSelect: Dispatch<any>; }' is not assignable to type 'IntrinsicAttributes & { categories: any; categoryCounts: any; onPress: any; }'.
+  Property 'selected' does not exist on type 'IntrinsicAttributes & { categories: any; categoryCounts: any; onPress: any; }'.
+app/marketplace.tsx(48,16): error TS2741: Property 'onProductPress' is missing in type '{ products: any[]; favorites: any; onToggleFavorite: (productId: string) => Promise<void>; loading: boolean; }' but required in type 'ProductListProps'.
+app/onboarding/dados-fisicos.tsx(81,34): error TS2322: Type '{ value: number; min: number; max: number; step: number; onValueChange: Dispatch<SetStateAction<number>>; }' is not assignable to type 'IntrinsicAttributes & SimpleStepperProps'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & SimpleStepperProps'.
+app/onboarding/dados-fisicos.tsx(86,34): error TS2322: Type '{ value: number; min: number; max: number; step: number; onValueChange: Dispatch<SetStateAction<number>>; }' is not assignable to type 'IntrinsicAttributes & SimpleStepperProps'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & SimpleStepperProps'.
+app/planner.tsx(98,127): error TS2339: Property 'name' does not exist on type 'WeekPlanDay'.
+app/player.tsx(68,256): error TS2322: Type '{ timeRemaining: number; totalTime: number; nextExercise: Exercise; onSkip: () => void; nextSet: number; nextIndex: number; totalExercises: number; onRestart: () => void; }' is not assignable to type 'IntrinsicAttributes & RestOverlayProps'.
+  Property 'onRestart' does not exist on type 'IntrinsicAttributes & RestOverlayProps'.
+app/player.tsx(144,13): error TS2322: Type 'number' is not assignable to type 'string'.
+app/player.tsx(145,13): error TS2322: Type 'string' is not assignable to type 'number'.
+app/register-coach.tsx(104,20): error TS2304: Cannot find name 'TouchableOpacity'.
+app/register-coach.tsx(105,21): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+app/register-coach.tsx(105,22): error TS2786: 'Text' cannot be used as a JSX component.
+  Its type '{ new (data?: string): Text; prototype: Text; }' is not a valid JSX element type.
+    Type '{ new (data?: string): Text; prototype: Text; }' is not assignable to type 'new (props: any, context: any) => Component<any, any, any>'.
+      Type 'Text' is missing the following properties from type 'Component<any, any, any>': context, setState, forceUpdate, render, and 2 more.
+app/register-coach.tsx(106,21): error TS2304: Cannot find name 'TouchableOpacity'.
+app/social.tsx(42,23): error TS2322: Type '{ posts: any[]; loading: boolean; currentUserId: string; onLike: (postId: string) => Promise<void>; onComment: (postId: string, text: string) => Promise<void>; recentCheckIns: any[]; userId: string; }' is not assignable to type 'IntrinsicAttributes & { userId: any; }'.
+  Property 'posts' does not exist on type 'IntrinsicAttributes & { userId: any; }'.
+app/workout/create.tsx(63,21): error TS2322: Type '{ key: number; exercise: ExerciseItem; config: unknown; onUpdate: (config: any) => void; onRemove: () => void; }' is not assignable to type 'IntrinsicAttributes & ExerciseConfiguratorProps'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & ExerciseConfiguratorProps'.
+app/workout/create.tsx(63,59): error TS2554: Expected 1 arguments, but got 2.
+node_modules/react-native-view-shot/src/index.tsx(219,7): error TS2322: Type 'number | HostElement | Component<{}, {}, any> | RefObject<HostElement | Component<{}, {}, any>>' is not assignable to type 'number | HostElement | Component<{}, {}, any>'.
+  Type 'RefObject<HostElement | Component<{}, {}, any>>' is not assignable to type 'number | HostElement | Component<{}, {}, any>'.
+src/components/admin/MonitoringDashboard.tsx(29,26): error TS2304: Cannot find name 'errorTracker'.
+src/components/admin/MonitoringDashboard.tsx(30,25): error TS2304: Cannot find name 'performanceMonitor'.
+src/components/analytics/BenchmarkComparison.tsx(22,42): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/BenchmarkComparison.tsx(67,42): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/BenchmarkComparison.tsx(98,37): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/MonthlyReport.tsx(67,33): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/MuscleRadarChart.tsx(145,78): error TS2322: Type '{ children: string; key: number; x: number; y: number; textAnchor: "middle"; dominantBaseline: string; fill: string; fontSize: number; fontFamily: string; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<Text> & Readonly<TextProps>'.
+  Property 'dominantBaseline' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<Text> & Readonly<TextProps>'.
+src/components/analytics/ProgressPrediction.tsx(54,34): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/ProgressPrediction.tsx(81,37): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/analytics/ProgressPrediction.tsx(156,63): error TS2339: Property 'goalWeight' does not exist on type 'ProgressPredictionData'.
+src/components/analytics/SleepCorrelation.tsx(24,37): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/common/NotificationManager.tsx(8,3): error TS2724: '"../../services/workout-reminders"' has no exported member named 'scheduleWorkoutReminder'. Did you mean 'setupWorkoutReminders'?
+src/components/common/NotificationManager.tsx(44,9): error TS2322: Type '{ weekday: number; hour: number; minute: number; repeats: true; }' is not assignable to type 'NotificationTriggerInput'.
+  Property 'type' is missing in type '{ weekday: number; hour: number; minute: number; repeats: true; }' but required in type 'CalendarTriggerInput'.
+src/components/common/Toast.tsx(62,5): error TS2353: Object literal may only specify known properties, and 'success' does not exist in type 'Function'.
+src/components/home/WaterLogger.tsx(85,98): error TS2339: Property 'catch' does not exist on type 'PromiseLike<void>'.
+src/components/index.ts(2,1): error TS2308: Module './exports/ui' has already exported a member named 'WorkoutListItem'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/index.ts(7,1): error TS2308: Module './exports/ui' has already exported a member named 'EmptyState'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/index.ts(14,1): error TS2308: Module './exports/ui' has already exported a member named 'CategoryFilter'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/index.ts(15,1): error TS2308: Module './exports/ui' has already exported a member named 'DraggableSlider'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/index.ts(15,1): error TS2308: Module './exports/ui' has already exported a member named 'LocationSection'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/index.ts(15,1): error TS2308: Module './exports/ui' has already exported a member named 'MiniCalendar'. Consider explicitly re-exporting to resolve the ambiguity.
+src/components/notifications/NotificationItem.tsx(13,29): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/components/nutrition/EnergyTracker.tsx(84,18): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/components/nutrition/ShoppingList.tsx(38,20): error TS2554: Expected 3 arguments, but got 1.
+src/components/planner/DayDetailView.tsx(30,10): error TS2741: Property 'borderColor' is missing in type '{ icon: Element; text: string; }' but required in type '{ icon: any; text: any; borderColor: any; }'.
+src/components/planner/DayDetailView.tsx(55,14): error TS2741: Property 'borderColor' is missing in type '{ icon: Element; text: string; }' but required in type '{ icon: any; text: any; borderColor: any; }'.
+src/components/progress/ProgressMeasurements.tsx(121,30): error TS2322: Type '{ bmi: string; latest: Measurement; }' is not assignable to type 'IntrinsicAttributes & BMICardProps'.
+  Property 'latest' does not exist on type 'IntrinsicAttributes & BMICardProps'.
+src/components/progress/ProgressWeekly.tsx(94,59): error TS2322: Type '{ totalWorkouts: number; avgPerDay: number; }' is not assignable to type 'IntrinsicAttributes & GlobalStatsProps'.
+  Property 'avgPerDay' does not exist on type 'IntrinsicAttributes & GlobalStatsProps'.
+src/components/progress/ProgressWeekly.tsx(114,20): error TS2322: Type '{ weekData: any; }' is not assignable to type 'IntrinsicAttributes & WeekSummaryProps'.
+  Property 'weekData' does not exist on type 'IntrinsicAttributes & WeekSummaryProps'.
+src/components/progress/ProgressWeekly.tsx(115,16): error TS2322: Type '{ weekData: any; }' is not assignable to type 'IntrinsicAttributes & DayGridProps'.
+  Property 'weekData' does not exist on type 'IntrinsicAttributes & DayGridProps'.
+src/components/progress/ProgressWeekly.tsx(116,21): error TS2322: Type '{ weekData: any; }' is not assignable to type 'IntrinsicAttributes & CategoryBarsProps'.
+  Property 'weekData' does not exist on type 'IntrinsicAttributes & CategoryBarsProps'.
+src/components/social/LiveLeaderboard.tsx(52,37): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/social/PostCard.tsx(54,40): error TS2322: Type 'number' is not assignable to type 'string'.
+src/components/social/PostCard.tsx(73,9): error TS2322: Type '{ likes: any; comments: number; isLiked: any; onLike: () => Promise<void>; onComment: () => void; onShare: () => Promise<void>; }' is not assignable to type 'IntrinsicAttributes & { isLiked: any; likes: any; commentsCount: any; onLike: any; onComment: any; onShare: any; }'.
+  Property 'comments' does not exist on type 'IntrinsicAttributes & { isLiked: any; likes: any; commentsCount: any; onLike: any; onComment: any; onShare: any; }'. Did you mean 'onComment'?
+src/components/social/PostCard.tsx(82,11): error TS2322: Type '{ postId: any; comments: any[]; currentUserId: any; }' is not assignable to type 'IntrinsicAttributes & { comments: any; loading: any; onSubmit: any; commentText: any; onCommentTextChange: any; }'.
+  Property 'postId' does not exist on type 'IntrinsicAttributes & { comments: any; loading: any; onSubmit: any; commentText: any; onCommentTextChange: any; }'.
+src/components/social/SocialHub.tsx(35,64): error TS2322: Type '{ width: string; }' is not assignable to type 'ViewStyle | Falsy | RecursiveArray<ViewStyle | Falsy> | readonly (ViewStyle | Falsy)[]'.
+  Types of property 'width' are incompatible.
+    Type 'string' is not assignable to type 'DimensionValue'.
+src/components/social/WorkoutStories.tsx(37,41): error TS2554: Expected 1-2 arguments, but got 0.
+src/components/ui/LocationSection.tsx(82,12): error TS2739: Type '{ label: string; value: string; onChangeText: Dispatch<SetStateAction<string>>; icon: string; error: undefined; secureTextEntry: boolean; autoCapitalize: string; style: {}; }' is missing the following properties from type '{ label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }': placeholder, keyboardType
+src/components/ui/LocationSection.tsx(88,16): error TS2739: Type '{ label: string; value: string; onChangeText: Dispatch<SetStateAction<string>>; icon: string; error: undefined; secureTextEntry: boolean; autoCapitalize: string; style: {}; }' is missing the following properties from type '{ label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }': placeholder, keyboardType
+src/components/ui/LocationSection.tsx(103,12): error TS2741: Property 'keyboardType' is missing in type '{ label: string; placeholder: string; value: string; onChangeText: Dispatch<SetStateAction<string>>; icon: string; error: undefined; secureTextEntry: boolean; autoCapitalize: string; style: {}; }' but required in type '{ label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }'.
+src/components/workout/BasicInfoStep.tsx(29,9): error TS2322: Type '{ label: string; value: any; onChangeText: (v: string) => void; placeholder: string; icon: string; error: any; success: string; }' is not assignable to type 'IntrinsicAttributes & { label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }'.
+  Property 'success' does not exist on type 'IntrinsicAttributes & { label: any; value: any; onChangeText: any; placeholder: any; error: any; icon: any; secureTextEntry: any; keyboardType: any; autoCapitalize: any; style: any; }'.
+src/components/workout/ExerciseQuickPanel.tsx(85,12): error TS2739: Type '{ videoId: any; }' is missing the following properties from type 'VideoPreviewProps': showVideo, onToggle
+src/components/workout/RestTimer.tsx(77,69): error TS2322: Type '{ timeRemaining: number; totalTime: number; timerColor: any; progress: number; pulseAnim: Value; }' is not assignable to type 'IntrinsicAttributes & RestRingProps'.
+  Property 'timerColor' does not exist on type 'IntrinsicAttributes & RestRingProps'.
+src/components/workout/WorkoutBuilder.tsx(135,38): error TS2322: Type '(exercise: Exercise) => void' is not assignable to type '(exercise: ExerciseData) => void'.
+  Types of parameters 'exercise' and 'exercise' are incompatible.
+    Type 'ExerciseData' is not assignable to type 'Exercise'.
+      Index signature for type 'string' is missing in type 'ExerciseData'.
+src/components/workout/WorkoutHeaderDetail.tsx(67,26): error TS2741: Property 'style' is missing in type '{ value: string; variant: string; size: string; }' but required in type '{ value: any; variant?: string; size?: string; style: any; }'.
+src/components/workout/WorkoutHistory.tsx(124,77): error TS2322: Type '{ icon: string; title: string; subtitle: string; }' is not assignable to type 'IntrinsicAttributes & EmptyStateProps'.
+  Property 'subtitle' does not exist on type 'IntrinsicAttributes & EmptyStateProps'.
+src/components/workout/WorkoutListView.tsx(53,12): error TS2741: Property 'isActive' is missing in type '{ key: string; workout: any; onPress: (workout: DailyWorkout | ActiveWorkout) => void; }' but required in type 'WorkoutListItemProps'.
+src/components/workout/WorkoutListView.tsx(58,12): error TS2741: Property 'isActive' is missing in type '{ key: string; workout: any; onPress: (workout: DailyWorkout | ActiveWorkout) => void; }' but required in type 'WorkoutListItemProps'.
+src/context/ThemeContext.tsx(79,9): error TS2367: This comparison appears to be unintentional because the types 'ThemeMode' and '"system"' have no overlap.
+src/hooks/useGamification.tsx(99,5): error TS2322: Type 'void' is not assignable to type 'AwardResult'.
+src/services/gymCheckIn.ts(37,20): error TS2304: Cannot find name 'userId'.
+src/services/monetizationSubscription.ts(75,97): error TS2554: Expected 1-2 arguments, but got 3.
+src/services/monetizationSubscription.ts(85,63): error TS2554: Expected 1-2 arguments, but got 3.
+src/services/notifications.ts(40,92): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | DailyTriggerInput'.
+src/services/notifications.ts(48,96): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/notifications.ts(56,96): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/offlineSync.ts(112,41): error TS2367: This comparison appears to be unintentional because the types '"syncing" | "pending" | "failed"' and '"synced"' have no overlap.
+src/services/planAdaptation.ts(37,47): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/services/planAdaptation.ts(37,139): error TS2339: Property 'getTime' does not exist on type 'number'.
+src/services/planFallback.ts(5,15): error TS2459: Module '"../data/exerciseCatalog"' declares 'DifficultyLevel' locally, but it is not exported.
+src/services/socialFeed.ts(43,70): error TS2554: Expected 1-2 arguments, but got 3.
+src/services/waterReminders.ts(28,91): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | DailyTriggerInput'.
+src/services/workout-reminders.ts(45,9): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/workout-reminders.ts(65,11): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/workout-reminders.ts(83,9): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/workout-reminders.ts(100,9): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | WeeklyTriggerInput'.
+src/services/workout-reminders.ts(205,94): error TS2353: Object literal may only specify known properties, and 'repeats' does not exist in type 'ChannelAwareTriggerInput | DailyTriggerInput'.
+src/utils/performance.ts(9,10): error TS2303: Circular definition of import alias 'deepMemo'.
+src/utils/performance.ts(9,20): error TS2303: Circular definition of import alias 'CachedImage'.
+src/utils/performance.ts(9,33): error TS2303: Circular definition of import alias 'OPTIMIZED_FLATLIST_CONFIG'.
+src/utils/performance.ts(9,60): error TS2303: Circular definition of import alias 'getOptimizedProps'.

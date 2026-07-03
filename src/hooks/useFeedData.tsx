@@ -93,7 +93,7 @@ export function useFeedData(): UseFeedDataReturn {
     } catch (err) {
       if (__DEV__) console.error('Erro ao buscar posts:', err);
     }
-  }, [likedPostIds]);
+  }, []);
 
   useEffect(() => {
     async function loadInitialPosts() {
@@ -111,7 +111,11 @@ export function useFeedData(): UseFeedDataReturn {
     async function loadLikes() {
       try {
         const { data } = await supabase.from('post_likes').select('post_id').eq('user_id', user.id!);
-        if (data) setLikedPostIds(new Set(data.map((l: { post_id: string }) => l.post_id)));
+        if (data) {
+          const likedIds = new Set(data.map((l: { post_id: string }) => l.post_id));
+          setLikedPostIds(likedIds);
+          setPosts(prev => prev.map(p => ({ ...p, isLiked: likedIds.has(p.id) })));
+        }
       } catch {}
     }
     loadLikes();

@@ -1,6 +1,5 @@
-// @ts-nocheck
 // src/components/profile/ProfileConfigScreen.tsx
-// Tela de perfil com animacoes - NOVAIX FITNESS
+// Tela de perfil com animações
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated } from 'react-native';

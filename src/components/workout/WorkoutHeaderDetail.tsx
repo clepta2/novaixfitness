@@ -7,6 +7,7 @@ import type { ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { CATEGORY_COLORS } from '../../constants/categoryColors';
 import { Badge } from '../ui/Badge';
 
 interface Workout {
@@ -26,11 +27,6 @@ interface WorkoutHeaderDetailProps {
   onFavorite: () => void;
   onOptions: () => void;
 }
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Musculação': COLORS.primary, 'HIIT': COLORS.error, 'Cardio': COLORS.secondary,
-  'Yoga': COLORS.info, 'Calistenia': COLORS.success, 'Natação': COLORS.info,
-};
 
 export default memo(function WorkoutHeaderDetail({ workout, isFavorite, isOffline, onBack, onFavorite, onOptions }: WorkoutHeaderDetailProps): React.ReactElement {
   const fadeAnim = useRef(new Animated.Value(0)).current;

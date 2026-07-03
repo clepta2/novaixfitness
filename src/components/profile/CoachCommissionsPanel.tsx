@@ -1,6 +1,5 @@
-// @ts-nocheck
-// src/components/profile/CoachCommissionsPanel.js
-// Componente de comissões e saques para Coach - NOVAIX FITNESS
+// src/components/profile/CoachCommissionsPanel.tsx
+// Componente de comissões e saques para Coach
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Alert, ScrollView } from 'react-native';

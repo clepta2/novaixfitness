@@ -1,6 +1,5 @@
-// @ts-nocheck
-// src/components/onboarding/CepInput.js
-// Campo de CEP com lookup automático - NOVAIX FITNESS
+// src/components/onboarding/CepInput.tsx
+// Campo de CEP com lookup automático
 
 import { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
@@ -9,7 +8,16 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { formatCEP } from '../../data/states';
 
-export default function CepInput({ cep, setCep, setState, setCity, setStreet, setNeighborhood }) {
+interface CepInputProps {
+  cep: string;
+  setCep: (v: string) => void;
+  setState: (v: string) => void;
+  setCity: (v: string) => void;
+  setStreet?: (v: string) => void;
+  setNeighborhood?: (v: string) => void;
+}
+
+export default function CepInput({ cep, setCep, setState, setCity, setStreet, setNeighborhood }: CepInputProps) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = async (text) => {
@@ -64,4 +72,5 @@ const s = StyleSheet.create({
   },
   iconLeft: { position: 'absolute', left: SPACING.lg, top: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' },
   loaderRight: { position: 'absolute', right: SPACING.lg, top: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' },
+  spinIcon: {},
 });

@@ -37,7 +37,8 @@
           "faciaIDPermission": "Permitir autenticação com Face ID"
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "expo-localization"
     ],
     "owner": "clepta2",
     "extra": {

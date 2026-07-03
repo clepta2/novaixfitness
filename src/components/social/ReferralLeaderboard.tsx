@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/ReferralLeaderboard.js
+// src/components/social/ReferralLeaderboard.tsx
 // Ranking de indicadores
 
 import { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { supabase } from '../../config/supabase';
 
-export default function ReferralLeaderboard({ currentUserId }) {
+export default function ReferralLeaderboard({ currentUserId }: { currentUserId: string }) {
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => { loadLeaders(); }, []);
@@ -34,7 +33,7 @@ export default function ReferralLeaderboard({ currentUserId }) {
 
   const getRankIcon = (rank) => {
     if (rank === 1) return <Ionicons name="trophy" size={16} color={COLORS.gold} />;
-    if (rank === 2) return <Ionicons name="medal" size={16} color={COLORS.silver} />;
+    if (rank === 2) return <Ionicons name="medal" size={16} color={COLORS.textMuted} />;
     if (rank === 3) return <Ionicons name="medal" size={16} color={COLORS.bronze} />;
     return <Text style={styles.rankText}>{rank}º</Text>;
   };

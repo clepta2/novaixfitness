@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/chat/NewChatModal.js
+// src/components/chat/NewChatModal.tsx
 // Modal para iniciar nova conversa
 
 import { useState, useEffect } from 'react';
@@ -9,10 +8,15 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 import { useAuth } from '../../context/AuthContext';
-import { supabase } from '../../config/supabase';
 import { searchUsers } from '../../services/social';
 
-export default function NewChatModal({ visible, onClose, onSelectUser }) {
+interface NewChatModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelectUser: (user: any) => void;
+}
+
+export default function NewChatModal({ visible, onClose, onSelectUser }: NewChatModalProps) {
   const { user } = useAuth();
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState([]);

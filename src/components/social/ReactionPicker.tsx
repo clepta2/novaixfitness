@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/ReactionPicker.js
+// src/components/social/ReactionPicker.tsx
 // Picker de reações com long-press
 
 import { useRef, useEffect, useMemo } from 'react';
@@ -8,7 +7,14 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { REACTION_TYPES } from '../../constants/reactions';
 
-export default function ReactionPicker({ visible, onSelect, onClose, position = 'top' }) {
+interface ReactionPickerProps {
+  visible: boolean;
+  onSelect: (id: string) => void;
+  onClose: () => void;
+  position?: 'top' | 'bottom';
+}
+
+export default function ReactionPicker({ visible, onSelect, onClose, position = 'top' }: ReactionPickerProps) {
   const containerScale = useMemo(() => new Animated.Value(0), []);
   const emojiAnims = useMemo(() => REACTION_TYPES.map(() => new Animated.Value(0)), []);
 
@@ -69,7 +75,7 @@ export default function ReactionPicker({ visible, onSelect, onClose, position = 
 }
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject, zIndex: 100, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.3)' },
+  overlay: { ...StyleSheet.absoluteFill, zIndex: 100, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.3)' },
   container: {
     flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.sm, gap: SPACING.xs, borderWidth: 1, borderColor: COLORS.border,

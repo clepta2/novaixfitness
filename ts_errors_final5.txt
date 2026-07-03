@@ -1,0 +1,10 @@
+﻿app/(tabs)/library.tsx(142,11): error TS2739: Type '{ visible: boolean; onClose: () => void; level: string; setLevel: () => void; duration: string; setDuration: () => void; category: string; setCategory: () => void; equipment: string; setEquipment: () => void; muscle: string; setMuscle: () => void; }' is missing the following properties from type 'FilterModalProps': access, setAccess, resultsCount, onClearAll
+app/body-measures.tsx(91,51): error TS2322: Type '{ form: { weight: string; chest: string; waist: string; hips: string; arms: string; thighs: string; body_fat: string; notes: string; }; setForm: any; onSave: () => Promise<void>; saving: boolean; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & MeasurementFormProps'.
+  Property 'setForm' does not exist on type 'IntrinsicAttributes & MeasurementFormProps'.
+app/coach-dashboard.tsx(79,134): error TS2322: Type '{ title: any; category: any; duration: any; level: any; onDelete: () => void; }' is not assignable to type 'IntrinsicAttributes & WorkoutListItemProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & WorkoutListItemProps'.
+app/intro.tsx(47,23): error TS2322: Type '{ scrollX: Value; }' is not assignable to type 'IntrinsicAttributes & StepPillProps'.
+  Property 'scrollX' does not exist on type 'IntrinsicAttributes & StepPillProps'.
+app/social.tsx(42,25): error TS2322: Type '{ posts: any[]; loading: boolean; currentUserId: string; onLike: (postId: string) => Promise<void>; onComment: (postId: string, text: string) => Promise<void>; recentCheckIns: any[]; userId: string; }' is not assignable to type 'IntrinsicAttributes & { userId: any; }'.
+  Property 'posts' does not exist on type 'IntrinsicAttributes & { userId: any; }'.
+app/workout/create.tsx(62,64): error TS2554: Expected 1 arguments, but got 2.

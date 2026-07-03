@@ -1,12 +1,14 @@
-// src/components/nutrition/ProgressPhotos.js
+// src/components/nutrition/ProgressPhotos.tsx
 // Registro de medidas corporais - NOVAIX FITNESS
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
+import { useAbortController } from '../../hooks/useAbortController';
+import { sanitizeInput } from '../../utils/validation';
 
 const MEASUREMENTS = [
   { key: 'weight', label: 'Peso', unit: 'kg', icon: 'scale', color: COLORS.primary },
@@ -18,6 +20,12 @@ const MEASUREMENTS = [
 ];
 
 function MeasurementInput({ measurement, value, onChange }) {
+  const handleChange = (text: string) => {
+    // Sanitizar entrada: apenas números e ponto/vírgula
+    const sanitized = text.replace(/[^0-9.,]/g, '').replace(',', '.');
+    onChange(sanitized);
+  };
+
   return (
     <View style={styles.inputRow}>
       <View style={[styles.inputIcon, { backgroundColor: measurement.color + '20' }]}>
@@ -28,10 +36,11 @@ function MeasurementInput({ measurement, value, onChange }) {
         <TextInput
           style={styles.input}
           value={value}
-          onChangeText={onChange}
+          onChangeText={handleChange}
           keyboardType="numeric"
           placeholder="--"
           placeholderTextColor={COLORS.textMuted}
+          maxLength={6}
         />
         <Text style={styles.inputUnit}>{measurement.unit}</Text>
       </View>
@@ -43,10 +52,9 @@ export default function ProgressPhotos({ userId }) {
   const [values, setValues] = useState({});
   const [lastEntry, setLastEntry] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { signal } = useAbortController();
 
-  useEffect(() => { loadData(); }, [userId]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!userId) { setLoading(false); return; }
     try {
       const { data } = await supabase.from('body_measurements')
@@ -66,9 +74,14 @@ export default function ProgressPhotos({ userId }) {
           arm: data.arm?.toString() || '',
         });
       }
-    } catch { }
-    finally { setLoading(false); }
-  };
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar medidas:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, signal]);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const handleSave = async () => {
     const hasAny = Object.values(values).some(v => v && v.trim());
@@ -96,7 +109,9 @@ export default function ProgressPhotos({ userId }) {
   };
 
   const handleChange = (key, value) => {
-    setValues(prev => ({ ...prev, [key]: value }));
+    // Validar e sanitizar
+    const sanitized = sanitizeInput(value);
+    setValues(prev => ({ ...prev, [key]: sanitized }));
   };
 
   return (

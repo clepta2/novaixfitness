@@ -1,15 +1,22 @@
 // src/__tests__/performance.test.ts
 // Testes para o utilitario de performance
 
-import { throttle, debounce, prefetchImages, preloadScreen } from '../utils/performance';
+import { throttle, debounce, performanceMonitor, measureSync } from '../utils/performance';
 
 // Limpar cache entre testes
 beforeEach(() => {
   jest.clearAllMocks();
+  performanceMonitor.clear();
 });
 
 describe('throttle', () => {
-  jest.useFakeTimers();
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('deve executar funcao imediatamente na primeira chamada', () => {
     const fn = jest.fn();
@@ -38,7 +45,13 @@ describe('throttle', () => {
 });
 
 describe('debounce', () => {
-  jest.useFakeTimers();
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('deve atrasar execucao', () => {
     const fn = jest.fn();
@@ -59,14 +72,28 @@ describe('debounce', () => {
   });
 });
 
-describe('prefetchImages', () => {
-  it('deve ser uma funcao', () => {
-    expect(typeof prefetchImages).toBe('function');
+describe('performanceMonitor', () => {
+  it('deve marcar e medir tempo', () => {
+    performanceMonitor.mark('start');
+    const result = measureSync('test', () => {
+      let sum = 0;
+      for (let i = 0; i < 1000; i++) sum += i;
+      return sum;
+    });
+    expect(result).toBe(499500);
   });
-});
 
-describe('preloadScreen', () => {
-  it('deve ser uma funcao', () => {
-    expect(typeof preloadScreen).toBe('function');
+  it('deve retornar entradas', () => {
+    performanceMonitor.mark('start');
+    performanceMonitor.measure('test', 'start');
+    const entries = performanceMonitor.getEntries();
+    expect(entries.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('deve limpar entradas', () => {
+    performanceMonitor.mark('start');
+    performanceMonitor.measure('test', 'start');
+    performanceMonitor.clear();
+    expect(performanceMonitor.getEntries()).toHaveLength(0);
   });
 });

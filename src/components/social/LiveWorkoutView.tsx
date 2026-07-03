@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/LiveWorkoutView.js
+// src/components/social/LiveWorkoutView.tsx
 // Tela completa de live de treino com timer, chat e participantes
 
 import { useState, useEffect, useRef } from 'react';
@@ -14,7 +13,13 @@ import { useSecurity } from '../../hooks/useSecurity';
 import { moderateText } from '../../services/contentModeration';
 import { subscribeToLive, sendMessage, getLiveMessages, getLiveParticipants, updateWorkoutState, leaveLive } from '../../services/liveWorkouts';
 
-export default function LiveWorkoutView({ live, isHost, onEnd }) {
+interface LiveWorkoutViewProps {
+  live: { id: string; title?: string; host_id?: string; status?: string; [key: string]: any };
+  isHost: boolean;
+  onEnd: () => void;
+}
+
+export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutViewProps) {
   const { t } = useI18n();
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
@@ -100,7 +105,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }) {
     if (!isHost) return;
     const newResting = !isResting;
     setIsResting(newResting);
-    await updateWorkoutState(live.id, { is_resting: newResting });
+    await updateWorkoutState(live.id, { is_resting: newResting } as any);
   };
 
   const handleNextExercise = async (exercise) => {

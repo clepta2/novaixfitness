@@ -1,0 +1,6 @@
+﻿app/notifications.tsx(90,11): error TS1005: ')' expected.
+app/notifications.tsx(91,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+app/planner.tsx(97,11): error TS1005: ')' expected.
+app/planner.tsx(102,10): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/workout/WorkoutListView.tsx(58,11): error TS2657: JSX expressions must have one parent element.
+src/components/workout/WorkoutListView.tsx(70,7): error TS1005: ')' expected.

@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/ReactionBar.js
+// src/components/social/ReactionBar.tsx
 // Barra de contagem de reações
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -7,7 +6,14 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { REACTION_MAP } from '../../constants/reactions';
 
-export default function ReactionBar({ reactions = {}, onToggle, currentUserId, userReaction }) {
+interface ReactionBarProps {
+  reactions?: Record<string, number>;
+  onToggle: (type: string) => void;
+  currentUserId: string;
+  userReaction?: string | null;
+}
+
+export default function ReactionBar({ reactions = {}, onToggle, currentUserId, userReaction }: ReactionBarProps) {
   const entries = Object.entries(reactions).filter(([, count]) => count > 0);
 
   if (entries.length === 0) return null;

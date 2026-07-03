@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, memo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -8,7 +7,11 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getProducts } from '../../services/marketplace';
 import { extractEquipments, equipmentToCategory, ProductChip } from './EquipmentData';
 
-export default memo(function EquipmentSuggestions({ exercises = [] }) {
+interface EquipmentSuggestionsProps {
+  exercises?: any[];
+}
+
+export default memo(function EquipmentSuggestions({ exercises = [] }: EquipmentSuggestionsProps) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);

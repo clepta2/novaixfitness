@@ -6,16 +6,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
+import { CATEGORY_COLORS } from '../../constants/categoryColors';
 import { isToday, getDaysBetween, formatTimeBR } from '../../helpers/dates';
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Musculação': COLORS.primary,
-  'HIIT': COLORS.error,
-  'Cardio': COLORS.secondary,
-  'Yoga': COLORS.info,
-  'Calistenia': COLORS.success,
-  'Natação': COLORS.info,
-};
 
 interface HistoryItem {
   completed?: boolean;

@@ -1,0 +1,82 @@
+Analisando o seu código do NOVAIX FITNESS, existem alguns pontos críticos de segurança, concorrência e tipagem. O erro mais imediato e fatal para o código rodar é a declaração duplicada de EVENT_QUEUE usando const e let, o que vai quebrar o runtime do JavaScript/TypeScript imediatamente.
+
+Para deixar essa função (e a estrutura do arquivo) robusta, segura contra perda de dados e livre de bugs de concorrência, precisamos corrigir a reatribuição de variáveis, tipar os objetos e blindar o tratamento de erros do AsyncStorage e do JSON.parse.
+
+Aqui está como estruturar esse arquivo de forma profissional e segura:
+
+Código Refatorado e Seguro
+TypeScript
+// Tracking de eventos consolidado - NOVAIX FITNESS
+import { supabase } from '../config/supabase';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const QUEUE_KEY = '@novaix:analytics_queue';
+
+// 1. Definição de interface para garantir segurança de tipos
+interface AnalyticsEvent {
+  id?: string;
+  event_name: string;
+  properties?: Record<string, any>;
+  timestamp: string;
+  session_id: string | null;
+  platform: string;
+}
+
+// 2. Corrigido: Apenas uma declaração. Usamos 'let' para permitir a reinicialização da fila com segurança
+let EVENT_QUEUE: AnalyticsEvent[] = [];
+const FLUSH_INTERVAL = 30000;
+let flushTimer: ReturnType<typeof setInterval> | null = null;
+let sessionId: string | null = null;
+let isLoaded = false;
+let isSaving = false; // Flag de concorrência para evitar sobreescrita no Storage
+
+/**
+ * Carrega a fila do armazenamento local com segurança contra JSON corrompido
+ */
+async function loadQueue(): Promise<void> {
+  if (isLoaded) return;
+  try {
+    const raw = await AsyncStorage.getItem(QUEUE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Garante que o dado recuperado realmente é um array antes de atribuir
+      if (Array.isArray(parsed)) {
+        EVENT_QUEUE = parsed;
+      }
+    }
+  } catch (error) {
+    // Evita crashar o app se o AsyncStorage falhar. Log apenas em ambiente de desenvolvimento
+    console.error('[Analytics] Erro ao carregar fila local:', error);
+    EVENT_QUEUE = []; 
+  } finally {
+    isLoaded = true;
+  }
+}
+
+/**
+ * Salva a fila atual no armazenamento local de forma atômica
+ */
+async function saveQueue(): Promise<void> {
+  if (isSaving) return; // Evita múltiplas gravações simultâneas atropelarem o arquivo
+  isSaving = true;
+  try {
+    // Armazena uma cópia em snapshot para evitar problemas se a fila mudar durante o processo assíncrono
+    const snapshot = [...EVENT_QUEUE];
+    await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(snapshot));
+  } catch (error) {
+    console.error('[Analytics] Erro ao salvar fila local:', error);
+  } finally {
+    isSaving = false;
+  }
+}
+O que mudou e por que ficou mais seguro?
+Fim do Conflito de Escopo (Erro de Sintaxe): O seu código original declarava const EVENT_QUEUE e let EVENT_QUEUE logo em seguida. Isso gera um erro fatal de compilação. Centralizei em um único let EVENT_QUEUE: AnalyticsEvent[] = [];.
+
+Controle de Concorrência (isSaving): Operações no AsyncStorage são assíncronas. Se dois eventos tentarem salvar a fila quase ao mesmo tempo, um pode sobrescrever o outro de forma incompleta, corrompendo o JSON. A flag isSaving impede gravações simultâneas.
+
+Proteção contra JSON Corrompido: O método JSON.parse() é uma das maiores causas de quebras inesperadas em aplicações mobile. Se o arquivo local for corrompido por qualquer motivo (falha de bateria do aparelho, por exemplo), o catch agora trata o erro isoladamente, limpa a memória com [] e não deixa o aplicativo fechar sozinho na cara do usuário.
+
+Tipagem Forte com TypeScript: Criar a interface AnalyticsEvent impede que códigos externos injetem dados malformados ou propriedades inválidas dentro da sua fila que posteriormente quebrariam a sua tabela no Supabase.
+
+Uso de Snapshot ([...EVENT_QUEUE]): Na função de salvar, criamos uma cópia rasa da fila no exato momento do disparo. Isso garante que se um novo evento for adicionado no meio da gravação do arquivo, ele não cause uma inconsistência de memória

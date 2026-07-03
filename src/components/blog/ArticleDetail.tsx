@@ -6,13 +6,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-
-const CATEGORY_COLORS = {
-  nutricao: COLORS.primary,
-  treino: COLORS.secondary,
-  saude: COLORS.success,
-  mindset: COLORS.info,
-};
+import { CATEGORY_COLORS } from '../../constants/categoryColors';
 
 function ArticleDetail({ article }) {
   const catColor = CATEGORY_COLORS[article.category] || COLORS.primary;

@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/components/social/LiveWorkoutCard.js
+// src/components/social/LiveWorkoutCard.tsx
 // Card de live de treino
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -8,7 +7,12 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Avatar } from '../ui/Avatar';
 
-export default function LiveWorkoutCard({ live, onPress }) {
+interface LiveWorkoutCardProps {
+  live: { id: string; title?: string; host_name?: string; host_avatar?: string; status?: string; participants_count?: number; [key: string]: any };
+  onPress?: (live: any) => void;
+}
+
+export default function LiveWorkoutCard({ live, onPress }: LiveWorkoutCardProps) {
   const isLive = live.status === 'live';
   const isScheduled = live.status === 'scheduled';
 

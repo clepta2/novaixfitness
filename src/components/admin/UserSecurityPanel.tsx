@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +8,7 @@ import TrustScoreCard from './TrustScoreCard';
 import BlockModal from './BlockModal';
 import { getUserAuditHistory, getUserBlocks, blockUser, unblockUser, getTrustScore, getActiveBlocks } from '../../services/security';
 
-const formatAction = (action) => {
+const formatAction = (action: string): string => {
   const map = {
     post_created: 'Post criado', comment_made: 'Comentário', reaction_made: 'Reação',
     message_sent: 'Mensagem', story_created: 'Story', live_created: 'Live',

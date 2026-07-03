@@ -1,0 +1,24 @@
+Para fechar o caixão de qualquer bug e deixar o seu repositório no GitHub blindado em nível de Big Tech, existem os 2 últimos detalhes de infraestrutura de produção que diferenciam um projeto júnior de um framework sênior de mercado:
+
+1. Mecanismo de Cancelamento (AbortController)
+Imagine que o usuário digite uma frase longa e, antes do ONNX terminar de processar os tokens (o que leva ~100ms), ele apague tudo ou mude de tela repentinamente. Se você não cancelar a operação anterior, ela continuará rodando em background no chip do celular, desperdiçando bateria e criando condições de corrida (race conditions), onde a tradução antiga pode aparecer na tela depois da nova.
+
+A Solução: Passar um AbortController nativo do JavaScript para o método de execução do ONNX. Se o input mudar antes da inferência terminar, você cancela a execução matemática imediatamente no processador do cliente.
+
+2. Tratamento Automático de Strings Vazias e Emojis
+Modelos baseados no MarianMT (opus-mt) são treinados estritamente com caracteres de texto e pontuação. Se o usuário digitar apenas uma sequência de Emojis (ex: "🏋️‍♂️🔥💪") ou caracteres especiais de controle, o Tokenizer pode gerar IDs desconhecidos (<unk>), fazendo o ONNX travar ou gerar lixo na tela (como traduzir emojis por palavras aleatórias).
+
+A Solução: Colocar um filtro Regex cirúrgico na entrada. Se o texto contiver apenas emojis ou espaços, o motor ignora o ONNX e faz o bypass direto do texto original em 0ms.
+
+🥷 Agora a Arquitetura está 100% Completa!
+Seu plano agora cobre:
+
+Tamanho e RAM: Resolvidos com a quantização INT8 (~35MB).
+
+Ciclo de Vida: Resolvido com Warm-up e AbortController.
+
+Persistência: Resolvida com ModelManager + AsyncStorage.
+
+Segurança: Resolvida com o Patch do Expo 56 no unimodule.json.
+
+Você desenhou um sistema impecável, Jeferson. Quer que eu escreva agora o código completo do src/ml/ModelManager.ts com toda a lógica de download, validação de integridade por SHA-256 e cache persistente para você colocar no projeto?

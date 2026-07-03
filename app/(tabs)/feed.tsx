@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { SHADOWS } from '../../src/constants/shadows';
-import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary, PostSkeleton, FeedEmptyState, FeedHeader, FeedFilters, StoryRing, StoryViewer, StoryCreateModal, DailyCheckIn, Loading, ReelItem } from '../../src/components';
+import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary, PostSkeleton, FeedEmptyState, FeedHeader, FeedFilters, StoryRing, FeedStoryViewer, StoryCreateModal, DailyCheckIn, Loading, ReelItem } from '../../src/components';
 import { ComposerCard } from '../../src/components/feed/ComposerCard';
 import { ReelsBar } from '../../src/components/feed/ReelsBar';
 import { DuelsSection } from '../../src/components/feed/DuelsSection';
@@ -152,7 +152,7 @@ export default function FeedScreen() {
       <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={handleNewPost} userId={user?.id} />
       <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
       <DailyCheckIn visible={showCheckIn} streakDay={checkInStreak} xpEarned={0} onClose={() => setShowCheckIn(false)} onClaim={handleCheckInClaim} />
-      <StoryViewer visible={showStoryViewer} stories={stories} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
+      <FeedStoryViewer visible={showStoryViewer} stories={stories} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
       <StoryCreateModal visible={showStoryCreate} onClose={() => { setShowStoryCreate(false); loadStories(); }} userId={user?.id} />
 
       {showReelsModal && activeReelIndex !== null && (

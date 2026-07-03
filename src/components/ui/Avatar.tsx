@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { BORDER_RADIUS } from '../../constants/spacing';
 
-export function Avatar({ uri, name, size = 'md', style }) {
+export function Avatar({ uri, name, size = 'md', style }: { uri?: string; name?: string; size?: string; style?: any }) {
   const sizes = {
     sm: 32,
     md: 48,

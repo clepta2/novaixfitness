@@ -1,0 +1,161 @@
+// src/data/motivationalMessages.ts
+// Mensagens motivacionais por humor - NOVAIX FITNESS
+
+type Mood = 'great' | 'good' | 'regular' | 'bad' | 'terrible';
+type Injury = 'knee' | 'back' | 'shoulder' | 'hip' | 'wrist' | 'ankle' | 'neck';
+type Progress = 'week_complete' | 'month_complete' | 'streak_7' | 'streak_30';
+
+export const MOOD_MESSAGES: Record<Mood, string[]> = {
+  great: [
+    "Bora arrasar! Seu corpo está pronto pra isso!",
+    "Essa energia é contagiante! Vamos treinar pesado!",
+    "Hoje é dia de superar limites! Preparado?",
+    "Você está no modo turbo! Vamos aproveitar!",
+    "Perfeito pra um treino intenso! Bora!",
+    "Com essa energia, vamos quebrar recordes!",
+    "Seu corpo está pedindo um treino pesado!",
+    "Vamos transformar essa energia em resultado!",
+    "Hoje seu treino vai ser épico!",
+    "Essa disposição é rara! Vamos usar bem!",
+    "Você está voando! Bora canalizar isso!",
+    "Com essa motivação, nada te para!",
+    "Vamos fazer acontecer! Tá preparado?",
+    "Hoje vai ser um dos melhores treinos!",
+    "Essa energia é ouro! Vamos investir bem!",
+    "Seu corpo está 100%! Vamos usar isso!",
+    "Bora provar do seu potencial!",
+    "Essa vontade é o que separa os bons dos ótimos!",
+    "Vamos treinar com tudo que você tem!",
+    "Hoje você é imparável! Bora!",
+  ],
+  good: [
+    "Bora! Treino padrão, consistência é chave!",
+    "Vamos manter o ritmo! Você consegue!",
+    "Cada treino te aproxima do seu objetivo!",
+    "Bom dia! Hora de se movimentar!",
+    "Vamos manter o hábito! Você está no caminho certo!",
+    "Consistência vence talento! Bora treinar!",
+    "Seu corpo agradece cada treino! Vamos lá!",
+    "Bora começar! Um passo de cada vez!",
+    "Treino de hoje é investimento no futuro!",
+    "Você já deu o primeiro passo! Agora é seguir!",
+    "Bom humor + treino = resultado!",
+    "Vamos manter o ritmo! Não para!",
+    "Cada gota de suor conta! Bora!",
+    "Hoje é mais um dia pra evoluir!",
+    "Bora cumprir o plano! Você consegue!",
+    "Treino é hábito! Vamos mantê-lo!",
+    "Você está no caminho certo! Siga!",
+    "Bora transformar esforço em resultado!",
+    "Um treino bom muda seu dia! Vamos lá!",
+    "Você é consistente! Isso é raro! Bora!",
+  ],
+  regular: [
+    "Tranquilo, vamos manter o ritmo!",
+    "Não precisa ser perfeito, só consistente!",
+    "Um treino leve já conta! Bora!",
+    "Vamos fazer o que der! Tá valendo!",
+    "Hoje pode ser mais leve, mas conta!",
+    "Consistência > intensidade! Vamos lá!",
+    "Um passo de cada vez! Você consegue!",
+    "Não desista! Mesmo cansado, mova-se!",
+    "Treino leve é melhor que nenhum treino!",
+    "Vamos manter o hábito! Mesmo assim!",
+    "Hoje pode ser difícil, mas amanhã será mais fácil!",
+    "Você já chegou até aqui! Não pare agora!",
+    "Um treino curto já mantém o ritmo!",
+    "Vamos fazer o mínimo que prometeu!",
+    "Seu corpo vai agradecer depois!",
+    "Não é sobre ser perfeito, é sobre continuar!",
+    "Bora! Mesmo com preguiça, você consegue!",
+    "Um treino bom não precisa ser perfeito!",
+    "Você é mais forte que a preguiça!",
+    "Vamos lá! Um passo de cada vez!",
+  ],
+  bad: [
+    "Hoje vamos com calma! Sem pressão!",
+    "Seu corpo precisa de cuidado! Vamos devagar!",
+    "Tranquilo! Um treino leve já é suficiente!",
+    "Vamos fazer o que der! Tá valendo!",
+    "Hoje é dia de se cuidar! Bora com gentileza!",
+  ],
+  terrible: [
+    "Hoje é dia de descansar! Isso faz parte!",
+    "Descansar não é desistir! É se preparar!",
+    "Seu corpo precisa de tempo! Vamos parar!",
+    "Amanhã é outro dia! Hoje descanse!",
+    "Não tem problema! Descanse sem culpa!",
+  ],
+};
+
+export const INJURY_MESSAGES: Record<Injury, string[]> = {
+  knee: [
+    "Vamos cuidar do seu joelho! Exercícios seguros!",
+    "Seu joelho vai agradecer! Treino adaptado!",
+    "Joelho cuidadoso = treino duradouro!",
+    "Vamos fortalecer sem machucar!",
+  ],
+  back: [
+    "Vamos proteger sua coluna! Exercícios seguros!",
+    "Suas costas vão agradecer! Treino adaptado!",
+    "Coluna saudável = treino duradouro!",
+    "Vamos fortalecer o core com cuidado!",
+  ],
+  shoulder: [
+    "Vamos cuidar do seu ombro! Exercícios seguros!",
+    "Seu ombro vai agradecer! Treino adaptado!",
+    "Ombro cuidadoso = treino duradouro!",
+    "Vamos mobilizar com gentileza!",
+  ],
+  hip: [
+    "Vamos cuidar do seu quadril! Exercícios seguros!",
+    "Seu quadril vai agradecer! Treino adaptado!",
+    "Quadril cuidadoso = treino duradouro!",
+    "Vamos mobilizar com cuidado!",
+  ],
+  wrist: [
+    "Vamos cuidar do seu punho! Exercícios seguros!",
+    "Seu punho vai agradecer! Treino adaptado!",
+    "Punho cuidadoso = treino duradouro!",
+    "Vamos adaptar a pegada!",
+  ],
+  ankle: [
+    "Vamos cuidar do seu tornozelo! Exercícios seguros!",
+    "Seu tornozelo vai agradecer! Treino adaptado!",
+    "Tornozelo cuidadoso = treino duradouro!",
+    "Vamos estabilizar com cuidado!",
+  ],
+  neck: [
+    "Vamos cuidar do seu pescoço! Exercícios seguros!",
+    "Seu pescoço vai agradecer! Treino adaptado!",
+    "Pescoço cuidadoso = treino duradouro!",
+    "Vamos mobilizar com gentileza!",
+  ],
+};
+
+export const PROGRESS_MESSAGES: Record<Progress, string[]> = {
+  week_complete: [
+    "Parabéns! Você completou todos os treinos da semana!",
+    "Semana perfeita! Você é incrível!",
+    "100% na semana! Continue assim!",
+    "Você é consistente! Isso é raro!",
+  ],
+  month_complete: [
+    "Mês completo! Você evoluiu muito!",
+    "30 dias de consistência! Impressionante!",
+    "Mês perfeito! Seu corpo agradece!",
+    "Você é uma máquina! Mês completo!",
+  ],
+  streak_7: [
+    "7 dias seguidos! Streak ligado!",
+    "Uma semana sem falhar! Você é fera!",
+    "7 dias de consistência! Continue!",
+    "Streak de 7! Não para agora!",
+  ],
+  streak_30: [
+    "30 dias seguidos! Você é lendário!",
+    "Um mês sem falhar! Impressionante!",
+    "30 dias de streak! Nada te para!",
+    "Você é um exemplo! 30 dias!",
+  ],
+};

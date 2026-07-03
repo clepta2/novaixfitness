@@ -1,0 +1,85 @@
+Com certeza. Se estamos falando de um aplicativo de produção como o NOVAIX FITNESS rodando em dispositivos reais (onde a conexão cai, o usuário fecha o app na marra ou a memória fica cheia), precisamos blindar a lógica de processamento (o envio para o Supabase e a limpeza da fila).
+
+Aqui estão as melhorias críticas para tornar as funções de processamento (flushQueue) e adição de eventos 100% seguras:
+
+1. Evitar Duplicação de Envio com Flag de Bloqueio (isFlushing)
+Se a fila demora 5 segundos para ser enviada para o Supabase (devido a uma conexão lenta 3G/4G) e o cronômetro disparar de novo, o app enviará os mesmos eventos duas vezes. Precisamos de uma trava.
+
+2. Padrão "Tentar de Novo" (Retry) em caso de Falha de Rede
+Se o envio falhar porque o usuário entrou em um elevador ou túnel, você não pode deletar a fila, mas também não pode deixar o app travar em um loop infinito consumindo bateria.
+
+3. Código Completo da Lógica de Envio Segura
+Veja como implementar essas proteções na função que processa a fila:
+
+TypeScript
+let isFlushing = false; // Trava de segurança contra envios duplicados
+
+/**
+ * Envia os eventos acumulados para o Supabase com segurança contra falhas de rede
+ */
+export async function flushQueue(): Promise<void> {
+  // 1. Evita processar se já estiver enviando, se a fila estiver vazia ou se não carregou o Storage ainda
+  if (isFlushing || EVENT_QUEUE.length === 0 || !isLoaded) return;
+
+  isFlushing = true;
+
+  // 2. Cria um snapshot dos eventos atuais para enviar. 
+  // Isso libera a fila principal para continuar recebendo novos eventos enquanto este lote é enviado.
+  const eventsToSend = [...EVENT_QUEUE];
+
+  try {
+    // 3. Envio em lote (bulk insert) para o Supabase - muito mais rápido e econômico
+    const { error } = await supabase
+      .from('analytics_events') // Substitua pelo nome real da sua tabela
+      .insert(eventsToSend);
+
+    if (error) throw error;
+
+    // 4. Se o envio deu certo, removemos APENAS os eventos que foram enviados com sucesso
+    // (Evita apagar eventos novos que entraram na fila durante o processo de rede)
+    EVENT_QUEUE = EVENT_QUEUE.filter(event => !eventsToSend.includes(event));
+    
+    // Atualiza o armazenamento local com a fila limpa
+    await saveQueue();
+    
+    console.log(`[Analytics] ${eventsToSend.length} eventos enviados com sucesso.`);
+  } catch (error) {
+    console.error('[Analytics] Falha ao enviar eventos para o Supabase:', error);
+    // IMPORTANTE: Não limpamos a fila aqui. Os eventos continuam salvos no dispositivo 
+    // e o sistema tentará reenviá-los no próximo intervalo de 30 segundos.
+  } finally {
+    isFlushing = false;
+  }
+}
+4. Função Segura para Adicionar Novos Eventos
+Para garantir que tudo funcione em harmonia, a função que expõe o tracking para o restante do app deve ser assíncrona e garantir que a fila local foi carregada antes de empurrar um novo dado:
+
+TypeScript
+/**
+ * Registra um novo evento na fila de forma segura
+ */
+export async function trackEvent(eventName: string, properties?: Record<string, any>): Promise<void> {
+  // Garante que a fila do AsyncStorage foi lida antes de injetar algo na memória
+  if (!isLoaded) {
+    await loadQueue();
+  }
+
+  const newEvent: AnalyticsEvent = {
+    event_name: eventName,
+    properties: properties || {},
+    timestamp: new Date().toISOString(),
+    session_id: sessionId,
+    platform: Platform.OS, // Identifica se é 'ios' ou 'android' automaticamente
+  };
+
+  EVENT_QUEUE.push(newEvent);
+
+  // Salva no armazenamento local imediatamente para o caso do app fechar repentinamente
+  await saveQueue();
+}
+O que você ganhou com isso no NOVAIX FITNESS?
+O app não perde dados em Modo Offline: Se a internet cair, o saveQueue() garante que os treinos iniciados, cliques ou visualizações fiquem guardados no celular do aluno.
+
+Performance de Bateria: Fazer um .insert() em lote (com todos os eventos juntos a cada 30 segundos) consome infinitamente menos bateria e processamento do que abrir uma conexão com o Supabase a cada clique que o usuário dá na tela.
+
+Consistência de Dados: O uso do .filter() impede que eventos gerados durante a chamada de rede sumam do mapa.

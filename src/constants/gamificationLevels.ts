@@ -53,6 +53,10 @@ export function getLevelForXP(xp: number): Level {
   return currentLevel;
 }
 
+export function calculateLevel(xp: number): number {
+  return getLevelForXP(xp).level;
+}
+
 export function getNextLevel(currentLevel: Level): Level | null {
   const idx = LEVELS.findIndex(l => l.level === currentLevel.level);
   return idx < LEVELS.length - 1 ? LEVELS[idx + 1] : null;

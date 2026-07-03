@@ -1,6 +1,5 @@
-// @ts-nocheck
-// src/components/admin/ReportModerationPanel.js
-// Painel de Moderação de Denúncias da Comunidade - NOVAIX FITNESS
+// src/components/admin/ReportModerationPanel.tsx
+// Painel de Moderação de Denúncias da Comunidade
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
@@ -91,7 +90,7 @@ export default function ReportModerationPanel() {
             await blockUser(reportedUserId, null, {
               reason: 'Violação repetida das diretrizes da comunidade',
               severity: 'permanent',
-              block_type: 'full'
+              blockType: 'full'
             });
 
             await supabase.from('reports').update({ status: 'resolved' }).eq('id', reportId);

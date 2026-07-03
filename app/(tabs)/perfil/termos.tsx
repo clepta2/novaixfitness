@@ -6,7 +6,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { COLORS } from '../../../src/constants/colors';
 import { SPACING } from '../../../src/constants/spacing';
 import { Header, ErrorBoundary } from '../../../src/components';
-import { legalTabs, termsContent, privacyContent, medicalContent } from '../../../src/data/legalContent';
+import { legalTabs, termsContent, privacyContent, medicalContent } from '../../../src/data/legal';
 
 const contentMap = {
   'Termos de Uso': termsContent,
