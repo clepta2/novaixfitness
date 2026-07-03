@@ -81,16 +81,16 @@ export function useWorkoutHistory(): UseWorkoutHistoryReturn {
 
   useEffect(() => { loadWorkouts(); }, [loadWorkouts]);
 
-  const formatDate = (dateStr: string | null): string => {
+  const formatDate = useCallback((dateStr: string | null): string => {
     if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-  };
+  }, []);
 
-  const formatDuration = (min: number | null): string => {
+  const formatDuration = useCallback((min: number | null): string => {
     if (!min) return '0min';
     if (min < 60) return `${min}min`;
     return `${Math.floor(min / 60)}h${min % 60 > 0 ? ` ${min % 60}min` : ''}`;
-  };
+  }, []);
 
   return {
     workouts, selectedPeriod, setSelectedPeriod,
