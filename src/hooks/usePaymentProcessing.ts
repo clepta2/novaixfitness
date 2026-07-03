@@ -34,6 +34,7 @@ export default function usePaymentProcessing() {
   };
 
   const handleSkip = async () => {
+    if (!user?.id) return;
     try {
       setProcessing(true);
       setProcessStep('Acessando versão gratuita...');
@@ -77,7 +78,7 @@ export default function usePaymentProcessing() {
         const status = await getPaymentStatus(id);
         if (status?.payment?.status === 'CONFIRMED' || status?.payment?.status === 'RECEIVED') {
           clearInterval(pollRef.current!);
-          await loadProfile(user.id);
+          if (user?.id) await loadProfile(user.id);
           setProcessing(false);
           Alert.alert('Pagamento Confirmado!', 'Seu plano foi ativado com sucesso.', [
             { text: 'Iniciar Tutorial', onPress: () => router.replace('/(tabs)/home') }
@@ -88,6 +89,7 @@ export default function usePaymentProcessing() {
   };
 
   const activateMockPlan = async () => {
+    if (!user?.id) return;
     try {
       const plan = PLANS[selected];
       const { error } = await supabase

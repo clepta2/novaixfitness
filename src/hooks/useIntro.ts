@@ -1,7 +1,7 @@
 // src/hooks/useIntro.ts
 // Hook de estado da intro (slide tracking, seen flag)
 
-import { useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { Animated, type FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeSyntheticEvent, ViewToken } from 'react-native';
@@ -79,7 +79,7 @@ export function useIntro(router: Router) {
     }
   }).current;
 
-  const viewabilityConfig = useMemo(() => { viewAreaCoveragePercentThreshold: 50 }, []);
+  const viewabilityConfig = useMemo(() => ({ viewAreaCoveragePercentThreshold: 50 }), []);
 
   return {
     currentIndex,
