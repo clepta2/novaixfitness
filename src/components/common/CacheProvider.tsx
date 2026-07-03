@@ -2,12 +2,7 @@
 // Provider reutilizável para gerenciamento de cache
 
 import React, { createContext, useContext, useCallback, ReactNode } from 'react';
-import {   setCache, 
-  getCache, 
-  removeCache, 
-  clearAllCache, 
-  getCacheSize,
-  CACHE_TTL  } from '../../utils/cache';
+import { setCache, getCache, removeCache, clearAllCache, getCacheSize, CACHE_TTL } from '../../utils/cache/cache';
 
 interface CacheContextType {
   set: <T>(key: string, data: T, ttl?: number) => Promise<void>;

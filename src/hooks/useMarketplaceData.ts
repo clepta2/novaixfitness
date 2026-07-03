@@ -49,7 +49,12 @@ export function useMarketplaceData(userId: string | undefined) {
 
   const loadFavorites = useCallback(async () => {
     if (!userId) return;
-    setFavorites(await getFavoriteIds(userId));
+    try {
+      const ids = await getFavoriteIds(userId);
+      setFavorites(ids);
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar favoritos:', err);
+    }
   }, [userId]);
 
   const loadRecentSearches = useCallback(async () => {
@@ -82,13 +87,15 @@ export function useMarketplaceData(userId: string | undefined) {
 
   const handleToggleFavorite = async (productId: string) => {
     if (!userId) return;
-    await tryIf(() => toggleFavorite(userId, productId), { retries: 1, baseDelay: 500 });
-    setFavorites(prev => {
-      const next = new Set(prev);
-      if (next.has(productId)) next.delete(productId);
-      else next.add(productId);
-      return next;
-    });
+    const result = await tryIf(() => toggleFavorite(userId, productId), { retries: 1, baseDelay: 500 });
+    if (result.ok) {
+      setFavorites(prev => {
+        const next = new Set(prev);
+        if (next.has(productId)) next.delete(productId);
+        else next.add(productId);
+        return next;
+      });
+    }
   };
 
   return {

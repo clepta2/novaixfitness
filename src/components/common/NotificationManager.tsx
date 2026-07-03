@@ -39,7 +39,7 @@ export function NotificationManager({ children }: NotificationManagerProps) {
           body: 'Seu treino personalizado está esperando por você.', 
           data: { type: 'workout_reminder' } 
         },
-        trigger: null,
+        trigger: { weekday: day, hour, minute, repeats: true },
       });
     }
     return true;

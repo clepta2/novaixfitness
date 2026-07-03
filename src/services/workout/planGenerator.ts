@@ -86,7 +86,7 @@ Usuario: ${weight}kg, ${height}cm, ${age}a. Objetivo: ${goal}. Restricoes: ${die
     const response = await generateWithAI({ prompt: systemPrompt, type: 'plan' });
     if (!response) return null;
     const sanitized = sanitizeAIOutput(response);
-    const jsonMatch = sanitized.match(/\{[\s\S]*?\}/);
+    const jsonMatch = sanitized.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       if (parsed.week) return parsed;
@@ -120,7 +120,7 @@ Retorne JSON: { week: [{ day, name, exercises: [{name, sets, reps, rest, muscle}
     const response = await generateWithAI({ prompt: systemPrompt, type: 'plan' });
     if (!response) return null;
     const sanitized = sanitizeAIOutput(response);
-    const jsonMatch = sanitized.match(/\{[\s\S]*?\}/);
+    const jsonMatch = sanitized.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       if (parsed.week) return parsed;

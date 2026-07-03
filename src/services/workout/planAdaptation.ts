@@ -67,6 +67,7 @@ export function getWorkoutModality(workout) {
 
 export async function saveAdaptation(userId, oldPlan, newPlan, reason) {
   if (!userId) return;
+  if (!newPlan?.week) return;
   await tryIf(async () => {
     await supabase.from('plan_adaptations').insert({ user_id: userId, old_plan: oldPlan, new_plan: newPlan, reason, adapted_at: new Date().toISOString() });
     await supabase.from('user_plans').delete().eq('user_id', userId).eq('is_active', true);
