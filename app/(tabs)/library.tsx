@@ -2,8 +2,7 @@
 // Biblioteca de Treinos com melhorias visuais - NOVAIX FITNESS
 
 
-            ;
-import { useMemo } from 'react';
+import { useMemo, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';

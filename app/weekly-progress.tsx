@@ -3,8 +3,7 @@
 // Progresso semanal com animacoes - NOVAIX FITNESS
 
 
-            ;
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

@@ -3,8 +3,7 @@
 // Painel Administrativo com animacoes de entrada - NOVAIX FITNESS
 
 
-            ;
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';

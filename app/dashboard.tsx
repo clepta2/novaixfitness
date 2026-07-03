@@ -92,7 +92,7 @@ export default function DashboardScreen() {
             <LineChart
               data={weightChartData}
               width={SCREEN_WIDTH - 80} height={160}
-              chartConfig={{ ...chartConfig, color: (opacity = 1) => `rgba(0, 230, 118, ${opacity})` }}
+              chartConfig={{ ...chartConfig, color: (opacity = 1) => `${COLORS.success}${Math.round(opacity * 255).toString(16).padStart(2, '0')}` }}
               style={styles.chart} bezier fromZero
             />
           </TouchableOpacity>

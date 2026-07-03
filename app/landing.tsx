@@ -2,8 +2,7 @@
 // Landing Page com animacoes de entrada - NOVAIX FITNESS
 
 
-            ;
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../src/config/supabase';

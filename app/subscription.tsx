@@ -3,8 +3,7 @@
 // Assinatura com animacoes de transicao - NOVAIX FITNESS
 
 
-            ;
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

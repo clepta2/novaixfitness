@@ -75,13 +75,14 @@ export default function WearablesScreen() {
     else if (type === 'health') { if (hConn) { setHConn(false); } else { const p = await requestHealthPermissions(); setHConn(p.granted); } }
   };
 
-  const handleSync = async (type) => {
+  const handleSync = useCallback(async (type) => {
     setSyncing(type);
     if (type === 'strava') await syncRunningActivities();
     if (type === 'watch') await getWatchHeartRate();
     if (type === 'health') await init();
-    setTimeout(() => setSyncing(null), 1500);
-  };
+    const timeout = setTimeout(() => setSyncing(null), 1500);
+    return () => clearTimeout(timeout);
+  }, [init]);
 
   const devices = [
     { name: t('wearables.appleWatch'), type: 'watch', connected: wConn, battery: wConn ? 85 : null, lastSync: wConn ? new Date().toISOString() : null, subtitle: wAvail ? (Platform.OS === 'ios' ? t('wearables.appleWatchAvailable') : t('wearables.notAvailable')) : t('wearables.notAvailable') },

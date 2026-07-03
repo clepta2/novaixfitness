@@ -2,9 +2,7 @@
 // app/intro.tsx
 // Intro com animacoes de entrada - NOVAIX FITNESS
 
-
-            ;
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, Animated,
   StyleSheet, Dimensions,
