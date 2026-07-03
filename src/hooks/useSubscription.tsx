@@ -71,6 +71,7 @@ export function useSubscription(): UseSubscriptionReturn {
   }, [user?.id]);
 
   async function loadPlan(): Promise<void> {
+    if (!user?.id) return;
     setLoading(true);
     try {
       const [userPlan, usageStats] = await Promise.all([
