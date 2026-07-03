@@ -95,7 +95,7 @@ export function useCreateWorkout() {
   const prevStep = () => setStep(s => Math.max(s - 1, 0));
 
   const handleSave = async () => {
-    if (!validateStep() || saving) return;
+    if (!validateStep() || saving || !user?.id) return;
     setSaving(true);
     try {
       const totalSets = exercises.reduce((s, e) => s + (e.sets || 4), 0);

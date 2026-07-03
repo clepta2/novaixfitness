@@ -59,6 +59,7 @@ export function useProfileEdit(): UseProfileEditReturn {
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
 
   const pickImage = useCallback(async (cam: boolean): Promise<void> => {
+    if (!user?.id) return;
     const perm = cam
       ? await ImagePicker.requestCameraPermissionsAsync()
       : await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -80,6 +81,7 @@ export function useProfileEdit(): UseProfileEditReturn {
   ]), [pickImage]);
 
   const updateProfileName = useCallback(async (newName: string): Promise<void> => {
+    if (!user?.id) return;
     try {
       await supabase.from('profiles').update({ name: newName }).eq('id', user.id);
       setProfile(prev => prev ? { ...prev, name: newName } : prev);

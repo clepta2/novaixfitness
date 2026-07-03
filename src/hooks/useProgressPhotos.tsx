@@ -65,6 +65,7 @@ export function useProgressPhotos(): UseProgressPhotosReturn {
   useEffect(() => { loadPhotos(); }, [loadPhotos]);
 
   const handlePickImage = useCallback(async (useCamera: boolean): Promise<void> => {
+    if (!user?.id) return;
     try {
       const image = useCamera ? await takePhoto() : await pickImage();
       if (!image) return;
@@ -79,6 +80,7 @@ export function useProgressPhotos(): UseProgressPhotosReturn {
   }, [user?.id, selectedLabel, loadPhotos]);
 
   const handleDelete = useCallback((photo: ProgressPhoto): void => {
+    if (!user?.id) return;
     Alert.alert('Excluir foto', 'Remover esta foto permanentemente?', [
       { text: 'Cancelar', style: 'cancel' },
       {
