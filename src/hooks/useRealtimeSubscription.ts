@@ -32,7 +32,13 @@ export function useRealtimeSubscription<T extends { id: string }>({
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   const subscribe = useCallback(() => {
-    if (!enabled || channelRef.current) return;
+    if (!enabled) return;
+
+    // Clean up any existing channel before creating a new one
+    if (channelRef.current) {
+      channelRef.current.unsubscribe();
+      channelRef.current = null;
+    }
 
     try {
       const channel = supabase

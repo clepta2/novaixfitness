@@ -3,20 +3,19 @@
 
 import { useState, useCallback } from 'react';
 import { supabase } from '../config/supabase';
-import { useOptimistic } from './useOptimistic';
 
 export interface Challenge {
   id: string;
-  challengerId: string;
-  challengedId: string;
+  challenger_id: string;
+  challenged_id: string;
   type: 'reps' | 'duration' | 'distance';
   duration: '1day' | '3days' | '1week';
   stake: number;
   status: 'pending' | 'active' | 'completed' | 'cancelled';
-  challengerProgress?: number;
-  challengedProgress?: number;
-  createdAt: string;
-  expiresAt: string;
+  challenger_progress?: number;
+  challenged_progress?: number;
+  created_at: string;
+  expires_at: string;
 }
 
 interface UseChallengeOptions {
@@ -118,7 +117,7 @@ export function useChallenge({ userId }: UseChallengeOptions) {
       const challenge = challenges.find(c => c.id === challengeId);
       if (!challenge) return;
 
-      const isChallenger = challenge.challengerId === userId;
+      const isChallenger = challenge.challenger_id === userId;
       const updateField = isChallenger ? 'challenger_progress' : 'challenged_progress';
 
       const { error: updateError } = await supabase
@@ -130,7 +129,7 @@ export function useChallenge({ userId }: UseChallengeOptions) {
       setChallenges(prev =>
         prev.map(c =>
           c.id === challengeId
-            ? { ...c, [isChallenger ? 'challengerProgress' : 'challengedProgress']: progress }
+            ? { ...c, [isChallenger ? 'challenger_progress' : 'challenged_progress']: progress }
             : c
         )
       );
@@ -144,7 +143,7 @@ export function useChallenge({ userId }: UseChallengeOptions) {
   }, [challenges]);
 
   const getPendingChallenges = useCallback(() => {
-    return challenges.filter(c => c.status === 'pending' && c.challengedId === userId);
+    return challenges.filter(c => c.status === 'pending' && c.challenged_id === userId);
   }, [challenges, userId]);
 
   const getCompletedChallenges = useCallback(() => {

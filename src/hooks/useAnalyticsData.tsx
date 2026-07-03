@@ -61,6 +61,7 @@ export function useAnalyticsData(period: string = 'month') {
   }, [user?.id, period]);
 
   async function loadData() {
+    if (!user?.id) return;
     setLoading(true);
     setError(null);
     try {

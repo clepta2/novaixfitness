@@ -43,17 +43,21 @@ export function useFeedStories(userId: string | undefined) {
   };
 
   const loadStories = async (uid: string) => {
-    const data = await getActiveStories(uid) as any[];
-    const grouped: Record<string, any[]> = {};
-    data.forEach((s: any) => {
-      if (!grouped[s.user_id]) grouped[s.user_id] = [];
-      grouped[s.user_id].push(s);
-    });
-    setStories(Object.entries(grouped).map(([userId, userStories]) => ({
-      userId, name: userStories[0]?.profiles?.name || 'User',
-      avatar: userStories[0]?.profiles?.avatar_url || null,
-      stories: userStories, seen: false,
-    })));
+    try {
+      const data = await getActiveStories(uid) as any[];
+      const grouped: Record<string, any[]> = {};
+      data.forEach((s: any) => {
+        if (!grouped[s.user_id]) grouped[s.user_id] = [];
+        grouped[s.user_id].push(s);
+      });
+      setStories(Object.entries(grouped).map(([userId, userStories]) => ({
+        userId, name: userStories[0]?.profiles?.name || 'User',
+        avatar: userStories[0]?.profiles?.avatar_url || null,
+        stories: userStories, seen: false,
+      })));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar stories:', err);
+    }
   };
 
   return { stories, showCheckIn, checkInStreak, setShowCheckIn, loadStories: () => userId && loadStories(userId) };
