@@ -1,23 +1,27 @@
 // src/services/chatMessages.ts
 // Mensagens do chat
 
-import { supabase } from '../config/supabase';
-import { TABLES } from '../config/tables';
-import type { ChatMessage, MessageType } from '../types';
-import { createServiceGuard } from '../utils/serviceGuard';
+import { supabase } from '../../config/supabase';
+import { TABLES } from '../../config/tables';
+import type { ChatMessage, MessageType } from '../../types';
+import { createServiceGuard } from '../../utils/serviceGuard';
+import { tryIf } from '../../utils/tryIf';
 
 const guard = createServiceGuard({ serviceName: 'chatMessages' });
 
 export async function getMessages(conversationId: string, limit: number = 50, before: string | null = null): Promise<ChatMessage[]> {
-  let query = supabase
-    .from(TABLES.MESSAGES)
-    .select('*, profiles:user_id(name, avatar_url)')
-    .eq('conversation_id', conversationId)
-    .order('created_at', { ascending: false })
-    .limit(limit);
-  if (before) query = query.lt('created_at', before);
-  const { data } = await query;
-  return ((data || []).reverse()) as ChatMessage[];
+  const result = await tryIf(async () => {
+    let query = supabase
+      .from(TABLES.MESSAGES)
+      .select('*, profiles:user_id(name, avatar_url)')
+      .eq('conversation_id', conversationId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (before) query = query.lt('created_at', before);
+    const { data } = await query;
+    return ((data || []).reverse()) as ChatMessage[];
+  }, { retries: 1, baseDelay: 500 });
+  return result.ok ? result.data : [];
 }
 
 export async function sendMessage(

@@ -7,6 +7,8 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../config/supabase';
 import { ALLOWED_DOMAINS } from '../data/allowedDomains';
 import { validateCPF, formatCPF } from '../helpers/cpf';
+import { formatPhone, validatePhone } from '../helpers/phone';
+import { calculatePasswordStrength } from '../helpers/password';
 import { COLORS } from '../constants/colors';
 
 interface ModalState {
@@ -53,20 +55,6 @@ interface UseRegisterReturn {
   signInWithApple: () => Promise<void>;
 }
 
-export function formatPhone(v: string): string {
-  const c = v.replace(/\D/g, '').slice(0, 11);
-  if (c.length <= 2) return c;
-  if (c.length <= 7) return `(${c.slice(0, 2)}) ${c.slice(2)}`;
-  return `(${c.slice(0, 2)}) ${c.slice(2, 7)}-${c.slice(7)}`;
-}
-
-export function validatePhone(p: string): boolean {
-  const c = p.replace(/\D/g, '');
-  return c.length === 10 || c.length === 11;
-}
-
-const WEAK_PASSWORDS: string[] = ['123456', '12345678', '123456789', 'password', 'senha123', 'novaix123', 'qwerty'];
-
 export function useRegister(): UseRegisterReturn {
   const router = useRouter();
   const { signUpWithEmail, signInWithGoogle, signInWithApple } = useAuth();
@@ -104,12 +92,10 @@ export function useRegister(): UseRegisterReturn {
 
   useEffect(() => {
     if (!password) { setStrength(0); setStrengthLabel(''); return; }
-    const score = [password.length >= 8, /[A-Z]/.test(password), /[a-z]/.test(password), /[0-9]/.test(password), /[^A-Za-z0-9]/.test(password)].filter(Boolean).length;
-    const isWeak = WEAK_PASSWORDS.includes(password.toLowerCase());
-    const fs = isWeak ? Math.max(1, score - 2) : score;
-    setStrength(fs);
-    setStrengthLabel(fs <= 1 ? 'Senha Fraca 🔴' : fs <= 3 ? 'Senha Média 🟡' : 'Senha Forte 🔥');
-    setStrengthColor(fs <= 1 ? COLORS.errorLight : fs <= 3 ? COLORS.warning : COLORS.primary);
+    const result = calculatePasswordStrength(password);
+    setStrength(result.strength);
+    setStrengthLabel(result.label);
+    setStrengthColor(result.color);
   }, [password]);
 
   useEffect(() => {

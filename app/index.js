@@ -6,6 +6,7 @@ import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacit
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
+import * as SecureStore from 'expo-secure-store';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
@@ -109,17 +110,29 @@ export default function LoginScreen() {
       if (!hasHardware || !isEnrolled) {
         return showAlert('Aviso', 'Autenticação biométrica não configurada no dispositivo.');
       }
+      const storedEmail = await SecureStore.getItemAsync('novaix_biometric_email');
+      const storedPassword = await SecureStore.getItemAsync('novaix_biometric_password');
+      if (!storedEmail || !storedPassword) {
+        return showAlert('Aviso', 'Faça login normalmente primeiro para configurar o acesso biométrico.');
+      }
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: `Login Rápido - ${BRAND_NAME}`,
         fallbackLabel: 'Usar Senha',
       });
       if (result.success) {
-        router.replace('/(tabs)/home');
+        setLoading(true);
+        try {
+          await signInWithEmail(storedEmail, storedPassword);
+        } catch (e) {
+          showAlert('Erro', 'Sessão expirada. Faça login novamente.');
+        } finally {
+          setLoading(false);
+        }
       }
     } catch (_e) {
       showAlert('Erro', 'Falha na autenticação biométrica.');
     }
-  }, [router]);
+  }, [router, signInWithEmail]);
 
   return (
     <ErrorBoundary screenName="Login">

@@ -86,17 +86,20 @@ export function useSubscription(): UseSubscriptionReturn {
   }
 
   const subscribe = useCallback(async (planId: string, paymentMethod: string): Promise<unknown> => {
+    if (!user?.id) return null;
     const sub = await createSubscription(user.id, planId, paymentMethod);
     await loadPlan();
     return sub;
   }, [user?.id]);
 
   const cancel = useCallback(async (): Promise<void> => {
+    if (!user?.id) return;
     await cancelSubscription(user.id);
     await loadPlan();
   }, [user?.id]);
 
   const checkAccess = useCallback(async (feature: string): Promise<boolean> => {
+    if (!user?.id) return false;
     return checkFeatureAccess(user.id, feature);
   }, [user?.id]);
 

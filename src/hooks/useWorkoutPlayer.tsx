@@ -96,8 +96,8 @@ export default function useWorkoutPlayer(): UseWorkoutPlayerReturn {
 
   const handleWorkoutComplete = useCallback(async (): Promise<void> => {
     const mappedLogs = timer.logs.map(log => ({
-      exercise_name: log.exercise?.name || '',
-      sets_done: log.setNumber,
+      exercise_name: log.exerciseName || '',
+      sets_done: log.set,
       reps_done: (log.reps as number) || 0,
       weight_kg: (log.weight as number) || 0,
     }));

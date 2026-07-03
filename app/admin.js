@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { COLORS } from '../src/constants/colors';
-import { SPACING } from '../src/constants/spacing';
+import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { StudentCard, FinanceStats, TwoFactorSetup, TwoFactorPrompt } from '../src/components';
 import AdminDashboard from '../src/components/admin/AdminDashboard';
 import WorkoutManager from '../src/components/admin/WorkoutManager';
@@ -138,8 +138,8 @@ export default function AdminScreen() {
 
 const styles = StyleSheet.create({
   center: { justifyContent: 'center', alignItems: 'center' },
-  tabs: { flexDirection: 'row', gap: 6, marginBottom: SPACING.xxl },
-  tab: { flex: 1, paddingVertical: 10, backgroundColor: COLORS.surface, borderRadius: 8, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+  tabs: { flexDirection: 'row', gap: SPACING.xs, marginBottom: SPACING.xxl },
+  tab: { flex: 1, paddingVertical: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   tabActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   tabText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted },
   tabTextActive: { color: COLORS.background },

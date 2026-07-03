@@ -28,7 +28,7 @@ interface WorkoutHistoryItem {
 interface HistoryStats {
   total: number;
   duration: number;
-  avgRating: number | string;
+  avgRating: number;
 }
 
 interface UseWorkoutHistoryReturn {
@@ -70,7 +70,7 @@ export function useWorkoutHistory(): UseWorkoutHistoryReturn {
       const duration = data?.reduce((sum: number, w: WorkoutHistoryItem) => sum + (w.duration || 0), 0) || 0;
       const ratings = data?.filter((w: WorkoutHistoryItem) => w.rating).map((w: WorkoutHistoryItem) => w.rating!) || [];
       const avgRating = ratings.length > 0
-        ? (ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length).toFixed(1) : 0;
+        ? parseFloat((ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length).toFixed(1)) : 0;
       setStats({ total, duration, avgRating });
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar histórico:', err);

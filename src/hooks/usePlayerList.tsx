@@ -101,9 +101,10 @@ export default function usePlayerList(): UsePlayerListReturn {
   const userPhysicalLevel: string | undefined = userLevelMap[profile?.onboarding?.level || ''];
 
   const fetchDailyWorkouts = useCallback(async (): Promise<void> => {
+    if (!user?.id) return;
     try {
-      let userPlan = user?.id ? await getUserPlan(user.id) : null;
-      if (user?.id && userPlan?.length > 0) userPlan = await adaptIfNeeded(user.id, userPlan);
+      let userPlan = await getUserPlan(user.id);
+      if (userPlan?.length > 0) userPlan = await adaptIfNeeded(user.id, userPlan);
 
       if (userPlan && userPlan.length > 0) {
         const mapped = mapPlanToWorkouts(userPlan);

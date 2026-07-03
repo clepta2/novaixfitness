@@ -1,6 +1,5 @@
-
-// app/onboarding/_layout.js
-// Layout do fluxo de Onboarding - NOVAIX FITNESS (Simplificado: 3 passos)
+// app/onboarding/_layout.tsx
+// Layout do fluxo de Onboarding
 
 import { Suspense } from 'react';
 import { Stack } from 'expo-router';
@@ -25,10 +24,20 @@ export default function OnboardingLayout() {
           animationDuration: 300,
         }}
       >
+        <Stack.Screen name="index" />
         <Stack.Screen name="objetivo" />
-        <Stack.Screen name="dados-fisicos" lazy />
-        <Stack.Screen name="preferencias" lazy />
-        <Stack.Screen name="processando" lazy />
+        <Stack.Screen name="dados-fisicos" />
+        <Stack.Screen name="modelo" />
+        <Stack.Screen name="disponibilidade" />
+        <Stack.Screen name="tipo-academia" />
+        <Stack.Screen name="experiencia" />
+        <Stack.Screen name="preferencias" />
+        <Stack.Screen name="localizacao" />
+        <Stack.Screen name="loading" />
+        <Stack.Screen name="processando" />
+        <Stack.Screen name="plano" />
+        <Stack.Screen name="treino" />
+        <Stack.Screen name="meu_treino" />
       </Stack>
     </Suspense>
   );

@@ -33,7 +33,7 @@ export default function PaywallScreen() {
             <Text style={styles.heroBadgeText}>7 DIAS GRATIS</Text>
           </View>
           <Text style={styles.heroTitle}>LIBERE TODO SEU POTENCIAL</Text>
-          <Text style={styles.heroSubtitle}>Escolha o plano ideal para sua evolucao</Text>
+          <Text style={styles.heroSubtitle}>Escolha o plano ideal para sua evolução</Text>
           <View style={styles.socialProof}>
             <View style={styles.socialItem}>
               <Text style={styles.socialNum}>12K+</Text>
@@ -49,7 +49,7 @@ export default function PaywallScreen() {
             <View style={styles.socialDivider} />
             <View style={styles.socialItem}>
               <Text style={styles.socialNum}>98%</Text>
-              <Text style={styles.socialLabel}>Satisfacao</Text>
+              <Text style={styles.socialLabel}>Satisfação</Text>
             </View>
           </View>
         </View>

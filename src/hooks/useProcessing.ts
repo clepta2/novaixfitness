@@ -72,7 +72,7 @@ export default function useProcessing() {
         const planContext = {
           weight: onboarding.weight || 70, goal: onboarding.goal || 'manter',
           level: onboarding.level || 'intermediario', gymType: onboarding.gymType || 'academia',
-          availableDays: onboarding.availableDays || 4, sessionDuration: onboarding.sessionDuration || 60,
+          availableDays: onboarding.daysPerWeek || onboarding.availableDays || 4, sessionDuration: onboarding.sessionDuration || 60,
         };
         const plan = await generateWorkoutPlan(planContext);
         if (plan && user?.id) await saveWorkoutPlan(user.id, plan);

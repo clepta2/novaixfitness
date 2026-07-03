@@ -26,7 +26,7 @@ export function useAuthState() {
     try {
       const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
       const { data: obv2 } = await supabase.from('onboarding_v2').select('*').eq('user_id', userId).maybeSingle();
-      setState(prev => ({ ...prev, profile: data as Profile, onboarding: obv2 || {} }));
+      setState(prev => ({ ...prev, profile: data as Profile, onboarding: obv2 || null }));
     } catch (err) { if (__DEV__) console.error('Erro ao carregar perfil:', err); }
   };
 
@@ -109,14 +109,16 @@ export function useAuthState() {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    setState(prev => ({ ...prev, onboarding: null }));
+    setState({ user: null, session: null, onboarding: null, profile: null, loading: false });
   };
 
   const saveOnboarding = async (data: Record<string, unknown>) => {
     setState(prev => ({ ...prev, onboarding: data }));
-    if (!state.user) return;
-    await saveOnboardingData(state.user.id, data as any);
-    await loadProfile(state.user.id);
+    setState(prev => {
+      if (!prev.user) return prev;
+      saveOnboardingData(prev.user.id, data as any).then(() => loadProfile(prev.user!.id));
+      return prev;
+    });
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {

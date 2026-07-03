@@ -79,6 +79,7 @@ export function useExportData() {
   const [exporting, setExporting] = useState<string | null>(null);
 
   const handleExport = async (option: ExportOption) => {
+    if (!user?.id) return;
     setExporting(option.id);
     try {
       switch (option.id) {

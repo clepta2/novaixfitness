@@ -40,7 +40,11 @@ export default function HomeScreen() {
   const [recentWorkouts, setRecentWorkouts] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
 
-  const [anim0, anim1, anim2, anim3, anim4] = [0, 1, 2, 3, 4].map(useStaggeredEntry);
+  const anim0 = useStaggeredEntry(0);
+  const anim1 = useStaggeredEntry(1);
+  const anim2 = useStaggeredEntry(2);
+  const anim3 = useStaggeredEntry(3);
+  const anim4 = useStaggeredEntry(4);
 
   useEffect(() => {
     const interval = setInterval(() => setTimeOfDay(getTimeOfDay()), 60000);

@@ -71,6 +71,7 @@ export function useGamification(): UseGamificationReturn {
   }, [user?.id]);
 
   async function loadData(): Promise<void> {
+    if (!user?.id) { setLoading(false); return; }
     setLoading(true);
     try {
       const [rankData, achievementsData, rank, profileData] = await Promise.all([

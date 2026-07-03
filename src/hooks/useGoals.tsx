@@ -63,7 +63,7 @@ export function useGoals() {
   useEffect(() => { loadData(); }, [loadData]);
 
   const addGoal = useCallback(async () => {
-    if (!newGoalType || !newGoalTarget) return;
+    if (!newGoalType || !newGoalTarget || !user?.id) return;
     const goalType = GOAL_TYPES.find(g => g.id === newGoalType);
     await supabase.from('short_term_goals').insert({
       user_id: user.id, goal_type: newGoalType,

@@ -1,7 +1,7 @@
 // src/hooks/useDebounce.ts
 // Hook para debounce de valores - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
@@ -15,11 +15,12 @@ export function useDebounce<T>(value: T, delay = 300): T {
 }
 
 export function useDebouncedCallback<T extends (...args: never[]) => void>(callback: T, delay = 300) {
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
 
-  return (...args: Parameters<T>) => {
-    if (timer) clearTimeout(timer);
-    const newTimer = setTimeout(() => callback(...args), delay);
-    setTimer(newTimer);
-  };
+  return useCallback((...args: Parameters<T>) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => callbackRef.current(...args), delay);
+  }, [delay]);
 }

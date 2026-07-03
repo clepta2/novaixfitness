@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: SPACING.xl, justifyContent: 'center', flex: 1 },
   iconContainer: { alignItems: 'center', marginBottom: SPACING.xl },
   emailHighlight: { color: COLORS.primary, fontFamily: 'Montserrat_700Bold' },
-  instructions: { marginTop: 30, marginBottom: 30, gap: 12 },
-  instructionItem: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  instructions: { marginTop: SPACING.xl, marginBottom: SPACING.xl, gap: SPACING.md },
+  instructionItem: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
 });

@@ -1,7 +1,7 @@
 // app/player.js
 // Tela de Player de Treino - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -59,11 +59,11 @@ export default function PlayerScreen() {
       .finally(() => setLoading(false));
   }, [params.id]);
 
-  const gamRef = { current: null };
-  const handleWorkoutComplete = async () => {
+  const gamRef = useRef(null);
+  const handleWorkoutComplete = useCallback(async () => {
     if (!isOnline && user?.id && workout?.id) {
       await queueWorkoutCompletion(user.id, workout.id, timer.logs, timer.elapsed);
-      Alert.alert('Salvo offline', 'Treino sera sincronizado quando voce estiver online.');
+      Alert.alert('Salvo offline', 'Treino será sincronizado quando você estiver online.');
       timer.stopWorkout();
       router.back();
       return;
@@ -71,7 +71,7 @@ export default function PlayerScreen() {
     gamRef.current = await saveCompleteWorkout(user?.id, workout, timer.logs, timer.elapsed);
     if (gamRef.current?.xpGained > 0) { setXpAmount(gamRef.current.xpGained); setShowXP(true); }
     setShowRating(true);
-  };
+  }, [isOnline, user, workout, timer.logs, timer.elapsed, router]);
 
   const handleRatingSubmit = async ({ rating, comment }) => {
     if (user?.id && workout?.id) await supabase.from('user_workouts').upsert({ user_id: user.id, workout_id: workout.id, rating, notes: comment }, { onConflict: 'user_id,workout_id' }).catch(() => {});
@@ -85,7 +85,7 @@ export default function PlayerScreen() {
     ]);
   };
 
-  useEffect(() => { if (timer.phase === 'completed') handleWorkoutComplete(); }, [timer.phase]);
+  useEffect(() => { if (timer.phase === 'completed') handleWorkoutComplete(); }, [timer.phase, handleWorkoutComplete]);
 
   const handleFinish = () => {
     Alert.alert('Finalizar', 'Salvar progresso e sair?', [

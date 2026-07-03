@@ -74,7 +74,7 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
       }
     }
     loadWorkoutDetail();
-    isWorkoutCached(id).then(setIsOffline);
+    isWorkoutCached(id).then(setIsOffline).catch(() => setIsOffline(false));
   }, [id]);
 
   useEffect(() => {

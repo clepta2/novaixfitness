@@ -1,4 +1,4 @@
-﻿// app/shopping/index.js
+// app/shopping/index.js
 // Lista de compras gerada por IA
 
 import { useState, useEffect } from 'react';
@@ -21,9 +21,9 @@ export default function ShoppingScreen() {
 
   const loadList = async () => {
     if (!user?.id) return;
-    setLoading(true);
+    setGenerating(true);
     const saved = await getShoppingList(user.id);
-    if (saved) { setList(saved); setLoading(false); return; }
+    if (saved) { setList(saved); setGenerating(false); return; }
     await generateNewList();
   };
 
@@ -33,7 +33,7 @@ export default function ShoppingScreen() {
       const newList = await generateShoppingList(null, { weight: onboarding?.weight, goal: onboarding?.goal, dietaryRestrictions: onboarding?.dietaryRestrictions });
       if (newList) { setList(newList); await saveShoppingList(user.id, newList); }
     } catch (err) { Alert.alert('Erro', 'Não foi possível gerar a lista'); }
-    finally { setGenerating(false); setLoading(false); }
+    finally { setGenerating(false); }
   };
 
   const toggleItem = (catIndex, itemIndex) => {

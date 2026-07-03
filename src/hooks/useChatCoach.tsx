@@ -87,6 +87,7 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
   }, [user?.id]);
 
   const handleSend = useCallback(async (text?: string): Promise<void> => {
+    if (!user?.id) return;
     const msg = (text || inputText).trim();
     if (!msg || loading) return;
     setInputText('');

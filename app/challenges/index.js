@@ -1,4 +1,4 @@
-﻿// app/challenges/index.js
+// app/challenges/index.js
 // Desafios diários
 
 import { useState, useEffect } from 'react';
@@ -23,10 +23,12 @@ export default function ChallengesScreen() {
   const loadData = async () => {
     if (!user?.id) return;
     const today = new Date().toISOString().split('T')[0];
+    const todayStart = new Date().setHours(0, 0, 0, 0);
+    const todayStartISO = new Date(todayStart).toISOString();
     const { data: completedData } = await supabase.from('daily_challenges').select('challenge_type').eq('user_id', user.id).eq('date', today);
     setCompleted(completedData?.map(c => c.challenge_type) || []);
-    const { data: workouts } = await supabase.from('user_workouts').select('id').eq('user_id', user.id).eq('completed', true).gte('completed_at', new Date().setHours(0, 0, 0, 0));
-    const { data: water } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', new Date().setHours(0, 0, 0, 0));
+    const { data: workouts } = await supabase.from('user_workouts').select('id').eq('user_id', user.id).eq('completed', true).gte('completed_at', todayStartISO);
+    const { data: water } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', todayStartISO);
     setStats({ workoutsToday: workouts?.length || 0, waterToday: water?.reduce((s, w) => s + w.amount_ml, 0) || 0 });
     setChallenges(getDailyChallenges(3));
   };

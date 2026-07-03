@@ -172,7 +172,9 @@ export default function useWorkoutTimer(workout: Workout | null) {
           }
           return prev - 1;
         });
-        setElapsed((prev) => prev + 1);
+        if (phaseRef.current === 'exercising') {
+          setElapsed((prev) => prev + 1);
+        }
       }, 1000);
     }
     return () => {

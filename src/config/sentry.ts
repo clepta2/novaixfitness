@@ -44,16 +44,7 @@ export function initSentry() {
       return event;
     },
 
-    integrations: [
-      new (Sentry as any).BrowserTracing(),
-      new (Sentry as any).Replay({
-        maskAllText: true,
-        blockAllMedia: true,
-      }),
-    ],
-
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
+    integrations: [],
 
     maxBreadcrumbs: 50,
     attachStacktrace: true,

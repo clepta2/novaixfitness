@@ -1,31 +1,33 @@
 // src/hooks/useNetworkStatus.ts
 // Hook para detectar status de rede - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 
 export function useNetworkStatus() {
   const [isConnected, setIsConnected] = useState(true);
   const [isInternetReachable, setIsInternetReachable] = useState(true);
-  const [lastConnected, setLastConnected] = useState(true);
+  const [wasOffline, setWasOffline] = useState(false);
+  const lastConnectedRef = useRef(true);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       const connected = state.isConnected ?? false;
       const reachable = state.isInternetReachable ?? false;
 
-      if (connected && !lastConnected) {
-        setLastConnected(true);
+      if (connected && !lastConnectedRef.current) {
+        setWasOffline(true);
       } else if (!connected) {
-        setLastConnected(false);
+        setWasOffline(false);
       }
 
+      lastConnectedRef.current = connected;
       setIsConnected(connected);
       setIsInternetReachable(reachable);
     });
 
     return () => unsubscribe();
-  }, [lastConnected]);
+  }, []);
 
   const checkConnection = useCallback(async () => {
     const state = await NetInfo.fetch();
@@ -37,7 +39,7 @@ export function useNetworkStatus() {
     isInternetReachable,
     isOnline: isConnected && isInternetReachable,
     isOffline: !isConnected || !isInternetReachable,
-    wasOffline: !lastConnected,
+    wasOffline,
     checkConnection,
   };
 }
