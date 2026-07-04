@@ -78,11 +78,9 @@ export default function useWorkoutTimer(workout: Workout | null) {
     setCurrentSet(1);
     setElapsed(0);
     setLogs([]);
-    setPhase('exercising');
-    setTimeRemaining(0);
-    setTotalTime(0);
     speakWelcome(workout?.name);
-  }, [workout]);
+    startExercise();
+  }, [workout, startExercise]);
 
   const pauseWorkout = useCallback(() => {
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
