@@ -86,13 +86,16 @@ export default function useWorkoutTimer(workout: Workout | null) {
     startExercise();
   }, [workout, startExercise]);
 
+  const prePausePhaseRef = useRef<string>('exercising');
+
   const pauseWorkout = useCallback(() => {
+    prePausePhaseRef.current = phaseRef.current === 'paused' ? 'exercising' : phaseRef.current;
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     setPhase('paused');
   }, []);
 
   const resumeWorkout = useCallback(() => {
-    setPhase(phaseRef.current === 'paused' ? 'exercising' : phaseRef.current);
+    setPhase(prePausePhaseRef.current || 'exercising');
   }, []);
 
   const markSetComplete = useCallback((setLog: { reps?: number; weight?: number }) => {
