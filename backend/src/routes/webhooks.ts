@@ -26,6 +26,7 @@ import {
   markEventFailed,
 } from '../services/webhookIdempotency';
 
+const router = express.Router();
 const WEBHOOK_SECRET = process.env.ASAAS_WEBHOOK_SECRET || '';
 
 // Verificacao HMAC-SHA256 da assinatura do webhook

@@ -24,6 +24,7 @@ export default function MarketplaceDetailScreen() {
   const [related, setRelated] = useState([]);
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -51,7 +52,10 @@ export default function MarketplaceDetailScreen() {
           if (!cancelled) setFavorited(fav);
         }
       } catch (err) {
-        if (__DEV__) console.error('Erro ao carregar produto:', err);
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Erro ao carregar produto');
+          if (__DEV__) console.error('Erro ao carregar produto:', err);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
