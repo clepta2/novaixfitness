@@ -52,7 +52,7 @@ export default function PhotoModal({ photo, onCompare, onDelete, onClose }: Phot
 }
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
+  overlay: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
   content: { flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center', padding: SPACING.xl },
   close: { position: 'absolute', top: 50, right: 20, zIndex: 10 },
   image: { width: '80%', height: '60%', borderRadius: 12, resizeMode: 'contain' },

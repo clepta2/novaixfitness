@@ -44,7 +44,7 @@ export default function AchievementPopup({ achievement, visible, onDone }) {
 }
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', alignItems: 'center', zIndex: 999 },
+  overlay: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', alignItems: 'center', zIndex: 999 },
   card: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.massive, alignItems: 'center', borderWidth: 2, borderColor: COLORS.primary, width: 280 },
   icon: { width: 80, height: 80, borderRadius: 40, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.xl },
   title: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.primary, letterSpacing: 2, marginBottom: SPACING.sm },

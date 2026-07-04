@@ -66,7 +66,7 @@ export default function RestRing({ timeRemaining, totalTime, pulseAnim }: RestRi
 const styles = StyleSheet.create({
   section: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xl, marginBottom: SPACING.md },
   timerWrap: { position: 'relative', width: CIRCLE_SIZE, height: CIRCLE_SIZE },
-  overlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
+  overlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   time: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 36, letterSpacing: 2 },
   info: { flex: 1 },
   label: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },

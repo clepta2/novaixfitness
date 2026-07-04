@@ -39,11 +39,11 @@ marginBottom: SPACING.sm },  info:
 {
 flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },  name: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textTitle },  pct: 
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textTitle },  pct: 
 {
-fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.primary },  track: 
+fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.primary },  track: 
 {
-height: 6, backgroundColor: colors.surfaceElevated, borderRadius: 3, overflow: 'hidden' },  fill: 
+height: 6, backgroundColor: COLORS.surfaceElevated, borderRadius: 3, overflow: 'hidden' },  fill: 
 {
 height: '100%', borderRadius: 3 },
 

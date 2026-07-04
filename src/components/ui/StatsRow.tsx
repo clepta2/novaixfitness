@@ -39,12 +39,12 @@ const styles = StyleSheet.create(
  row: {
 flexDirection: 'row', gap: SPACING.sm },  card: 
 {
-   flex: 1, alignItems: 'center',    justifyContent: 'center',    padding: SPACING.md,    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.md,    borderWidth: 1,    borderColor: colors.border,  
+   flex: 1, alignItems: 'center',    justifyContent: 'center',    padding: SPACING.md,    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.md,    borderWidth: 1,    borderColor: COLORS.border,  
 
 },  value: 
 {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle },  label: 
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },  label: 
 {
-fontFamily: 'Inter_500Medium', fontSize: 12, color: colors.textMuted },
+fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.textMuted },
 
 });

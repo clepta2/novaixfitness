@@ -27,20 +27,20 @@ return (    <TouchableOpacity style=
 {0.7 }>      <Ionicons name=
 {icon as any } size=
 {20 } color=
-{colors.primary } />      <Text style=
+{COLORS.primary } />      <Text style=
 {styles.label }>
 {label }</Text>      <Ionicons name="chevron-forward" size=
 {16 } color=
-{colors.textMuted } />    </TouchableOpacity>  );
+{COLORS.textMuted } />    </TouchableOpacity>  );
 }
 
 const styles = StyleSheet.create(
 {
  card: {
-   flexDirection: 'row', alignItems: 'center',    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.lg,    padding: SPACING.lg,    borderWidth: 1,    borderColor: colors.border,    gap: SPACING.md,  
+   flexDirection: 'row', alignItems: 'center',    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.lg,    padding: SPACING.lg,    borderWidth: 1,    borderColor: COLORS.border,    gap: SPACING.md,  
 
 },  label: 
 {
-fontFamily: 'Inter_500Medium', fontSize: 14, color: colors.textTitle, flex: 1 },
+fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textTitle, flex: 1 },
 
 });

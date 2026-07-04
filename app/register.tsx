@@ -44,7 +44,7 @@ export default function RegisterScreen() {
   return (
     <ErrorBoundary screenName="Register">
       <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ImageBackground source={require('../assets/images/gym_interior.jpg')} style={StyleSheet.absoluteFillObject} resizeMode="cover">
+        <ImageBackground source={require('../assets/images/gym_interior.jpg')} style={StyleSheet.absoluteFill} resizeMode="cover">
           <LinearGradient colors={isDark ? [COLORS.background + 'CC', COLORS.background + 'F8'] : [COLORS.background + '90', COLORS.background + 'FA']} style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
               {/* Header com animacao */}

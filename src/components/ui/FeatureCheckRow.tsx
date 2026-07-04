@@ -24,7 +24,7 @@ return (    <View style=
 {styles.row }>      <Ionicons        name=
 {included ? 'checkmark-circle' : 'close-circle' }        size=
 {16 }        color=
-{included ? colors.success : colors.textMuted }      />      <Text style=
+{included ? COLORS.success : COLORS.textMuted }      />      <Text style=
 {[styles.text, !included && styles.excluded] }>
 {text }</Text>    </View>  );
 }
@@ -34,8 +34,8 @@ const styles = StyleSheet.create(
  row: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },  text: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textDescription },  excluded: 
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription },  excluded: 
 {
-textDecorationLine: 'line-through', color: colors.textMuted },
+textDecorationLine: 'line-through', color: COLORS.textMuted },
 
 });

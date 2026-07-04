@@ -29,15 +29,15 @@ return (    <View style=
 const styles = StyleSheet.create(
 {
  pill: {
-   flexDirection: 'row', alignItems: 'center',    gap: SPACING.xs,    backgroundColor: colors.primary + '15',    paddingHorizontal: SPACING.md,    paddingVertical: SPACING.xs,    borderRadius: BORDER_RADIUS.full,    marginBottom: SPACING.lg,  
+   flexDirection: 'row', alignItems: 'center',    gap: SPACING.xs,    backgroundColor: COLORS.primary + '15',    paddingHorizontal: SPACING.md,    paddingVertical: SPACING.xs,    borderRadius: BORDER_RADIUS.full,    marginBottom: SPACING.lg,  
 
 },  dot: 
 {
-   width: 6, height: 6,    borderRadius: 3,    backgroundColor: colors.primary,  
+   width: 6, height: 6,    borderRadius: 3,    backgroundColor: COLORS.primary,  
 
 },  text: 
 {
-   fontFamily: 'Montserrat_600SemiBold', fontSize: 10,    color: colors.primary,    letterSpacing: 1.5,  
+   fontFamily: 'Montserrat_600SemiBold', fontSize: 10,    color: COLORS.primary,    letterSpacing: 1.5,  
 
 },
 

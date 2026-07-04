@@ -12,10 +12,10 @@ interface StatusCardProps {
 const STATUS_CONFIG: Record<StatusType, {
 icon: string;
 color: string }> = {pending: {
-icon: 'time-outline', color: colors.attention },  active: {
-icon: 'checkmark-circle-outline', color: colors.success },  suspended: {
-icon: 'ban-outline', color: colors.error },  warning: {
-icon: 'warning-outline', color: colors.attention },
+icon: 'time-outline', color: COLORS.attention },  active: {
+icon: 'checkmark-circle-outline', color: COLORS.success },  suspended: {
+icon: 'ban-outline', color: COLORS.error },  warning: {
+icon: 'warning-outline', color: COLORS.attention },
 };
 export function StatusCard({
 status, title, message }: StatusCardProps) {

@@ -146,10 +146,10 @@ function RestOverlay({ timeRemaining, totalTime, nextExercise, onSkip, nextSet, 
 export default memo(RestOverlay);
 
 const styles = StyleSheet.create({
-  container: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(18, 22, 26, 0.98)', justifyContent: 'center', alignItems: 'center', zIndex: 100 },
+  container: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(18, 22, 26, 0.98)', justifyContent: 'center', alignItems: 'center', zIndex: 100 },
   content: { alignItems: 'center', gap: SPACING.xl },
   timerWrap: { position: 'relative', width: CIRCLE_SIZE, height: CIRCLE_SIZE, justifyContent: 'center', alignItems: 'center' },
-  timerOverlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
+  timerOverlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   phaseBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.md, paddingVertical: 4, borderRadius: BORDER_RADIUS.sm, marginBottom: SPACING.sm },
   phaseText: { fontFamily: 'Montserrat_700Bold', fontSize: 10, letterSpacing: 2 },
   timer: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 52, letterSpacing: 2 },

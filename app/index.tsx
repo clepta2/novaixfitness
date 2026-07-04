@@ -46,7 +46,7 @@ export default function LoginScreen() {
     <KeyboardAvoidingView style={layout.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ImageBackground
         source={require('../assets/images/gym_interior.jpg')}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         resizeMode="cover"
       >
         <LinearGradient

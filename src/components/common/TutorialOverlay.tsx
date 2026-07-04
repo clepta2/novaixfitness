@@ -149,7 +149,7 @@ export default function TutorialOverlay({ visible, steps, onComplete, onSkip, on
 }
 
 const styles = StyleSheet.create({
-  darkBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(18, 22, 26, 0.65)' },
+  darkBackdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(18, 22, 26, 0.65)' },
   maskPanel: { position: 'absolute', backgroundColor: 'rgba(18, 22, 26, 0.65)' },
   glowBorder: { position: 'absolute', borderWidth: 2, borderColor: COLORS.primary, borderRadius: 12, shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 8, elevation: 4 },
   pointer: { position: 'absolute', zIndex: 10, alignItems: 'center', width: 24 },

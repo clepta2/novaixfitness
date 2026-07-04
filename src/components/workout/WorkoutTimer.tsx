@@ -142,7 +142,7 @@ export default memo(WorkoutTimer);
 const styles = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center' },
   timerWrap: { alignItems: 'center', justifyContent: 'center' },
-  overlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
+  overlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   phaseContainer: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.md, paddingVertical: 4, borderRadius: BORDER_RADIUS.sm, marginBottom: SPACING.sm },
   phase: { fontFamily: 'Montserrat_700Bold', fontSize: 10, letterSpacing: 2 },
   time: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 56, letterSpacing: 2 },

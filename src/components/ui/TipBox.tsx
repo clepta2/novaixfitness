@@ -24,7 +24,7 @@ return (    <View style=
 {styles.box }>      <Ionicons name=
 {icon as any } size=
 {16 } color=
-{colors.primary } />      <Text style=
+{COLORS.primary } />      <Text style=
 {styles.text }>
 {message }</Text>    </View>  );
 }
@@ -32,10 +32,10 @@ return (    <View style=
 const styles = StyleSheet.create(
 {
  box: {
-   flexDirection: 'row', alignItems: 'center',    gap: SPACING.sm,    padding: SPACING.md,    backgroundColor: colors.primary + '10',    borderRadius: BORDER_RADIUS.md,  
+   flexDirection: 'row', alignItems: 'center',    gap: SPACING.sm,    padding: SPACING.md,    backgroundColor: COLORS.primary + '10',    borderRadius: BORDER_RADIUS.md,  
 
 },  text: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.primary, flex: 1 },
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.primary, flex: 1 },
 
 });

@@ -49,7 +49,7 @@ export default function PhotoPicker({ selectedLabel, onSelectLabel, onCamera, on
 }
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
+  overlay: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
   content: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.xl, width: '80%', alignItems: 'center', gap: SPACING.lg },
   options: { flexDirection: 'row', gap: SPACING.xl },
   option: { alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.background, padding: SPACING.xl, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border },

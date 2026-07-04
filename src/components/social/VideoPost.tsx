@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   heartOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.15)',

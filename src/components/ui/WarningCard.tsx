@@ -24,7 +24,7 @@ return (    <View style=
 {styles.card }>      <Ionicons name=
 {icon as any } size=
 {20 } color=
-{colors.attention } />      <Text style=
+{COLORS.attention } />      <Text style=
 {styles.text }>
 {message }</Text>    </View>  );
 }
@@ -32,10 +32,10 @@ return (    <View style=
 const styles = StyleSheet.create(
 {
  card: {
-   flexDirection: 'row', alignItems: 'center',    gap: SPACING.sm,    backgroundColor: colors.attention + '15',    borderRadius: BORDER_RADIUS.md,    padding: SPACING.md,    borderWidth: 1,    borderColor: colors.attention + '40',  
+   flexDirection: 'row', alignItems: 'center',    gap: SPACING.sm,    backgroundColor: COLORS.attention + '15',    borderRadius: BORDER_RADIUS.md,    padding: SPACING.md,    borderWidth: 1,    borderColor: COLORS.attention + '40',  
 
 },  text: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.attention, flex: 1 },
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.attention, flex: 1 },
 
 });

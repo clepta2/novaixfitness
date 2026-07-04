@@ -40,7 +40,7 @@ top: 10, bottom: 10, left: 10, right: 10 }
 
 }>          <Ionicons name="trash-outline" size=
 {18 } color=
-{colors.error } />        </TouchableOpacity>      )
+{COLORS.error } />        </TouchableOpacity>      )
 
 }    </View>  );
 }
@@ -48,12 +48,12 @@ top: 10, bottom: 10, left: 10, right: 10 }
 const styles = StyleSheet.create(
 {
  card: {
-flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: colors.surface, padding: SPACING.lg, borderRadius: BORDER_RADIUS.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: colors.border },  info: 
+flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.surface, padding: SPACING.lg, borderRadius: BORDER_RADIUS.lg, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },  info: 
 {
 flex: 1 },  title: 
 {
-fontFamily: 'Montserrat_700Bold', fontSize: 14, color: colors.textTitle },  meta: 
+fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textTitle },  meta: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 4 },
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 4 },
 
 });

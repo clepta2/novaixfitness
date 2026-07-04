@@ -45,8 +45,8 @@ width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: '
 {
 flex: 1 },  label: 
 {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.textTitle },  desc: 
+fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },  desc: 
 {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 2 },
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },
 
 });
