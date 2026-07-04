@@ -188,9 +188,11 @@ export async function awardActionXP(userId: string, action: string): Promise<num
 export async function updateMaxStreak(userId: string): Promise<void> {
   if (!userId) return;
   try {
+    const { data: profile } = await supabase.from('profiles').select('max_streak').eq('id', userId).single();
     const { data: workouts } = await supabase.from('user_workouts').select('completed, completed_at').eq('user_id', userId);
     const streak = calculateStreak(workouts || []);
-    await supabase.from('profiles').update({ max_streak: streak }).eq('id', userId);
+    const currentMax = profile?.max_streak || 0;
+    await supabase.from('profiles').update({ max_streak: Math.max(streak, currentMax) }).eq('id', userId);
   } catch (err) {
     if (__DEV__) console.error('Erro ao atualizar streak:', err);
   }
