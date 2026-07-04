@@ -54,32 +54,7 @@ export interface NotificationSettings {
   system?: boolean;
 }
 
-// ─── Workout ───────────────────────────────────────────────
-export interface Workout {
-  id: string;
-  name: string;
-  category: string;
-  level: string;
-  duration: number;
-  exercises: Exercise[];
-  description?: string;
-  video_url?: string;
-  thumbnail_url?: string;
-  created_at: string;
-}
-
-export interface Exercise {
-  id: string;
-  name: string;
-  muscleGroup: string;
-  equipment: string;
-  description?: string;
-  video_url?: string;
-  sets?: number;
-  reps?: string;
-  rest?: number;
-}
-
+// ─── User Workout ──────────────────────────────────────────
 export interface UserWorkout {
   id: string;
   user_id: string;
@@ -88,16 +63,6 @@ export interface UserWorkout {
   completed_at?: string;
   duration?: number;
   workout?: Workout;
-}
-
-export interface WorkoutLog {
-  id: string;
-  user_workout_id: string;
-  exercise_name: string;
-  set_number: number;
-  reps_done: number;
-  weight_kg?: number;
-  recorded_at: string;
 }
 
 // ─── Nutrition ─────────────────────────────────────────────
