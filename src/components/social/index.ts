@@ -2,8 +2,8 @@
 // Re-exports from social components
 
 export { default as ForumPost } from './ForumPost';
-export { ForumFilters } from './ForumFilters';
-export { ForumEmptyState } from './ForumEmptyState';
+export { default as ForumFilters } from './ForumFilters';
+export { default as ForumEmptyState } from './ForumEmptyState';
 export { default as CreateForumPostModal } from './CreateForumPostModal';
 export { default as StoryRing } from './StoryRing';
 export { default as FeedStoryViewer } from './FeedStoryViewer';

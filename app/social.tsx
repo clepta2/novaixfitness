@@ -96,6 +96,7 @@ export default function SocialScreen() {
         content: p.content, image: p.image_url, postType: p.post_type || 'text', secondImage: p.second_image_url,
         createdAt: formatRelativeDate(p.created_at), likes: p.likes_count || 0, comments: p.comments_count || 0, isLiked: false,
       })));
+      loadUserLikes();
     }
   }, [dbPosts]);
   const onInsert = useCallback((p) => setPosts(prev => prev.some(x => x.id === p.id) ? prev : [p, ...prev]), []);

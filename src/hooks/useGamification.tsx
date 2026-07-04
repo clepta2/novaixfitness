@@ -100,6 +100,21 @@ export function useGamification(): UseGamificationReturn {
     setRefreshing(false);
   }, [user?.id]);
 
+  const award = useCallback(async (eventType: string, metadata: Record<string, unknown> = {}): Promise<AwardResult | null> => {
+    if (!user?.id) return null;
+    try {
+      const result = await awardXP(user.id, eventType, metadata);
+      const newAchievements = await checkAchievements(user.id);
+      if (newAchievements.length > 0) {
+        setAchievements(prev => [...prev, ...newAchievements.map((a: any) => ({ ...a, unlocked: true }))]);
+      }
+      return result;
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao conceder XP:', err);
+      return null;
+    }
+  }, [user?.id]);
+
   const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
   const xpBreakdown = profile ? {
     workout: profile.totalWorkouts * 50,
