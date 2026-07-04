@@ -2,7 +2,7 @@
 // app/marketplace-detail.js
 // Tela de detalhe do produto - NOVAIX FITNESS
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,25 +23,32 @@ export default function MarketplaceDetailScreen() {
   const [related, setRelated] = useState([]);
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
     async function load() {
       if (!productId) return;
       try {
         const p = await getProductById(productId);
+        if (!mountedRef.current) return;
         setProduct(p);
         if (p.category_id) {
           const rel = await getRelatedProducts(productId, p.category_id);
-          setRelated(rel);
+          if (mountedRef.current) setRelated(rel);
         }
-        if (user?.id) setFavorited(await isFavorited(user.id, productId));
+        if (user?.id) {
+          const fav = await isFavorited(user.id, productId);
+          if (mountedRef.current) setFavorited(fav);
+        }
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar produto:', err);
       } finally {
-        setLoading(false);
+        if (mountedRef.current) setLoading(false);
       }
     }
     load();
+    return () => { mountedRef.current = false; };
   }, [productId, user?.id]);
 
   const handleToggleFavorite = async () => {
