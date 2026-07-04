@@ -125,9 +125,6 @@ export default function SocialScreen() {
   const handleLike = async (postId) => {
     if (!user || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);
-    const post = posts.find(p => p.id === postId);
-    const wasLiked = post?.isLiked || false;
-    const prevLikes = post?.likes || 0;
     try {
       await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
         const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
@@ -140,7 +137,10 @@ export default function SocialScreen() {
         }
       });
     } catch (err) {
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: wasLiked, likes: prevLikes } : p));
+      setPosts(prev => {
+        const post = prev.find(p => p.id === postId);
+        return prev.map(p => p.id === postId ? { ...p, isLiked: post?.isLiked || false, likes: post?.likes || 0 } : p);
+      });
       if (__DEV__) console.error('Erro ao curtir:', err);
     } finally {
       processingLikes.current.delete(postId);
@@ -148,7 +148,6 @@ export default function SocialScreen() {
   };
   const handleComment = async (postId, text) => {
     if (!user || !text?.trim()) return;
-    const prevComments = posts.find(p => p.id === postId)?.comments || 0;
     try {
       await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
         const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
@@ -156,7 +155,10 @@ export default function SocialScreen() {
         setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
       }, t('social.errorComment'));
     } catch (err) {
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: prevComments } : p));
+      setPosts(prev => {
+        const post = prev.find(p => p.id === postId);
+        return prev.map(p => p.id === postId ? { ...p, comments: post?.comments || 0 } : p);
+      });
       if (__DEV__) console.error('Erro ao comentar:', err);
     }
   };
