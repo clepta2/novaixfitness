@@ -1,4 +1,4 @@
-
+﻿
 // app/chat.tsx
 // Pagina de chats com melhorias visuais - NOVAIX FITNESS
 
@@ -20,7 +20,7 @@ export default function ChatScreen() {
   const [showNewChat, setShowNewChat] = useState(false);
 
   // Animacao de entrada
-  const fadeAnim = useRef(Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
   }, []);

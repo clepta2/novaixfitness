@@ -1,4 +1,4 @@
-
+﻿
 import { useState, useEffect, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -17,7 +17,7 @@ export default function WarmupScreen() {
   const [countdown, setCountdown] = useState(null);
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState([]);
-  const anim = useRef(Animated.Value(0)).current;
+  const anim = useRef(new Animated.Value(0)).current;
 
   const current = EXERCISES[currentIdx];
   const progress = completed.length / EXERCISES.length;
@@ -98,12 +98,12 @@ export default function WarmupScreen() {
 
           <View style={styles.actions}>
             {!started ? (
-              <TouchableOpacity style={styles.startBtn} onPress={startExercise} activeOpacity={0.8} accessibilityLabel="Iniciar exercício" accessibilityRole="button">
+              <TouchableOpacity style={styles.startBtn} onPress={startExercise} activeOpacity={0.8} accessibilityLabel="Iniciar exercÃ­cio" accessibilityRole="button">
                 <Ionicons name="play" size={20} color={COLORS.background} />
                 <Text style={styles.startBtnText}>INICIAR</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.skipBtn} onPress={skipExercise} activeOpacity={0.8} accessibilityLabel="Pular exercício" accessibilityRole="button">
+              <TouchableOpacity style={styles.skipBtn} onPress={skipExercise} activeOpacity={0.8} accessibilityLabel="Pular exercÃ­cio" accessibilityRole="button">
                 <Text style={styles.skipBtnText}>PULAR</Text>
               </TouchableOpacity>
             )}
@@ -123,9 +123,9 @@ export default function WarmupScreen() {
         </View>
 
         {completed.length === EXERCISES.length && (
-          <TouchableOpacity style={styles.doneBtn} onPress={() => router.back()} activeOpacity={0.8} accessibilityLabel="Aquecimento concluído, voltar" accessibilityRole="button">
+          <TouchableOpacity style={styles.doneBtn} onPress={() => router.back()} activeOpacity={0.8} accessibilityLabel="Aquecimento concluÃ­do, voltar" accessibilityRole="button">
             <Ionicons name="checkmark-circle" size={20} color={COLORS.background} />
-            <Text style={styles.doneBtnText}>AQUECIMENTO CONCLUÍDO</Text>
+            <Text style={styles.doneBtnText}>AQUECIMENTO CONCLUÃDO</Text>
           </TouchableOpacity>
         )}
 

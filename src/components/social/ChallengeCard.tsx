@@ -8,7 +8,7 @@ const ICON_MAP = { Hidratação: 'water', Proteína: 'flash', Treino: 'barbell',
 const COLOR_MAP = { Hidratação: COLORS.info, Proteína: COLORS.success, Treino: COLORS.primary, Geral: COLORS.primary, Sono: COLORS.info, Nutrição: COLORS.attention };
 
 function AnimatedProgressBar({ progress, target, color }) {
-  const animatedValue = useRef(Animated.Value(0)).current;
+  const animatedValue = useRef(new Animated.Value(0)).current;
   const pct = target > 0 ? Math.min(100, (progress / target) * 100) : 0;
   useEffect(() => { Animated.spring(animatedValue, { toValue: pct, tension: 30, friction: 8, useNativeDriver: false }).start(); }, [pct, animatedValue]);
   const width = animatedValue.interpolate({ inputRange: [0, 100], outputRange: ['0%', '100%'] });
@@ -21,7 +21,7 @@ function AnimatedProgressBar({ progress, target, color }) {
 }
 
 export default memo(function ChallengeCard({ challenge, index, onPress, onShare }) {
-  const animatedValue = useRef(Animated.Value(0)).current;
+  const animatedValue = useRef(new Animated.Value(0)).current;
   const icon = ICON_MAP[challenge.category] || 'fitness';
   const color = COLOR_MAP[challenge.category] || COLORS.primary;
   const progress = challenge.progress || 0;

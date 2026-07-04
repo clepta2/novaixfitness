@@ -1,4 +1,4 @@
-
+﻿
 // app/progress.tsx
 // Progresso com timeline animado - NOVAIX FITNESS
 
@@ -28,8 +28,8 @@ export default function ProgressScreen() {
   const [previous, setPrevious] = useState(null);
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     Animated.parallel([

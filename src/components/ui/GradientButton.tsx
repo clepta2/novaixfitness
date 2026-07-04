@@ -32,8 +32,8 @@ export default function GradientButton({
   size = 'md',
   variant = 'filled',
 }: GradientButtonProps) {
-  const scaleAnim = useRef(Animated.Value(1)).current;
-  const shimmerAnim = useRef(Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (variant === 'filled') {

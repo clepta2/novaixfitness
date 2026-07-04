@@ -1,4 +1,4 @@
-
+﻿
 // app/coach-dashboard.tsx
 // Painel do Coach com animacoes de entrada - NOVAIX FITNESS
 
@@ -29,8 +29,8 @@ export default function CoachDashboardScreen() {
   const [duration, setDuration] = useState('30');
   const [saving, setSaving] = useState(false);
 
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {
@@ -125,7 +125,7 @@ export default function CoachDashboardScreen() {
                   <Animated.View key={w.id} style={[styles.workoutCard, { opacity: Math.min(1, 0.5 + i * 0.1) }]}>
                     <View style={styles.workoutInfo}>
                       <Text style={styles.workoutTitle}>{w.title}</Text>
-                      <Text style={styles.workoutMeta}>{w.category} · {w.duration}min · {w.level}</Text>
+                      <Text style={styles.workoutMeta}>{w.category} Â· {w.duration}min Â· {w.level}</Text>
                     </View>
                     <Ionicons name="trash-outline" size={18} color={COLORS.error} onPress={() => handleDeleteWorkout(w.id)} />
                   </Animated.View>

@@ -25,8 +25,8 @@ export default function StatsCard({
   trend,
   suffix = '',
 }: StatsCardProps) {
-  const scaleAnim = useRef(Animated.Value(0.8)).current;
-  const opacityAnim = useRef(Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([

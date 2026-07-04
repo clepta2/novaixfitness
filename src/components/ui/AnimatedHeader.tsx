@@ -16,7 +16,7 @@ export function AnimatedHeader({title,  subtitle,  rightContent,  showOffline,  
 }: AnimatedHeaderProps) {
 const colors = useColors();
  
-const fadeAnim = useRef(Animated.Value(0)).current;
+const fadeAnim = useRef(new Animated.Value(0)).current;
  
 const slideAnim = useMemo(() => 
 new Animated.Value(20), []);

@@ -1,4 +1,4 @@
-
+﻿
 // app/marketplace.tsx
 // Marketplace com cards animados - NOVAIX FITNESS
 
@@ -34,8 +34,8 @@ export default function MarketplaceScreen() {
   const debouncedSearch = useDebounce(search, 300);
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

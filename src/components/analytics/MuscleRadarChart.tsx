@@ -53,8 +53,8 @@ function getInsight(values: any) {
 }
 
 export default function MuscleRadarChart({ data = {}, previousData = null }) {
-  const animatedValue = useRef(Animated.Value(0)).current;
-  const pulseAnim = useRef(Animated.Value(1)).current;
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.spring(animatedValue, { toValue: 1, tension: 40, friction: 8, useNativeDriver: true }).start();

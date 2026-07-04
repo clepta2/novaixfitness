@@ -7,7 +7,7 @@ import { STREAK_LEVELS as STREAK_LEVELS_CONFIG } from '../../config/gamification
 export const STREAK_LEVELS = STREAK_LEVELS_CONFIG.map(l => ({ ...l, color: COLORS[l.colorKey as keyof typeof COLORS] }));
 
 export function FlameIcon({ level, size = 24 }: any) {
-  const pulseAnim = useRef(Animated.Value(1)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (level >= 7) {

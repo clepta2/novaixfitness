@@ -49,7 +49,7 @@ type Router = {
 export function useIntro(router: Router) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<IntroSlide>>(null);
-  const scrollX = useRef(Animated.Value(0)).current;
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const isLastSlide = currentIndex === INTRO_SLIDES.length - 1;
 

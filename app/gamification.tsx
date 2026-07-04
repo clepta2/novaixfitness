@@ -1,4 +1,4 @@
-
+﻿
 // app/gamification.tsx
 // Gamification com rankings animados e melhorias visuais - NOVAIX FITNESS
 
@@ -51,8 +51,8 @@ function GamificationContent() {
   } = useGamification();
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

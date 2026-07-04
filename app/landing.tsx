@@ -1,4 +1,4 @@
-// app/landing.tsx
+﻿// app/landing.tsx
 // Landing Page com animacoes de entrada - NOVAIX FITNESS
 
 
@@ -14,7 +14,7 @@ export default function LandingScreen() {
   const [dbStats, setDbStats] = useState({ users: 0, workouts: 0, rating: 4.9, loading: true });
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }).start();
@@ -49,7 +49,7 @@ export default function LandingScreen() {
   const stats = [
     { value: dbStats.loading ? '...' : `+${dbStats.users}`, label: 'Alunos Ativos' },
     { value: dbStats.loading ? '...' : `+${dbStats.workouts}`, label: 'Video Treinos' },
-    { value: dbStats.loading ? '...' : `${dbStats.rating}★`, label: 'Avaliacao' },
+    { value: dbStats.loading ? '...' : `${dbStats.rating}â˜…`, label: 'Avaliacao' },
   ];
 
   const goToRegister = () => router.push('/register');

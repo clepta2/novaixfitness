@@ -3,7 +3,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
 export default function Skeleton({ width = '100%', height = 20, borderRadius = 8, style }: { width?: string | number; height?: number; borderRadius?: number; style?: any }) {
-  const opacity = useRef(Animated.Value(0.3)).current;
+  const opacity = useRef(new Animated.Value(0.3)).current;
 
   useEffect(() => {
     const animation = Animated.loop(

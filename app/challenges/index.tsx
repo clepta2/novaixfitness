@@ -1,4 +1,4 @@
-
+﻿
 // app/challenges/index.tsx
 // Desafios diarios com cards animados - NOVAIX FITNESS
 
@@ -28,8 +28,8 @@ export default function ChallengesScreen() {
   const [loading, setLoading] = useState(true);
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

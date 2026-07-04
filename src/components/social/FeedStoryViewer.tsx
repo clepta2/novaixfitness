@@ -26,7 +26,7 @@ interface FeedStoryViewerProps {
 export default function FeedStoryViewer({ visible, stories, initialIndex = 0, onClose }: FeedStoryViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [currentStory, setCurrentStory] = useState(0);
-  const progressAnim = useRef(Animated.Value(0)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
   const timerRef = useRef<any>(null);
 
   useEffect(() => {

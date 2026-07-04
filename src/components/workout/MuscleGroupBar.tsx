@@ -12,7 +12,7 @@ interface MuscleGroupBarProps {
 }
 
 export default memo(function MuscleGroupBar({ name, count, max, color }: MuscleGroupBarProps): React.ReactElement {
-  const animatedValue = useRef(Animated.Value(0)).current;
+  const animatedValue = useRef(new Animated.Value(0)).current;
   const width = max > 0 ? (count / max) * 100 : 0;
 
   useEffect(() => {

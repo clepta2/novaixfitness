@@ -15,7 +15,7 @@ interface ReactionPickerProps {
 }
 
 export default function ReactionPicker({ visible, onSelect, onClose, position = 'top' }: ReactionPickerProps) {
-  const containerScale = useRef(Animated.Value(0)).current;
+  const containerScale = useRef(new Animated.Value(0)).current;
   const emojiAnims = useMemo(() => REACTION_TYPES.map(() => new Animated.Value(0)), []);
 
   useEffect(() => {

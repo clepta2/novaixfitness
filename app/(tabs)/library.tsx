@@ -1,4 +1,4 @@
-// app/(tabs)/library.tsx
+﻿// app/(tabs)/library.tsx
 // Biblioteca de Treinos com melhorias visuais - NOVAIX FITNESS
 
 
@@ -42,8 +42,8 @@ export default function LibraryScreen() {
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('library', true);
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     Animated.parallel([

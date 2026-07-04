@@ -25,7 +25,7 @@ export default function Stepper({
   showLabels = true,
   size = 'md',
 }: StepperProps) {
-  const progressAnim = useRef(Animated.Value(0)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const progress = currentStep / (steps.length - 1);

@@ -60,8 +60,8 @@ function WorkoutTimer({ timeRemaining, totalTime, phase, exerciseName, setInfo, 
     progress = totalTime > 0 ? (totalTime - timeRemaining) / totalTime : 0;
   }
 
-  const pulseAnim = useRef(Animated.Value(1)).current;
-  const scaleAnim = useRef(Animated.Value(0.9)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const prevPhaseRef = useRef(phase);
   const prevTimeRef = useRef(timeRemaining);
 

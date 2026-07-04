@@ -31,9 +31,9 @@ export default function ReelItem({ item, isPlaying, onClose, screenHeight }: Ree
   const [likesCount, setLikesCount] = useState(item.likes);
   const [lastTap, setLastTap] = useState(0);
 
-  const heartScale = useRef(Animated.Value(0)).current;
-  const heartOpacity = useRef(Animated.Value(0)).current;
-  const likeScale = useRef(Animated.Value(1)).current;
+  const heartScale = useRef(new Animated.Value(0)).current;
+  const heartOpacity = useRef(new Animated.Value(0)).current;
+  const likeScale = useRef(new Animated.Value(1)).current;
 
   const toggleLike = () => {
     try {

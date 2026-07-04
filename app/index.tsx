@@ -1,4 +1,4 @@
-
+﻿
 // app/index.tsx
 // Tela de Login com animacoes de entrada - NOVAIX FITNESS
 
@@ -29,9 +29,9 @@ export default function LoginScreen() {
   } = useLogin();
 
   // Animacoes de entrada
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(30)).current;
-  const logoScale = useRef(Animated.Value(0.8)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const logoScale = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
     Animated.parallel([

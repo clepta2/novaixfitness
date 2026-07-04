@@ -1,4 +1,4 @@
-
+﻿
 // app/settings/appearance.tsx
 // Configuracao de aparencia com animacoes - NOVAIX FITNESS
 
@@ -19,9 +19,9 @@ export default function AppearanceScreen() {
   const { isSmall } = useResponsive();
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const lightScale = useRef(Animated.Value(1)).current;
-  const darkScale = useRef(Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const lightScale = useRef(new Animated.Value(1)).current;
+  const darkScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }).start();

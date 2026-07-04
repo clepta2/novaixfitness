@@ -1,4 +1,4 @@
-
+﻿
 // app/forgot-password.tsx
 // Recuperacao de senha com animacoes - NOVAIX FITNESS
 
@@ -27,9 +27,9 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
 
   // Animacoes
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
-  const iconScale = useRef(Animated.Value(0.8)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+  const iconScale = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
     Animated.parallel([

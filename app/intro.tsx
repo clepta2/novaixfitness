@@ -1,4 +1,4 @@
-
+﻿
 // app/intro.tsx
 // Intro com animacoes de entrada - NOVAIX FITNESS
 
@@ -32,7 +32,7 @@ function IntroScreen() {
   } = useIntro(router);
 
   // Animacao de entrada
-  const fadeAnim = useRef(Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }).start();
@@ -109,7 +109,7 @@ function IntroScreen() {
           activeOpacity={0.8}
         >
           <Text style={styles.ctaBtnText}>
-            {isLastSlide ? 'COMEÇAR' : 'PROXIMO'}
+            {isLastSlide ? 'COMEÃ‡AR' : 'PROXIMO'}
           </Text>
         </TouchableOpacity>
       </View>

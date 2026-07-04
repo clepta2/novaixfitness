@@ -1,4 +1,4 @@
-// app/body-measures.tsx
+﻿// app/body-measures.tsx
 // Medidas corporais com graficos animados - NOVAIX FITNESS
 
 import { useState, useEffect, useMemo , useRef} from 'react';
@@ -30,8 +30,8 @@ export default function BodyMeasuresScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ weight: '', chest: '', waist: '', hips: '', arms: '', thighs: '', body_fat: '', notes: '' });
-  const fadeAnim = useRef(Animated.Value(0)).current;
-  const slideAnim = useRef(Animated.Value(20)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {
