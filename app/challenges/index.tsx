@@ -46,12 +46,13 @@ export default function ChallengesScreen() {
     if (!user?.id) return;
     setLoading(true);
     const today = new Date().toISOString().split('T')[0];
+    const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
     const { data: completedData } = await supabase.from('daily_challenges').select('challenge_type').eq('user_id', user.id).eq('date', today);
     if (!mounted.current) return;
     setCompleted(completedData?.map(c => c.challenge_type) || []);
-    const { data: workouts } = await supabase.from('user_workouts').select('id').eq('user_id', user.id).eq('completed', true).gte('completed_at', new Date().setHours(0, 0, 0, 0));
+    const { data: workouts } = await supabase.from('user_workouts').select('id').eq('user_id', user.id).eq('completed', true).gte('completed_at', todayStart);
     if (!mounted.current) return;
-    const { data: water } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', new Date().setHours(0, 0, 0, 0));
+    const { data: water } = await supabase.from('water_logs').select('amount_ml').eq('user_id', user.id).gte('logged_at', todayStart);
     if (!mounted.current) return;
     setStats({ workoutsToday: workouts?.length || 0, waterToday: water?.reduce((s, w) => s + w.amount_ml, 0) || 0 });
     setChallenges(getDailyChallenges(3));
@@ -59,7 +60,7 @@ export default function ChallengesScreen() {
   };
 
   const completeChallenge = async (challenge) => {
-    if (completed.includes(challenge.type)) return;
+    if (!user?.id || completed.includes(challenge.type)) return;
     const today = new Date().toISOString().split('T')[0];
     await supabase.from('daily_challenges').insert({ user_id: user.id, challenge_type: challenge.type, challenge_text: challenge.text, xp_reward: challenge.xp, date: today });
     setCompleted([...completed, challenge.type]);

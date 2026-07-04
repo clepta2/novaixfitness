@@ -7,7 +7,7 @@ import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
 import { useAuth } from '../src/context/AuthContext';
 import { useI18n } from '../src/i18n';
-import { getMealLogs, getDailySummary, calculateNutritionGoals } from '../src/services/mealAnalyzer';
+import { getMealLogs, getDailySummary, calculateNutritionGoals } from '../src/services/ai/mealAnalyzer';
 import { ErrorBoundary, WaterTracker, BottomTabBar, DailySummaryCard, MealTimeline, MealLogModal, NutritionTips, MacroChart } from '../src/components';
 import { useResponsive } from '../src/hooks/useResponsive';
 
