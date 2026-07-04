@@ -31,6 +31,7 @@ export default function LGPDScreen() {
   useEffect(() => { loadConsents(); }, [loadConsents]);
 
   const handleExportData = async () => {
+    if (!user?.id) return;
     Alert.alert('Exportar Dados', 'Você receberá um arquivo JSON com todos os seus dados pessoais.', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Exportar', onPress: async () => {
@@ -43,6 +44,7 @@ export default function LGPDScreen() {
   };
 
   const handleDeleteAccount = () => {
+    if (!user?.id) return;
     Alert.alert('Excluir Minha Conta', 'Esta ação é IRREVERSÍVEL. Tem certeza absoluta?', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Continuar', style: 'destructive', onPress: () => {
@@ -60,6 +62,7 @@ export default function LGPDScreen() {
   };
 
   const handleConsentChange = async (type, value) => {
+    if (!user?.id) return;
     const newSettings = { ...consents, [type]: value };
     setConsents(newSettings);
     try { await updateConsentSettings(user.id, newSettings); }

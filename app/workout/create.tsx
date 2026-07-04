@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { ALL_CATEGORIES } from '../../src/data/categories';
 import { 
   Input, ErrorBoundary, ExerciseSearch, ExerciseConfigurator, 
-  WorkoutPreview, GradientButton
+  WorkoutPreview, GradientButton, Stepper
 } from '../../src/components';
 import { useResponsive } from '../../src/hooks/useResponsive';
 import { useCreateWorkout, STEPS, LEVELS, LEVEL_COLORS } from '../../src/hooks/useCreateWorkout';
@@ -39,7 +39,7 @@ export default function CreateWorkoutScreen() {
 
         {/* Stepper */}
         <Stepper 
-          steps={STEPS.map(s => ({ label: s.label, icon: s.icon }))} 
+          steps={STEPS.map(s => ({ label: s, icon: 'ellipse' }))} 
           currentStep={step} 
           size={isSmall ? 'sm' : 'md'}
         />

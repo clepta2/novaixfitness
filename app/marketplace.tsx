@@ -175,7 +175,7 @@ export default function MarketplaceScreen() {
               ) : (
                 <ProductList
                   products={products}
-                  favorites={Array.from(favorites)}
+                  favorites={favorites}
                   onToggleFavorite={handleToggleFavorite}
                   loading={loading}
                 />
