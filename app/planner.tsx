@@ -27,7 +27,7 @@ export default function PlannerScreen() {
     async function loadPlan() {
       if (!user?.id) return;
       const result = await call(() => loadWeeklyPlan(user.id));
-      if (result.ok && result.data) setWeekPlan(result.data as Record<string, unknown>);
+      if (result.ok && result.data) setWeekPlan(result.data as any);
       try {
         const needsAdapt = await shouldAdaptPlan(user.id);
         if (needsAdapt) {

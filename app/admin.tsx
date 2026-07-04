@@ -124,7 +124,7 @@ export default function AdminScreen() {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
         >
           <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-            {activeTab === 'dashboard' && <AdminDashboard />}
+            {activeTab === 'dashboard' && <AdminDashboard onNavigate={(tab: string) => setActiveTab(tab)} />}
             {activeTab === 'students' && (
               <View>
                 <Text style={styles.sectionTitle}>ALUNOS ({students.length})</Text>
@@ -136,7 +136,7 @@ export default function AdminScreen() {
                 ) : (
                   students.map((s, i) => (
                     <Animated.View key={s.id} style={{ opacity: Math.min(1, 0.5 + i * 0.05) }}>
-                      <StudentCard student={s} />
+                      <StudentCard student={s} onEdit={() => {}} />
                     </Animated.View>
                   ))
                 )}

@@ -1,4 +1,4 @@
-﻿
+
 // app/register.tsx
 // Tela de Cadastro com animacoes de entrada - NOVAIX FITNESS
 
@@ -58,7 +58,7 @@ export default function RegisterScreen() {
 
               {/* Formulario com animacao */}
               <Animated.View style={[styles.formContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-                <AuthInput label="NOME" placeholder="digite seu nome completo" value={name} onChangeText={(v: string) => setName(v.replace(/[^a-zA-Z\s]/g, ''))} autoCapitalize="words" icon="person-outline" translucent={true} />
+                <AuthInput label="NOME" placeholder="digite seu nome completo" value={name} onChangeText={(v: string) => setName(v.replace(/[^a-zA-Z\s]/g, ''))} autoCapitalize="words" icon="person-outline" translucent={true} secureTextEntry={false} keyboardType="default" error="" />
                 {name.length > 0 && (
                   <View style={styles.validationRow}>
                     <Ionicons name={isNameValid ? 'checkmark-circle' : 'close-circle'} size={14} color={isNameValid ? COLORS.primary : COLORS.error} />
@@ -68,7 +68,7 @@ export default function RegisterScreen() {
                   </View>
                 )}
 
-                <AuthInput label="E-MAIL" placeholder="digite seu melhor e-mail" value={email} onChangeText={(v: string) => setEmail(v.replace(/[^a-zA-Z0-9@._+-]/g, '').slice(0, 80))} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} />
+                <AuthInput label="E-MAIL" placeholder="digite seu melhor e-mail" value={email} onChangeText={(v: string) => setEmail(v.replace(/[^a-zA-Z0-9@._+-]/g, '').slice(0, 80))} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} secureTextEntry={false} error="" />
                 {email.length > 0 && (
                   <View style={styles.validationRow}>
                     <Ionicons name={isEmailValid ? 'checkmark-circle' : 'close-circle'} size={14} color={isEmailValid ? COLORS.primary : COLORS.error} />
@@ -78,7 +78,7 @@ export default function RegisterScreen() {
                   </View>
                 )}
 
-                <AuthInput label="SENHA" placeholder="digite sua senha" value={password} onChangeText={setPassword} secureTextEntry icon="lock-closed-outline" translucent={true} />
+                <AuthInput label="SENHA" placeholder="digite sua senha" value={password} onChangeText={setPassword} secureTextEntry keyboardType="default" autoCapitalize="none" icon="lock-closed-outline" translucent={true} error="" />
                 {password.length > 0 && (
                   <View style={styles.strengthSection}>
                     <View style={styles.strengthBar}>
@@ -93,7 +93,7 @@ export default function RegisterScreen() {
                         ['Numero (0-9)', /[0-9]/.test(password)],
                         ['Simbolo (@, #, !)', /[^A-Za-z0-9]/.test(password)],
                       ].map(([lbl, ok]) => (
-                        <View key={lbl} style={styles.checkRow}>
+                        <View key={String(lbl)} style={styles.checkRow}>
                           <Ionicons name={ok ? 'checkmark-circle' : 'ellipse-outline'} size={12} color={ok ? COLORS.primary : COLORS.textMuted} />
                           <Text style={[styles.checkText, { color: ok ? COLORS.primary : COLORS.textMuted }]}>{lbl}</Text>
                         </View>
@@ -102,7 +102,7 @@ export default function RegisterScreen() {
                   </View>
                 )}
 
-                <AuthInput label="CONFIRMAR SENHA" placeholder="confirme sua senha" value={confirm} onChangeText={setConfirm} secureTextEntry icon="lock-closed-outline" translucent={true} />
+                <AuthInput label="CONFIRMAR SENHA" placeholder="confirme sua senha" value={confirm} onChangeText={setConfirm} secureTextEntry keyboardType="default" autoCapitalize="none" icon="lock-closed-outline" translucent={true} error="" />
                 {confirm.length > 0 && (
                   <View style={styles.validationRow}>
                     <Ionicons name={passwordsMatch ? 'checkmark-circle' : 'close-circle'} size={14} color={passwordsMatch ? COLORS.success : COLORS.error} />

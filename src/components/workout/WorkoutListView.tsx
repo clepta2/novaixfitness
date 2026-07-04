@@ -50,12 +50,12 @@ export default memo(function WorkoutListView({ dailyWorkouts, activeWorkout, sta
 
         <Text style={typography.h5}>TREINOS CONCLUÍDOS ({completedCount})</Text>
         {dailyWorkouts.filter((w) => w.completed).map((w) => (
-          <WorkoutListItem key={w.id} workout={w} onPress={startWorkout} />
+          <WorkoutListItem key={w.id} workout={w as any} isActive={false} onPress={startWorkout as any} />
         ))}
 
         <Text style={[typography.h5, { marginTop: SPACING.lg }]}>PRÓXIMOS TREINOS ({totalCount - completedCount})</Text>
         {dailyWorkouts.filter((w) => !w.completed).map((w) => (
-          <WorkoutListItem key={w.id} workout={w} onPress={startWorkout} />
+          <WorkoutListItem key={w.id} workout={w as any} isActive={false} onPress={startWorkout as any} />
         ))}
 
         <Text style={[typography.h5, { marginTop: SPACING.lg }]}>TREINO ATIVO (1)</Text>

@@ -38,7 +38,7 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
     try {
       const fileName = `${userId}/posts/${Date.now()}.jpg`;
       const formData = new FormData();
-      formData.append('file', { uri: imageUri, type: 'image/jpeg', name: fileName });
+      formData.append('file', { uri: imageUri, type: 'image/jpeg', name: fileName } as any);
       const { error: uploadError } = await supabase.storage.from('posts').upload(fileName, formData, { contentType: 'image/jpeg', upsert: false });
       if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage.from('posts').getPublicUrl(fileName);

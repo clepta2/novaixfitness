@@ -1,4 +1,4 @@
-﻿
+
 // app/index.tsx
 // Tela de Login com animacoes de entrada - NOVAIX FITNESS
 
@@ -77,21 +77,28 @@ export default function LoginScreen() {
             {/* Formulario com animacao */}
             <Animated.View style={[styles.formContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
               <AuthInput 
+                label="E-mail ou CPF"
                 placeholder="E-mail ou CPF" 
                 value={email} 
                 onChangeText={setEmail} 
                 keyboardType="email-address" 
                 autoCapitalize="none" 
                 icon="mail-outline" 
-                translucent={true} 
+                translucent={true}
+                secureTextEntry={false}
+                error=""
               />
               <AuthInput 
+                label="Senha"
                 placeholder="Senha" 
                 value={password} 
                 onChangeText={setPassword} 
                 secureTextEntry 
+                keyboardType="default"
+                autoCapitalize="none"
                 icon="lock-closed-outline" 
-                translucent={true} 
+                translucent={true}
+                error=""
               />
               
               {error && (

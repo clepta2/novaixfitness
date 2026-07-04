@@ -30,7 +30,7 @@ function MacroBar({ label, current, goal, color, icon, delay = 0 }: MacroBarProp
   return (
     <View style={styles.macroRow}>
       <View style={styles.macroHeader}>
-        <Ionicons name={icon} size={14} color={color} />
+        <Ionicons name={icon as any} size={14} color={color} />
         <Text style={styles.macroLabel}>{label}</Text>
         <Text style={styles.macroValue}>{Math.round(current)}/{goal}g</Text>
       </View>

@@ -36,11 +36,11 @@ export default function OnboardingScreen() {
   const handleNext = useCallback(async () => {
     try {
       if (currentStep?.type === 'redirect' && currentStep?.redirectScreen) {
-        await saveOnboarding({ ...data, currentStep: currentStepId });
-        router.push(currentStep.redirectScreen);
+        await saveOnboarding({ ...data, currentStep: currentStepId } as any);
+        router.push(currentStep.redirectScreen as string);
         return;
       }
-      const nextStepId = getNextStep(currentStepId, data);
+      const nextStepId = getNextStep(currentStepId, data) as any;
       if (nextStepId === 'processing') {
         await saveOnboarding(data);
         router.push('/onboarding/processando');

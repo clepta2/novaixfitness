@@ -77,6 +77,19 @@ export const INFO_OPTIONS: InfoOption[] = [
   { icon: 'document-text-outline', label: 'Termos de Uso', route: '/(tabs)/perfil/termos', color: COLORS.textMuted },
   { icon: 'information-circle-outline', label: 'Sobre', version: '1.0.0', color: COLORS.textMuted },
 ];
+export const ACCESSIBILITY_OPTIONS: SettingItem[] = [
+  { key: 'largeText', icon: 'text-outline', label: 'Texto Grande', desc: 'Aumentar tamanho do texto', color: COLORS.info },
+  { key: 'highContrast', icon: 'contrast-outline', label: 'Alto Contraste', desc: 'Aumentar contraste das cores', color: COLORS.warning },
+  { key: 'reduceMotion', icon: 'pause-outline', label: 'Reduzir Movimento', desc: 'Desativar animacoes', color: COLORS.rose },
+  { key: 'screenReader', icon: 'accessibility-outline', label: 'Leitor de Tela', desc: 'Suporte a leitor de tela', color: COLORS.successLight },
+];
+
+export const LANGUAGES = [
+  { key: 'pt-BR', label: 'Portugues (Brasil)', flag: '🇧🇷' },
+  { key: 'en-US', label: 'English', flag: '🇺🇸' },
+  { key: 'es-ES', label: 'Espanol', flag: '🇪🇸' },
+];
+
 export const AI_TABS = [
   { id: 'dados', key: 'chat', label: 'Dados', icon: 'person-outline' },
   { id: 'insights', key: 'plans', label: 'Insights', icon: 'analytics-outline' },

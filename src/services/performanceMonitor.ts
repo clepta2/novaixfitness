@@ -185,3 +185,15 @@ export function getPerformanceSummary(): {
     screensLoaded: screenTimings.size,
   };
 }
+
+// Namespace export for component imports like `import { performanceMonitor } from '...'`
+export const performanceMonitor = {
+  trackOperation,
+  measureOperation,
+  trackError,
+  trackScreenMount,
+  getMetricsForExport,
+  clearOldData,
+  resetAll,
+  getPerformanceSummary,
+};

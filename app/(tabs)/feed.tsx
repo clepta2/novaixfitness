@@ -113,7 +113,7 @@ export default function FeedScreen() {
       >
         <FeedHeader hasNotif={hasNotif} onNotificationsPress={() => { setHasNotif(false); setShowNotifications(true); }} />
         <FeedFilters filters={filters} selected={selectedFilter} onSelect={setSelectedFilter} />
-        <ComposerCard userName={user?.name} onPhoto={() => setShowCreatePost(true)} onVideo={() => setShowCreatePost(true)} onCheckIn={() => setShowCheckIn(true)} />
+        <ComposerCard userName={(user as any)?.name || profile?.name} onPhoto={() => setShowCreatePost(true)} onVideo={() => setShowCreatePost(true)} onCheckIn={() => setShowCheckIn(true)} />
         <StoryRing currentUserId={user?.id || ''} currentUserAvatar={profile?.avatar_url} currentUserName={profile?.name} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />
         <ReelsBar reels={feedReels} onPressReel={(i) => { setActiveReelIndex(i); setShowReelsModal(true); }} />
         <DuelsSection />
@@ -124,7 +124,7 @@ export default function FeedScreen() {
             <PostSkeleton /><PostSkeleton /><PostSkeleton />
           </View>
         ) : showEmpty ? (
-          <FeedEmptyState hasFilter={selectedFilter !== t('common.all')} />
+          <FeedEmptyState title={t('library.noWorkouts')} message={selectedFilter !== t('common.all') ? t('library.noWorkoutsMessage') : t('social.feedEmpty')} />
         ) : (
           filteredPosts.map((post, index) => (
             <View key={post.id} style={[styles.postWrapper, { opacity: Math.min(1, 0.8 + index * 0.05) }]}>

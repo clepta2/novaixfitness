@@ -11,7 +11,7 @@ import { useChatCoach } from '../src/hooks/useChatCoach';
 export default function ChatCoachScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const { messages, inputText, setInputText, loading, historyLoaded, flatListRef, handleSend, handleClearChat } = useChatCoach(user, router);
+  const { messages, inputText, setInputText, loading, historyLoaded, flatListRef, handleSend, handleClearChat } = useChatCoach(user as any, router);
 
   if (!historyLoaded) {
     return (
@@ -27,7 +27,7 @@ export default function ChatCoachScreen() {
       <ChatHeader onBack={() => router.back()} onClear={handleClearChat} />
 
       <FlatList
-        ref={flatListRef}
+        ref={flatListRef as any}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MessageBubble message={item} />}

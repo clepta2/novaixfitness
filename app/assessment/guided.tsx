@@ -26,7 +26,7 @@ export default function GuidedAssessmentScreen() {
         <Ionicons name="checkmark-circle" size={80} color={COLORS.primary} />
         <Text style={styles.doneTitle}>AVALIAÇÃO COMPLETA!</Text>
         <Text style={styles.doneScore}>Resultado: {Object.values(results).reduce((s, v) => s + v, 0)} pontos</Text>
-        {prevResults && <Text style={styles.doneCompare}>Compare com: {prevResults.overall_score || 0} pontos (mês anterior)</Text>}
+        {prevResults && <Text style={styles.doneCompare}>Compare com: {(prevResults as any).overall_score || 0} pontos (mês anterior)</Text>}
         <TouchableOpacity accessibilityLabel="Finalizar avaliação" accessibilityRole="button" style={styles.btn} onPress={() => router.back()}><Text style={styles.btnText}>FINALIZAR</Text></TouchableOpacity>
       </View>
       </ErrorBoundary>
@@ -59,9 +59,9 @@ export default function GuidedAssessmentScreen() {
           <View style={styles.repsArea}>
             <Text style={styles.repsLabel}>Repetições:</Text>
             <View style={styles.repsRow}>
-              <TouchableOpacity accessibilityLabel="Diminuir repetição" accessibilityRole="button" style={styles.repsBtn} onPress={() => setInputValue(String(Math.max(0, parseInt(inputValue || 0) - 1)))}><Ionicons name="remove" size={20} color={COLORS.textMuted} /></TouchableOpacity>
+              <TouchableOpacity accessibilityLabel="Diminuir repetição" accessibilityRole="button" style={styles.repsBtn} onPress={() => setInputValue(String(Math.max(0, parseInt(String(inputValue || 0)) - 1)))}><Ionicons name="remove" size={20} color={COLORS.textMuted} /></TouchableOpacity>
               <Text style={styles.repsVal}>{inputValue || '0'}</Text>
-              <TouchableOpacity accessibilityLabel="Aumentar repetição" accessibilityRole="button" style={styles.repsBtn} onPress={() => setInputValue(String(parseInt(inputValue || 0) + 1))}><Ionicons name="add" size={20} color={COLORS.textMuted} /></TouchableOpacity>
+              <TouchableOpacity accessibilityLabel="Aumentar repetição" accessibilityRole="button" style={styles.repsBtn} onPress={() => setInputValue(String(parseInt(String(inputValue || 0)) + 1))}><Ionicons name="add" size={20} color={COLORS.textMuted} /></TouchableOpacity>
             </View>
           </View>
         )}
@@ -69,7 +69,7 @@ export default function GuidedAssessmentScreen() {
         {prevResults && (
           <View style={styles.prevBox}>
             <Text style={styles.prevLabel}>MÊS ANTERIOR:</Text>
-            <Text style={styles.prevVal}>{prevResults[`${test.id}_result`] || '—'} {test.unit}</Text>
+            <Text style={styles.prevVal}>{(prevResults as any)[`${test.id}_result`] || '—'} {test.unit}</Text>
           </View>
         )}
       </View>

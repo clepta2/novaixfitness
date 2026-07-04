@@ -69,6 +69,7 @@ export default function MealTimer() {
           data: { mealId: meal.id },
         },
         trigger: {
+          type: 'calendar' as const,
           hour: meal.hour,
           minute: meal.min,
           repeats: true,

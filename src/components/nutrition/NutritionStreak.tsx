@@ -61,7 +61,7 @@ export default function NutritionStreak({ userId }) {
         } else {
           const curr = new Date(uniqueDays[i]);
           const prev = new Date(uniqueDays[i + 1]);
-          const diff = (prev - curr) / 86400000;
+          const diff = (prev.getTime() - curr.getTime()) / 86400000;
           if (diff === 1) {
             current++;
           } else {

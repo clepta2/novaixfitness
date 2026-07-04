@@ -31,7 +31,7 @@ const PRESETS = [
 const LEVEL_COLORS: Record<string, string> = { beginner: COLORS.success, intermediate: COLORS.attention, advanced: COLORS.error };
 
 export default function ExerciseConfigurator({ exercise, config, onChange, onRemove }: ExerciseConfiguratorProps): React.ReactElement {
-  const cfg: ExerciseConfig = config || { sets: 4, reps: '10-12', rest: 60, weight: '', notes: '' };
+  const cfg: ExerciseConfig = (config || { sets: 4, reps: '10-12', rest: 60, weight: '', notes: '' }) as ExerciseConfig;
   const update = (k: keyof ExerciseConfig, v: string | number): void => onChange?.({ ...cfg, [k]: v });
   const levelColor = LEVEL_COLORS[exercise?.level || ''] || COLORS.textMuted;
 

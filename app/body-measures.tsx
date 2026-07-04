@@ -1,4 +1,4 @@
-﻿// app/body-measures.tsx
+// app/body-measures.tsx
 // Medidas corporais com graficos animados - NOVAIX FITNESS
 
 import { useState, useEffect, useMemo , useRef} from 'react';
@@ -120,7 +120,7 @@ export default function BodyMeasuresScreen() {
         </Animated.View>
       </ScrollView>
 
-      {showForm && <MeasurementForm form={form} setForm={setForm} onSave={handleSave} saving={saving} onClose={() => setShowForm(false)} />}
+      {showForm && <MeasurementForm form={form} onChangeForm={setForm} onSave={handleSave} saving={saving} />}
     </ErrorBoundary>
   );
 }

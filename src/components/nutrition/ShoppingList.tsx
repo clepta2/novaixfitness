@@ -52,7 +52,7 @@ export default function ShoppingList({ mealPlan }) {
     const result = [];
     Object.entries(grouped).forEach(([category, catItems]) => {
       result.push({ type: 'header', category, id: `header-${category}` });
-      catItems.forEach(item => {
+      (catItems as any[]).forEach(item => {
         result.push({ type: 'item', ...item, id: `item-${item.index}` });
       });
     });

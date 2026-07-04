@@ -60,7 +60,7 @@ export default memo(function WorkoutHeaderDetail({ workout, isFavorite, isOfflin
       <View style={styles.titleSection}>
         <View style={styles.titleRow}>
           <Text style={styles.title} numberOfLines={2}>{workout?.title || workout?.name}</Text>
-          {isOffline && <Badge value="Offline" variant="success" size="sm" />}
+          {isOffline && <Badge value="Offline" variant="success" size="sm" style={undefined} />}
         </View>
         <Text style={styles.description}>{workout?.description || 'Treino completo para evoluir seu físico.'}</Text>
         <View style={styles.tagRow}>

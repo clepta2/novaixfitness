@@ -100,7 +100,7 @@ export default function FoodSwaps() {
             <View style={[styles.categoryHeader, { borderLeftColor: COLOR_MAP[cat] || COLORS.primary }]}>
               <Text style={[styles.categoryTitle, { color: COLOR_MAP[cat] || COLORS.primary }]}>{cat}</Text>
             </View>
-            {catSwaps.map((swap, i) => <SwapCard key={i} swap={swap} />)}
+            {(catSwaps as any[]).map((swap, i) => <SwapCard key={i} swap={swap} />)}
           </View>
         ))}
       </ScrollView>

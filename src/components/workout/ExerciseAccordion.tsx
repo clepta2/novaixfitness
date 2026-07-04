@@ -87,7 +87,7 @@ function ExerciseAccordionInner({ exercise, isOpen, onToggle, index = 0 }: Exerc
             <Text style={styles.videoLabel}>Assistir execução</Text>
           </TouchableOpacity>
 
-          <ExerciseStepCarousel steps={steps.map((s: string) => ({ text: s }))} />
+          <ExerciseStepCarousel steps={steps.map((s: any) => ({ text: s }))} />
           <LoadHistory exerciseName={exercise.name} />
 
           {tips && tips.length > 0 && (

@@ -22,7 +22,7 @@ export default memo(function ChallengesList({ userId }: Props) {
 
   const loadChallenges = async () => {
     try {
-      const content = await getNutritionContent();
+      const content = await getNutritionContent('challenges');
       const weekChallenges = (content?.challenges || []).slice(0, 5);
       if (userId) {
         const { data: logs } = await supabase
@@ -68,7 +68,7 @@ export default memo(function ChallengesList({ userId }: Props) {
           <ChallengeCard key={c.id || i} challenge={c} index={i} onPress={setSelectedChallenge} onShare={handleShare} />
         ))}
       </ScrollView>
-      <ChallengeModal visible={!!selectedChallenge} challenge={selectedChallenge} onComplete={handleComplete} onClose={() => setSelectedChallenge(null)} />
+      <ChallengeModal visible={!!selectedChallenge} challenge={selectedChallenge} onClose={() => setSelectedChallenge(null)} onJoin={() => {}} />
     </View>
   );
 });

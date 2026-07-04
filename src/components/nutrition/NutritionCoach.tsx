@@ -24,7 +24,7 @@ export default function NutritionCoach({ userId, userWeight = 70, userGoal = 'ma
   const [loading, setLoading] = useState(false);
   const flatListRef = useRef(null);
 
-  const handleSend = async (text) => {
+  const handleSend = async (text = '') => {
     const msg = (text || input).trim();
     if (!msg || loading) return;
 

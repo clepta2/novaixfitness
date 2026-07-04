@@ -1,4 +1,4 @@
-﻿// app/paywall.tsx
+// app/paywall.tsx
 // Paywall com melhorias visuais e animacoes - NOVAIX FITNESS
 
 import { useState, useMemo, useEffect , useRef} from 'react';
@@ -107,7 +107,7 @@ export default function PaywallScreen() {
           {/* Planos */}
           <View style={styles.plans}>
             {Object.values(PLANS).map((plan) => (
-              <PlanCard key={plan.id} plan={plan} isSelected={selected === plan.id} onSelect={setSelected} isAnnual={isAnnual} />
+              <PlanCard key={plan.id} plan={plan} isSelected={selected === plan.id} onSelect={setSelected} />
             ))}
           </View>
 

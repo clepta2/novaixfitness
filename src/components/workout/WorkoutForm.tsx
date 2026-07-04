@@ -67,7 +67,7 @@ export default function WorkoutForm({ onSave, existingWorkout }: WorkoutFormProp
   const flatData: FlatDataItem[] = [
     { type: 'basicInfo', id: 'basicInfo' },
     { type: 'exerciseHeader', id: 'exerciseHeader' },
-    ...form.exercises.map((ex: Exercise, i: number) => ({ type: 'exercise', exercise: ex, index: i, id: `ex-${i}` })),
+    ...form.exercises.map((ex: any, i: number) => ({ type: 'exercise', exercise: ex, index: i, id: `ex-${i}` })),
     ...(form.showExerciseForm ? [{ type: 'exerciseForm', id: 'exerciseForm' }] : []),
     { type: 'saveBtn', id: 'saveBtn' },
   ];
@@ -102,8 +102,8 @@ export default function WorkoutForm({ onSave, existingWorkout }: WorkoutFormProp
         return (
           <View style={styles.exerciseFormWrapper}>
             <ExerciseForm
-              exercise={form.editingExercise !== null ? form.exercises[form.editingExercise] : null}
-              onSave={form.addExercise}
+              exercise={form.editingExercise !== null ? form.exercises[form.editingExercise] as any : null}
+              onSave={form.addExercise as any}
               onCancel={form.closeExerciseForm}
             />
           </View>

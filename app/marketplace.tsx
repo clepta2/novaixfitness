@@ -1,4 +1,4 @@
-﻿
+
 // app/marketplace.tsx
 // Marketplace com cards animados - NOVAIX FITNESS
 
@@ -29,7 +29,7 @@ export default function MarketplaceScreen() {
   const [_hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [favorites, setFavorites] = useState(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentSearches, setRecentSearches] = useState([]);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -50,7 +50,7 @@ export default function MarketplaceScreen() {
     const newOffset = reset ? 0 : offset;
     if (!reset) setLoading(true);
     try {
-      const params = { limit: PAGE_SIZE, offset: newOffset };
+      const params: { limit: number; offset: number; search?: string; category?: string } = { limit: PAGE_SIZE, offset: newOffset };
       if (debouncedSearch) params.search = debouncedSearch;
       if (selectedCategory) params.category = selectedCategory;
       const data = await getProducts(params);
@@ -127,7 +127,6 @@ export default function MarketplaceScreen() {
             placeholder="Buscar produtos..."
             value={search}
             onChangeText={handleSearch}
-            onClear={() => setSearch('')}
           />
         </View>
 
@@ -141,11 +140,11 @@ export default function MarketplaceScreen() {
           </TouchableOpacity>
           {MARKETPLACE_CATEGORIES.slice(0, 4).map((cat) => (
             <TouchableOpacity
-              key={cat.id}
-              style={[styles.categoryChip, selectedCategory === cat.id && styles.categoryChipActive]}
-              onPress={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
+              key={cat.slug}
+              style={[styles.categoryChip, selectedCategory === cat.slug && styles.categoryChipActive]}
+              onPress={() => setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)}
             >
-              <Text style={[styles.categoryText, selectedCategory === cat.id && styles.categoryTextActive]}>{cat.label}</Text>
+              <Text style={[styles.categoryText, selectedCategory === cat.slug && styles.categoryTextActive]}>{cat.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -161,7 +160,7 @@ export default function MarketplaceScreen() {
             {featured.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Destaques</Text>
-                <FeaturedProducts products={featured} />
+                <FeaturedProducts products={featured} onPress={() => {}} />
               </View>
             )}
 
@@ -171,10 +170,11 @@ export default function MarketplaceScreen() {
               {loading ? (
                 <Loading variant="dots" />
               ) : products.length === 0 ? (
-                <EmptyState icon="bag-outline" title="Nenhum produto" message="Tente outra busca ou categoria." />
+                <EmptyState icon="bag-outline" title="Nenhum produto" description="Tente outra busca ou categoria." />
               ) : (
                 <ProductList
                   products={products}
+                  onProductPress={() => {}}
                   favorites={favorites}
                   onToggleFavorite={handleToggleFavorite}
                   loading={loading}

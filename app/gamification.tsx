@@ -97,7 +97,7 @@ function GamificationContent() {
       </Animated.View>
 
       <View style={styles.section}>
-        <LevelCard xp={data?.total_xp || data?.totalXP || 0} />
+        <LevelCard xp={Number(data?.total_xp || data?.totalXP || 0)} />
       </View>
 
       <View style={styles.section}>
@@ -105,7 +105,7 @@ function GamificationContent() {
       </View>
 
       <View style={styles.section}>
-        <AchievementGrid unlockedIds={unlockedIds} />
+        <AchievementGrid unlockedIds={unlockedIds} onAchievementPress={() => {}} />
       </View>
 
       <View style={styles.section}>

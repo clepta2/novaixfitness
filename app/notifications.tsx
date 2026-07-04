@@ -137,9 +137,10 @@ export default function NotificationsScreen() {
           <NotificationConfig
             prefs={prefs}
             reminderTime={reminderTime}
-            setReminderTime={setReminderTime}
+            onReminderTimeChange={setReminderTime}
             pushEnabled={pushEnabled}
             quietHours={quietHours}
+            notifGroups={notifGroups}
             onNotifToggle={handleNotifToggle}
             onPushToggle={handlePushToggle}
           />

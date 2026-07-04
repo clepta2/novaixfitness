@@ -12,10 +12,10 @@ export default function ChangelogScreen() {
   return (
     <ErrorBoundary screenName="Changelog">
       <ScrollView style={layout.screen} contentContainerStyle={styles.container}>
-        <View style={styles.hero}>
+        <View style={styles.hero as any}>
           <Ionicons name="sparkles" size={32} color={COLORS.primary} />
-          <Text style={styles.title}>O QUE HÁ DE NOVO?</Text>
-          <Text style={styles.subtitle}>
+          <Text style={styles.title as any}>O QUE HÁ DE NOVO?</Text>
+          <Text style={styles.subtitle as any}>
             Acompanhe as novidades, melhorias e correções do {BRAND_NAME}
           </Text>
         </View>

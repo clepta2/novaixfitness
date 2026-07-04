@@ -11,7 +11,7 @@ type Props = {
 };
 
 function Leaderboard({ userId }: Props) {
-  const [leaders, setLeaders] = useState([]);
+  const [leaders, setLeaders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('all');
 
@@ -33,11 +33,11 @@ function Leaderboard({ userId }: Props) {
           .order('count', { ascending: false });
       }
 
-      const { data } = await query;
+      const { data } = await query as any;
 
       if (period === 'week' && data) {
         const userCounts = {};
-        data.forEach(w => { userCounts[w.user_id] = (userCounts[w.user_id] || 0) + 1; });
+        data.forEach(w => { userCounts[(w as any).user_id] = (userCounts[(w as any).user_id] || 0) + 1; });
         const sorted = Object.entries(userCounts)
           .sort(([, a], [, b]) => b - a)
           .slice(0, 50);
@@ -111,7 +111,7 @@ function Leaderboard({ userId }: Props) {
           data={leaders}
           keyExtractor={(item, i) => `${item.rank}-${i}`}
           renderItem={({ item, index }) => (
-            <RankItem item={item} index={index} isCurrentUser={item.id === userId} />
+            <RankItem item={item} index={index} isCurrentUser={(item as any).id === userId} />
           )}
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}

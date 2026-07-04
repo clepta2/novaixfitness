@@ -24,7 +24,7 @@ export function FlameIcon({ level, size = 24 }: any) {
 
   return (
     <Animated.View style={{ transform: [{ scale: pulseAnim }], width: 48, height: 48, borderRadius: 24, backgroundColor: COLORS.primary + '15', justifyContent: 'center', alignItems: 'center' }}>
-      <Ionicons name={config.icon as any} size={size} color={config.color} />
+      <Ionicons name={config.icon as any} size={size} color={config.color as any} />
     </Animated.View>
   );
 }

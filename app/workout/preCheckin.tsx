@@ -33,7 +33,7 @@ export default function PreCheckinScreen() {
 
   const handleFinish = async () => {
     try {
-      await saveOnboarding({ ...onboarding, preCheckin: { mood, notes, support: selectedSupport, timestamp: new Date().toISOString() } });
+      await saveOnboarding({ ...onboarding, preCheckin: { mood, notes, support: selectedSupport, timestamp: new Date().toISOString() } } as any);
       router.replace('/(tabs)/home');
     } catch (error) {
       Alert.alert('Erro', formatUserError(error));

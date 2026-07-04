@@ -1,4 +1,4 @@
-﻿// app/(tabs)/library.tsx
+// app/(tabs)/library.tsx
 // Biblioteca de Treinos com melhorias visuais - NOVAIX FITNESS
 
 
@@ -98,7 +98,7 @@ export default function LibraryScreen() {
             placeholder={t('library.search')}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onClear={() => setSearchQuery('')}
+            onSubmit={() => {}}
           />
         </Animated.View>
 
@@ -139,18 +139,21 @@ export default function LibraryScreen() {
           <EmptyState
             icon="barbell-outline"
             title={t('library.noWorkouts')}
-            message={t('library.noWorkoutsMessage')}
+            description={t('library.noWorkoutsMessage')}
+            actionLabel={undefined}
+            onAction={undefined}
+            iconColor={COLORS.textMuted}
           />
         ) : (
           <View style={styles.workoutList}>
             {filteredWorkouts.map((workout: WorkoutItem, index: number) => (
               <View key={workout.id} style={[styles.workoutItem, { opacity: Math.min(1, 0.5 + index * 0.1) }]}>
                 <WorkoutCard
-                  workout={workout}
+                  workout={workout as any}
                   onPress={() => handleWorkoutPress(workout)}
-                  onFavorite={() => toggleFavorite(workout.id)}
-                  isFavorite={favorites.includes(workout.id)}
-                  isOfflineCached={cachedIds?.has?.(workout.id)}
+                  onFavorite={() => toggleFavorite(workout.id as string)}
+                  isFavorite={favorites.includes(workout.id as string)}
+                  isOfflineCached={cachedIds?.has?.(workout.id as string)}
                 />
               </View>
             ))}
@@ -160,7 +163,7 @@ export default function LibraryScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      <FilterModal visible={showFilters} onClose={() => setShowFilters(false)} />
+      <FilterModal visible={showFilters} onClose={() => setShowFilters(false)} level="all" setLevel={() => {}} duration="all" setDuration={() => {}} access="all" setAccess={() => {}} equipment="all" setEquipment={() => {}} category={selectedCategory || 'all'} setCategory={(v) => setSelectedCategory(v)} muscle="all" setMuscle={() => {}} resultsCount={filteredWorkouts.length} onClearAll={() => {}} />
     </ErrorBoundary>
   );
 }

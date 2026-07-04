@@ -11,7 +11,8 @@ import { getLiveById, joinLive, endLive } from '../src/services/liveWorkouts';
 
 export default function LiveRoomScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams();
+  const { id: rawId } = useLocalSearchParams();
+  const id = rawId as string;
   const { user } = useAuth();
   const [live, setLive] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,10 +20,10 @@ export default function LiveRoomScreen() {
   useEffect(() => { if (id) loadLive(); }, [id]);
 
   const loadLive = async () => {
-    const data = await getLiveById(id);
+    const data = await getLiveById(id as string);
     setLive(data);
     if (data && data.status !== 'ended') {
-      await joinLive(id, user.id);
+      await joinLive(id as string, user.id);
     }
     setLoading(false);
   };
@@ -31,7 +32,7 @@ export default function LiveRoomScreen() {
     Alert.alert('Encerrar Live', 'Tem certeza que deseja encerrar esta live?', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Encerrar', style: 'destructive', onPress: async () => {
-        await endLive(id);
+        await endLive(id as string);
         router.back();
       }},
     ]);

@@ -37,7 +37,7 @@ function MacroBar({ label, current, goal, color, icon, delay = 0 }) {
 }
 
 export default function NutritionTracker({ userId, weight = 70, goal = 'manter' }) {
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const calorieAnim = useRef(new Animated.Value(0)).current;
 

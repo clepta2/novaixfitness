@@ -79,7 +79,7 @@ export default function WorkoutStreak({ userId }: Props) {
       for (let i = uniqueDays.length - 1; i >= 0; i--) {
         if (i === uniqueDays.length - 1) { curr = 1; }
         else {
-          const diff = (new Date(uniqueDays[i + 1]) - new Date(uniqueDays[i])) / 86400000;
+          const diff = (new Date(uniqueDays[i + 1]).getTime() - new Date(uniqueDays[i]).getTime()) / 86400000;
           if (diff === 1) curr++;
           else { best = Math.max(best, curr); curr = 1; }
         }

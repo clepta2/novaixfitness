@@ -71,7 +71,7 @@ interface ExerciseLibraryProps {
 }
 
 export default function ExerciseLibrary({ onSelect }: ExerciseLibraryProps): React.ReactElement {
-  const [exercises, setExercises] = useState<Exercise[]>(EXERCISE_FALLBACK);
+  const [exercises, setExercises] = useState<Exercise[]>(EXERCISE_FALLBACK as any);
   const [search, setSearch] = useState<string>('');
   const [selectedMuscle, setSelectedMuscle] = useState<string>('all');
   const [selectedEquipment, setSelectedEquipment] = useState<string>('Todos');

@@ -22,7 +22,7 @@ export default function ChangelogItem({ version, date, changes }) {
           const config = TYPE_CONFIG[change.type];
           return (
             <View key={i} style={styles.changeRow}>
-              <Ionicons name={config.icon} size={18} color={config.color} />
+              <Ionicons name={config.icon as any} size={18} color={config.color} />
               <View style={styles.changeTextWrap}>
                 <Text style={[styles.changeType, { color: config.color }]}>{config.label}</Text>
                 <Text style={styles.changeText}>{change.text}</Text>

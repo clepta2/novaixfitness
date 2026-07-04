@@ -107,3 +107,13 @@ export function classifyHttpError(status: number): {
   if (status >= 500) return { message: 'Erro no servidor. Tente novamente.', severity: 'high', retryable: true };
   return { message: `Erro HTTP ${status}`, severity: 'medium', retryable: false };
 }
+
+// Namespace export for component imports like `import { errorTracker } from '...'`
+export const errorTracker = {
+  trackError,
+  getRecentErrors,
+  clearErrors,
+  classifySupabaseError,
+  classifyHttpError,
+  setErrorReporter,
+};

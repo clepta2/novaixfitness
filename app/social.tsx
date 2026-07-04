@@ -69,7 +69,7 @@ export default function SocialScreen() {
         <SocialHub badgeCounts={{ feed: 2, challenges: 1 }} refreshControl={<RefreshControl refreshing={feed.refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} />}>
           {feed.stories.length > 0 && <StoryRing currentUserId={user?.id} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />}
           <QuickSocialActions onPress={handleQuickAction} />
-          <SocialFeed posts={feed.posts} loading={loading} userId={user?.id} onLike={feed.handleLike} onComment={feed.handleComment} />
+          <SocialFeed posts={feed.posts as any} loading={loading} userId={user?.id} onLike={feed.handleLike} onComment={feed.handleComment} />
           <WorkoutGroups currentUserId={user?.id} onSelectGroup={(g) => router.push({ pathname: '/(tabs)/group', params: { id: g.id } })} />
           <ChallengesList userId={user?.id} />
           <View style={{ marginTop: SPACING.lg }} />

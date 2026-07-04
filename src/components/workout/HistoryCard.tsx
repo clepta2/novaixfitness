@@ -33,7 +33,7 @@ function formatDate(dateStr?: string): string {
   if (!dateStr) return '';
   const date = new Date(dateStr);
   if (isToday(dateStr)) return `Hoje, ${formatTimeBR(dateStr)}`;
-  if (getDaysBetween(dateStr, new Date()) === 1) return `Ontem, ${formatTimeBR(dateStr)}`;
+  if (getDaysBetween(dateStr, new Date().toISOString()) === 1) return `Ontem, ${formatTimeBR(dateStr)}`;
   return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 

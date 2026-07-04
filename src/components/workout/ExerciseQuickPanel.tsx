@@ -82,7 +82,7 @@ function ExerciseQuickPanel({ exercise }: any) {
         {activeTab === 'tips' && <CarouselSlider items={tips} color={COLORS.success} icon="checkmark-circle" />}
         {activeTab === 'errors' && <CarouselSlider items={mistakes} color={COLORS.error} icon="close-circle" />}
         {activeTab === 'video' && (
-          <VideoPreview videoId={exercise?.videoId || exercise?.video_id || 'dQw4w9WgXcQ'} title={exercise?.name || 'Execução'} />
+          <VideoPreview videoId={exercise?.videoId || exercise?.video_id || 'dQw4w9WgXcQ'} showVideo={true} onToggle={() => {}} />
         )}
       </View>
     </View>

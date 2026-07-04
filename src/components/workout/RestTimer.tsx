@@ -73,7 +73,7 @@ export default function RestTimer({ timeRemaining, totalTime, nextExercise, curr
         <Text style={styles.headerTitle}>DESCANSO</Text>
       </View>
 
-      <RestRing timeRemaining={timeRemaining} totalTime={totalTime} timerColor={timerColor} progress={progress} pulseAnim={pulseAnim} />
+      <RestRing timeRemaining={timeRemaining} totalTime={totalTime} pulseAnim={pulseAnim} />
 
       <View style={styles.timeControls}>
         <TouchableOpacity style={styles.timeBtn} onPress={onSubtractTime} accessibilityLabel="Subtrair 15 segundos" accessibilityRole="button">
@@ -103,7 +103,7 @@ export default function RestTimer({ timeRemaining, totalTime, nextExercise, curr
         </View>
       )}
 
-      <NextExercisePreview exercise={nextExercise} currentSet={currentSet} totalSets={totalSets} />
+      <NextExercisePreview exercise={nextExercise as any} currentSet={currentSet} totalSets={totalSets} />
 
       <TouchableOpacity style={styles.skipBtn} onPress={onSkip} accessibilityLabel="Iniciar agora" accessibilityRole="button">
         <Ionicons name="play-skip-forward" size={18} color={COLORS.background} />

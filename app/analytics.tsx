@@ -1,4 +1,4 @@
-﻿
+
 // app/analytics.tsx
 // Dashboard de Analytics com animacoes - NOVAIX FITNESS
 
@@ -110,11 +110,11 @@ export default function AnalyticsScreen() {
             <ComparisonCard comparison={analytics?.comparison} />
             <StatsGrid analytics={analytics} />
             <InsightsRow bestDay={analytics?.bestDay} bestHour={analytics?.bestHour} />
-            <FrequencyChart data={frequency} />
-            <CategoryChart data={analytics?.byCategory} />
-            <DayOfWeekChart data={analytics?.byDayOfWeek} />
-            <MonthlyChart data={monthlyData} />
-            <HourChart data={analytics?.byHour} />
+            <FrequencyChart data={frequency} onPress={() => {}} />
+            <CategoryChart data={analytics?.byCategory} onPress={() => {}} />
+            <DayOfWeekChart data={analytics?.byDayOfWeek} onPress={() => {}} />
+            <MonthlyChart data={monthlyData} onPress={() => {}} />
+            <HourChart data={analytics?.byHour} onPress={() => {}} />
           </Animated.View>
 
           <View style={{ height: 40 }} />

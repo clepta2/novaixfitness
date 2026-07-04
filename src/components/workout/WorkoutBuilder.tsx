@@ -114,7 +114,7 @@ export default function WorkoutBuilder({ onSave, existingWorkout }: WorkoutBuild
           windowSize={5}
         data={selectedExercises}
         renderItem={({ item, index }) => (
-          <ExerciseSlot exercise={item} index={index} onRemove={removeExercise} onUpdate={updateExercise} />
+          <ExerciseSlot exercise={item as any} index={index} onRemove={removeExercise} onUpdate={updateExercise} />
         )}
         keyExtractor={(_, i) => String(i)}
         style={styles.exercisesList}
@@ -131,7 +131,7 @@ export default function WorkoutBuilder({ onSave, existingWorkout }: WorkoutBuild
         <Text style={styles.saveText}>SALVAR TREINO</Text>
       </TouchableOpacity>
 
-      {showPicker && <ExercisePicker onSelect={addExercise} onClose={() => setShowPicker(false)} />}
+      {showPicker && <ExercisePicker onSelect={addExercise as any} onClose={() => setShowPicker(false)} />}
     </View>
   );
 }

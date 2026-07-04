@@ -21,6 +21,7 @@ export { default as DirectChatDrawer } from '../social/DirectChatDrawer';
 export { default as ReferralLeaderboard } from '../social/ReferralLeaderboard';
 export { default as LiveWorkoutView } from '../social/LiveWorkoutView';
 export { PostSkeleton } from '../social/FeedSkeleton';
+export { default as ActiveDuelCard } from '../social/ActiveDuelCard';
 export { default as FeedHeader } from '../social/FeedHeader';
 export { default as FeedFilters } from '../social/FeedFilters';
 export { default as StoryRing } from '../social/StoryRing';

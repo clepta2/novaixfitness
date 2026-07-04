@@ -112,7 +112,7 @@ export default function WorkoutSummary({
             </View>
           )}
 
-          <WorkoutAchievements achievements={achievements} />
+          <WorkoutAchievements achievements={achievements as any} />
           <WorkoutComparison current={{ duration, exercises: exercisesCompleted, sets: setsCompleted }} previous={previousWorkout} />
 
           {muscleGroups?.length > 0 && (

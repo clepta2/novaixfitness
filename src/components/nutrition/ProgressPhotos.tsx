@@ -92,7 +92,7 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
   useEffect(() => { loadData(); }, [loadData]);
 
   const handleSave = async () => {
-    const hasAny = Object.values(values).some(v => v && v.trim());
+    const hasAny = Object.values(values).some(v => v && (v as string).trim());
     if (!hasAny) {
       Alert.alert('Aviso', 'Preencha pelo menos uma medida.');
       return;
@@ -108,7 +108,7 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
         hip: parseFloat(values.hip) || null,
         arm: parseFloat(values.arm) || null,
         recorded_at: new Date().toISOString(),
-      });
+      } as any);
       Alert.alert('Sucesso', 'Medidas salvas!');
       loadData();
     } catch (err) {

@@ -21,7 +21,7 @@ export default function MarketplaceFavoritesScreen() {
   const mounted = useMountedRef();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   const loadFavorites = useCallback(async () => {
     if (!user?.id) return;

@@ -26,25 +26,25 @@ interface FilterSection {
 interface FilterModalProps {
   visible: boolean;
   onClose: () => void;
-  level: string;
-  setLevel: (value: string) => void;
-  duration: string;
-  setDuration: (value: string) => void;
-  access: string;
-  setAccess: (value: string) => void;
-  equipment: string;
-  setEquipment: (value: string) => void;
-  category: string;
-  setCategory: (value: string) => void;
-  muscle: string;
-  setMuscle: (value: string) => void;
-  resultsCount: number;
-  onClearAll: () => void;
+  level?: string;
+  setLevel?: (value: string) => void;
+  duration?: string;
+  setDuration?: (value: string) => void;
+  access?: string;
+  setAccess?: (value: string) => void;
+  equipment?: string;
+  setEquipment?: (value: string) => void;
+  category?: string;
+  setCategory?: (value: string) => void;
+  muscle?: string;
+  setMuscle?: (value: string) => void;
+  resultsCount?: number;
+  onClearAll?: () => void;
 }
 
 function FilterModal({
-  visible, onClose, level, setLevel, duration, setDuration, access, setAccess,
-  equipment, setEquipment, category, setCategory, muscle, setMuscle, resultsCount, onClearAll
+  visible, onClose, level = 'all', setLevel = () => {}, duration = 'all', setDuration = () => {}, access = 'all', setAccess = () => {},
+  equipment = 'all', setEquipment = () => {}, category = 'all', setCategory = () => {}, muscle = 'all', setMuscle = () => {}, resultsCount = 0, onClearAll = () => {}
 }: FilterModalProps): React.ReactElement {
   const activeFilters = [level, duration, access, equipment, category, muscle].filter(f => f && f !== 'all').length;
 
