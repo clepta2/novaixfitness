@@ -51,10 +51,11 @@ export async function addXP(userId: string, type: string, amount?: number): Prom
     const currentXP = profile?.total_xp || 0;
     const newXP = currentXP + xpGain;
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('profiles')
       .update({ total_xp: newXP })
       .eq('id', userId);
+    if (updateError) throw updateError;
 
     return newXP;
   } catch (err) {

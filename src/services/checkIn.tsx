@@ -38,7 +38,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
       .eq('user_id', userId)
       .order('check_in_date', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     let streakDay = 1;
     if (lastCheckIn) {
