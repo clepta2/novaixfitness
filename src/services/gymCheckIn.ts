@@ -16,7 +16,9 @@ export async function checkIn(userId, gymName) {
 
   if (error) throw error;
 
-  await supabase.from(TABLES.PROFILES).update({ xp: supabase.rpc ? undefined : undefined }).eq('id', userId);
+  const xpGain = 5;
+  const { data: profile } = await supabase.from(TABLES.PROFILES).select('total_xp').eq('id', userId).single();
+  await supabase.from(TABLES.PROFILES).update({ total_xp: (profile?.total_xp || 0) + xpGain }).eq('id', userId);
 
   return data;
 }
