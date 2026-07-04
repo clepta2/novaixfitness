@@ -5,6 +5,18 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import ShareWorkoutCard from '../ShareWorkoutCard';
 
+jest.mock('../../context/ThemeContext', () => ({
+  useColors: () => ({
+    primary: '#CCFF00',
+    background: '#12161A',
+    surface: '#1E232A',
+    textTitle: '#FFFFFF',
+    textMuted: '#8892A0',
+    textDescription: '#B0B8C4',
+    border: '#2A3040',
+  }),
+}));
+
 const defaultProps = {
   workoutName: 'Treino Peito',
   duration: 45,

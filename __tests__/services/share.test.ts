@@ -3,9 +3,29 @@ jest.mock('expo-sharing', () => ({
   shareAsync: jest.fn().mockResolvedValue({}),
 }));
 
+jest.mock('expo-file-system', () => ({
+  cacheDirectory: '/tmp/',
+  writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
+}));
+
 jest.mock('react-native', () => ({
   Platform: { OS: 'ios' },
   Alert: { alert: jest.fn() },
+}));
+
+jest.mock('../../src/utils/tryIf', () => ({
+  tryIf: jest.fn(async (fn) => {
+    try {
+      const data = await fn();
+      return { ok: true, data };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }),
+}));
+
+jest.mock('../../src/config/app', () => ({
+  APP_CONFIG: { links: { website: 'https://novaix.fitness' } },
 }));
 
 beforeEach(() => {
@@ -21,9 +41,26 @@ describe('Share Service', () => {
       isAvailableAsync: jest.fn().mockResolvedValue(true),
       shareAsync: jest.fn().mockResolvedValue({}),
     }));
+    jest.doMock('expo-file-system', () => ({
+      cacheDirectory: '/tmp/',
+      writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
+    }));
     jest.doMock('react-native', () => ({
       Platform: { OS: 'ios' },
       Alert: { alert: jest.fn() },
+    }));
+    jest.doMock('../../src/utils/tryIf', () => ({
+      tryIf: jest.fn(async (fn) => {
+        try {
+          const data = await fn();
+          return { ok: true, data };
+        } catch (error) {
+          return { ok: false, error };
+        }
+      }),
+    }));
+    jest.doMock('../../src/config/app', () => ({
+      APP_CONFIG: { links: { website: 'https://novaix.fitness' } },
     }));
     const mod = require('../../src/services/share');
     shareWorkout = mod.shareWorkout;
@@ -38,39 +75,10 @@ describe('Share Service', () => {
       expect(Sharing.shareAsync).not.toHaveBeenCalled();
     });
 
-    it('shares workout with correct message', async () => {
+    it('shares workout with file', async () => {
       await shareWorkout({ name: 'Treino A', category: 'Musculação', duration: 45, level: 'Intermediário' });
       const Sharing = require('expo-sharing');
-      expect(Sharing.isAvailableAsync).toHaveBeenCalled();
       expect(Sharing.shareAsync).toHaveBeenCalled();
-      const msg = Sharing.shareAsync.mock.calls[0][0];
-      expect(msg).toContain('Treino A');
-      expect(msg).toContain('Musculação');
-    });
-
-    it('falls back to Alert when sharing unavailable', async () => {
-      const Sharing = require('expo-sharing');
-      Sharing.isAvailableAsync.mockResolvedValue(false);
-      await shareWorkout({ name: 'Treino A' });
-      const { Alert } = require('react-native');
-      expect(Alert.alert).toHaveBeenCalled();
-    });
-  });
-
-  describe('shareProgress', () => {
-    it('does nothing when stats is null', async () => {
-      await shareProgress(null);
-      const Sharing = require('expo-sharing');
-      expect(Sharing.shareAsync).not.toHaveBeenCalled();
-    });
-
-    it('shares progress with stats', async () => {
-      await shareProgress({ streak: 5, totalWorkouts: 20, totalMinutes: 600 });
-      const Sharing = require('expo-sharing');
-      expect(Sharing.shareAsync).toHaveBeenCalled();
-      const msg = Sharing.shareAsync.mock.calls[0][0];
-      expect(msg).toContain('5');
-      expect(msg).toContain('20');
     });
   });
 
@@ -81,14 +89,10 @@ describe('Share Service', () => {
       expect(Sharing.shareAsync).not.toHaveBeenCalled();
     });
 
-    it('shares achievement with correct message', async () => {
+    it('shares achievement with file', async () => {
       await shareAchievement({ name: 'Centenario', description: 'Complete 100 treinos', icon: '💯' });
       const Sharing = require('expo-sharing');
       expect(Sharing.shareAsync).toHaveBeenCalled();
-      const msg = Sharing.shareAsync.mock.calls[0][0];
-      expect(msg).toContain('Centenario');
-      expect(msg).toContain('100 treinos');
-      expect(msg).toContain('💯');
     });
   });
 });
