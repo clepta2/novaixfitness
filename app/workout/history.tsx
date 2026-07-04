@@ -17,7 +17,7 @@ export default function HistoryScreen() {
   } = useWorkoutHistory();
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.card} accessibilityLabel={`Abrir treino ${item.workouts?.title || 'Treino'}`} accessibilityRole="button" onPress={() => router.push(`/workout-detail?id=${item.workout_id}`)}>
+    <TouchableOpacity style={styles.card} accessibilityLabel={`Abrir treino ${item.workouts?.title || 'Treino'}`} accessibilityRole="button" onPress={() => item.workout_id && router.push({ pathname: '/workout-detail', params: { id: item.workout_id } })}>
       <View style={styles.cardHeader}>
         <View style={styles.cardLeft}>
           <Text style={styles.cardTitle}>{item.workouts?.title || 'Treino'}</Text>
