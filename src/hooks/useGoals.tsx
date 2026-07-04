@@ -57,7 +57,7 @@ export function useGoals() {
       setUnlocked(unlockedData?.map(a => a.achievement_id as string) || []);
 
       const { data: workouts } = await supabase.from('user_workouts')
-        .select('id, completed_at').eq('user_id', user.id).eq('completed', true);
+        .select('id, completed_at, duration').eq('user_id', user.id).eq('completed', true);
       const { data: profile } = await supabase.from('profiles')
         .select('total_xp').eq('id', user.id).single();
       const streak = calcStreak(workouts || []);
