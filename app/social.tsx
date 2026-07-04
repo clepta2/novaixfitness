@@ -184,7 +184,7 @@ export default function SocialScreen() {
     if (!user?.id) return;
     await checkAndPerform(ACTIONS.CHECK_IN, 'check_in', async () => {
       await checkIn(user.id, gymName);
-      loadCheckIns();
+      await loadCheckIns();
     }, t('social.errorCheckIn'));
   };
   const handleViewStory = (storyGroup) => {
