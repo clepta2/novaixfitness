@@ -63,7 +63,7 @@ export default function MarketplaceDetailScreen() {
   const isTogglingRef = useRef(false);
 
   const handleToggleFavorite = async () => {
-    if (!user?.id || isTogglingRef.current) return;
+    if (!user?.id || isTogglingRef.current || !productId) return;
     isTogglingRef.current = true;
     setFavorited(prev => !prev);
     try {
