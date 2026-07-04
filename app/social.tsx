@@ -123,7 +123,7 @@ export default function SocialScreen() {
     }
   }, [refetch, user?.id, loadStories, loadCheckIns, loadUserLikes]);
   const handleLike = async (postId) => {
-    if (!user || processingLikes.current.has(postId)) return;
+    if (!user?.id || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);
     try {
       await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
