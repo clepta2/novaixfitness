@@ -40,7 +40,7 @@ export default function ForumScreen() {
     }
   }, [dbPosts]);
 
-  const onRefresh = async () => { setRefreshing(true); await refetch(); setRefreshing(false); };
+  const onRefresh = async () => { setRefreshing(true); try { await refetch(); } finally { setRefreshing(false); } };
 
   const handleCreatePost = async (postData) => {
     if (!user) return;

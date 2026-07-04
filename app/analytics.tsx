@@ -64,7 +64,7 @@ export default function AnalyticsScreen() {
 
   useEffect(() => { loadData(); }, [user?.id, period]);
 
-  const onRefresh = async () => { setRefreshing(true); await loadData(); setRefreshing(false); };
+  const onRefresh = async () => { setRefreshing(true); try { await loadData(); } finally { setRefreshing(false); } };
 
   if (loading) {
     return (
