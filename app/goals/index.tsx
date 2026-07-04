@@ -29,7 +29,7 @@ export default function GoalsScreen() {
         <Text style={[styles.achName, isUnlocked && { color: COLORS.primary }]}>{item.name}</Text>
         <Text style={styles.achDesc}>{item.description}</Text>
         <View style={styles.achProgress}><View style={[styles.achFill, { width: `${progress}%` }]} /></View>
-        <Text style={styles.achXp}>+{item.xp} XP</Text>
+        <Text style={styles.achXp}>+{item.xpReward} XP</Text>
       </View>
     );
   };
