@@ -125,6 +125,12 @@ export default function SocialScreen() {
   const handleLike = async (postId) => {
     if (!user?.id || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);
+    let preLikeSnapshot: { isLiked: boolean; likes: number } | null = null;
+    setPosts(prev => {
+      const post = prev.find(p => p.id === postId);
+      preLikeSnapshot = { isLiked: post?.isLiked || false, likes: post?.likes || 0 };
+      return prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p);
+    });
     try {
       await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
         const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).maybeSingle();
@@ -137,10 +143,9 @@ export default function SocialScreen() {
         }
       });
     } catch (err) {
-      setPosts(prev => {
-        const post = prev.find(p => p.id === postId);
-        return prev.map(p => p.id === postId ? { ...p, isLiked: post?.isLiked || false, likes: post?.likes || 0 } : p);
-      });
+      if (preLikeSnapshot) {
+        setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: preLikeSnapshot!.isLiked, likes: preLikeSnapshot!.likes } : p));
+      }
       if (__DEV__) console.error('Erro ao curtir:', err);
     } finally {
       processingLikes.current.delete(postId);
@@ -148,17 +153,21 @@ export default function SocialScreen() {
   };
   const handleComment = async (postId, text) => {
     if (!user?.id || !text?.trim()) return;
+    let preCommentSnapshot: number | null = null;
+    setPosts(prev => {
+      const post = prev.find(p => p.id === postId);
+      preCommentSnapshot = post?.comments || 0;
+      return prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p);
+    });
     try {
       await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
         const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
         if (error) throw error;
-        setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
       }, t('social.errorComment'));
     } catch (err) {
-      setPosts(prev => {
-        const post = prev.find(p => p.id === postId);
-        return prev.map(p => p.id === postId ? { ...p, comments: post?.comments || 0 } : p);
-      });
+      if (preCommentSnapshot !== null) {
+        setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: preCommentSnapshot! } : p));
+      }
       if (__DEV__) console.error('Erro ao comentar:', err);
     }
   };
