@@ -45,7 +45,11 @@ export default function MarketplaceDetailScreen() {
 
   const handleToggleFavorite = async () => {
     if (!user?.id) return;
-    setFavorited(await toggleFavorite(user.id, id));
+    try {
+      setFavorited(await toggleFavorite(user.id, id));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao alternar favorito:', err);
+    }
   };
 
   const handleBuy = () => {

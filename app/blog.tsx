@@ -24,6 +24,7 @@ export default function BlogScreen() {
 
   if (selectedArticle) {
     return (
+      <ErrorBoundary screenName="BlogDetail">
       <View style={styles.screen}>
         <View style={styles.detailHeader}>
           <TouchableOpacity onPress={handleBack} style={styles.backBtn} accessibilityLabel="Voltar" accessibilityRole="button">
@@ -34,6 +35,7 @@ export default function BlogScreen() {
         </View>
         <ArticleDetail article={selectedArticle} />
       </View>
+      </ErrorBoundary>
     );
   }
 

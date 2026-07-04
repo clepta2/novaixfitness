@@ -58,13 +58,17 @@ export default function MarketplaceFavoritesScreen() {
 
   const handleToggleFavorite = async (productId) => {
     if (!user?.id) return;
-    const isNowFav = await toggleFavorite(user.id, productId);
-    setFavorites(prev => {
-      const next = new Set(prev);
-      if (isNowFav) next.add(productId); else next.delete(productId);
-      return next;
-    });
-    if (!isNowFav) setProducts(prev => prev.filter(p => p.id !== productId));
+    try {
+      const isNowFav = await toggleFavorite(user.id, productId);
+      setFavorites(prev => {
+        const next = new Set(prev);
+        if (isNowFav) next.add(productId); else next.delete(productId);
+        return next;
+      });
+      if (!isNowFav) setProducts(prev => prev.filter(p => p.id !== productId));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao alternar favorito:', err);
+    }
   };
 
   return (
