@@ -67,15 +67,11 @@ export default function SocialScreen() {
 
   const loadCheckIns = async () => {
     try {
-      const data = await getRecentCheckIns(undefined, 5);
+      const data = await getRecentCheckIns(5);
       setRecentCheckIns(data);
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar check-ins:', err);
     }
-  };
-  const loadCheckIns = async () => {
-    const data = await getRecentCheckIns(5);
-    setRecentCheckIns(data);
   };
   useEffect(() => {
     if (dbPosts) {
@@ -93,14 +89,17 @@ export default function SocialScreen() {
   useRealtimePosts(onInsert, onUpdate, onDelete);
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await refetch();
-    if (user?.id) {
-      const result = await serviceCall(() => getUnreadCount(user.id));
-      if (result.ok) setUnreadCount(result.data);
+    try {
+      await refetch();
+      if (user?.id) {
+        const result = await serviceCall(() => getUnreadCount(user.id));
+        if (result.ok) setUnreadCount(result.data);
+      }
+      await loadStories();
+      await loadCheckIns();
+    } finally {
+      setRefreshing(false);
     }
-    loadStories();
-    loadCheckIns();
-    setRefreshing(false);
   }, [refetch, user?.id]);
   const handleLike = async (postId) => {
     if (!user || processingLikes.current.has(postId)) return;
