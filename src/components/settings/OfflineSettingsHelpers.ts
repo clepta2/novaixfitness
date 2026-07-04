@@ -1,13 +1,24 @@
 import { Alert } from 'react-native';
 import { clearAllCache, clearWorkoutCache } from '../../services/cache';
 import { forceSyncNow } from '../../services/autoSync';
-import pt from '../../i18n/pt.json';
 
 const t = (key: string, params?: Record<string, any>) => {
-  const keys = key.split('.');
-  let value: any = pt;
-  for (const k of keys) value = value?.[k];
-  if (typeof value !== 'string') return key;
+  const translations: Record<string, string> = {
+    'offline.offlineTitle': 'Sem conexao',
+    'offline.offlineMessage': 'Voce esta offline. Conecte-se para sincronizar.',
+    'offline.syncTitle': 'Sincronizar',
+    'offline.syncMessage': 'Sincronizado: {synced}, Falhou: {failed}',
+    'common.error': 'Erro',
+    'offline.syncError': 'Erro ao sincronizar',
+    'offline.clearWorkoutsTitle': 'Limpar treinos',
+    'offline.clearWorkoutsMessage': 'Remove todos os treinos salvos offline',
+    'offline.cancel': 'Cancelar',
+    'offline.clear': 'Limpar',
+    'offline.clearAllTitle': 'Limpar tudo',
+    'offline.clearAllMessage': 'Remove todos os dados offline',
+    'offline.clearAllButton': 'Limpar tudo',
+  };
+  const value = translations[key] || key;
   return value.replace(/\{(\w+)\}/g, (_, param) => params?.[param] ?? `{${param}}`);
 };
 
