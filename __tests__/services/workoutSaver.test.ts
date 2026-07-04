@@ -9,6 +9,8 @@ jest.mock('../../src/config/supabase', () => {
   chain.update = jest.fn(() => chain);
   chain.upsert = jest.fn(() => chain);
   chain.single = jest.fn(() => Promise.resolve({ data: null, error: null }));
+  chain.maybeSingle = jest.fn(() => Promise.resolve({ data: null, error: null }));
+  chain.rpc = jest.fn(() => Promise.resolve({ data: null, error: null }));
   chain.then = (resolve) => Promise.resolve({ data: null, error: null }).then(resolve);
   chain._setData = (d) => { chain._stateData = d; };
   chain._reset = () => {
@@ -19,6 +21,8 @@ jest.mock('../../src/config/supabase', () => {
     chain.update.mockReturnValue(chain);
     chain.upsert.mockReturnValue(chain);
     chain.single.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+    chain.maybeSingle.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+    chain.rpc.mockImplementation(() => Promise.resolve({ data: null, error: null }));
   };
   chain._reset();
   return { supabase: chain };
@@ -49,6 +53,11 @@ jest.mock('../../src/utils/tryIf', () => ({
       return { ok: false, error };
     }
   }),
+}));
+
+jest.mock('../../src/utils/atomicUpdates', () => ({
+  incrementXP: jest.fn().mockResolvedValue(undefined),
+  incrementProfileStats: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock('../../src/services/offline/offlineSync', () => ({

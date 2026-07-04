@@ -10,6 +10,8 @@ jest.mock('../../src/config/supabase', () => {
   chain.upsert = jest.fn(() => chain);
   chain.eq = jest.fn(() => chain);
   chain.single = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+  chain.maybeSingle = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+  chain.rpc = jest.fn(() => Promise.resolve({ data: null, error: null }));
   chain.then = (resolve) => Promise.resolve({ data: state.data, error: state.error }).then(resolve);
   chain._setData = (d) => { state.data = d; };
   chain._setError = (e) => { state.error = e; };
@@ -22,6 +24,8 @@ jest.mock('../../src/config/supabase', () => {
     chain.upsert.mockReturnValue(chain);
     chain.eq.mockReturnValue(chain);
     chain.single.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+    chain.maybeSingle.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+    chain.rpc.mockImplementation(() => Promise.resolve({ data: null, error: null }));
   };
   chain._reset();
   return { supabase: chain };
@@ -29,6 +33,11 @@ jest.mock('../../src/config/supabase', () => {
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
 const { addXP, getGamificationData } = require('../../src/services/gamification');
+
+jest.mock('../../src/utils/atomicUpdates', () => ({
+  incrementXP: jest.fn().mockResolvedValue(undefined),
+  incrementProfileStats: jest.fn().mockResolvedValue(undefined),
+}));
 
 describe('Gamification Service', () => {
   beforeEach(() => {

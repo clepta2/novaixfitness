@@ -11,6 +11,7 @@ jest.mock('../../src/config/supabase', () => {
   chain.insert = jest.fn(() => chain);
   chain.update = jest.fn(() => chain);
   chain.single = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+  chain.maybeSingle = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
   chain.then = (resolve, reject) => Promise.resolve({ data: state.data, error: state.error }).then(resolve, reject);
   chain.catch = (fn) => Promise.resolve({ data: state.data, error: state.error }).catch(fn);
   chain._setData = (d) => { state.data = d; };
@@ -25,6 +26,7 @@ jest.mock('../../src/config/supabase', () => {
     chain.insert.mockReturnValue(chain);
     chain.update.mockReturnValue(chain);
     chain.single.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+    chain.maybeSingle.mockImplementation(() => Promise.resolve({ data: null, error: null }));
   };
   chain._reset();
   return { supabase: chain };

@@ -1,11 +1,16 @@
-jest.mock('expo-audio', () => ({
-  createAudioPlayer: jest.fn(() => ({
-    play: jest.fn(),
-    remove: jest.fn(),
-    currentTime: 0,
-    duration: 1,
-  })),
-  setAudioModeAsync: jest.fn().mockResolvedValue({}),
+// __tests__/services/audioService.test.ts
+// Tests for audioService — sounds are no-ops until assets/sounds/ is populated
+
+jest.mock('expo-av', () => ({
+  Audio: {
+    setAudioModeAsync: jest.fn().mockResolvedValue({}),
+    Sound: {
+      createAsync: jest.fn().mockResolvedValue({
+        sound: { playAsync: jest.fn().mockResolvedValue({}), unloadAsync: jest.fn().mockResolvedValue({}), setOnPlaybackStatusUpdate: jest.fn() },
+        status: { isLoaded: true },
+      }),
+    },
+  },
 }));
 
 import {
@@ -16,7 +21,7 @@ import {
   unloadSounds,
 } from '../../src/services/audioService';
 
-const { createAudioPlayer, setAudioModeAsync } = require('expo-audio');
+const { Audio } = require('expo-av');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -26,49 +31,39 @@ describe('Audio Service', () => {
   describe('loadSounds', () => {
     it('sets audio mode', async () => {
       await loadSounds();
-      expect(setAudioModeAsync).toHaveBeenCalled();
+      expect(Audio.setAudioModeAsync).toHaveBeenCalled();
     });
 
     it('skips loading if already loaded', async () => {
       await loadSounds();
-      setAudioModeAsync.mockClear();
+      Audio.setAudioModeAsync.mockClear();
       await loadSounds();
-      expect(setAudioModeAsync).not.toHaveBeenCalled();
+      expect(Audio.setAudioModeAsync).not.toHaveBeenCalled();
     });
   });
 
   describe('playCountdownTick', () => {
-    it('creates and plays sound', async () => {
+    it('does nothing when no sound assets', async () => {
       await loadSounds();
       await playCountdownTick();
-      expect(createAudioPlayer).toHaveBeenCalled();
-    });
-
-    it('does nothing if not loaded', async () => {
-      jest.resetModules();
-      jest.mock('expo-audio', () => ({
-        createAudioPlayer: jest.fn(),
-        setAudioModeAsync: jest.fn().mockResolvedValue({}),
-      }));
-      const { playCountdownTick: freshPlay } = require('../../src/services/audioService');
-      await freshPlay();
-      expect(require('expo-audio').createAudioPlayer).not.toHaveBeenCalled();
+      // No-ops until assets/sounds/ is populated
+      expect(Audio.Sound.createAsync).not.toHaveBeenCalled();
     });
   });
 
   describe('playPhaseEnd', () => {
-    it('creates and plays sound', async () => {
+    it('does nothing when no sound assets', async () => {
       await loadSounds();
       await playPhaseEnd();
-      expect(createAudioPlayer).toHaveBeenCalled();
+      expect(Audio.Sound.createAsync).not.toHaveBeenCalled();
     });
   });
 
   describe('playWorkoutComplete', () => {
-    it('creates and plays sound', async () => {
+    it('does nothing when no sound assets', async () => {
       await loadSounds();
       await playWorkoutComplete();
-      expect(createAudioPlayer).toHaveBeenCalled();
+      expect(Audio.Sound.createAsync).not.toHaveBeenCalled();
     });
   });
 

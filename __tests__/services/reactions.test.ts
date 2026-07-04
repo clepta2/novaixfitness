@@ -13,6 +13,7 @@ jest.mock('../../src/config/supabase', () => {
     chain.delete = jest.fn(() => chain);
     chain.upsert = jest.fn(() => chain);
     chain.single = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+    chain.maybeSingle = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
     chain.then = function(resolve, reject) {
       return Promise.resolve({ data: state.data, error: state.error }).then(resolve, reject);
     };
