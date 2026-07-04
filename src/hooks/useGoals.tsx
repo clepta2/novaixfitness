@@ -77,11 +77,13 @@ export function useGoals() {
 
   const addGoal = useCallback(async () => {
     if (!newGoalType || !newGoalTarget || !user?.id) return;
+    const parsedValue = parseFloat(newGoalTarget);
+    if (isNaN(parsedValue) || parsedValue <= 0) return;
     try {
       const goalType = GOAL_TYPES.find(g => g.id === newGoalType);
       await supabase.from('short_term_goals').insert({
         user_id: user.id, goal_type: newGoalType,
-        target_value: parseFloat(newGoalTarget),
+        target_value: parsedValue,
         target_unit: goalType?.unit, target_days: 30,
       });
       setNewGoalType(null);

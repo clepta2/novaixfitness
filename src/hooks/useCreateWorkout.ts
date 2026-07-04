@@ -98,7 +98,7 @@ export function useCreateWorkout() {
     return Object.keys(errs).length === 0;
   };
 
-  const nextStep = () => { if (validateStep()) setStep(s => Math.min(s + 1, 3)); };
+  const nextStep = () => { if (validateStep()) setStep(s => Math.min(s + 1, STEPS.length - 1)); };
   const prevStep = () => setStep(s => Math.max(s - 1, 0));
 
   const handleSave = async () => {
