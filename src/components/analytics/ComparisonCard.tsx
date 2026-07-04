@@ -7,7 +7,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function ComparisonCard({ comparison }) {
+interface ComparisonCardProps {
+  comparison?: any;
+}
+
+export default memo(function ComparisonCard({ comparison }: ComparisonCardProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
 

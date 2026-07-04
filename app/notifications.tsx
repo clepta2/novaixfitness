@@ -59,7 +59,7 @@ export default function NotificationsScreen() {
   const renderNotification = ({ item, index }: { item: any; index: number }) => (
     <Animated.View style={[styles.notifItem, { opacity: Math.min(1, 0.5 + index * 0.1) }]}>
       <NotificationItem
-        notification={item}
+        item={item}
         onPress={() => markAsRead(item.id)}
       />
     </Animated.View>
@@ -68,7 +68,7 @@ export default function NotificationsScreen() {
   return (
     <ErrorBoundary screenName="Notifications">
       <View style={layout.screen}>
-        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
+        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} onRestart={() => {}} />
 
         {/* Header */}
         <Animated.View style={[styles.header, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
@@ -119,7 +119,7 @@ export default function NotificationsScreen() {
             <EmptyState
               icon="notifications-off-outline"
               title="Sem notificacoes"
-              message="Quando algo acontecer, voce sera notificado aqui."
+              description="Quando algo acontecer, voce sera notificado aqui."
             />
           ) : (
             <FlatList

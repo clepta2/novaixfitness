@@ -60,5 +60,5 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg, backgroundColor: COLORS.primary, paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.xl, borderRadius: BORDER_RADIUS.md,
   },
-  buttonText: { fontFamily: 'Inter_600SemiBold', fontSize: 14, color: COLORS.bg, textAlign: 'center' },
+  buttonText: { fontFamily: 'Inter_600SemiBold', fontSize: 14, color: COLORS.background, textAlign: 'center' },
 });

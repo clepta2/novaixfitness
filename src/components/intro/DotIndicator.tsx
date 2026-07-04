@@ -2,7 +2,12 @@ import React, { useEffect, useRef, memo } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
-export default memo(function DotIndicator({ total, currentIndex }) {
+interface DotIndicatorProps {
+  total?: number;
+  currentIndex?: number;
+}
+
+export default memo(function DotIndicator({ total = 0, currentIndex = 0 }: DotIndicatorProps) {
   const animatedWidths = useRef(
     Array.from({ length: total }, () => new Animated.Value(0))
   ).current;

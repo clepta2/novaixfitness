@@ -104,11 +104,11 @@ export default function CoachCommissionsPanel() {
       <View style={styles.balanceGrid}>
         <View style={styles.balanceBox}>
           <Text style={styles.boxLabel}>Disponível para Saque</Text>
-          <Text style={[styles.boxValue, { color: COLORS.primary }]}>R$ {parseFloat(balance.available_balance).toFixed(2)}</Text>
+          <Text style={[styles.boxValue, { color: COLORS.primary }]}>R$ {Number(balance.available_balance).toFixed(2)}</Text>
         </View>
         <View style={styles.balanceBox}>
           <Text style={styles.boxLabel}>Aguardando Liberação</Text>
-          <Text style={styles.boxValue}>R$ {parseFloat(balance.pending_amount).toFixed(2)}</Text>
+          <Text style={styles.boxValue}>R$ {Number(balance.pending_amount).toFixed(2)}</Text>
         </View>
       </View>
 

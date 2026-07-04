@@ -1,4 +1,4 @@
-﻿
+
 // app/forgot-password.tsx
 // Recuperacao de senha com animacoes - NOVAIX FITNESS
 
@@ -77,10 +77,10 @@ export default function ForgotPasswordScreen() {
                     <Text style={styles.title}>Esqueceu a senha?</Text>
                     <Text style={styles.subtitle}>Insira seu e-mail e enviaremos um link para redefinir sua senha.</Text>
 
-                    <AuthInput label="E-MAIL" placeholder="seu@email.com" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} />
+                    <AuthInput label="E-MAIL" placeholder="seu@email.com" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" icon="mail-outline" translucent={true} secureTextEntry={false} error={undefined} />
 
                     <View style={styles.btnWrap}>
-                      <Button title="ENVIAR LINK" onPress={handleSendResetEmail} loading={loading} size={isSmall ? 'md' : 'lg'} style={{ width: '100%' }} />
+                      <Button title="ENVIAR LINK" onPress={handleSendResetEmail} loading={loading} icon="mail-outline" disabled={!email} size={isSmall ? 'md' : 'lg'} style={{ width: '100%' }} />
                     </View>
                   </>
                 ) : (

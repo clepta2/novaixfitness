@@ -7,7 +7,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function SearchBar({ value, onChangeText, placeholder = 'Buscar...', onSubmit, loading = false }) {
+interface SearchBarProps {
+  value?: string;
+  onChangeText?: (text: string) => void;
+  placeholder?: string;
+  onSubmit?: () => void;
+  loading?: boolean;
+}
+
+export default memo(function SearchBar({ value = '', onChangeText, placeholder = 'Buscar...', onSubmit, loading = false }: SearchBarProps) {
   const [focused, setFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 

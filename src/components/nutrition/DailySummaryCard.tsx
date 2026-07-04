@@ -4,7 +4,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-function MacroBar({ label, current, goal, color, icon, delay = 0 }) {
+interface MacroBarProps {
+  label?: string;
+  current?: number;
+  goal?: number;
+  color?: string;
+  icon?: string;
+  delay?: number;
+}
+
+function MacroBar({ label, current, goal, color, icon, delay = 0 }: MacroBarProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const progress = goal > 0 ? Math.min(100, (current / goal) * 100) : 0;
 
@@ -32,7 +41,12 @@ function MacroBar({ label, current, goal, color, icon, delay = 0 }) {
   );
 }
 
-export default memo(function DailySummaryCard({ summary, goals }) {
+interface DailySummaryCardProps {
+  summary?: any;
+  goals?: any;
+}
+
+export default memo(function DailySummaryCard({ summary, goals }: DailySummaryCardProps) {
   const calAnim = useRef(new Animated.Value(0)).current;
   const data = summary || { calories: 0, protein: 0, carbs: 0, fat: 0, meals: 0 };
   const remaining = Math.max(0, goals.calories - Math.round(data.calories));

@@ -8,7 +8,11 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getXPProgress } from '../../constants/gamification';
 
-export default memo(function LevelCard({ xp = 0 }) {
+interface LevelCardProps {
+  xp?: number;
+}
+
+export default memo(function LevelCard({ xp = 0 }: LevelCardProps) {
   const { current, next, progress, xpInLevel, xpNeeded } = getXPProgress(xp);
   const barAnim = useRef(new Animated.Value(0)).current;
 

@@ -9,7 +9,15 @@ import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { SocialButton } from '../index';
 
-export default function AccountExistsCard({ type, email, onClear, onGoogleSignIn, onAppleSignIn }) {
+interface AccountExistsCardProps {
+  type?: string;
+  email?: string;
+  onClear?: () => void;
+  onGoogleSignIn?: () => void;
+  onAppleSignIn?: () => void;
+}
+
+export default function AccountExistsCard({ type, email, onClear, onGoogleSignIn, onAppleSignIn }: AccountExistsCardProps) {
   const router = useRouter();
 
   return (

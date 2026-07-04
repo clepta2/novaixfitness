@@ -7,7 +7,11 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const MEAL_ICONS = { cafe: 'sunny', almoco: 'restaurant', jantar: 'moon', lanche: 'cafe' };
 const MEAL_LABELS = { cafe: 'Café da Manhã', almoco: 'Almoço', jantar: 'Jantar', lanche: 'Lanche' };
 
-function MealItem({ meal }) {
+interface MealItemProps {
+  meal?: any;
+}
+
+function MealItem({ meal }: MealItemProps) {
   const time = new Date(meal.logged_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   return (
     <View style={styles.mealItem}>
@@ -28,7 +32,11 @@ function MealItem({ meal }) {
   );
 }
 
-export default memo(function MealTimeline({ meals = [] }) {
+interface MealTimelineProps {
+  meals?: any[];
+}
+
+export default memo(function MealTimeline({ meals = [] }: MealTimelineProps) {
   const grouped = meals.reduce((acc, meal) => {
     const type = meal.meal_type || 'lanche';
     if (!acc[type]) acc[type] = [];

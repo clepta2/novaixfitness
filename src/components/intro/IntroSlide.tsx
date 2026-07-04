@@ -4,7 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function IntroSlide({ icon, title, subtitle, index }) {
+interface IntroSlideProps {
+  icon?: string;
+  title?: string;
+  subtitle?: string;
+  index?: number;
+}
+
+export default memo(function IntroSlide({ icon = 'fitness', title, subtitle, index = 0 }: IntroSlideProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(30)).current;
 

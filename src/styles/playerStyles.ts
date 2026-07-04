@@ -33,6 +33,10 @@ export function usePlayerStyles() {
     activeStatLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
     activeStatDivider: { width: 1, height: 24, backgroundColor: COLORS.border },
     voiceToggle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+    summaryCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.lg },
+    summaryRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.lg },
+    summaryInfo: { flex: 1, gap: 4 },
+    summaryDivider: { height: 1, backgroundColor: COLORS.border, marginVertical: 2 },
   }), [COLORS.background, COLORS.primary, COLORS.surface, COLORS.border, COLORS.textTitle]);
 }
 
@@ -61,4 +65,8 @@ export const styles = StyleSheet.create({
   activeStatLabel: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },
   activeStatDivider: { width: 1, height: 24, backgroundColor: COLORS.border },
   voiceToggle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+  summaryCard: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, marginBottom: SPACING.lg },
+  summaryRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.lg },
+  summaryInfo: { flex: 1, gap: 4 },
+  summaryDivider: { height: 1, backgroundColor: COLORS.border, marginVertical: 2 },
 });

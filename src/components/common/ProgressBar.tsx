@@ -6,7 +6,16 @@ import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function ProgressBar({ value = 0, max = 100, label, showPercentage = true, color = COLORS.primary, height = 8 }) {
+interface ProgressBarProps {
+  value?: number;
+  max?: number;
+  label?: string;
+  showPercentage?: boolean;
+  color?: string;
+  height?: number;
+}
+
+export default memo(function ProgressBar({ value = 0, max = 100, label, showPercentage = true, color = COLORS.primary, height = 8 }: ProgressBarProps) {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const percentage = max > 0 ? Math.min(100, (value / max) * 100) : 0;
 

@@ -48,7 +48,7 @@ export default function PlayerScreen() {
   if (timer.phase === 'idle') {
     return (
       <View style={layout.screen}>
-        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
+        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} onRestart={() => {}} />
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <Text style={[typography.h2, { fontSize: isSmall ? 22 : 28 }]}>{workout?.name || t('player.defaultName')}</Text>
@@ -107,7 +107,7 @@ export default function PlayerScreen() {
     <View style={layout.screen}>
       <XPFloating amount={xpAmount} visible={showXP} onComplete={() => setShowXP(false)} />
       {timer.phase === 'resting' && (
-        <RestOverlay timeRemaining={timer.timeRemaining} nextExercise={timer.currentExercise} onSkip={timer.skipRest} nextSet={timer.currentSet} nextIndex={timer.currentExerciseIndex} totalExercises={timer.totalExercises} />
+        <RestOverlay timeRemaining={timer.timeRemaining} totalTime={timer.totalTime} nextExercise={timer.currentExercise} onSkip={timer.skipRest} nextSet={timer.currentSet} nextIndex={timer.currentExerciseIndex} totalExercises={timer.totalExercises} />
       )}
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <ExerciseProgress exercises={workout.exercises} currentIndex={timer.currentExerciseIndex} currentSet={timer.currentSet} totalSets={timer.totalSets} />
@@ -162,7 +162,7 @@ export default function PlayerScreen() {
           onResume={timer.resumeWorkout} 
           onSkip={timer.phase === 'resting' ? timer.skipRest : timer.skipExercise} 
           onStop={handleFinish} 
-          onMarkComplete={timer.markSetComplete} 
+          onMarkComplete={() => timer.markSetComplete({})} 
         />
       </ScrollView>
       <RatingModal visible={showRating} onClose={dismissRating} onSubmit={handleRatingSubmit} />
@@ -175,7 +175,7 @@ export default function PlayerScreen() {
             xp={xpAmount}
             duration={Math.floor(timer.elapsed / 60) || workout?.duration || 30}
             exercises={timer.logs.length || workout?.exercises?.length || 5}
-            onClose={() => {
+            onShare={() => {
               setShowCompletion(false);
               timer.stopWorkout();
               router.back();

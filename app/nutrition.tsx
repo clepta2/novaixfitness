@@ -34,7 +34,11 @@ export default function NutritionScreen() {
   const weight = profile?.physical_data?.weight;
   const goal = profile?.goal || 'manter';
   const weightMissing = !weight;
-  const goals = calculateNutritionGoals(weight || 70, goal);
+  const [goals, setGoals] = useState<{ calories: number; protein: number; carbs: number; fat: number } | null>(null);
+
+  useEffect(() => {
+    calculateNutritionGoals(weight || 70, goal).then(setGoals);
+  }, [weight, goal]);
 
   const loadData = useCallback(async () => {
     if (!user?.id) return;
@@ -88,7 +92,7 @@ export default function NutritionScreen() {
               <Text style={styles.warningText}>{t('nutrition.weightWarning')}</Text>
             </View>
           )}
-          <DailySummaryCard summary={summary} goals={goals} />
+          <DailySummaryCard summary={summary} goals={goals || undefined} />
 
           <TouchableOpacity style={styles.logBtn} onPress={() => setModalVisible(true)} accessibilityLabel={t('nutrition.logMeal')} accessibilityRole="button">
             <Ionicons name="add-circle" size={22} color={COLORS.background} />
@@ -101,9 +105,9 @@ export default function NutritionScreen() {
             protein={summary?.protein || 0}
             carbs={summary?.carbs || 0}
             fat={summary?.fat || 0}
-            proteinGoal={goals.protein}
-            carbsGoal={goals.carbs}
-            fatGoal={goals.fat}
+            proteinGoal={goals?.protein || 150}
+            carbsGoal={goals?.carbs || 250}
+            fatGoal={goals?.fat || 70}
           />
 
           <WaterTracker userId={user?.id} />

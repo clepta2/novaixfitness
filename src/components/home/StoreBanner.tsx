@@ -5,7 +5,11 @@ import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { BRAND_SHORT } from '../../constants/brand';
 
-export default memo(function StoreBanner({ onPress }) {
+interface StoreBannerProps {
+  onPress?: () => void;
+}
+
+export default memo(function StoreBanner({ onPress }: StoreBannerProps) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.iconWrap}>

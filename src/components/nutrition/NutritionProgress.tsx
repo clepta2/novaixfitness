@@ -3,7 +3,12 @@ import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function NutritionProgress({ streak, nextBadge }) {
+interface NutritionProgressProps {
+  streak?: number;
+  nextBadge?: any;
+}
+
+export default memo(function NutritionProgress({ streak = 0, nextBadge }: NutritionProgressProps) {
   if (!nextBadge) return null;
   const progress = (streak / nextBadge.days) * 100;
 

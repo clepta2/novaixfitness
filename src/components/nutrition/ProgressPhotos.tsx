@@ -19,7 +19,11 @@ const MEASUREMENTS = [
   { key: 'arm', label: 'Braço', unit: 'cm', icon: 'barbell', color: COLORS.primary },
 ];
 
-function MeasurementInput({ measurement, value, onChange }) {
+function MeasurementInput({ measurement, value, onChange }: {
+  measurement?: any;
+  value?: string;
+  onChange?: (text: string) => void;
+}) {
   const handleChange = (text: string) => {
     // Sanitizar entrada: apenas números e ponto/vírgula
     const sanitized = text.replace(/[^0-9.,]/g, '').replace(',', '.');
@@ -48,7 +52,11 @@ function MeasurementInput({ measurement, value, onChange }) {
   );
 }
 
-export default function ProgressPhotos({ userId }) {
+interface ProgressPhotosProps {
+  userId?: string;
+}
+
+export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
   const [values, setValues] = useState({});
   const [lastEntry, setLastEntry] = useState(null);
   const [loading, setLoading] = useState(true);

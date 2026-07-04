@@ -23,9 +23,15 @@ export default function SubscriptionScreen() {
   const router = useRouter();
   const { isSmall } = useResponsive();
   const {
-    payments, loading, status,
-    currentPlan, isSubscribed, handleCancel,
+    plan, plans, usage, loading, isPremium, isBasic, isFree, cancel,
   } = useSubscription();
+
+  const isSubscribed = !isFree;
+  const status = isPremium
+    ? { color: COLORS.success, icon: 'star' as const, label: 'Premium' }
+    : isBasic
+    ? { color: COLORS.primary, icon: 'checkmark-circle' as const, label: 'Basico' }
+    : { color: COLORS.textMuted, icon: 'alert-circle-outline' as const, label: 'Gratuito' };
 
   // Animacoes
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -70,22 +76,22 @@ export default function SubscriptionScreen() {
             </View>
             <View style={styles.statusInfo}>
               <Text style={[styles.statusLabel, { color: status.color }]}>{status.label}</Text>
-              {currentPlan && (
-                <Text style={styles.statusPlan}>{currentPlan.name} - {currentPlan.priceText}{currentPlan.period}</Text>
+              {plan && (
+                <Text style={styles.statusPlan}>{plan.name} - {plan.priceText}{plan.period}</Text>
               )}
-              {!isSubscribed && !currentPlan && (
+              {!isSubscribed && !plan && (
                 <Text style={styles.statusHint}>{t('subscription.activatePlan')}</Text>
               )}
             </View>
           </View>
 
           {/* Plano ativo */}
-          {isSubscribed && currentPlan && (
+          {isSubscribed && plan && (
             <View style={styles.planCard}>
               <Text style={styles.planTitle}>{t('subscription.activePlan')}</Text>
-              <Text style={styles.planName}>{currentPlan.name}</Text>
+              <Text style={styles.planName}>{plan.name}</Text>
               <View style={styles.planFeatures}>
-                {currentPlan.features.filter(f => f.included).map((feature, i) => (
+                {plan.features.filter(f => f.included).map((feature, i) => (
                   <View key={i} style={styles.featureRow}>
                     <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
                     <Text style={styles.featureText}>{feature.text}</Text>
@@ -121,25 +127,7 @@ export default function SubscriptionScreen() {
             ))}
           </View>
 
-          {/* Historico */}
-          {payments && payments.length > 0 && (
-            <View style={styles.historySection}>
-              <Text style={styles.historyTitle}>Historico de Pagamentos</Text>
-              {payments.slice(0, 5).map((payment, i) => (
-                <View key={i} style={[styles.historyItem, { opacity: Math.min(1, 0.5 + i * 0.1) }]}>
-                  <View style={styles.historyInfo}>
-                    <Text style={styles.historyDate}>{new Date(payment.created_at).toLocaleDateString('pt-BR')}</Text>
-                    <Text style={styles.historyAmount}>R$ {payment.amount?.toFixed(2)}</Text>
-                  </View>
-                  <View style={[styles.historyStatus, { backgroundColor: payment.status === 'paid' ? COLORS.success + '15' : COLORS.attention + '15' }]}>
-                    <Text style={[styles.historyStatusText, { color: payment.status === 'paid' ? COLORS.success : COLORS.attention }]}>
-                      {payment.status === 'paid' ? 'Pago' : 'Pendente'}
-                    </Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-          )}
+          {/* Historico de pagamentos indisponivel */}
         </Animated.View>
       </ScrollView>
     </ErrorBoundary>

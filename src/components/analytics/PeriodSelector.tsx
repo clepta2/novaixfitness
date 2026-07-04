@@ -14,7 +14,12 @@ const PERIODS = [
   { key: 'year', label: '1 ano', icon: 'calendar-outline' },
 ];
 
-export default memo(function PeriodSelector({ selected, onSelect }) {
+interface PeriodSelectorProps {
+  selected?: string;
+  onSelect?: (period: string) => void;
+}
+
+export default memo(function PeriodSelector({ selected = 'week', onSelect }: PeriodSelectorProps) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
