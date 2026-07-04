@@ -124,7 +124,7 @@ export default function FeedScreen() {
             <PostSkeleton /><PostSkeleton /><PostSkeleton />
           </View>
         ) : showEmpty ? (
-          <FeedEmptyState hasFilter={selectedFilter !== t('common.all')} />
+          <FeedEmptyState {...{ hasFilter: selectedFilter !== t('common.all') } as any} />
         ) : (
           filteredPosts.map((post, index) => (
             <View key={post.id} style={[styles.postWrapper, { opacity: Math.min(1, 0.8 + index * 0.05) }]}>

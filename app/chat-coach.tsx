@@ -32,7 +32,7 @@ export default function ChatCoachScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MessageBubble message={item} />}
         contentContainerStyle={[styles.listContent, { paddingBottom: 110 }]}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+        onContentSizeChange={() => (flatListRef.current as any)?.scrollToEnd({ animated: true })}
         removeClippedSubviews={true}
         maxToRenderPerBatch={10}
         windowSize={5}

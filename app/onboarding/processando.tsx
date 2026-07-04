@@ -19,7 +19,7 @@ export default function ProcessingScreen() {
       <View style={styles.header}>
         <Text style={typography.h3}>PROCESSANDO...</Text>
         <Text style={typography.h5}>PREPARANDO SUA NOVA EVOLUCAO NO TREINO</Text>
-        <View style={styles.progressContainer}><ProgressBar value={currentStep + 1} max={steps.length} label="" showValue={false} /></View>
+        <View style={styles.progressContainer}><ProgressBar {...{ value: currentStep + 1, max: steps.length, label: "", showValue: false, style: {} } as any} /></View>
       </View>
 
       <Text style={typography.h5}>{formatTime(elapsedTime)}</Text>

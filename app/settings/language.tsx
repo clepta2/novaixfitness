@@ -36,18 +36,18 @@ export default function LanguageScreen() {
         <Text style={styles.title}>IDIOMA</Text>
         <Text style={styles.subtitle}>Selecione o idioma do app</Text>
 
-        {LANGUAGES.map((lang) => (
+        {LANGUAGES.map((lang: any) => (
           <TouchableOpacity
-            key={lang.id}
-            style={[styles.option, selected === lang.id && styles.optionActive]}
-            onPress={() => handleSelect(lang.id)}
+            key={lang.id ?? lang.key}
+            style={[styles.option, selected === (lang.id ?? lang.key) && styles.optionActive]}
+            onPress={() => handleSelect(lang.id ?? lang.key)}
           >
             <Text style={styles.flag}>{lang.flag}</Text>
             <View style={styles.optionInfo}>
               <Text style={styles.optionLabel}>{lang.label}</Text>
-              <Text style={styles.optionNative}>{lang.native}</Text>
+              {lang.native && <Text style={styles.optionNative}>{lang.native}</Text>}
             </View>
-            {selected === lang.id && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
+            {selected === (lang.id ?? lang.key) && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
           </TouchableOpacity>
         ))}
       </ScrollView>

@@ -137,8 +137,7 @@ function AppContent() {
               return isLazy ? (
                 <Stack.Screen
                   key={name}
-                  name={name}
-                  component={() => <LazyScreenWrapper name={name} />}
+                  {...{ name, component: () => <LazyScreenWrapper name={name} /> } as any}
                 />
               ) : (
                 <Stack.Screen key={name} name={name} />

@@ -39,12 +39,12 @@ export default function AccessibilityScreen() {
         <Text style={styles.subtitle}>Personalize a aparência do app</Text>
 
         {ACCESSIBILITY_OPTIONS.map((option) => (
-          <View key={option.id} style={styles.optionRow}>
+          <View key={(option as any).id} style={styles.optionRow}>
             <View style={styles.optionInfo}>
-              <Text style={styles.optionLabel}>{option.label}</Text>
-              <Text style={styles.optionDescription}>{option.description}</Text>
+              <Text style={styles.optionLabel}>{(option as any).label}</Text>
+              <Text style={styles.optionDescription}>{(option as any).description}</Text>
             </View>
-            <Switch value={settings[option.id]} onValueChange={() => toggleSetting(option.id)} trackColor={{ false: COLORS.surface, true: COLORS.primary + '50' }} thumbColor={settings[option.id] ? COLORS.primary : COLORS.textMuted} />
+            <Switch value={settings[(option as any).id]} onValueChange={() => toggleSetting((option as any).id)} trackColor={{ false: COLORS.surface, true: COLORS.primary + '50' }} thumbColor={settings[(option as any).id] ? COLORS.primary : COLORS.textMuted} />
           </View>
         ))}
 

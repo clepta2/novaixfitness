@@ -85,9 +85,9 @@ export const ACCESSIBILITY_OPTIONS: SettingItem[] = [
 ];
 
 export const LANGUAGES = [
-  { key: 'pt-BR', label: 'Portugues (Brasil)', flag: '🇧🇷' },
-  { key: 'en-US', label: 'English', flag: '🇺🇸' },
-  { key: 'es-ES', label: 'Espanol', flag: '🇪🇸' },
+  { id: 'pt-BR', key: 'pt-BR', label: 'Portugues (Brasil)', native: 'Portugues', flag: '🇧🇷' },
+  { id: 'en-US', key: 'en-US', label: 'English', native: 'English', flag: '🇺🇸' },
+  { id: 'es-ES', key: 'es-ES', label: 'Espanol', native: 'Espanol', flag: '🇪🇸' },
 ];
 
 export const AI_TABS = [

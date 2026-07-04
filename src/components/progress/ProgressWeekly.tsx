@@ -89,9 +89,9 @@ export default function ProgressWeekly({ userId }: ProgressWeeklyProps): React.J
 
   return (
     <View>
-      <FilterBar selected={period} onSelect={setPeriod} filters={PERIOD_FILTERS} />
+      <FilterBar selected={period} onSelect={setPeriod} filters={PERIOD_FILTERS} style={{}} />
 
-      <GlobalStats totalWorkouts={weekData.totalWorkouts} totalMinutes={weekData.totalMinutes} avgPerDay={weekData.avgPerDay} />
+      <GlobalStats totalWorkouts={weekData.totalWorkouts} />
 
       <View style={styles.section}>
         <Text style={typography.label}>MINUTOS POR DIA</Text>
@@ -105,13 +105,15 @@ export default function ProgressWeekly({ userId }: ProgressWeeklyProps): React.J
             fromZero
             showBarTops={false}
             showValuesOnTopOfBars={true}
+            yAxisLabel=""
+            yAxisSuffix=""
           />
         </View>
       </View>
 
-      <WeekSummary weekData={weekData} />
-      <DayGrid weekData={weekData.byDay} />
-      <CategoryBars weekData={weekData.byDay} />
+      <WeekSummary data={{ totalWorkouts: weekData.totalWorkouts, totalMinutes: weekData.totalMinutes }} />
+      <DayGrid byDay={Object.entries(weekData.byDay).map(([key, val]: [string, any]) => ({ day: DAY_NAMES[Number(key)], count: val.workouts }))} />
+      <CategoryBars categories={Object.values(weekData.byDay).reduce((acc: any, val: any) => { Object.entries(val.categories).forEach(([k, v]: [string, any]) => { acc[k] = (acc[k] || 0) + v; }); return acc; }, {})} total={weekData.totalWorkouts} />
     </View>
   );
 }

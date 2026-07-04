@@ -82,7 +82,7 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
           <Input label="RUA" placeholder="" value={street} onChangeText={setStreet} icon="location-outline" />
           <View style={styles.row}>
             <View style={{ width: 60 }}>
-              <Input label="NÚMERO" placeholder="Nº" value={number} onChangeText={setNumber} keyboardType="numeric" icon="hash" />
+              <Input label="NÚMERO" placeholder="Nº" value={number} onChangeText={setNumber} keyboardType="numeric" icon={"hash" as any} />
             </View>
             <View style={{ flex: 1 }}>
               <Input label="BAIRRO" placeholder="" value={neighborhood} onChangeText={setNeighborhood} icon="location-outline" />

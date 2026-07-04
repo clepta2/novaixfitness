@@ -140,6 +140,7 @@ export default function LibraryScreen() {
             icon="barbell-outline"
             title={t('library.noWorkouts')}
             description={t('library.noWorkoutsMessage')}
+            message=""
             actionLabel={undefined}
             onAction={undefined}
             iconColor={COLORS.textMuted}
@@ -150,7 +151,7 @@ export default function LibraryScreen() {
               <View key={workout.id} style={[styles.workoutItem, { opacity: Math.min(1, 0.5 + index * 0.1) }]}>
                 <WorkoutCard
                   workout={workout as any}
-                  onPress={() => handleWorkoutPress(workout)}
+                  onPress={() => handleWorkoutPress(workout as any)}
                   onFavorite={() => toggleFavorite(workout.id as string)}
                   isFavorite={favorites.some((f: any) => f.id === workout.id)}
                   isOfflineCached={cachedIds?.has?.(workout.id as string)}

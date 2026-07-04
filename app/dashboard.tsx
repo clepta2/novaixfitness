@@ -59,9 +59,7 @@ export default function DashboardScreen() {
               <Ionicons name="expand-outline" size={18} color={COLORS.textMuted} />
             </View>
             <BarChart
-              data={freqChartData}
-              width={SCREEN_WIDTH - 80} height={160}
-              chartConfig={chartConfig} style={styles.chart} fromZero showValuesOnTopOfBars
+              {...{data: freqChartData, width: SCREEN_WIDTH - 80, height: 160, chartConfig, style: styles.chart, fromZero: true, showValuesOnTopOfBars: true, yAxisLabel: "", yAxisSuffix: ""} as any}
             />
           </TouchableOpacity>
         )}

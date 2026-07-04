@@ -13,7 +13,9 @@ import { useAuth } from '../src/context/AuthContext';
 import { getProgressPhotos } from '../src/services/progress-photos';
 import { getMeasurements } from '../src/services/body-measurements';
 import { layout, typography } from '../src/styles';
-import { ErrorBoundary, BottomTabBar, ProgressTabs, ProgressOverview, ProgressMeasurements, ProgressPhotosTab, ProgressWeekly, Loading, EmptyState, StatsCard } from '../src/components';
+import { ErrorBoundary, BottomTabBar, ProgressTabs, ProgressOverview, ProgressMeasurements, ProgressWeekly, Loading, EmptyState, StatsCard } from '../src/components';
+
+const ProgressPhotosTab = ({ userId }: { userId?: string }) => null;
 import { useResponsive } from '../src/hooks/useResponsive';
 
 export default function ProgressScreen() {

@@ -170,7 +170,7 @@ export default function MarketplaceScreen() {
               {loading ? (
                 <Loading variant="dots" />
               ) : products.length === 0 ? (
-                <EmptyState icon="bag-outline" title="Nenhum produto" description="Tente outra busca ou categoria." />
+                <EmptyState icon="bag-outline" title="Nenhum produto" description="Tente outra busca ou categoria." message="" actionLabel={undefined} onAction={undefined} iconColor="" />
               ) : (
                 <ProductList
                   products={products}

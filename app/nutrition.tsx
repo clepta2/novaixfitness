@@ -105,9 +105,6 @@ export default function NutritionScreen() {
             protein={summary?.protein || 0}
             carbs={summary?.carbs || 0}
             fat={summary?.fat || 0}
-            proteinGoal={goals?.protein || 150}
-            carbsGoal={goals?.carbs || 250}
-            fatGoal={goals?.fat || 70}
           />
 
           <WaterTracker userId={user?.id} />

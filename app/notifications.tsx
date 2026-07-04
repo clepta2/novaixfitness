@@ -121,6 +121,10 @@ export default function NotificationsScreen() {
               icon="notifications-off-outline"
               title="Sem notificacoes"
               description="Quando algo acontecer, voce sera notificado aqui."
+              message=""
+              actionLabel={undefined}
+              onAction={undefined}
+              iconColor=""
             />
           ) : (
             <FlatList

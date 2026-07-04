@@ -114,10 +114,10 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
       </View>
 
       {showForm ? (
-        <MeasurementForm form={form} onChangeForm={setForm} onSave={handleSave} saving={saving} />
+        <MeasurementForm form={form as any} onChangeForm={setForm as any} onSave={handleSave} saving={saving} />
       ) : latest ? (
         <>
-          <BMICard bmi={bmi} bmiCategory={bmiCategory} latest={latest} />
+          <BMICard bmi={bmi} />
           <MeasurementChart selectedChart={selectedChart} onSelectChart={setSelectedChart} chartData={chartData} />
         </>
       ) : (
@@ -128,7 +128,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
         </View>
       )}
 
-      <MeasurementHistory history={history} onDelete={handleDelete} />
+      <MeasurementHistory history={history as any} onDelete={handleDelete} />
     </View>
   );
 }

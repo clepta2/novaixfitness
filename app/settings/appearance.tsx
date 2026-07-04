@@ -1,4 +1,4 @@
-﻿
+
 // app/settings/appearance.tsx
 // Configuracao de aparencia com animacoes - NOVAIX FITNESS
 
@@ -15,7 +15,7 @@ import { ErrorBoundary } from '../../src/components';
 import { APPEARANCE } from '../../src/data/settingsTexts';
 
 export default function AppearanceScreen() {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme() as any;
   const { isSmall } = useResponsive();
 
   // Animacoes

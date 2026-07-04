@@ -30,7 +30,7 @@ function Leaderboard({ userId }: Props) {
         query = supabase.from('user_workouts')
           .select('user_id, count')
           .gte('completed_at', weekAgo)
-          .order('count', { ascending: false });
+          .order('count', { ascending: false }) as any;
       }
 
       const { data } = await query as any;
@@ -39,7 +39,7 @@ function Leaderboard({ userId }: Props) {
         const userCounts = {};
         data.forEach(w => { userCounts[(w as any).user_id] = (userCounts[(w as any).user_id] || 0) + 1; });
         const sorted = Object.entries(userCounts)
-          .sort(([, a], [, b]) => b - a)
+          .sort(([, a], [, b]) => Number(b) - Number(a))
           .slice(0, 50);
 
         const userIds = sorted.map(([id]) => id);

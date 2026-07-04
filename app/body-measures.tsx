@@ -115,12 +115,12 @@ export default function BodyMeasuresScreen() {
           {history.length > 0 ? (
             <MeasurementHistory items={history} />
           ) : (
-            <EmptyState icon="body-outline" title="Nenhuma medida" description="Adicione sua primeira medida corporal." />
+            <EmptyState icon="body-outline" title="Nenhuma medida" description="Adicione sua primeira medida corporal." message="" actionLabel={undefined} onAction={undefined} iconColor="" />
           )}
         </Animated.View>
       </ScrollView>
 
-      {showForm && <MeasurementForm form={form} onChangeForm={(f) => setForm(f as typeof form)} onSave={handleSave} saving={saving} />}
+      {showForm && <MeasurementForm form={form} onChangeForm={(f) => (setForm as any)(f as typeof form)} onSave={handleSave} saving={saving} />}
     </ErrorBoundary>
   );
 }

@@ -41,11 +41,11 @@ export default function AiHubScreen() {
             <DataRow label="Telefone" value={profile?.phone} />
             <DataRow label="Objetivo" value={onboarding?.goal} />
             <DataRow label="Nível" value={onboarding?.level} />
-            <DataRow label="Tipo de treino" value={onboarding?.workoutType} />
+            <DataRow label="Tipo de treino" value={(onboarding as any)?.workoutType} />
           </View>
           <View style={styles.dataCard}>
             <Text style={styles.dataTitle}>SAÚDE</Text>
-            <DataRow label="Lesões" value={onboarding?.injuries?.map(i => i.bodyPart).join(', ') || 'Nenhuma'} />
+            <DataRow label="Lesões" value={(onboarding as any)?.injuries?.map((i: any) => i.bodyPart).join(', ') || 'Nenhuma'} />
             <DataRow label="Estresse/Sono" value={onboarding?.stressSleep} />
             <DataRow label="Horário" value={onboarding?.preferredTime} />
           </View>
@@ -60,7 +60,7 @@ export default function AiHubScreen() {
           </View>
           <View style={styles.insightCard}>
             <Ionicons name="fitness" size={20} color={COLORS.primary} />
-            <Text style={styles.insightText}>Tipo de treino: {onboarding?.workoutType || 'não definido'}. A IA seleciona exercícios adequados.</Text>
+            <Text style={styles.insightText}>Tipo de treino: {(onboarding as any)?.workoutType || 'não definido'}. A IA seleciona exercícios adequados.</Text>
           </View>
         </View>
       )}

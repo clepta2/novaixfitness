@@ -1,5 +1,6 @@
 // eslint-security-rules.js
 // Regras de segurança customizadas para ESLint
+declare var module: any;
 
 module.exports = {
   rules: {

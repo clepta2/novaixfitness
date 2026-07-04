@@ -22,7 +22,7 @@ const POSES = [
 export default function InitialPhotoScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const [photos, setPhotos] = useState({});
+  const [photos, setPhotos] = useState({} as any);
   const [saved, setSaved] = useState(false);
 
   const takePhoto = async (poseId) => {
@@ -40,15 +40,15 @@ export default function InitialPhotoScreen() {
   const savePhotos = async () => {
     if (!user?.id) return;
     try {
-      const photoData = {};
-      for (const [poseId, uri] of Object.entries(photos)) {
+      const photoData = {} as any;
+      for (const [poseId, uri] of Object.entries(photos) as any) {
         const fileName = `${user.id}/${poseId}_${Date.now()}.jpg`;
-        const response = await fetch(uri);
+        const response = await fetch(uri as string);
         const blob = await response.blob();
         const { data } = await supabase.storage.from('progress-photos').upload(fileName, blob);
         if (data) photoData[poseId] = supabase.storage.from('progress-photos').getPublicUrl(data.path).data.publicUrl;
       }
-      await supabase.from('initial_photos').insert({ user_id: user.id, front_url: photoData.front, side_url: photoData.side, back_url: photoData.back });
+      await supabase.from('initial_photos').insert({ user_id: user.id, front_url: (photoData as any).front, side_url: (photoData as any).side, back_url: (photoData as any).back });
       setSaved(true);
     } catch (err) {
       Alert.alert('Erro', 'Não foi possível salvar as fotos');

@@ -17,6 +17,12 @@ interface OnboardingData {
 interface Step {
   type: string;
   field?: string;
+  title?: string;
+  subtitle?: string;
+  buttonText?: string;
+  sections?: any[];
+  options?: any[];
+  fields?: any[];
   [key: string]: any;
 }
 

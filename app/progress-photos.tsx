@@ -56,8 +56,8 @@ export default function ProgressPhotosScreen() {
         <PhotoGrid
           photos={filteredPhotos as any}
           selectedIds={comparePhotos as any}
-          onSelect={(p) => compareMode ? toggleCompare(p) : setSelectedPhoto(p)}
-          onLongPress={handleDelete}
+          onSelect={(p: any) => compareMode ? toggleCompare(p) : setSelectedPhoto(p)}
+          onLongPress={handleDelete as any}
           compareMode={compareMode}
         />
 
@@ -71,14 +71,14 @@ export default function ProgressPhotosScreen() {
         <Text style={[typography.label, { marginTop: SPACING.xl }]}>TODAS AS FOTOS</Text>
         <View style={styles.allGrid}>
           {photos.slice(0, 12).map((photo) => (
-            <TouchableOpacity key={photo.id} style={styles.allItem} accessibilityLabel={`Ver foto ${photo.id}`} accessibilityRole="button" onPress={() => setSelectedPhoto(photo)}>
-              <Image source={{ uri: photo.image_url }} style={styles.allThumb} />
+            <TouchableOpacity key={photo.id} style={styles.allItem} accessibilityLabel={`Ver foto ${photo.id}`} accessibilityRole="button" onPress={() => setSelectedPhoto(photo as any)}>
+              <Image source={{ uri: photo.image_url as string }} style={styles.allThumb} />
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
 
-      <PhotoModal photo={selectedPhoto as any} onCompare={toggleCompare} onDelete={handleDelete} onClose={() => setSelectedPhoto(null)} />
+      <PhotoModal photo={selectedPhoto as any} onCompare={toggleCompare as any} onDelete={handleDelete as any} onClose={() => setSelectedPhoto(null)} />
       {showPicker && (
         <PhotoPicker
           selectedLabel={selectedLabel}

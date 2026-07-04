@@ -1,4 +1,4 @@
-﻿
+
 // app/weekly-progress.tsx
 // Progresso semanal com animacoes - NOVAIX FITNESS
 
@@ -71,13 +71,7 @@ export default function WeeklyProgressScreen() {
               <View style={styles.chartCard}>
                 <Text style={styles.chartTitle}>TREINOS POR DIA</Text>
                 <BarChart
-                  data={{ labels: weekData.byDay.map((d: any) => d.day), datasets: [{ data: weekData.byDay.map((d: any) => d.count) }] }}
-                  width={SCREEN_WIDTH - 80}
-                  height={180}
-                  chartConfig={chartConfig}
-                  style={styles.chart}
-                  showValuesOnTopOfBars
-                  fromZero
+                  {...{data: { labels: weekData.byDay.map((d: any) => d.day), datasets: [{ data: weekData.byDay.map((d: any) => d.count) }] }, width: SCREEN_WIDTH - 80, height: 180, chartConfig, style: styles.chart, showValuesOnTopOfBars: true, fromZero: true} as any}
                 />
               </View>
             )}

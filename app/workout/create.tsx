@@ -112,16 +112,12 @@ export default function CreateWorkoutScreen() {
           {/* Step 1: Exercicios */}
           {step === 1 && (
             <View>
-              <ExerciseSearch onSelect={addExercise} />
+              <ExerciseSearch onSelect={addExercise as any} />
               <View style={styles.exerciseList}>
                 {exercises.map((ex, i) => (
-                  <ExerciseConfigurator 
+                  <ExerciseConfigurator
                     key={`${ex.name}-${i}`}
-                    exercise={ex} 
-                    index={i}
-                    config={ex}
-                    onChange={(config) => updateConfig(i, config)} 
-                    onRemove={() => removeExercise(i)} 
+                    {...{ exercise: ex, index: i, config: ex, onChange: (config: any) => updateConfig(i, config), onRemove: () => removeExercise(i) } as any}
                   />
                 ))}
               </View>
@@ -131,12 +127,12 @@ export default function CreateWorkoutScreen() {
           {/* Step 2: Preview */}
           {step === 2 && (
             <View>
-              <WorkoutPreview 
-                name={form.name} 
-                category={ALL_CATEGORIES.find(c => c.id === form.category)?.label} 
-                level={LEVELS.find(l => l.id === form.level)?.label} 
-                exercises={exercises} 
-                duration={form.duration} 
+              <WorkoutPreview
+                name={form.name}
+                category={ALL_CATEGORIES.find(c => c.id === form.category)?.label}
+                level={LEVELS.find(l => l.id === form.level)?.label}
+                exercises={exercises as any}
+                duration={Number(form.duration)}
               />
             </View>
           )}
