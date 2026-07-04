@@ -19,6 +19,7 @@ export default function MarketplaceDetailScreen() {
   const { id } = useLocalSearchParams();
   const productId = Array.isArray(id) ? id[0] : id;
   const { user } = useAuth();
+  const styles = useMarketplaceDetailStyles();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [favorited, setFavorited] = useState(false);
