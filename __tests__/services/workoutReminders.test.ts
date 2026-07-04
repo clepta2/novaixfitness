@@ -19,6 +19,17 @@ jest.mock('expo-notifications', () => {
   };
 });
 
+jest.mock('../../src/utils/tryIf', () => ({
+  tryIf: jest.fn(async (fn) => {
+    try {
+      const data = await fn();
+      return { ok: true, data };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }),
+}));
+
 jest.mock('../../src/config/supabase', () => {
   const chain = {
     select: jest.fn(() => chain),
