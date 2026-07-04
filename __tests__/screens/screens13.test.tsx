@@ -62,7 +62,6 @@ jest.mock('../../src/services/gamification', () => ({ getUserAchievements: jest.
 jest.mock('../../src/constants/gamification', () => ({ GAMIFICATION: {}, ACHIEVEMENTS: [], XP_VALUES: {} }));
 jest.mock('../../src/services/appleWatch', () => ({ isAvailable: jest.fn().mockResolvedValue(false), startWorkout: jest.fn().mockResolvedValue({}), stopWorkout: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/healthConnect', () => ({ isAvailable: jest.fn().mockResolvedValue(false), syncData: jest.fn().mockResolvedValue({}) }));
-jest.mock('../../src/services/strava', () => ({ isAuthenticated: jest.fn().mockResolvedValue(false), authenticate: jest.fn().mockResolvedValue({}), syncActivities: jest.fn().mockResolvedValue([]) }));
 jest.mock('../../src/services/body-measurements', () => ({ getMeasurements: jest.fn().mockResolvedValue([]), addMeasurement: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/progress-photos', () => ({ getPhotos: jest.fn().mockResolvedValue([]), addPhoto: jest.fn().mockResolvedValue({}) }));
 jest.mock('../../src/services/notifications', () => ({ getNotifications: jest.fn().mockResolvedValue([]), markAsRead: jest.fn().mockResolvedValue({}) }));
