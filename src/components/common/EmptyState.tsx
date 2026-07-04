@@ -18,7 +18,8 @@ import { useFadeInUp } from '../../utils/animations';
  * @param {function} onAction - callback do botão
  * @param {string} iconColor - cor do ícone (default: textMuted)
  */
-function EmptyState({ icon = 'search-outline', title, description, actionLabel, onAction, iconColor }) {
+function EmptyState({ icon = 'search-outline', title, description, message, actionLabel, onAction, iconColor }) {
+  const displayText = description || message;
   const { opacity, translateY } = useFadeInUp(100);
 
   return (
@@ -31,7 +32,7 @@ function EmptyState({ icon = 'search-outline', title, description, actionLabel, 
         />
       </View>
       <Text style={styles.title}>{title}</Text>
-      {description && <Text style={styles.description}>{description}</Text>}
+      {displayText && <Text style={styles.description}>{displayText}</Text>}
       {actionLabel && onAction && (
         <View style={styles.actionContainer}>
           <Button

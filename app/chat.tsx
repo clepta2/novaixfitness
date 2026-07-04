@@ -1,8 +1,8 @@
-﻿
+
 // app/chat.tsx
 // Pagina de chats com melhorias visuais - NOVAIX FITNESS
 
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
