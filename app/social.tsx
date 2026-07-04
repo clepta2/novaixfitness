@@ -189,10 +189,14 @@ export default function SocialScreen() {
   };
   const handleGymCheckIn = async ({ gymName }) => {
     if (!user?.id) return;
-    await checkAndPerform(ACTIONS.CHECK_IN, 'check_in', async () => {
-      await checkIn(user.id, gymName);
-      await loadCheckIns();
-    }, t('social.errorCheckIn'));
+    try {
+      await checkAndPerform(ACTIONS.CHECK_IN, 'check_in', async () => {
+        await checkIn(user.id, gymName);
+        await loadCheckIns();
+      }, t('social.errorCheckIn'));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao fazer check-in:', err);
+    }
   };
   const handleViewStory = (storyGroup) => {
     const idx = stories.findIndex(s => s.userId === storyGroup.userId);
