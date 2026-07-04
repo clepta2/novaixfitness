@@ -76,8 +76,10 @@ export function useCreateWorkout() {
     else if (configIndex > i) setConfigIndex(configIndex - 1);
   }, [configIndex]);
 
-  const updateConfig = useCallback((cfg: Partial<ExerciseItem>) => {
-    setExercises(prev => prev.map((e, i) => i === configIndex ? { ...e, ...cfg } : e));
+  const updateConfig = useCallback((indexOrCfg: number | Partial<ExerciseItem>, cfg?: Partial<ExerciseItem>) => {
+    const idx = typeof indexOrCfg === 'number' ? indexOrCfg : configIndex;
+    const config = typeof indexOrCfg === 'number' ? cfg : indexOrCfg;
+    setExercises(prev => prev.map((e, i) => i === idx ? { ...e, ...config } : e));
   }, [configIndex]);
 
   const validateStep = (): boolean => {

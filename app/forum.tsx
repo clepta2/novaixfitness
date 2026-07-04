@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -45,7 +45,7 @@ export default function ForumScreen() {
   const handleCreatePost = async (postData) => {
     if (!user) return;
     const { error } = await insert({ user_id: user.id, title: postData.title, content: postData.content, category: postData.category });
-    if (error) alert('Erro ao criar post: ' + error);
+    if (error) Alert.alert('Erro', 'Ao criar post: ' + error);
     else refetch();
   };
 

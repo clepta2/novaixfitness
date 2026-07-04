@@ -51,22 +51,25 @@ export default function AssessmentScreen() {
   const progress = ((currentTest + 1) / TESTS.length) * 100;
 
   const handleAnswer = (score: number) => {
-    setAnswers({ ...answers, [test.id]: score });
+    const newAnswers = { ...answers, [test.id]: score };
+    setAnswers(newAnswers);
     if (currentTest < TESTS.length - 1) {
       setCurrentTest(currentTest + 1);
-      saveAssessment();
+    } else {
+      saveAssessment(newAnswers);
     }
   };
 
-  const saveAssessment = async () => {
+  const saveAssessment = async (finalAnswers: Record<string, number>) => {
     if (!user?.id) return;
+    const finalScore = Object.values(finalAnswers).reduce((sum, score) => sum + score, 0);
     try {
       await supabase.from('fitness_assessments').insert({
         user_id: user.id,
-        pushups_result: TESTS[0].options[answers[TESTS[0].id] || 0],
-        squat_result: TESTS[1].options[answers[TESTS[1].id] || 0],
-        plank_result: TESTS[2].options[answers[TESTS[2].id] || 0],
-        overall_score: totalScore,
+        pushups_result: TESTS[0].options[finalAnswers[TESTS[0].id] || 0],
+        squat_result: TESTS[1].options[finalAnswers[TESTS[1].id] || 0],
+        plank_result: TESTS[2].options[finalAnswers[TESTS[2].id] || 0],
+        overall_score: finalScore,
       });
       setSaved(true);
     } catch (err) {

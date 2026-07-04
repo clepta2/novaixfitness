@@ -127,7 +127,7 @@ export default function FeedScreen() {
           <FeedEmptyState hasFilter={selectedFilter !== t('common.all')} />
         ) : (
           filteredPosts.map((post, index) => (
-            <View key={post.id} style={[styles.postWrapper, { opacity: Math.min(1, 0.5 + index * 0.1) }]}>
+            <View key={post.id} style={[styles.postWrapper, { opacity: Math.min(1, 0.8 + index * 0.05) }]}>
               <PostCard post={post} onLike={handleLike} onComment={handleComment} currentUserId={user?.id} />
             </View>
           ))
