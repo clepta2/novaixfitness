@@ -54,7 +54,7 @@ export default function useWorkoutTimer(workout: Workout | null) {
     const exercises = workout?.exercises || [];
     const exercise = exercises[idx];
     if (!exercise) { completeWorkout(); return; }
-    const exerciseTime = (exercise.rest || 60);
+    const exerciseTime = 45;
     setTimeRemaining(exerciseTime);
     setTotalTime(exerciseTime);
     setPhase('exercising');
