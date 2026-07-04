@@ -72,7 +72,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
     return { streakDay, xp, isNew: true };
   } catch (err) {
     if (__DEV__) console.error('Erro no check-in:', err);
-    return { alreadyCheckedIn: false, xp: 0, isNew: false };
+    return { alreadyCheckedIn: false, streakDay: 0, xp: 0, isNew: false };
   }
 }
 
