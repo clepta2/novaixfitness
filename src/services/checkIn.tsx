@@ -60,13 +60,13 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
 
     const { data: profile } = await supabase
       .from(TABLES.PROFILES)
-      .select('xp')
+      .select('total_xp')
       .eq('id', userId)
       .single();
 
     await supabase
       .from(TABLES.PROFILES)
-      .update({ xp: (profile?.xp || 0) + xp })
+      .update({ total_xp: (profile?.total_xp || 0) + xp })
       .eq('id', userId);
 
     return { streakDay, xp, isNew: true };
