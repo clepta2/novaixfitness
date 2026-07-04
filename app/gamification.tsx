@@ -15,7 +15,7 @@ import { useAuth } from '../src/context/AuthContext';
 import { useI18n } from '../src/i18n';
 import { useResponsive } from '../src/hooks/useResponsive';
 
-function StatsSummary({ data }) {
+function StatsSummary({ data, unlockedCount }) {
   const { t } = useI18n();
   const stats = [
     { key: 'totalXP', label: t('gamification.totalXP'), icon: 'flash', color: COLORS.primary },
@@ -25,7 +25,7 @@ function StatsSummary({ data }) {
   ];
   const values = {
     totalXP: `${data?.total_xp || data?.totalXP || 0}`,
-    achievements: `${unlockedIds?.length || 0}/${ACHIEVEMENTS.length}`,
+    achievements: `${unlockedCount || 0}/${ACHIEVEMENTS.length}`,
     streak: t('common.days', { count: data?.streak || 0 }),
     totalWorkouts: `${data?.totalWorkouts || 0}`,
   };
@@ -91,7 +91,7 @@ function GamificationContent() {
       <Header title={t('gamification.title')} showBack />
 
       <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-        <StatsSummary data={data} />
+        <StatsSummary data={data} unlockedCount={unlockedIds?.length} />
       </Animated.View>
 
       <View style={styles.section}>
