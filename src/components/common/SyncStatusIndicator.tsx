@@ -15,14 +15,13 @@ interface Props {
 export default function SyncStatusIndicator({ pendingCount = 0 }: Props) {
   const { isOnline } = useNetworkStatus();
   const colors = useColors();
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1, duration: 200, useNativeDriver: true
     }).start();
-  }, [isOnline]);
+  }, [isOnline, fadeAnim]);
 
   const isSyncing = !isOnline && pendingCount > 0;
 
