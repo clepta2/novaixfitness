@@ -88,8 +88,7 @@ export default function SocialScreen() {
     serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); });
     loadStories();
     loadCheckIns();
-    loadUserLikes();
-  }, [user?.id, loadStories, loadCheckIns, loadUserLikes]);
+  }, [user?.id, loadStories, loadCheckIns]);
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
@@ -115,10 +114,11 @@ export default function SocialScreen() {
       }
       await loadStories();
       await loadCheckIns();
+      await loadUserLikes();
     } finally {
       setRefreshing(false);
     }
-  }, [refetch, user?.id, loadStories, loadCheckIns]);
+  }, [refetch, user?.id, loadStories, loadCheckIns, loadUserLikes]);
   const handleLike = async (postId) => {
     if (!user || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);

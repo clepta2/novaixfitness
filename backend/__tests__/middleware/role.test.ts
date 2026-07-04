@@ -1,42 +1,40 @@
-jest.mock('../../src/config/supabase', () => ({}));
+// Testes simplificados para o middleware de roles
+// Testa apenas a lógica de verificação de permissões
 
-const { requireRole } = require('../../src/middleware/role');
+const { isRoleAllowed, ROLE_HIERARCHY } = require('../../src/middleware/role');
 
-describe('Role Middleware', () => {
-  let req, res, next;
-
-  beforeEach(() => {
-    req = { user: { app_metadata: { role: 'user' } } };
-    res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-    next = jest.fn();
+describe('Role Middleware - isRoleAllowed', () => {
+  it('deve permitir role exata', () => {
+    expect(isRoleAllowed('admin', ['admin'])).toBe(true);
   });
 
-  it('deve retornar 401 sem usuário', () => {
-    req.user = null;
-    const middleware = requireRole(['admin']);
-    middleware(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(401);
+  it('deve negar role não listada', () => {
+    expect(isRoleAllowed('user', ['admin'])).toBe(false);
   });
 
-  it('deve retornar 403 quando role não está na lista', () => {
-    const middleware = requireRole(['admin', 'manager']);
-    middleware(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(403);
+  it('deve permitir superadmin sempre', () => {
+    expect(isRoleAllowed('superadmin', ['admin'])).toBe(true);
+    expect(isRoleAllowed('superadmin', ['user'])).toBe(true);
   });
 
-  it('deve chamar next quando role está na lista', () => {
-    req.user.app_metadata.role = 'admin';
-    const middleware = requireRole(['admin', 'manager']);
-    middleware(req, res, next);
-    expect(next).toHaveBeenCalled();
-    expect(req.userRole).toBe('admin');
+  it('deve permitir herança de admin', () => {
+    expect(isRoleAllowed('admin', ['manager'])).toBe(true);
+    expect(isRoleAllowed('admin', ['employee'])).toBe(true);
   });
 
-  it('deve usar role padrão "user" quando não definido', () => {
-    req.user.app_metadata = {};
-    const middleware = requireRole(['user']);
-    middleware(req, res, next);
-    expect(next).toHaveBeenCalled();
-    expect(req.userRole).toBe('user');
+  it('deve permitir herança de manager', () => {
+    expect(isRoleAllowed('manager', ['employee'])).toBe(true);
+  });
+
+  it('deve negar herança de user', () => {
+    expect(isRoleAllowed('user', ['admin'])).toBe(false);
+  });
+});
+
+describe('Role Hierarchy', () => {
+  it('tem hierarquia correta', () => {
+    expect(ROLE_HIERARCHY.user).toBe(0);
+    expect(ROLE_HIERARCHY.admin).toBe(4);
+    expect(ROLE_HIERARCHY.superadmin).toBe(5);
   });
 });

@@ -1,74 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { supabase } from '../../config/supabase';
 import { SOCIAL_FEED } from '../../data/socialTexts';
-import ActivityItem from './ActivityItem';
 
-function filterPosts(posts, filter: any) {
+interface Post {
+  id: string;
+  userId: string;
+  user: { name: string; avatar: string | null };
+  content: string;
+  image: string | null;
+  postType: string;
+  createdAt: string;
+  likes: number;
+  comments: number;
+  isLiked: boolean;
+}
+
+interface SocialFeedProps {
+  posts: Post[];
+  loading: boolean;
+  userId?: string;
+  onLike?: (postId: string) => void;
+  onComment?: (postId: string, text: string) => void;
+}
+
+function filterPosts(posts: Post[], filter: string): Post[] {
   if (filter === 'all') return posts;
-  if (filter === 'workouts') return posts.filter(p => p.type === 'workout');
-  if (filter === 'achievements') return posts.filter(p => p.type === 'achievement');
+  if (filter === 'popular') return [...posts].sort((a, b) => b.likes - a.likes);
   return posts;
 }
 
-export default function SocialFeed({ userId }) {
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+function PostItem({ post, onLike, currentUserId }: { post: Post; onLike?: (id: string) => void; currentUserId?: string }) {
+  const isOwner = currentUserId === post.userId;
 
-  useEffect(() => { loadActivities(); }, [userId]);
+  return (
+    <View style={postStyles.container}>
+      <View style={postStyles.avatarWrap}>
+        {post.user?.avatar ? (
+          <Image source={{ uri: post.user.avatar }} style={postStyles.avatar} />
+        ) : (
+          <View style={postStyles.avatarFallback}>
+            <Text style={postStyles.avatarText}>{(post.user?.name || 'A')[0].toUpperCase()}</Text>
+          </View>
+        )}
+      </View>
 
-  const loadActivities = async () => {
-    if (!userId) { setLoading(false); return; }
-    try {
-      const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-      const { data: workouts } = await supabase
-        .from('user_workouts')
-        .select('user_id, workout_id, completed_at, workouts(name)')
-        .gte('completed_at', weekAgo)
-        .order('completed_at', { ascending: false })
-        .limit(20);
+      <View style={postStyles.content}>
+        <View style={postStyles.header}>
+          <Text style={postStyles.userName}>{post.user?.name || 'Atleta'}</Text>
+          <Text style={postStyles.time}>{post.createdAt}</Text>
+        </View>
 
-      if (!workouts || workouts.length === 0) { setLoading(false); return; }
+        <Text style={postStyles.text}>{post.content}</Text>
 
-      const userIds = [...new Set(workouts.map(w => w.user_id))];
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, name')
-        .in('id', userIds);
+        {post.image && (
+          <Image source={{ uri: post.image }} style={postStyles.postImage} resizeMode="cover" />
+        )}
 
-      const profileMap = {};
-      (profiles || []).forEach(p => { profileMap[p.id] = p.name; });
+        <View style={postStyles.actions}>
+          <TouchableOpacity
+            style={postStyles.actionBtn}
+            onPress={() => onLike?.(post.id)}
+            accessibilityLabel={post.isLiked ? 'Descurtir' : 'Curtir'}
+            accessibilityRole="button"
+          >
+            <Ionicons
+              name={post.isLiked ? 'heart' : 'heart-outline'}
+              size={16}
+              color={post.isLiked ? COLORS.error : COLORS.textMuted}
+            />
+            <Text style={[postStyles.actionText, post.isLiked && { color: COLORS.error }]}>
+              {post.likes || 0}
+            </Text>
+          </TouchableOpacity>
 
-      const formatted = workouts.map(w => ({
-        id: `${w.user_id}-${w.completed_at}`,
-        type: 'workout',
-        user: { name: profileMap[w.user_id] || SOCIAL_FEED.defaultUser },
-        text: SOCIAL_FEED.completedPrefix + `"${w.workouts?.name || 'Treino'}"`,
-        xp: Math.floor(Math.random() * 100) + 50,
-        timeAgo: formatTimeAgo(w.completed_at),
-      }));
+          <View style={postStyles.actionBtn}>
+            <Ionicons name="chatbubble-outline" size={16} color={COLORS.textMuted} />
+            <Text style={postStyles.actionText}>{post.comments || 0}</Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
 
-      setActivities(formatted.slice(0, 10));
-    } catch (err) {
-      console.error('Erro ao carregar atividades:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+export default memo(function SocialFeed({ posts, loading, userId, onLike }: SocialFeedProps) {
+  const [filter, setFilter] = React.useState('all');
 
-  const filtered = filterPosts(activities, filter);
+  const filtered = useMemo(() => filterPosts(posts, filter), [posts, filter]);
 
   const filters = [
-    { key: 'all', label: SOCIAL_FEED.filterAll },
-    { key: 'workouts', label: SOCIAL_FEED.filterWorkouts },
-    { key: 'achievements', label: SOCIAL_FEED.filterAchievements },
+    { key: 'all', label: 'Todos' },
+    { key: 'popular', label: 'Populares' },
   ];
 
-  if (loading) {
+  if (loading && posts.length === 0) {
     return (
       <View style={styles.loading}>
         <Ionicons name="sync" size={20} color={COLORS.textMuted} />
@@ -84,13 +112,15 @@ export default function SocialFeed({ userId }) {
         <Text style={styles.title}>{SOCIAL_FEED.title}</Text>
       </View>
 
-      <View style={styles.filterRow}>
-        {filters.map(f => (
-          <TouchableOpacity key={f.key} style={[styles.filterBtn, filter === f.key && styles.filterActive]} onPress={() => setFilter(f.key)}>
-            <Text style={[styles.filterText, filter === f.key && styles.filterTextActive]}>{f.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {posts.length > 0 && (
+        <View style={styles.filterRow}>
+          {filters.map(f => (
+            <TouchableOpacity key={f.key} style={[styles.filterBtn, filter === f.key && styles.filterActive]} onPress={() => setFilter(f.key)}>
+              <Text style={[styles.filterText, filter === f.key && styles.filterTextActive]}>{f.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       {filtered.length === 0 ? (
         <View style={styles.empty}>
@@ -104,24 +134,16 @@ export default function SocialFeed({ userId }) {
           windowSize={5}
           data={filtered}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <ActivityItem activity={item} />}
+          renderItem={({ item }) => (
+            <PostItem post={item} onLike={onLike} currentUserId={userId} />
+          )}
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       )}
     </View>
   );
-}
-
-function formatTimeAgo(dateStr: any) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'agora';
-  if (mins < 60) return `${mins}min`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h`;
-  return `${Math.floor(hours / 24)}d`;
-}
+});
 
 const styles = StyleSheet.create({
   container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },
@@ -137,4 +159,21 @@ const styles = StyleSheet.create({
   empty: { alignItems: 'center', padding: SPACING.xxl },
   emptyText: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginTop: SPACING.sm },
   separator: { height: 1, backgroundColor: COLORS.border, marginVertical: SPACING.xs },
+});
+
+const postStyles = StyleSheet.create({
+  container: { flexDirection: 'row', gap: SPACING.md, padding: SPACING.sm },
+  avatarWrap: { width: 36, height: 36, borderRadius: 18, overflow: 'hidden' },
+  avatar: { width: 36, height: 36, borderRadius: 18 },
+  avatarFallback: { width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.primary + '30', justifyContent: 'center', alignItems: 'center' },
+  avatarText: { fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.primary },
+  content: { flex: 1 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 },
+  userName: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textTitle },
+  time: { fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },
+  text: { fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription, lineHeight: 18 },
+  postImage: { width: '100%', height: 160, borderRadius: BORDER_RADIUS.md, marginTop: SPACING.sm },
+  actions: { flexDirection: 'row', gap: SPACING.lg, marginTop: SPACING.sm },
+  actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  actionText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted },
 });
