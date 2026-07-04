@@ -152,6 +152,7 @@ jest.mock('../../src/services/voiceCoach', () => ({
 jest.mock('../../src/hooks/useWorkoutTimer', () => {
   return () => ({
     time: 0,
+    elapsed: 0,
     formatTime: () => '00:00',
     isRunning: false,
     isPaused: false,
@@ -164,6 +165,8 @@ jest.mock('../../src/hooks/useWorkoutTimer', () => {
     currentSet: 0,
     isResting: false,
     restTime: 0,
+    logs: [],
+    totalXP: 0,
   });
 });
 

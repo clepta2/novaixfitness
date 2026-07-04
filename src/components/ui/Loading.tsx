@@ -1,7 +1,7 @@
 // src/components/ui/Loading.tsx
 // Componente de carregamento animado - NOVAIX FITNESS
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
