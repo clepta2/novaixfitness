@@ -2,11 +2,24 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import { Platform, Alert } from 'react-native';
 import { APP_CONFIG } from '../config/app';
+import { Workout } from '../types/workout';
 import { tryIf } from '../utils/tryIf';
 
 const WEBSITE_URL = APP_CONFIG.links.website;
 
-export async function shareWorkout(workout) {
+interface ShareAchievement {
+  icon?: string;
+  name: string;
+  description?: string;
+}
+
+interface ShareProgress {
+  streak: number;
+  totalWorkouts: number;
+  totalMinutes: number;
+}
+
+export async function shareWorkout(workout: Workout) {
   if (!workout) return;
 
   const message = `💪 Treine com o NOVAIX Fitness!\n\n` +
@@ -31,7 +44,7 @@ export async function shareWorkout(workout) {
   if (!result.ok && __DEV__) console.error('Erro ao compartilhar:', result.error);
 }
 
-export async function shareAchievement(achievement) {
+export async function shareAchievement(achievement: ShareAchievement) {
   if (!achievement) return;
 
   const message = `🏆 Conquista desbloqueada no NOVAIX Fitness!\n\n` +
@@ -54,7 +67,7 @@ export async function shareAchievement(achievement) {
   if (!result.ok && __DEV__) console.error('Erro ao compartilhar conquista:', result.error);
 }
 
-export async function shareProgress(stats) {
+export async function shareProgress(stats: ShareProgress) {
   if (!stats) return;
 
   const message = `📊 Meu progresso no NOVAIX Fitness:\n\n` +
