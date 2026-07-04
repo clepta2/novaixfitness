@@ -2,9 +2,7 @@
 // Performance utilities - re-exportacao
 
 import React, { memo, lazy, Suspense } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-// @ts-ignore
-import { Image } from 'expo-image';
+import { View, ActivityIndicator, Image, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
 export function createLazyComponent<T extends React.ComponentType<any>>(importFn: () => Promise<{ default: T }>) {
@@ -36,8 +34,7 @@ export function deepMemo<P>(Component: React.ComponentType<P>, areEqual?: (prev:
 }
 
 export function CachedImage({ uri, style, placeholder, ...props }: { uri: string; style?: any; placeholder?: any; [key: string]: any }) {
-  return <Image source={{ uri }} style={style} placeholder={placeholder || require('../../../assets/images/placeholder.png')}
-    contentFit="cover" transition={300} cachePolicy="memory-disk" {...props} />;
+  return <Image source={{ uri }} style={style} resizeMode="cover" {...props} />;
 }
 
 export const OPTIMIZED_FLATLIST_CONFIG = {
@@ -67,9 +64,7 @@ export function debounce<T extends (...args: any[]) => void>(fn: T, delay: numbe
 
 export async function prefetchImages(urls: string[]) {
   try {
-    // @ts-ignore
-    const { Image: ExpoImage } = await import('expo-image');
-    return Promise.allSettled(urls.filter(Boolean).map(url => ExpoImage.prefetch(url)));
+    return Promise.allSettled(urls.filter(Boolean).map(url => Image.prefetch(url)));
   } catch (err) {
     if (__DEV__) console.warn('Prefetch images error:', err);
     return [];

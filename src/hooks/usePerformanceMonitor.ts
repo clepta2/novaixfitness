@@ -61,7 +61,7 @@ export function usePerformanceMonitor({
 
     return () => {
       const totalTime = Date.now() - metricsRef.current.mountTime;
-      console.log(
+      if (__DEV__) console.log(
         `[Performance] ${componentName} lifecycle:`,
         {
           mountTime: metricsRef.current.mountTime,
@@ -89,7 +89,7 @@ export function useMeasureTime() {
       const result = await fn();
       const duration = performance.now() - start;
       if (__DEV__) {
-        console.log(`[Timer] ${name}: ${duration.toFixed(2)}ms`);
+        if (__DEV__) console.log(`[Timer] ${name}: ${duration.toFixed(2)}ms`);
       }
       return result;
     } catch (error) {
