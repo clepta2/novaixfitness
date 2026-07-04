@@ -12,7 +12,7 @@ import { layout, typography } from '../src/styles';
 import { ErrorBoundary, FavoriteButton, ProductCard, ImageCarousel, ProductReviews } from '../src/components';
 import { shareProduct, shareToWhatsApp } from '../src/components/marketplace';
 import { getProductById, getRelatedProducts, toggleFavorite, isFavorited } from '../src/services/marketplace';
-import { styles } from '../src/styles/marketplaceDetailStyles';
+import { useMarketplaceDetailStyles } from '../src/styles/marketplaceDetailStyles';
 
 export default function MarketplaceDetailScreen() {
   const router = useRouter();

@@ -65,7 +65,8 @@ export async function openSpotifySearch(query: string): Promise<SpotifyResult> {
 }
 
 export function getPlaylistByWorkoutType(workoutType: string): Playlist {
-  return PLAYLISTS[workoutType] || PLAYLISTS.strength;
+  const key = workoutType.toLowerCase();
+  return PLAYLISTS[key] || PLAYLISTS.strength;
 }
 
 export const getPlaylistForWorkout = getPlaylistByWorkoutType;

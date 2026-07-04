@@ -94,7 +94,7 @@ describe('Podcast', () => {
   });
 
   it('filters by category', () => {
-    const episodes = podcast.getEpisodes('treino');
+    const episodes = podcast.getEpisodesByCategory('treino');
     expect(episodes.every(ep => ep.category === 'treino')).toBe(true);
   });
 
@@ -107,8 +107,8 @@ describe('Podcast', () => {
     expect(podcast.getEpisodeById('unknown')).toBeNull();
   });
 
-  it('returns playback status', () => {
-    const status = podcast.getPlaybackStatus();
-    expect(status.isPlaying).toBe(false);
+  it('returns null when no sound playing', async () => {
+    const status = await podcast.getPlaybackStatus();
+    expect(status).toBeNull();
   });
 });
