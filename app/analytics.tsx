@@ -68,6 +68,7 @@ export default function AnalyticsScreen() {
 
   if (loading) {
     return (
+      <ErrorBoundary screenName="Analytics">
       <View style={layout.screen}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
@@ -80,6 +81,7 @@ export default function AnalyticsScreen() {
           <Loading variant="pulse" />
         </View>
       </View>
+      </ErrorBoundary>
     );
   }
 
