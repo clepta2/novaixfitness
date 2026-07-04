@@ -107,14 +107,27 @@ export function useGamification(): UseGamificationReturn {
 
   const refresh = useCallback((): void => { loadData(); }, [user?.id]);
 
+  const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
+  const xpBreakdown = profile ? {
+    workout: profile.totalWorkouts * 50,
+    streak: profile.streak * 5,
+    achievements: achievements.filter(a => a.unlocked).reduce((sum, a) => sum + (a.xpReward || 0), 0),
+  } : {};
+
   return {
     profile,
+    data: profile,
     achievements,
     rankings,
     userRank,
     loading,
+    refreshing: false,
+    error: null,
     award,
     refresh,
+    onRefresh: refresh,
+    unlockedIds,
+    xpBreakdown,
     level: calculateLevel(profile?.xp || 0),
     xpForNext: getXPForNextLevel(profile?.xp || 0),
     levelProgress: getLevelProgress(profile?.xp || 0),

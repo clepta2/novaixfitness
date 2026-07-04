@@ -100,10 +100,10 @@ export default function CreateWorkoutScreen() {
                 {[30, 45, 60, 90].map(d => (
                   <TouchableOpacity 
                     key={d} 
-                    style={[styles.durationCard, form.duration === d && styles.durationCardActive]} 
-                    onPress={() => updateForm('duration', d)}
+                    style={[styles.durationCard, form.duration === String(d) && styles.durationCardActive]} 
+                    onPress={() => updateForm('duration', String(d))}
                   >
-                    <Text style={[styles.durationText, form.duration === d && styles.durationTextActive]}>{d}</Text>
+                    <Text style={[styles.durationText, form.duration === String(d) && styles.durationTextActive]}>{d}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
