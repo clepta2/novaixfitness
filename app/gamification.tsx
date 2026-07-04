@@ -113,7 +113,7 @@ function GamificationContent() {
       </View>
 
       <View style={styles.section}>
-        <GamificationChallenges progress={{ workouts: data?.totalWorkouts || 0, minutes: data?.totalMinutes || 0, posts: data?.social_first_post_count || 0, streak: data?.maxStreak || 0 }} />
+        <GamificationChallenges progress={{ workouts: data?.total_workouts || data?.totalWorkouts || 0, minutes: data?.total_minutes || data?.totalMinutes || 0, posts: data?.social_first_post_count || 0, streak: data?.max_streak || data?.maxStreak || data?.streak || 0 }} />
       </View>
 
       <View style={styles.bottomSpacer} />
