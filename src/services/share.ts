@@ -47,6 +47,8 @@ export async function shareAchievement(achievement) {
         mimeType: 'text/plain',
         dialogTitle: 'Compartilhar conquista',
       });
+    } else {
+      Alert.alert('Compartilhar conquista', message);
     }
   }, { retries: 2, baseDelay: 500 });
   if (!result.ok && __DEV__) console.error('Erro ao compartilhar conquista:', result.error);
@@ -69,6 +71,8 @@ export async function shareProgress(stats) {
         mimeType: 'text/plain',
         dialogTitle: 'Compartilhar progresso',
       });
+    } else {
+      Alert.alert('Compartilhar progresso', message);
     }
   }, { retries: 2, baseDelay: 500 });
   if (!result.ok && __DEV__) console.error('Erro ao compartilhar progresso:', result.error);
