@@ -6,8 +6,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING } from '../src/constants/spacing';
 import { ErrorBoundary, DeviceCard, HeartRateWidget, ActivitySummary } from '../src/components';
+import { ActivitySection } from '../src/components/activity/ActivitySection';
 import { checkWatchAvailability, connectWatch, isWatchConnected, getWatchHeartRate } from '../src/services/appleWatch';
 import { checkHealthAvailability, requestHealthPermissions, getHealthStats, getStepsToday, getCaloriesBurnedToday } from '../src/services/healthConnect';
+import { startActivity, finishActivity, getActivityHistory, getActiveActivityId } from '../src/services/activityTracker';
 import { useAuth } from '../src/context/AuthContext';
 import { useI18n } from '../src/i18n';
 
@@ -30,6 +32,8 @@ export default function WearablesScreen() {
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
+  const [activities, setActivities] = useState([]);
+  const [activeActivity, setActiveActivity] = useState(null);
 
   const init = useCallback(async () => {
     try {
@@ -50,6 +54,9 @@ export default function WearablesScreen() {
       setDistance(height > 0 ? stepsCount * (height * STRIDE_LENGTH_CM / 100000) : 0);
       const stats = await getHealthStats();
       if (stats?.heartRate) setHeartRate(stats.heartRate);
+      const recentActivities = await getActivityHistory(profile?.id || '', 10);
+      setActivities(recentActivities);
+      setActiveActivity(getActiveActivityId());
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar wearables:', err);
     } finally {
@@ -78,6 +85,20 @@ export default function WearablesScreen() {
     return () => clearTimeout(timeout);
   }, [init]);
 
+  const handleStartActivity = useCallback(async (type: string) => {
+    if (!profile?.id) return;
+    const id = await startActivity(profile.id, { type: type as any });
+    if (id) setActiveActivity(id);
+  }, [profile?.id]);
+
+  const handleFinishActivity = useCallback(async () => {
+    if (!activeActivity) return;
+    await finishActivity(activeActivity, { calories, notes: '' });
+    setActiveActivity(null);
+    const recentActivities = await getActivityHistory(profile?.id || '', 10);
+    setActivities(recentActivities);
+  }, [activeActivity, calories, profile?.id]);
+
   const devices = [
     { name: t('wearables.appleWatch'), type: 'watch', connected: wConn, battery: wConn ? 85 : null, lastSync: wConn ? new Date().toISOString() : null, subtitle: wAvail ? (Platform.OS === 'ios' ? t('wearables.appleWatchAvailable') : t('wearables.notAvailable')) : t('wearables.notAvailable') },
     { name: t('wearables.healthConnect'), type: 'health', connected: hConn, lastSync: hConn ? new Date().toISOString() : null, subtitle: hAvail ? (Platform.OS === 'android' ? t('wearables.healthConnect') : t('wearables.appleHealth')) : t('wearables.notAvailable') },
@@ -100,6 +121,7 @@ export default function WearablesScreen() {
             {devices.map((d) => (<DeviceCard key={d.type} device={d} onToggle={handleToggle} onSync={handleSync} syncing={syncing} />))}
             <HeartRateWidget bpm={heartRate} restingHR={restingHR} maxHR={maxHR} />
             <ActivitySummary steps={steps} stepsGoal={profile?.physical_data?.daily_steps_goal || 8000} calories={calories} caloriesGoal={profile?.physical_data?.daily_calories_goal || 500} distance={distance} />
+            <ActivitySection activeActivity={activeActivity} activities={activities} onStart={handleStartActivity} onFinish={handleFinishActivity} />
           </ScrollView>
         )}
       </View>
