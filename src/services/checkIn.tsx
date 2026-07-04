@@ -3,6 +3,7 @@
 
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
+import { incrementXP } from '../utils/atomicUpdates';
 import type { DailyCheckIn } from '../types';
 
 interface CheckInResult {
@@ -60,17 +61,7 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
     });
     if (insertError) throw insertError;
 
-    const { data: profile } = await supabase
-      .from(TABLES.PROFILES)
-      .select('total_xp')
-      .eq('id', userId)
-      .single();
-
-    const { error: updateError } = await supabase
-      .from(TABLES.PROFILES)
-      .update({ total_xp: (profile?.total_xp || 0) + xp })
-      .eq('id', userId);
-    if (updateError) throw updateError;
+    await incrementXP(userId, xp);
 
     return { streakDay, xp, isNew: true };
   } catch (err) {

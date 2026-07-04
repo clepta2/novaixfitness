@@ -4,6 +4,7 @@
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
+import { incrementXP } from '../utils/atomicUpdates';
 
 const guard = createServiceGuard({ serviceName: 'gymCheckIn' });
 
@@ -16,9 +17,7 @@ export async function checkIn(userId, gymName) {
 
   if (error) throw error;
 
-  const xpGain = 5;
-  const { data: profile } = await supabase.from(TABLES.PROFILES).select('total_xp').eq('id', userId).single();
-  await supabase.from(TABLES.PROFILES).update({ total_xp: (profile?.total_xp || 0) + xpGain }).eq('id', userId);
+  await incrementXP(userId, 5);
 
   return data;
 }

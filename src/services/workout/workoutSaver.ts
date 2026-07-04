@@ -7,6 +7,7 @@ import { sendWorkoutCompletedNotification } from '../notifications/notifications
 import { sendPushToUser } from '../notifications/pushNotifications';
 import { tryIf } from '../../utils/tryIf';
 import { queueWorkoutCompletion, isOnline } from '../offline/offlineSync';
+import { incrementProfileStats } from '../../utils/atomicUpdates';
 
 export async function saveCompleteWorkout(userId: string, workout: any, logs: any[], duration: number) {
   if (!userId) return null;
@@ -36,21 +37,7 @@ export async function saveCompleteWorkout(userId: string, workout: any, logs: an
 
     if (workoutError) throw workoutError;
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('total_workouts, total_minutes')
-      .eq('id', userId)
-      .single();
-
-    if (profile) {
-      await supabase
-        .from('profiles')
-        .update({
-          total_workouts: (profile.total_workouts || 0) + 1,
-          total_minutes: (profile.total_minutes || 0) + duration,
-        })
-        .eq('id', userId);
-    }
+    await incrementProfileStats(userId, { workouts: 1, minutes: duration });
 
     const gamResult = await recordWorkoutCompletion(userId, workout, logs, duration);
 
