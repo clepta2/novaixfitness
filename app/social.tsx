@@ -43,13 +43,6 @@ export default function SocialScreen() {
     orderBy: { column: 'created_at', ascending: false },
     mockData: [],
   });
-  useEffect(() => {
-    if (!user?.id) return;
-    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); });
-    loadStories();
-    loadCheckIns();
-    loadUserLikes();
-  }, [user?.id, loadStories, loadCheckIns, loadUserLikes]);
 
   const loadUserLikes = useCallback(async () => {
     if (!user?.id) return;
@@ -89,6 +82,14 @@ export default function SocialScreen() {
       if (__DEV__) console.error('Erro ao carregar check-ins:', err);
     }
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); });
+    loadStories();
+    loadCheckIns();
+    loadUserLikes();
+  }, [user?.id, loadStories, loadCheckIns, loadUserLikes]);
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
