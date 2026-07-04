@@ -52,3 +52,6 @@ storybook-static/
 .idea/
 *.swp
 *.swo
+
+# ML models (too large for GitHub)
+models/
