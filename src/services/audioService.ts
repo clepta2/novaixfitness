@@ -17,16 +17,27 @@ export async function loadSounds() {
 
 function playSound(source: any) {
   if (!isLoaded) return;
-  const player = createAudioPlayer(source);
-  player.play();
-  const checkFinish = () => {
-    if (player.currentTime >= player.duration && player.duration > 0) {
-      player.release();
-    } else {
-      setTimeout(checkFinish, 200);
-    }
-  };
-  setTimeout(checkFinish, 200);
+  try {
+    const player = createAudioPlayer(source);
+    player.play();
+    let attempts = 0;
+    const maxAttempts = 25;
+    const checkFinish = () => {
+      attempts++;
+      if (attempts >= maxAttempts) {
+        player.remove();
+        return;
+      }
+      if (player.currentTime >= player.duration && player.duration > 0) {
+        player.remove();
+      } else {
+        setTimeout(checkFinish, 200);
+      }
+    };
+    setTimeout(checkFinish, 200);
+  } catch (err) {
+    if (__DEV__) console.error('Erro ao tocar som:', err);
+  }
 }
 
 export async function playCountdownTick() {

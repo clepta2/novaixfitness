@@ -102,7 +102,7 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
         if (isFavorite) await supabase.from('favorites').delete().eq('user_id', user.id).eq('workout_id', id);
         else await supabase.from('favorites').insert({ user_id: user.id, workout_id: id });
       } else {
-        await queueFavoriteAction(user.id, id, !isFavorite);
+        await queueFavoriteAction(user.id, id, !isFavorite ? 'add' : 'remove');
       }
       setIsFavorite(!isFavorite);
     } catch { Alert.alert('Erro', 'Falha ao atualizar favorito'); }
