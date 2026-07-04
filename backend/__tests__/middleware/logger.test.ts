@@ -8,6 +8,7 @@ describe('Logger Middleware', () => {
     res = { statusCode: 200, on: jest.fn() };
     next = jest.fn();
     jest.spyOn(console, 'log').mockImplementation();
+    jest.spyOn(console, 'info').mockImplementation();
     jest.spyOn(console, 'error').mockImplementation();
   });
 
@@ -42,7 +43,7 @@ describe('Logger Middleware', () => {
     const finishCallback = res.on.mock.calls.find(c => c[0] === 'finish')[1];
     finishCallback();
     
-    expect(console.log).toHaveBeenCalled();
+    expect(console.info).toHaveBeenCalled();
     process.env.NODE_ENV = originalEnv;
   });
 
