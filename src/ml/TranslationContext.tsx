@@ -64,7 +64,7 @@ export function TranslationProvider({ children, initialLocale = 'pt' }: {
   const loadModel = async (targetLocale: string) => {
     const config = getModelConfig('pt', targetLocale);
     if (!config) {
-      console.warn(`[ML] Modelo pt-${targetLocale} não encontrado`);
+      if (__DEV__) console.warn(`[ML] Modelo pt-${targetLocale} não encontrado`)
       return;
     }
 

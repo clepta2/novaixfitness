@@ -47,7 +47,7 @@ export function usePerformanceMonitor({
 
       // Log se passar do threshold
       if (duration > logThreshold) {
-        console.warn(
+        if (__DEV__) console.warn(
           `[Performance] ${componentName} render took ${duration.toFixed(2)}ms`,
           metricsRef.current
         );
@@ -95,7 +95,7 @@ export function useMeasureTime() {
     } catch (error) {
       const duration = performance.now() - start;
       if (__DEV__) {
-        console.error(`[Timer] ${name} failed after ${duration.toFixed(2)}ms`);
+        if (__DEV__) console.error(`[Timer] ${name} failed after ${duration.toFixed(2)}ms`);
       }
       throw error;
     }

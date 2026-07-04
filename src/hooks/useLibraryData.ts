@@ -59,7 +59,7 @@ export function useLibraryData() {
       try {
         const { data } = await supabase.from('profiles').select('subscription_status, onboarding').eq('id', user.id).single();
         if (data) setProfile(data);
-      } catch (err) { console.error('Erro ao carregar perfil:', err); }
+      } catch (err) { if (__DEV__) console.error('Erro ao carregar perfil:', err); }
     }
     loadProfile();
   }, [user?.id]);
@@ -76,7 +76,7 @@ export function useLibraryData() {
             level: f.workouts?.level || 'Intermediário'
           })));
         }
-      } catch (err) { console.error(err); }
+      } catch (err) { if (__DEV__) console.error(err); }
     }
     loadFavorites();
   }, [user]);
@@ -95,7 +95,7 @@ export function useLibraryData() {
           level: ins.workouts?.level || 'Intermediário'
         }]);
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { if (__DEV__) console.error(err); }
   };
 
   const userPhysicalLevel = userLevelMap[profile?.onboarding?.level as string];

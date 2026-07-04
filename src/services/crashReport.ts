@@ -40,7 +40,7 @@ export async function reportCrash(error, extra = {}) {
   const result = await tryIf(async () => {
     await supabase.from('crash_reports').insert(crashData);
   }, { retries: 2, baseDelay: 500 });
-  if (!result.ok) console.error('Falha ao reportar crash');
+  if (!result.ok && __DEV__) console.error('Falha ao reportar crash');
 }
 
 export async function reportHandledError(error, context = '') {

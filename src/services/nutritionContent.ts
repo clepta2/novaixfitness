@@ -74,7 +74,7 @@ async function fetchContent(type: string) {
   }, { retries: 2, baseDelay: 500 });
 
   if (!result.ok) {
-    console.error(`Erro ao buscar conteudo (${type}):`, result.error);
+    if (__DEV__) console.error(`Erro ao buscar conteudo (${type}):`, result.error);
     return null;
   }
   return result.data;

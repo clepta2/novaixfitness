@@ -22,7 +22,7 @@ async function getOnnxRuntime() {
     ort = require('onnxruntime-react-native');
     return ort;
   } catch (e) {
-    console.warn('[ML] ONNX Runtime não disponível:', e);
+    if (__DEV__) console.warn('[ML] ONNX Runtime não disponível:', e)
     return null;
   }
 }
@@ -59,7 +59,7 @@ export class TranslationEngine {
       this.tokenizer = await loadTokenizer(paths.tokenizer);
       if (__DEV__) console.log('[ML] Tokenizer carregado');
     } catch (e) {
-      console.warn('[ML] Erro ao carregar tokenizer:', e);
+      if (__DEV__) console.warn('[ML] Erro ao carregar tokenizer:', e)
     }
 
     // Criar sessões ONNX
@@ -80,7 +80,7 @@ export class TranslationEngine {
       if (__DEV__) console.log('[ML] Sessões ONNX criadas (encoder + decoder)');
     } catch (error) {
       // Fallback CPU
-      console.warn('[ML] Fallback para CPU:', error);
+      if (__DEV__) console.warn('[ML] Fallback para CPU:', error)
       const cpuOptions = { intraOpNumThreads: 2, executionProviders: ['cpu'] };
       this.encoderSession = await ort.InferenceSession.create(paths.encoder, cpuOptions);
       this.decoderSession = await ort.InferenceSession.create(paths.decoder, cpuOptions);
@@ -170,7 +170,7 @@ export class TranslationEngine {
 
     const encoderHidden = encoderOutput.last_hidden_state;
     if (!encoderHidden) {
-      console.warn('[ML] Encoder não retornou hidden states');
+      if (__DEV__) console.warn('[ML] Encoder não retornou hidden states')
       return text;
     }
 

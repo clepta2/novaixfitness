@@ -29,7 +29,7 @@ export async function analyzeUserPerformance(userId) {
       weeksSinceAdaptation: lastAdaptation ? Math.floor((Date.now() - new Date(lastAdaptation.created_at).getTime()) / (7 * 86400000)) : 99,
     };
   }, { retries: 1, baseDelay: 500 });
-  if (!result.ok) { console.error('Erro ao analisar performance:', result.error); return null; }
+  if (!result.ok) { if (__DEV__) console.error('Erro ao analisar performance:', result.error); return null; }
   return result.data!;
 }
 

@@ -21,7 +21,7 @@ export async function setNotificationPref(userId, type, enabled) {
     await supabase.from('profiles').update({ notification_prefs: updated }).eq('id', userId);
     return updated;
   }, { retries: 2, baseDelay: 500 });
-  if (!result.ok) console.error('Erro ao salvar preferencia:', result.error);
+  if (!result.ok && __DEV__) console.error('Erro ao salvar preferencia:', result.error);
   return result.ok ? result.data : undefined;
 }
 
