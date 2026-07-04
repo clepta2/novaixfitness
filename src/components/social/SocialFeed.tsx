@@ -32,7 +32,7 @@ function filterPosts(posts: Post[], filter: string): Post[] {
   return posts;
 }
 
-function PostItem({ post, onLike, currentUserId }: { post: Post; onLike?: (id: string) => void; currentUserId?: string }) {
+function PostItem({ post, onLike, onComment, currentUserId }: { post: Post; onLike?: (id: string) => void; onComment?: (id: string, text: string) => void; currentUserId?: string }) {
   const isOwner = currentUserId === post.userId;
 
   return (
@@ -86,7 +86,7 @@ function PostItem({ post, onLike, currentUserId }: { post: Post; onLike?: (id: s
   );
 }
 
-export default memo(function SocialFeed({ posts, loading, userId, onLike }: SocialFeedProps) {
+export default memo(function SocialFeed({ posts, loading, userId, onLike, onComment }: SocialFeedProps) {
   const [filter, setFilter] = React.useState('all');
 
   const filtered = useMemo(() => filterPosts(posts, filter), [posts, filter]);
@@ -135,7 +135,7 @@ export default memo(function SocialFeed({ posts, loading, userId, onLike }: Soci
           data={filtered}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
-            <PostItem post={item} onLike={onLike} currentUserId={userId} />
+            <PostItem post={item} onLike={onLike} onComment={onComment} currentUserId={userId} />
           )}
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
