@@ -30,6 +30,7 @@ export default function MarketplaceDetailScreen() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(null);
     setProduct(null);
     setRelated([]);
     setFavorited(false);
