@@ -60,8 +60,8 @@ export default function GoalsScreen() {
           <Text style={styles.goalTitle}>{gt?.label || item.goal_type}</Text>
           <Text style={styles.goalPct}>{Math.round(progress)}%</Text>
         </View>
-        <View style={styles.goalBar}><View style={[styles.goalFill, { width: `${progress}%` }]} /></View>
-        <Text style={styles.goalTarget}>{item.target_value} {item.target_unit}</Text>
+        <View style={styles.goalBar}><View style={[styles.goalFill, { width: hasTracking ? `${progress}%` : '0%' }]} /></View>
+        <Text style={styles.goalTarget}>{hasTracking ? `${currentVal} / ${item.target_value} ${item.target_unit}` : 'Rastreamento não disponível'}</Text>
       </View>
     );
   };
