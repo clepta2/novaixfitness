@@ -88,7 +88,7 @@ export default function SocialScreen() {
     serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); }).catch(() => {});
     loadStories();
     loadCheckIns();
-  }, [user?.id, loadStories, loadCheckIns]);
+  }, [user?.id, loadStories, loadCheckIns, serviceCall]);
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
