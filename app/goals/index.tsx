@@ -22,7 +22,7 @@ export default function GoalsScreen() {
 
   const renderAchievement = ({ item }) => {
     const isUnlocked = unlocked.includes(item.id);
-    const progress = Math.min(100, ((stats[item.metric] || 0) / item.target) * 100);
+    const progress = Math.min(100, item.target ? ((stats[item.metric] || 0) / item.target) * 100 : 0);
     return (
       <View style={[styles.achCard, isUnlocked && styles.achUnlocked]}>
         <Ionicons name={item.icon} size={24} color={isUnlocked ? COLORS.primary : COLORS.textMuted} />
@@ -36,7 +36,7 @@ export default function GoalsScreen() {
 
   const renderGoal = ({ item }) => {
     const gt = GOAL_TYPES.find(g => g.id === item.goal_type);
-    const progress = Math.min(100, ((item.current_value || 0) / item.target_value) * 100);
+    const progress = Math.min(100, item.target_value ? ((item.current_value || 0) / item.target_value) * 100 : 0);
     return (
       <View style={styles.goalCard}>
         <View style={styles.goalRow}>

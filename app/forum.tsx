@@ -45,7 +45,7 @@ export default function ForumScreen() {
   const handleCreatePost = async (postData) => {
     if (!user) return;
     const { error } = await insert({ user_id: user.id, title: postData.title, content: postData.content, category: postData.category });
-    if (error) Alert.alert('Erro', 'Ao criar post: ' + error);
+    if (error) Alert.alert('Erro', 'Ao criar post: ' + (error.message || error));
     else refetch();
   };
 
