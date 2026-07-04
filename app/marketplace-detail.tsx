@@ -29,6 +29,9 @@ export default function MarketplaceDetailScreen() {
   useEffect(() => {
     mountedRef.current = true;
     setLoading(true);
+    setProduct(null);
+    setRelated([]);
+    setFavorited(false);
     async function load() {
       if (!productId) {
         setLoading(false);
