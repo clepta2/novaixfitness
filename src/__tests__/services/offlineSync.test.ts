@@ -2,12 +2,13 @@
 
 import { queueAction, getPendingActions, hasPendingActions, getQueueStats, clearPendingActions } from '../../services/offlineSync';
 
+const storage = {};
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
   default: {
-    getItem: jest.fn().mockResolvedValue(null),
-    setItem: jest.fn().mockResolvedValue(undefined),
-    removeItem: jest.fn().mockResolvedValue(undefined),
+    getItem: jest.fn((key) => Promise.resolve(storage[key] || null)),
+    setItem: jest.fn((key, value) => { storage[key] = value; return Promise.resolve(); }),
+    removeItem: jest.fn((key) => { delete storage[key]; return Promise.resolve(); }),
   },
 }));
 
@@ -21,13 +22,16 @@ jest.mock('../../config/supabase', () => ({
 
 describe('offlineSync', () => {
   beforeEach(() => {
+    Object.keys(storage).forEach(k => delete storage[k]);
     jest.clearAllMocks();
   });
 
   describe('queueAction', () => {
     it('deve adicionar acao na fila', async () => {
-      const id = await queueAction('insert', 'posts', { content: 'teste' });
-      expect(id).toMatch(/^action_/);
+      await queueAction({ type: 'insert', table: 'posts', content: 'teste' });
+      const actions = await getPendingActions();
+      expect(actions.length).toBe(1);
+      expect(actions[0].type).toBe('insert');
     });
   });
 
