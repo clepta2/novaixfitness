@@ -58,8 +58,10 @@ export function useGoals() {
       const streak = calcStreak(workouts || []);
       setStats({
         totalWorkouts: workouts?.length || 0,
-        streak, totalMeals: 0, waterStreak: 0,
-        totalXp: profile?.total_xp || 0,
+        streak, maxStreak: streak, totalMeals: 0, waterStreak: 0,
+        totalXp: profile?.total_xp || 0, totalXP: profile?.total_xp || 0,
+        totalMinutes: workouts?.reduce((s: number, w: any) => s + (w.duration || 0), 0) || 0,
+        level: 1,
       });
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar metas:', err);
