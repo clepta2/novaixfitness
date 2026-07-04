@@ -83,7 +83,7 @@ export async function getGamificationData(userId: string): Promise<GamificationD
     const { count: likesCount } = await supabase.from('post_likes').select('*', { count: 'exact', head: true }).eq('user_id', userId);
     const { count: commentsCount } = await supabase.from('post_comments').select('*', { count: 'exact', head: true }).eq('user_id', userId);
 
-    const totalXP = profile?.total_xp || 0;
+    const totalXP = profile?.total_xp ?? 0;
     const totalWorkouts = profile?.total_workouts ?? userWorkouts?.filter(w => w.completed).length ?? 0;
     const totalMinutes = profile?.total_minutes ?? userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) ?? 0;
     const streak = calculateStreak(userWorkouts || []);
