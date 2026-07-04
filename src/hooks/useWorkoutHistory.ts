@@ -49,7 +49,10 @@ export function useWorkoutHistory(): UseWorkoutHistoryReturn {
   const [stats, setStats] = useState<HistoryStats>({ total: 0, duration: 0, avgRating: 0 });
 
   const loadWorkouts = useCallback(async (): Promise<void> => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       let query = supabase.from('user_workouts')
