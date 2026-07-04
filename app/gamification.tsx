@@ -24,8 +24,8 @@ function StatsSummary({ data }) {
     { key: 'totalWorkouts', label: t('gamification.workouts'), icon: 'barbell', color: COLORS.success },
   ];
   const values = {
-    totalXP: `${data?.totalXP || 0}`,
-    achievements: `${(data?.achievements || []).length}/${ACHIEVEMENTS.length}`,
+    totalXP: `${data?.total_xp || data?.totalXP || 0}`,
+    achievements: `${unlockedIds?.length || 0}/${ACHIEVEMENTS.length}`,
     streak: t('common.days', { count: data?.streak || 0 }),
     totalWorkouts: `${data?.totalWorkouts || 0}`,
   };

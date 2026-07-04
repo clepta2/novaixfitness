@@ -20,7 +20,7 @@ export default function TermsScreen() {
   return (
     <ErrorBoundary screenName="Termos">
       <View style={styles.screen}>
-        <Header title="Termos e Privacidade" />
+        <Header title="Termos e Privacidade" showBack />
 
         <View style={styles.tabRow}>
           {legalTabs.map((tab, i) => (

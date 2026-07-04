@@ -22,7 +22,7 @@ export default function GoalsScreen() {
 
   const renderAchievement = ({ item }) => {
     const isUnlocked = unlocked.includes(item.id);
-    const progress = Math.min(100, item.target ? ((stats[item.metric] || 0) / item.target) * 100 : 0);
+    const progress = Math.min(100, item.requirement ? ((stats[item.category] || 0) / item.requirement) * 100 : 0);
     return (
       <View style={[styles.achCard, isUnlocked && styles.achUnlocked]}>
         <Ionicons name={item.icon} size={24} color={isUnlocked ? COLORS.primary : COLORS.textMuted} />

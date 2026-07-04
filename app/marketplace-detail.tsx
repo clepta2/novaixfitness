@@ -9,7 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { useAuth } from '../src/context/AuthContext';
 import { layout, typography } from '../src/styles';
-import { ErrorBoundary, FavoriteButton, ProductCard, ImageCarousel, ProductReviews, shareProduct, shareToWhatsApp } from '../src/components';
+import { ErrorBoundary, FavoriteButton, ProductCard, ImageCarousel, ProductReviews } from '../src/components';
+import { shareProduct, shareToWhatsApp } from '../src/components/marketplace';
 import { getProductById, getRelatedProducts, toggleFavorite, isFavorited } from '../src/services/marketplace';
 import { styles } from '../src/styles/marketplaceDetailStyles';
 
