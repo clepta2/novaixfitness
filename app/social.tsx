@@ -145,11 +145,17 @@ export default function SocialScreen() {
   };
   const handleComment = async (postId, text) => {
     if (!user) return;
-    await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
-      const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
-      if (error) throw error;
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
-    }, t('social.errorComment'));
+    const prevComments = posts.find(p => p.id === postId)?.comments || 0;
+    try {
+      await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
+        const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
+        if (error) throw error;
+        setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: p.comments + 1 } : p));
+      }, t('social.errorComment'));
+    } catch (err) {
+      setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments: prevComments } : p));
+      if (__DEV__) console.error('Erro ao comentar:', err);
+    }
   };
   const handleNewPost = async (postData) => {
     if (!user) return;
