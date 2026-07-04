@@ -13,12 +13,12 @@ interface PendingAction {
   [key: string]: unknown;
 }
 
-async function getQueue(): Promise<PendingAction[]> {
+export async function getQueue(): Promise<PendingAction[]> {
   const raw = await AsyncStorage.getItem(QUEUE_KEY).catch(() => null);
   return raw ? JSON.parse(raw) : [];
 }
 
-async function saveQueue(queue: PendingAction[]) {
+export async function saveQueue(queue: PendingAction[]) {
   await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue)).catch(() => {});
 }
 

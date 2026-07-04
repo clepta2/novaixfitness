@@ -37,15 +37,19 @@ false
 }    </View>  );
 }
 const styles = StyleSheet.create({
- container: {
-   flex: 1,    justifyContent: 'center',    alignItems: 'center',    padding: SPACING.xl,    gap: SPACING.md,  
-},  iconWrap: {
-   width: 80,    height: 80,    borderRadius: 40,    backgroundColor: colors.error + '15',    justifyContent: 'center',    alignItems: 'center',    marginBottom: SPACING.sm,  
-},  title: {
-   fontFamily: 'Montserrat_600SemiBold',    fontSize: 16,    color: colors.textTitle,    textAlign: 'center',  
-},  message: {
-   fontFamily: 'Inter_400Regular',    fontSize: 14,    color: colors.textDescription,    textAlign: 'center',    lineHeight: 20,  
-},  button: {
-   marginTop: SPACING.sm,  
-},
+  container: {
+    flex: 1, justifyContent: 'center', alignItems: 'center', padding: SPACING.xl, gap: SPACING.md,
+  },
+  iconWrap: {
+    width: 80, height: 80, borderRadius: 40, backgroundColor: COLORS.error + '15', justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.sm,
+  },
+  title: {
+    fontFamily: 'Montserrat_600SemiBold', fontSize: 16, color: COLORS.textTitle, textAlign: 'center',
+  },
+  message: {
+    fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textDescription, textAlign: 'center', lineHeight: 20,
+  },
+  button: {
+    marginTop: SPACING.sm,
+  },
 });

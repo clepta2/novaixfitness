@@ -67,6 +67,10 @@ export function getEpisodes(): Episode[] {
   return EPISODES;
 }
 
+export function getEpisodeById(id: string): Episode | null {
+  return EPISODES.find(ep => ep.id === id) || null;
+}
+
 export function getEpisodesByCategory(category: string): Episode[] {
   return EPISODES.filter(ep => ep.category === category);
 }

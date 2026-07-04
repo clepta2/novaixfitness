@@ -68,6 +68,8 @@ export function getPlaylistByWorkoutType(workoutType: string): Playlist {
   return PLAYLISTS[workoutType] || PLAYLISTS.strength;
 }
 
+export const getPlaylistForWorkout = getPlaylistByWorkoutType;
+
 export function getAllPlaylists(): Playlist[] {
   return Object.values(PLAYLISTS);
 }

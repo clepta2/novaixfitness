@@ -34,6 +34,8 @@ export default function AnalyticsScreen() {
 
   useEffect(() => {
     if (!loading) {
+      fadeAnim.setValue(0);
+      slideAnim.setValue(20);
       Animated.parallel([
         Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
         Animated.spring(slideAnim, { toValue: 0, friction: 8, tension: 55, useNativeDriver: true }),

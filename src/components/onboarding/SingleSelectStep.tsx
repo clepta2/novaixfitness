@@ -1,24 +1,37 @@
-import React from 'react';
-﻿// src/components/onboarding/SingleSelectStep.js
+// src/components/onboarding/SingleSelectStep.tsx
 // Step de seleção única
+
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function SingleSelectStep({ step, value, onSelect }) {
+interface Option {
+  id: string;
+  label: string;
+  icon?: string;
+}
+
+interface SingleSelectStepProps {
+  step: { title?: string; subtitle?: string; options?: Option[] };
+  value?: string;
+  onSelect: (id: string) => void;
+}
+
+export default function SingleSelectStep({ step, value, onSelect }: SingleSelectStepProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{step.title}</Text>
       {step.subtitle && <Text style={styles.subtitle}>{step.subtitle}</Text>}
       <View style={styles.optionsGrid}>
-        {step.options.map((option) => (
+        {(step.options || []).map((option) => (
           <TouchableOpacity
             key={option.id}
             style={[styles.optionCard, value === option.id && styles.optionActive]}
             onPress={() => onSelect(option.id)}
           >
-            {option.icon && <Ionicons name={option.icon} size={24} color={value === option.id ? COLORS.primary : COLORS.textMuted} />}
+            {option.icon && <Ionicons name={option.icon as any} size={24} color={value === option.id ? COLORS.primary : COLORS.textMuted} />}
             <Text style={[styles.optionText, value === option.id && styles.optionTextActive]}>{option.label}</Text>
             {value === option.id && <Ionicons name="checkmark-circle" size={20} color={COLORS.primary} />}
           </TouchableOpacity>
