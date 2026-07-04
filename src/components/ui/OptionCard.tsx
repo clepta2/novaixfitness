@@ -16,7 +16,7 @@ interface OptionCardProps {
 }
 export 
 function OptionCard({
- icon,  label,  description,  isSelected,  color = colors.primary,  onPress,  showRadio = 
+ icon,  label,  description,  isSelected,  color = COLORS.primary,  onPress,  showRadio = 
 true,
 }: OptionCardProps) {
  

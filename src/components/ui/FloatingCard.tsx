@@ -11,7 +11,7 @@ interface FloatingCardProps {
  onPress?: () => void;
  style?: ViewStyle;
 }
-export function FloatingCard({children,  elevation = 16,  glowColor = colors.primary,  onPress,  style,
+export function FloatingCard({children,  elevation = 16,  glowColor = COLORS.primary,  onPress,  style,
 }: FloatingCardProps) {
 const colors = useColors();
  

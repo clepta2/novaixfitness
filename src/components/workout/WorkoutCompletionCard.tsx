@@ -1,6 +1,6 @@
 // src/components/workout/WorkoutCompletionCard.tsx// Card de conclusão do treino com XP e stats
 import React, {
-useEffect, useMemo } from 'react';
+useEffect, useMemo, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors'

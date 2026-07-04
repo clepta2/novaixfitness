@@ -1,7 +1,7 @@
 // src/components/ui/PlanCard.tsx
 // Card de plano com animacao e destaque - NOVAIX FITNESS
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';

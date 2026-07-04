@@ -18,7 +18,7 @@ interface InfoRowProps {
 }
 export function InfoRow(
 {
-icon, iconColor = colors.primary, label, description }: InfoRowProps) 
+icon, iconColor = COLORS.primary, label, description }: InfoRowProps) 
 {
 const colors = useColors();
 

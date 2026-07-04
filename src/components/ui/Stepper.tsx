@@ -1,7 +1,7 @@
 // src/components/ui/Stepper.tsx
 // Stepper visual para onboarding e formularios - NOVAIX FITNESS
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';

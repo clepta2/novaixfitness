@@ -1,6 +1,6 @@
 // src/components/common/DailyCheckInModal.tsx// Modal de check-in diário compartilhado
 import React, {
-useEffect, useMemo } from 'react';
+useEffect, useMemo, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors'

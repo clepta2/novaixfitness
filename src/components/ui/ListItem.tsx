@@ -14,7 +14,7 @@ interface ListItemProps {
  variant?: 'default' | 'compact' | 'detailed';
  style?: ViewStyle;
 }
-export function ListItem({title,  subtitle,  icon,  iconColor = colors.primary,  rightElement,  onPress,  variant = 'default',  style,
+export function ListItem({title,  subtitle,  icon,  iconColor = COLORS.primary,  rightElement,  onPress,  variant = 'default',  style,
 }: ListItemProps) {
 const colors = useColors();
  

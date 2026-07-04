@@ -1,6 +1,6 @@
 // src/components/auth/LoginLogo.tsx// Logo animado do login - NOVAIX FITNESS
 import React, {
-useMemo, useEffect } from 'react';
+useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors'

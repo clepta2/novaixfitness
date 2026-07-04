@@ -14,7 +14,7 @@ interface MagneticButtonProps {
  magneticRange?: number;
  style?: ViewStyle;
 }
-export function MagneticButton({icon,  size = 56,  color = colors.primary,  onPress,  magneticRange = 30,  style,
+export function MagneticButton({icon,  size = 56,  color = COLORS.primary,  onPress,  magneticRange = 30,  style,
 }: MagneticButtonProps) {
 const colors = useColors();
  

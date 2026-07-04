@@ -3,7 +3,7 @@
 
 
             ;
-import { useMemo , useRef} from 'react';
+import React, { useState, useMemo , useRef} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Pressable, Animated } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';

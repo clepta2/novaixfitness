@@ -1,7 +1,7 @@
 // src/components/analytics/MuscleRadarChart.js
 // Gráfico Radar de Equilíbrio Muscular - NOVAIX FITNESS
 
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { G, Circle, Line, Polygon, Text as SvgText, Defs, Filter, FeGaussianBlur, FeMerge, FeMergeNode, RadialGradient, Stop } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
