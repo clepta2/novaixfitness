@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../config/supabase';
 import { useAuth } from '../context/AuthContext';
 import { GOAL_TYPES, getUnlockedAchievements } from '../data/achievements';
+import { calcStreak } from '../helpers/streaks';
 import type { Achievement } from '../types';
 
 interface Goal {
@@ -54,9 +55,10 @@ export function useGoals() {
         .select('id, completed_at').eq('user_id', user.id).eq('completed', true);
       const { data: profile } = await supabase.from('profiles')
         .select('total_xp').eq('id', user.id).single();
+      const streak = calcStreak(workouts || []);
       setStats({
         totalWorkouts: workouts?.length || 0,
-        streak: 0, totalMeals: 0, waterStreak: 0,
+        streak, totalMeals: 0, waterStreak: 0,
         totalXp: profile?.total_xp || 0,
       });
     } catch (err) {

@@ -116,7 +116,7 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
     try {
       const context = buildChatContext(profile);
       (context as any).userId = user.id;
-      const reply = await askGeminiCoach(msg, context, messages);
+      const reply = await askGeminiCoach(msg, context, [...messages, userMsg]);
       setMessages(prev => [...prev, createCoachMessage(reply)]);
       await saveChatMessage(user.id, reply, false);
     } catch (err) {

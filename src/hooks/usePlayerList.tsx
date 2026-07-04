@@ -43,8 +43,13 @@ interface UsePlayerListReturn {
 
 function mapPlanToWorkouts(plan: { title?: string; category?: string; focus?: string; duration_minutes?: number; video_id?: string; exercises?: string }[]): PlayerWorkout[] {
   return plan.map((w, i) => {
-    const exercises = w.exercises ? JSON.parse(w.exercises) : [];
-    const firstEx = exercises[0] || {};
+    let exercises: unknown[] = [];
+    try {
+      exercises = w.exercises ? JSON.parse(w.exercises) : [];
+    } catch {
+      exercises = [];
+    }
+    const firstEx = (exercises as any[])[0] || {};
     return {
       id: w.title || `plan_${i}`, time: `${8 + i * 2}:00`, name: w.title || 'Treino',
       focus: w.category || 'Treino', sets: firstEx.sets || 4, reps: firstEx.reps || '10-12',
@@ -69,7 +74,15 @@ async function adaptIfNeeded(userId: string, userPlan: { title?: string; categor
   if (!(await shouldAdaptPlan(userId))) return userPlan;
   const performance = await analyzeUserPerformance(userId);
   if (!performance) return userPlan;
-  const fullPlan = { week: userPlan.map(w => ({ ...w, exercises: w.exercises ? JSON.parse(w.exercises) : [] })) };
+  const fullPlan = { week: userPlan.map(w => {
+    let exercises: unknown[] = [];
+    try {
+      exercises = w.exercises ? JSON.parse(w.exercises) : [];
+    } catch {
+      exercises = [];
+    }
+    return { ...w, exercises };
+  }) };
   const adapted = await adaptWorkoutPlan(userId, fullPlan, performance);
   await saveAdaptation(userId, fullPlan, adapted, getAdaptationReason(performance));
   return await getUserPlan(userId);

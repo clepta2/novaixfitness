@@ -92,12 +92,17 @@ export function useGamification(): UseGamificationReturn {
 
   const award = useCallback(async (eventType: string, metadata: Record<string, unknown> = {}): Promise<AwardResult | null> => {
     if (!user?.id) return null;
-    const result = await awardXP(user.id, eventType, metadata);
-    const newAchievements = await checkAchievements(user.id);
-    if (newAchievements.length > 0) {
-      setAchievements(prev => [...prev, ...newAchievements.map((a: any) => ({ ...a, unlocked: true }))]);
+    try {
+      const result = await awardXP(user.id, eventType, metadata);
+      const newAchievements = await checkAchievements(user.id);
+      if (newAchievements.length > 0) {
+        setAchievements(prev => [...prev, ...newAchievements.map((a: any) => ({ ...a, unlocked: true }))]);
+      }
+      return result;
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao conceder XP:', err);
+      return null;
     }
-    return result;
   }, [user?.id]);
 
   const refresh = useCallback((): void => { loadData(); }, [user?.id]);

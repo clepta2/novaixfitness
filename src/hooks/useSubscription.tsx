@@ -164,6 +164,7 @@ export function useReferral(): UseReferralReturn {
   }, [user?.id]);
 
   async function loadStats(): Promise<void> {
+    if (!user?.id) return;
     setLoading(true);
     try {
       const data = await getReferralStats(user.id);
@@ -175,6 +176,7 @@ export function useReferral(): UseReferralReturn {
   }
 
   const generateCode = useCallback(async (): Promise<string> => {
+    if (!user?.id) return '';
     const code = await createReferral(user.id);
     setStats(prev => prev ? { ...prev, code } : { code });
     return code;

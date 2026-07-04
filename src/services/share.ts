@@ -41,7 +41,9 @@ export async function shareAchievement(achievement) {
 
   const result = await tryIf(async () => {
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(message, {
+      const fileUri = FileSystem.cacheDirectory + 'novaix_achievement.txt';
+      await FileSystem.writeAsStringAsync(fileUri, message);
+      await Sharing.shareAsync(fileUri, {
         mimeType: 'text/plain',
         dialogTitle: 'Compartilhar conquista',
       });
@@ -61,7 +63,9 @@ export async function shareProgress(stats) {
 
   const result = await tryIf(async () => {
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(message, {
+      const fileUri = FileSystem.cacheDirectory + 'novaix_progress.txt';
+      await FileSystem.writeAsStringAsync(fileUri, message);
+      await Sharing.shareAsync(fileUri, {
         mimeType: 'text/plain',
         dialogTitle: 'Compartilhar progresso',
       });
