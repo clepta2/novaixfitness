@@ -123,13 +123,3 @@ declare module 'path' {
   export function basename(path: string, ext?: string): string;
   export function dirname(path: string): string;
 }
-
-import '@supabase/supabase-js';
-declare module '@supabase/supabase-js' {
-  interface User {
-    name?: string;
-  }
-  interface UserMetadata {
-    [key: string]: unknown;
-  }
-}

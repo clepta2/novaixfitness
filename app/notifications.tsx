@@ -61,6 +61,7 @@ export default function NotificationsScreen() {
       <NotificationItem
         item={item}
         onPress={() => markAsRead(item.id)}
+        onLongPress={() => {}}
       />
     </Animated.View>
   );

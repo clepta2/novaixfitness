@@ -25,5 +25,5 @@ export { default as NewChatModal } from '../chat/NewChatModal';
 export { default as DailyCheckInModal } from '../common/DailyCheckInModal';
 export { default as ChangelogItem } from '../changelog/ChangelogItem';
 export { default as NotificationConfig } from '../notifications/NotificationConfig';
-export { default as FeedEmptyState } from '../common/EmptyState';
+export { default as FeedEmptyState } from '../social/FeedEmptyState';
 export { default as CommonOfflineBanner } from '../common/OfflineBanner';

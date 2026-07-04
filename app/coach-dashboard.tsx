@@ -1,4 +1,4 @@
-﻿
+
 // app/coach-dashboard.tsx
 // Painel do Coach com animacoes de entrada - NOVAIX FITNESS
 
@@ -119,7 +119,7 @@ export default function CoachDashboardScreen() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>MEUS TREINOS ({workouts.length})</Text>
               {workouts.length === 0 ? (
-                <EmptyState icon="barbell-outline" title="Nenhum treino" message="Publique seu primeiro treino publico." />
+                <EmptyState icon="barbell-outline" title="Nenhum treino" description="Publique seu primeiro treino publico." actionLabel="Criar Treino" onAction={() => setModalVisible(true)} iconColor={COLORS.primary} />
               ) : (
                 workouts.map((w, i) => (
                   <Animated.View key={w.id} style={[styles.workoutCard, { opacity: Math.min(1, 0.5 + i * 0.1) }]}>

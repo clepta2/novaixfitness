@@ -42,7 +42,7 @@ type Props = {
 export default function WorkoutStreak({ userId }: Props) {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [weekDots, setWeekDots] = useState([]);
+  const [weekDots, setWeekDots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadStreak(); }, [userId]);

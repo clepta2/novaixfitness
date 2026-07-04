@@ -88,13 +88,13 @@ export default function MindfulnessScreen() {
         {breathingExercises.map((exercise) => (
           <TouchableOpacity key={exercise.id} style={styles.exerciseCard} onPress={() => setSelectedExercise(exercise)} activeOpacity={0.8} accessibilityLabel={`Iniciar ${exercise.name}`} accessibilityRole="button">
             <View style={[styles.iconCircle, { backgroundColor: exercise.color + '20' }]}>
-              <Ionicons name={exercise.icon} size={24} color={exercise.color} />
+              <Ionicons name={(exercise as any).icon} size={24} color={exercise.color} />
             </View>
             <View style={styles.exerciseInfo}>
               <Text style={styles.exerciseName}>{exercise.name}</Text>
               <Text style={styles.exerciseDescription}>{exercise.description}</Text>
               <View style={styles.exerciseMeta}>
-                <Text style={styles.benefitTag}>{exercise.benefit}</Text>
+                <Text style={styles.benefitTag}>{(exercise as any).benefit}</Text>
                 <Text style={styles.metaText}>{exercise.cycles} ciclos</Text>
               </View>
             </View>

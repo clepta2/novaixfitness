@@ -12,10 +12,11 @@ interface SearchBarProps {
   onChangeText?: (text: string) => void;
   placeholder?: string;
   onSubmit?: () => void;
+  onClear?: () => void;
   loading?: boolean;
 }
 
-export default memo(function SearchBar({ value = '', onChangeText, placeholder = 'Buscar...', onSubmit, loading = false }: SearchBarProps) {
+export default memo(function SearchBar({ value = '', onChangeText, placeholder = 'Buscar...', onSubmit, onClear, loading = false }: SearchBarProps) {
   const [focused, setFocused] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -39,7 +40,7 @@ export default memo(function SearchBar({ value = '', onChangeText, placeholder =
         accessibilityLabel="Buscar"
       />
       {value.length > 0 && (
-        <TouchableOpacity onPress={() => onChangeText('')} style={styles.clearBtn} accessibilityLabel="Limpar busca" accessibilityRole="button">
+        <TouchableOpacity onPress={() => { onChangeText?.(''); onClear?.(); }} style={styles.clearBtn} accessibilityLabel="Limpar busca" accessibilityRole="button">
           <Ionicons name="close-circle" size={18} color={COLORS.textMuted} />
         </TouchableOpacity>
       )}

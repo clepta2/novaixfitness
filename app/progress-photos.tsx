@@ -50,12 +50,12 @@ export default function ProgressPhotosScreen() {
         </ScrollView>
 
         {compareMode && comparePhotos.length >= 2 && (
-          <CompareView photos={comparePhotos} onCancel={cancelCompare} />
+          <CompareView photos={comparePhotos as any} onCancel={cancelCompare} />
         )}
 
         <PhotoGrid
-          photos={filteredPhotos}
-          selectedIds={comparePhotos}
+          photos={filteredPhotos as any}
+          selectedIds={comparePhotos as any}
           onSelect={(p) => compareMode ? toggleCompare(p) : setSelectedPhoto(p)}
           onLongPress={handleDelete}
           compareMode={compareMode}
@@ -78,7 +78,7 @@ export default function ProgressPhotosScreen() {
         </View>
       </ScrollView>
 
-      <PhotoModal photo={selectedPhoto} onCompare={toggleCompare} onDelete={handleDelete} onClose={() => setSelectedPhoto(null)} />
+      <PhotoModal photo={selectedPhoto as any} onCompare={toggleCompare} onDelete={handleDelete} onClose={() => setSelectedPhoto(null)} />
       {showPicker && (
         <PhotoPicker
           selectedLabel={selectedLabel}
