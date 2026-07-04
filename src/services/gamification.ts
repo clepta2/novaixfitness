@@ -160,17 +160,15 @@ export async function recordWorkoutCompletion(
         { onConflict: 'user_id,achievement_id' }
       );
 
-      let achievementXP = 0;
       for (const a of newAchievements) {
         if (a.xpReward) {
           await addXP(userId, 'ACHIEVEMENT_UNLOCKED', a.xpReward);
-          achievementXP += a.xpReward;
         }
       }
     }
 
     return {
-      xpGained: workoutXP + streakBonus + (newAchievements?.reduce((sum, a) => sum + (a.xpReward || 0), 0) || 0),
+      xpGained: workoutXP + streakBonus,
       newAchievements,
       level: updatedData?.levelData,
       streak: updatedData?.streak,
