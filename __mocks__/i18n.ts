@@ -35,4 +35,9 @@ module.exports = {
     },
   }, children),
   useI18n: () => React.useContext(I18nContext),
+  LOCALES: [
+    { code: 'pt', label: 'Portugues', flag: '🇧🇷' },
+    { code: 'en', label: 'English', flag: '🇺🇸' },
+    { code: 'es', label: 'Espanol', flag: '🇪🇸' },
+  ],
 };
