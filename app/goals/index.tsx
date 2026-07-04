@@ -91,7 +91,7 @@ export default function GoalsScreen() {
 
       <Modal visible={showAddModal} transparent animationType="fade">
         <TouchableOpacity accessibilityLabel="Fechar" accessibilityRole="button" style={styles.modalBg} activeOpacity={1} onPress={() => setShowAddModal(false)}>
-          <TouchableOpacity activeOpacity={1} style={styles.modal}>
+          <TouchableOpacity activeOpacity={1} style={styles.modal} onPress={() => {}}>
             <Text style={styles.modalTitle}>NOVA META</Text>
             <View style={styles.gtGrid}>
               {GOAL_TYPES.map((gt) => (
