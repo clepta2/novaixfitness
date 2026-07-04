@@ -1,9 +1,10 @@
-// src/middleware/auth.js
+// src/middleware/auth.ts
 // Middleware de Autenticação
 
-const supabase = require('../config/supabase');
+import { Request, Response, NextFunction } from 'express';
+import supabase from '../config/supabase';
 
-const authenticate = async (req, res, next) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
 
   if (!token) {
@@ -17,11 +18,9 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: 'Token inválido' });
     }
 
-    req.user = user;
+    (req as any).user = user;
     next();
   } catch (err) {
     return res.status(401).json({ error: 'Erro na autenticação' });
   }
 };
-
-export { authenticate };

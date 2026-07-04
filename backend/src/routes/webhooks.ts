@@ -1,32 +1,30 @@
-// src/routes/webhooks.js
+// src/routes/webhooks.ts
 // Webhooks de Pagamento - Asaas
-// COM: Idempotency check + HMAC-SHA256 signature validation
 
-const express = require('express');
-const crypto = require('crypto');
-const router = express.Router();
-const asaas = require('../services/asaas');
-const {
+import express, { Request, Response } from 'express';
+import crypto from 'crypto';
+import asaas from '../services/asaas';
+import {
   handlePaymentReceived,
   handlePaymentCreated,
   handlePaymentUpdated,
   handlePaymentOverdue,
   handlePaymentDeleted,
   handlePaymentRefunded,
-} = require('../services/paymentHandlers');
-const {
+} from '../services/paymentHandlers';
+import {
   handleSubscriptionCreated,
   handleSubscriptionUpdated,
   handleSubscriptionDeleted,
   handleSubscriptionInactivated,
   handleSubscriptionReactivated,
-} = require('../services/subscriptionHandlers');
-const {
+} from '../services/subscriptionHandlers';
+import {
   isEventProcessed,
   markEventProcessing,
   markEventCompleted,
   markEventFailed,
-} = require('../services/webhookIdempotency');
+} from '../services/webhookIdempotency';
 
 const WEBHOOK_SECRET = process.env.ASAAS_WEBHOOK_SECRET || '';
 
