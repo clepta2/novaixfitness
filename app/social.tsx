@@ -89,7 +89,7 @@ export default function SocialScreen() {
     loadStories();
     loadCheckIns();
     loadUserLikes();
-  }, [user?.id, loadStories, loadCheckIns]);
+  }, [user?.id, loadStories, loadCheckIns, loadUserLikes]);
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
