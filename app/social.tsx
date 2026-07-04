@@ -138,6 +138,7 @@ export default function SocialScreen() {
     else if (actionId === 'chat') router.push('/chat');
   };
   const handleGymCheckIn = async ({ gymName }) => {
+    if (!user?.id) return;
     await checkAndPerform(ACTIONS.CHECK_IN, 'check_in', async () => {
       await checkIn(user.id, gymName);
       loadCheckIns();
