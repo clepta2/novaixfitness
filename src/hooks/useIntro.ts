@@ -69,6 +69,7 @@ export function useIntro(router: Router) {
   const handleNext = useCallback(() => {
     if (isLastSlide) {
       goToLogin();
+    } else {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
     }
   }, [currentIndex, isLastSlide, goToLogin]);

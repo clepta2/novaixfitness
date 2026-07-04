@@ -145,7 +145,7 @@ export default function usePlayerList(): UsePlayerListReturn {
     finally { setLoading(false); setRefreshing(false); }
   }, [user?.id, isSubscribed, userPhysicalLevel]);
 
-  useEffect(() => { if (user && !profile) return; fetchDailyWorkouts(); }, [profile, user, fetchDailyWorkouts]);
+  useEffect(() => { if (!user) return; fetchDailyWorkouts(); }, [user, fetchDailyWorkouts]);
   const onRefresh = useCallback((): void => { setRefreshing(true); fetchDailyWorkouts(); }, [fetchDailyWorkouts]);
   const startWorkout = useCallback((w: PlayerWorkout): void => {
     if (w.locked) { Alert.alert('Conteudo Premium', 'Exclusivo para assinantes.', [{ text: 'Ver Planos', onPress: () => router.push('/paywall') }, { text: 'Cancelar', style: 'cancel' }]); return; }

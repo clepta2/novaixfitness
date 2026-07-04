@@ -139,6 +139,7 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
   }, [user?.id, inputText, loading, profile, messages, router]);
 
   const handleClearChat = useCallback((): void => {
+    if (!user?.id) return;
     Alert.alert('Limpar historico', 'Apagar todas as mensagens?', [
       { text: 'Cancelar', style: 'cancel' },
       {
