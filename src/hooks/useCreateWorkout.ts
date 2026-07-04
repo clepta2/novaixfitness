@@ -66,15 +66,20 @@ export function useCreateWorkout() {
   const updateForm = (key: keyof WorkoutForm, value: string) => setForm(f => ({ ...f, [key]: value }));
 
   const addExercise = useCallback((ex: { name: string; [key: string]: unknown }) => {
-    if (exercises.find(e => e.name === ex.name)) return;
-    setExercises(prev => [...prev, { ...ex, sets: 4, reps: '10-12', rest: DEFAULT_REST_SECONDS, weight: '', notes: '' }]);
-  }, [exercises]);
+    setExercises(prev => {
+      if (prev.find(e => e.name === ex.name)) return prev;
+      return [...prev, { ...ex, sets: 4, reps: '10-12', rest: DEFAULT_REST_SECONDS, weight: '', notes: '' }];
+    });
+  }, []);
 
   const removeExercise = useCallback((i: number) => {
     setExercises(prev => prev.filter((_, idx) => idx !== i));
-    if (configIndex === i) setConfigIndex(-1);
-    else if (configIndex > i) setConfigIndex(configIndex - 1);
-  }, [configIndex]);
+    setConfigIndex(prev => {
+      if (prev === i) return -1;
+      if (prev > i) return prev - 1;
+      return prev;
+    });
+  }, []);
 
   const updateConfig = useCallback((indexOrCfg: number | Partial<ExerciseItem>, cfg?: Partial<ExerciseItem>) => {
     const idx = typeof indexOrCfg === 'number' ? indexOrCfg : configIndex;
