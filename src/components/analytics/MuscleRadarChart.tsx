@@ -140,7 +140,7 @@ export default function MuscleRadarChart({ data = {}, previousData = null }) {
             })}
             {values.map((v, i) => {
               const lp = { x: CENTER + (RADIUS + 22) * Math.cos((Math.PI * 2 * i) / values.length - Math.PI / 2), y: CENTER + (RADIUS + 22) * Math.sin((Math.PI * 2 * i) / values.length - Math.PI / 2) };
-              return <SvgText key={i} x={lp.x} y={lp.y} textAnchor="middle" dominantBaseline="middle" fill={COLORS.textMuted} fontSize={9} fontFamily="Montserrat_700Bold">{v.short}</SvgText>;
+              return <SvgText key={i} x={lp.x} y={lp.y} textAnchor="middle" dominantBaseline="middle" fill={COLORS.textMuted} fontSize={9} fontFamily="Montserrat_700Bold" {...{} as any}>{v.short}</SvgText>;
             })}
           </G>
         </Svg>

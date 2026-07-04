@@ -79,13 +79,13 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
 
       {street.length > 0 && (
         <>
-          <Input label="RUA" value={street} onChangeText={setStreet} icon="location-outline" />
+          <Input label="RUA" placeholder="" value={street} onChangeText={setStreet} icon="location-outline" />
           <View style={styles.row}>
             <View style={{ width: 60 }}>
               <Input label="NÚMERO" placeholder="Nº" value={number} onChangeText={setNumber} keyboardType="numeric" icon="hash" />
             </View>
             <View style={{ flex: 1 }}>
-              <Input label="BAIRRO" value={neighborhood} onChangeText={setNeighborhood} icon="location-outline" />
+              <Input label="BAIRRO" placeholder="" value={neighborhood} onChangeText={setNeighborhood} icon="location-outline" />
             </View>
           </View>
         </>
@@ -100,7 +100,7 @@ export default function LocationSection({ onLocationChange, initialLocation }) {
           </View>
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Input label="CIDADE" placeholder={selectedState ? "Buscar cidade" : "CEP primeiro"} value={city} onChangeText={setCity} disabled={!selectedState} icon="location-outline" />
+          <Input label="CIDADE" placeholder={selectedState ? "Buscar cidade" : "CEP primeiro"} value={city} onChangeText={setCity} icon="location-outline" />
         </View>
       </View>
 

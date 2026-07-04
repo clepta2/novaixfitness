@@ -41,7 +41,7 @@ export default function VariantBView({ selected, onSelect, onSubscribe, loading 
         <View style={styles.plans}>
           {Object.values(PLANS).map((plan) => (
             <TouchableOpacity key={plan.id} style={[styles.planCard, selected === plan.id && styles.planActive]} onPress={() => handleSelect(plan.id)}>
-              {plan.popular && <View style={styles.popularTag}><Text style={styles.popularText}>RECOMENDADO</Text></View>}
+              {(plan as any).popular && <View style={styles.popularTag}><Text style={styles.popularText}>RECOMENDADO</Text></View>}
               <Text style={typography.h4}>{plan.name}</Text>
               <Text style={styles.price}>{plan.priceText}<Text style={typography.bodySmall}>/mes</Text></Text>
             </TouchableOpacity>

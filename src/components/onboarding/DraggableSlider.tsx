@@ -72,7 +72,7 @@ export default function DraggableSlider({ label, value, setValue, min, max, unit
         <View style={styles.track}>
           <View style={[styles.fill, { width: `${pct * 100}%` }]} />
         </View>
-        <Animated.View style={[styles.thumb, { left: thumbLeft }]} {...panResponder.panHandlers}>
+        <Animated.View style={[styles.thumb, { left: thumbLeft } as any]} {...panResponder.panHandlers}>
           <View style={styles.thumbDot} />
         </Animated.View>
       </View>

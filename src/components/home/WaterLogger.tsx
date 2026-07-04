@@ -81,7 +81,7 @@ export default memo(function WaterLogger() {
     await AsyncStorage.setItem(STORAGE_KEY, String(newTotal));
 
     if (user?.id) {
-      supabase.from('water_logs').insert({ user_id: user.id, amount_ml: amount }).catch(() => {});
+      supabase.from('water_logs').insert({ user_id: user.id, amount_ml: amount }).then(null, () => {});
     }
   };
 

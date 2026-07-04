@@ -43,12 +43,12 @@ export function Header({ title, subtitle, showBack, onBack, rightIcon, onRightPr
       <View style={styles.rightActions}>
         {rightIcon2 && (
           <TouchableOpacity onPress={onRightPress2} style={styles.iconBtn} accessibilityLabel="Mais opções" accessibilityRole="button">
-            <Ionicons name={rightIcon2} size={22} color={COLORS.textMuted} />
+            <Ionicons name={rightIcon2 as any} size={22} color={COLORS.textMuted} />
           </TouchableOpacity>
         )}
         {rightIcon ? (
           <TouchableOpacity onPress={onRightPress} style={styles.iconBtn} accessibilityLabel="Ação principal" accessibilityRole="button">
-            <Ionicons name={rightIcon} size={22} color={COLORS.primary} />
+            <Ionicons name={rightIcon as any} size={22} color={COLORS.primary} />
           </TouchableOpacity>
         ) : <View style={styles.iconBtn} />}
       </View>

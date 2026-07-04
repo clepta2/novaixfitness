@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -35,19 +35,19 @@ export default function ChangelogItem({ version, date, changes }) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   card: {
     backgroundColor: COLORS.surface,
     borderRadius: BORDER_RADIUS.lg,
     borderWidth: 1,
     borderColor: COLORS.border,
     marginBottom: SPACING.lg,
-    overflow: 'hidden',
+    overflow: 'hidden' as const,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center' as const,
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.lg,
     paddingBottom: SPACING.md,
@@ -70,7 +70,7 @@ const styles = {
   },
   changeRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start' as const,
     gap: SPACING.sm,
     marginBottom: SPACING.xs,
   },
@@ -80,7 +80,7 @@ const styles = {
   changeType: {
     fontFamily: 'Montserrat_600SemiBold',
     fontSize: 11,
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
     letterSpacing: 0.5,
   },
   changeText: {
@@ -90,4 +90,4 @@ const styles = {
     lineHeight: 20,
     marginTop: 1,
   },
-};
+});

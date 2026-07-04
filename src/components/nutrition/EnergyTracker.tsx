@@ -79,10 +79,10 @@ export default function EnergyTracker({ userId }) {
 
   const ratedCount = Object.keys(ratings).length;
   const avgEnergy = ratedCount > 0
-    ? (Object.values(ratings).reduce((a: number, b: number) => a + b, 0) / ratedCount).toFixed(1)
+    ? (Object.values(ratings).reduce((a: any, b: any) => Number(a) + Number(b), 0) / ratedCount).toFixed(1)
     : '--';
 
-  const avgColor = Number(avgEnergy) >= 4 ? COLORS.success : Number(avgEnergy) >= 3 ? COLORS.attention : Number(avgEnergy) >= 2 ? COLORS.secondary : COLORS.error;
+  const avgColor = avgEnergy !== '--' && Number(avgEnergy) >= 4 ? COLORS.success : avgEnergy !== '--' && Number(avgEnergy) >= 3 ? COLORS.attention : avgEnergy !== '--' && Number(avgEnergy) >= 2 ? COLORS.secondary : COLORS.error;
 
   return (
     <View style={styles.container}>

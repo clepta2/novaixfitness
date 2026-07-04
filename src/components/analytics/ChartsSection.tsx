@@ -22,7 +22,7 @@ const chartConfig = {
   propsForDots: { r: '4', strokeWidth: '2', stroke: COLORS.primary },
 };
 
-function ChartCard({ title, subtitle, children, onPress, icon }) {
+function ChartCard({ title, subtitle, children, onPress, icon }: { title: string; subtitle?: string; children: React.ReactNode; onPress?: () => void; icon?: string }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export function FrequencyChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="FREQÜÊNCIA SEMANAL" subtitle="Treinos por semana" icon="calendar" onPress={onPress}>
-      <BarChart data={{ labels: data.map(f => f.week), datasets: [{ data: data.map(f => f.count || 0) }] }} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} showValuesOnTopOfBars fromZero />
+      <BarChart data={{ labels: data.map(f => f.week), datasets: [{ data: data.map(f => f.count || 0) }] }} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
     </ChartCard>
   );
 }
@@ -75,7 +75,7 @@ export function DayOfWeekChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="TREINOS POR DIA" subtitle="Qual dia você mais treina?" icon="calendar-outline" onPress={onPress}>
-      <BarChart data={{ labels: data.map(d => d.day), datasets: [{ data: data.map(d => d.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero />
+      <BarChart data={{ labels: data.map(d => d.day), datasets: [{ data: data.map(d => d.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
     </ChartCard>
   );
 }
@@ -93,7 +93,7 @@ export function HourChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="HORÁRIOS PREFERIDOS" subtitle="Quando você treina?" icon="time" onPress={onPress}>
-      <BarChart data={{ labels: data.slice(0, 8).map(h => h.hour), datasets: [{ data: data.slice(0, 8).map(h => h.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero />
+      <BarChart data={{ labels: data.slice(0, 8).map(h => h.hour), datasets: [{ data: data.slice(0, 8).map(h => h.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
     </ChartCard>
   );
 }

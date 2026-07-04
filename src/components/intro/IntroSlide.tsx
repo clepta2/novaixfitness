@@ -36,7 +36,7 @@ export default memo(function IntroSlide({ icon = 'fitness', title, subtitle, ind
     <View style={styles.container} accessibilityLabel={`${title}. ${subtitle}`}>
       <Animated.View style={[styles.iconContainer, { opacity: fadeAnim, transform: [{ translateY }] }]}>
         <View style={styles.iconCircle}>
-          <Ionicons name={icon} size={64} color={COLORS.primary} />
+          <Ionicons name={icon as any} size={64} color={COLORS.primary} />
         </View>
       </Animated.View>
 

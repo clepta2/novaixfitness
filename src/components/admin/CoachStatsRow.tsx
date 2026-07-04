@@ -19,7 +19,7 @@ export default function CoachStatsRow({ stats }) {
         <Text style={styles.statTitle}>Faturado</Text>
       </View>
       <View style={[styles.statCard, { borderLeftColor: COLORS.attention }]}>
-        <Ionicons name="percent" size={20} color={COLORS.attention} />
+        <Ionicons name="percent" size={20} color={COLORS.attention} as any />
         <Text style={styles.statValue}>{((stats?.commission_rate || 0.70) * 100).toFixed(0)}%</Text>
         <Text style={styles.statTitle}>Comissao</Text>
       </View>
