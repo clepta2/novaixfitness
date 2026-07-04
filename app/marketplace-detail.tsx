@@ -128,8 +128,8 @@ export default function MarketplaceDetailScreen() {
           {product.brand && <Text style={styles.brand}>{product.brand}</Text>}
 
           <View style={styles.priceSection}>
-            <Text style={styles.price}>R$ {product.price?.toFixed(2) ?? '0,00'}</Text>
-            {hasDiscount && <Text style={styles.originalPrice}>R$ {product.original_price?.toFixed(2) ?? '0,00'}</Text>}
+            <Text style={styles.price}>R$ {(product.price ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>
+            {hasDiscount && <Text style={styles.originalPrice}>R$ {(product.original_price ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>}
           </View>
 
           {product.rating > 0 && (
