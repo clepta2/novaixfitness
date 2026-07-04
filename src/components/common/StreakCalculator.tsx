@@ -25,10 +25,10 @@ export function StreakCalculator({
   const colors = useColors();
   const styles = useMemo(() => StyleSheet.create({
     container: {
-      backgroundColor: colors.surface,
+      backgroundColor: COLORS.surface,
       borderRadius: BORDER_RADIUS.lg,
       borderWidth: 1,
-      borderColor: colors.border,
+      borderColor: COLORS.border,
     },
     main: {
       flexDirection: 'row',
@@ -37,12 +37,12 @@ export function StreakCalculator({
     },
     streak: {
       fontFamily: 'Montserrat_700Bold',
-      color: colors.textTitle,
+      color: COLORS.textTitle,
     },
     label: {
       fontFamily: 'Inter_400Regular',
       fontSize: 14,
-      color: colors.textDescription,
+      color: COLORS.textDescription,
     },
     details: {
       marginTop: SPACING.sm,
@@ -50,12 +50,12 @@ export function StreakCalculator({
     detailText: {
       fontFamily: 'Inter_400Regular',
       fontSize: 12,
-      color: colors.textMuted,
+      color: COLORS.textMuted,
     },
     activeText: {
       fontFamily: 'Inter_500Medium',
       fontSize: 12,
-      color: colors.success,
+      color: COLORS.success,
       marginTop: SPACING.xs,
     },
   }), [colors]);

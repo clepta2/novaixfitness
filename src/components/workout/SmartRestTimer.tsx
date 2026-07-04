@@ -49,25 +49,25 @@ export default function SmartRestTimer({
 }: SmartRestTimerProps): React.ReactElement | null {
   const colors = useColors();
   const styles = useMemo(() => StyleSheet.create({
-    container: { backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: colors.success + '30', alignItems: 'center' } as ViewStyle,
+    container: { backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.success + '30', alignItems: 'center' } as ViewStyle,
     header: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.md } as ViewStyle,
-    headerTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.success, letterSpacing: 2 } as TextStyle,
+    headerTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.success, letterSpacing: 2 } as TextStyle,
     timerWrap: { position: 'relative', width: CIRCLE_SIZE, height: CIRCLE_SIZE, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.md } as ViewStyle,
     timerOverlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' } as ViewStyle,
     timerText: { fontFamily: 'Montserrat_800ExtraBold', fontSize: 42, letterSpacing: 2 } as TextStyle,
-    progressLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.textMuted, marginTop: 4 } as TextStyle,
+    progressLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted, marginTop: 4 } as TextStyle,
     infoRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.md } as ViewStyle,
-    infoChip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, backgroundColor: colors.surfaceOverlay, borderRadius: BORDER_RADIUS.sm } as ViewStyle,
-    infoText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textDescription } as TextStyle,
+    infoChip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, backgroundColor: COLORS.surfaceOverlay, borderRadius: BORDER_RADIUS.sm } as ViewStyle,
+    infoText: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textDescription } as TextStyle,
     controls: { flexDirection: 'row', gap: SPACING.xl, marginBottom: SPACING.md } as ViewStyle,
     ctrlBtn: { alignItems: 'center', gap: 2 } as ViewStyle,
-    ctrlText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: colors.textMuted } as TextStyle,
-    nextCard: { alignItems: 'center', backgroundColor: colors.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.md, borderWidth: 1, borderColor: colors.border, width: '100%' } as ViewStyle,
-    nextLabel: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: colors.primary, letterSpacing: 1, marginTop: 4 } as TextStyle,
-    nextName: { fontFamily: 'Montserrat_700Bold', fontSize: 15, color: colors.textTitle, marginTop: 4 } as TextStyle,
-    nextMeta: { fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textDescription, marginTop: 2 } as TextStyle,
-    skipBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: colors.primary, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, width: '100%' } as ViewStyle,
-    skipText: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.background, letterSpacing: 0.5 } as TextStyle,
+    ctrlText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, color: COLORS.textMuted } as TextStyle,
+    nextCard: { alignItems: 'center', backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.md, borderWidth: 1, borderColor: COLORS.border, width: '100%' } as ViewStyle,
+    nextLabel: { fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.primary, letterSpacing: 1, marginTop: 4 } as TextStyle,
+    nextName: { fontFamily: 'Montserrat_700Bold', fontSize: 15, color: COLORS.textTitle, marginTop: 4 } as TextStyle,
+    nextMeta: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textDescription, marginTop: 2 } as TextStyle,
+    skipBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, width: '100%' } as ViewStyle,
+    skipText: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.background, letterSpacing: 0.5 } as TextStyle,
   }), [colors]);
   const [elapsed, setElapsed] = useState(0);
   const [fadeAnim] = useState(() => new Animated.Value(0));

@@ -39,16 +39,16 @@ return (    <View style={styles.container
 }
 const styles = StyleSheet.create({
  container: {
-   flexDirection: 'row',    alignItems: 'center',    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 1,    borderColor: colors.border,    paddingVertical: SPACING.md,    paddingHorizontal: SPACING.lg,    gap: SPACING.lg,    width: '100%',    justifyContent: 'space-around',    ...SHADOWS.sm,  
+   flexDirection: 'row',    alignItems: 'center',    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 1,    borderColor: COLORS.border,    paddingVertical: SPACING.md,    paddingHorizontal: SPACING.lg,    gap: SPACING.lg,    width: '100%',    justifyContent: 'space-around',    ...SHADOWS.sm,  
 },  item: {
 alignItems: 'center', flex: 1 
 },  num: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 18, color: colors.primary 
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 18, color: COLORS.primary 
 },  label: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted, marginTop: 2, textAlign: 'center' 
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, marginTop: 2, textAlign: 'center' 
 },  starsRow: {
 flexDirection: 'row', gap: 2, marginBottom: 2 
 },  divider: {
-width: 1, height: 32, backgroundColor: colors.border 
+width: 1, height: 32, backgroundColor: COLORS.border 
 },
 });

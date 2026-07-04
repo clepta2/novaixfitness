@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
  overlay: {
    flex: 1,    backgroundColor: 'rgba(0,0,0,0.5)',    justifyContent: 'flex-end',  
 },  container: {
-   backgroundColor: colors.surface,    borderTopLeftRadius: BORDER_RADIUS.xl,    borderTopRightRadius: BORDER_RADIUS.xl,    padding: SPACING.lg,    maxHeight: SCREEN_HEIGHT * 0.85,  
+   backgroundColor: COLORS.surface,    borderTopLeftRadius: BORDER_RADIUS.xl,    borderTopRightRadius: BORDER_RADIUS.xl,    padding: SPACING.lg,    maxHeight: SCREEN_HEIGHT * 0.85,  
 },  handle: {
-   width: 40,    height: 4,    borderRadius: 2,    backgroundColor: colors.border,    alignSelf: 'center',    marginBottom: SPACING.md,  
+   width: 40,    height: 4,    borderRadius: 2,    backgroundColor: COLORS.border,    alignSelf: 'center',    marginBottom: SPACING.md,  
 },  header: {
    flexDirection: 'row',    justifyContent: 'space-between',    alignItems: 'center',    marginBottom: SPACING.md,  
 },  title: {
-   fontFamily: 'Montserrat_700Bold',    fontSize: 16,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_700Bold',    fontSize: 16,    color: COLORS.textTitle,  
 },  closeBtn: {
-   width: 32,    height: 32,    borderRadius: 16,    backgroundColor: colors.surfaceElevated,    justifyContent: 'center',    alignItems: 'center',  
+   width: 32,    height: 32,    borderRadius: 16,    backgroundColor: COLORS.surfaceElevated,    justifyContent: 'center',    alignItems: 'center',  
 },
 });

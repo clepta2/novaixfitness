@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
  overlay: {
    flex: 1,    backgroundColor: 'rgba(0,0,0,0.6)',    justifyContent: 'center',    alignItems: 'center',    padding: SPACING.xl,  
 },  container: {
-   backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.xl,    padding: SPACING.xl,    ...SHADOWS.lg,  
+   backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.xl,    padding: SPACING.xl,    ...SHADOWS.lg,  
 },  header: {
    flexDirection: 'row',    justifyContent: 'space-between',    alignItems: 'center',    marginBottom: SPACING.lg,  
 },  title: {
-   fontFamily: 'Montserrat_700Bold',    fontSize: 16,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_700Bold',    fontSize: 16,    color: COLORS.textTitle,  
 },  closeBtn: {
-   width: 28,    height: 28,    borderRadius: 14,    backgroundColor: colors.surfaceElevated,    justifyContent: 'center',    alignItems: 'center',  
+   width: 28,    height: 28,    borderRadius: 14,    backgroundColor: COLORS.surfaceElevated,    justifyContent: 'center',    alignItems: 'center',  
 },
 });

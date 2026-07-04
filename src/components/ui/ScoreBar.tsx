@@ -37,11 +37,11 @@ container: {
    gap: SPACING.xs, },  header: {
    flexDirection: 'row', justifyContent: 'space-between',    alignItems: 'center',  
 },  label: {
-   fontFamily: 'Inter_500Medium', fontSize: 12,    color: colors.textMuted,  
+   fontFamily: 'Inter_500Medium', fontSize: 12,    color: COLORS.textMuted,  
 },  value: {
    fontFamily: 'Montserrat_700Bold', fontSize: 12,  
 },  track: {
-   height: 6, backgroundColor: colors.surfaceOverlay,    borderRadius: 3,    overflow: 'hidden',  
+   height: 6, backgroundColor: COLORS.surfaceOverlay,    borderRadius: 3,    overflow: 'hidden',  
 },  fill: {
    height: '100%', borderRadius: 3,  
 },

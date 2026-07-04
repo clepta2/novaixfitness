@@ -40,9 +40,9 @@ backgroundColor: (isCompleted ? colors.primary : colors.textMuted) + '15'
 }
 const styles = StyleSheet.create({
  card: {
-flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: SPACING.lg, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: colors.border, ...SHADOWS.sm 
+flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: SPACING.lg, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.sm 
 },  cardDone: {
-opacity: 0.6, borderColor: colors.primary + '30' 
+opacity: 0.6, borderColor: COLORS.primary + '30' 
 },  left: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.md, flex: 1 
 },  iconWrap: {
@@ -50,10 +50,10 @@ width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: '
 },  info: {
 flex: 1 
 },  text: {
-fontFamily: 'Inter_500Medium', fontSize: 14, color: colors.textTitle 
+fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textTitle 
 },  textDone: {
-textDecorationLine: 'line-through', color: colors.textMuted 
+textDecorationLine: 'line-through', color: COLORS.textMuted 
 },  xp: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.primary, marginTop: 2 
+fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.primary, marginTop: 2 
 },
 });

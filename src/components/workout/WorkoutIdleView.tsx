@@ -71,15 +71,15 @@ container: {
 flex: 1 },  scroll: {
 padding: SPACING.lg },  header: {
 flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.lg },  voiceToggle: {
-width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center' },  summaryCard: {
+width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center' },  summaryCard: {
 marginBottom: SPACING.lg },  summaryRow: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.lg },  summaryInfo: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.md },  divider: {
-width: 1, height: 30, backgroundColor: colors.border },  exerciseList: {
+width: 1, height: 30, backgroundColor: COLORS.border },  exerciseList: {
 gap: SPACING.sm },  exerciseItem: {
-flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.md, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: colors.border },  number: {
-width: 32, height: 32, borderRadius: 16, backgroundColor: colors.primary + '15', justifyContent: 'center', alignItems: 'center' },  numberText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 14, color: colors.primary },  info: {
+flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border },  number: {
+width: 32, height: 32, borderRadius: 16, backgroundColor: COLORS.primary + '15', justifyContent: 'center', alignItems: 'center' },  numberText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.primary },  info: {
 flex: 1 },  footer: {
-padding: SPACING.lg, backgroundColor: colors.background, borderTopWidth: 1, borderTopColor: colors.border },
+padding: SPACING.lg, backgroundColor: COLORS.background, borderTopWidth: 1, borderTopColor: COLORS.border },
 });

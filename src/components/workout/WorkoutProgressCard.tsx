@@ -95,21 +95,21 @@ width: `${setProgress
 }
 const styles = StyleSheet.create({
  card: {
-backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.md, borderWidth: 1, borderColor: colors.border },  header: {
+backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },  header: {
 flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.md },  workoutName: {
-fontFamily: 'Montserrat_700Bold', fontSize: 15, color: colors.textTitle, flex: 1 },  phaseBadge: {
+fontFamily: 'Montserrat_700Bold', fontSize: 15, color: COLORS.textTitle, flex: 1 },  phaseBadge: {
 flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: BORDER_RADIUS.full },  phaseDot: {
 width: 6, height: 6, borderRadius: 3 },  phaseText: {
 fontFamily: 'Inter_500Medium', fontSize: 11 },  exerciseRow: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.md },  exerciseName: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textMuted, flex: 1 },  exerciseCount: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textMuted },  progressRow: {
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, flex: 1 },  exerciseCount: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted },  progressRow: {
 gap: SPACING.sm, marginBottom: SPACING.md },  progressItem: {
 gap: 4 },  progressBar: {
-height: 4, backgroundColor: colors.surfaceElevated, borderRadius: 2, overflow: 'hidden' },  progressFill: {
+height: 4, backgroundColor: COLORS.surfaceElevated, borderRadius: 2, overflow: 'hidden' },  progressFill: {
 height: '100%', borderRadius: 2 },  progressLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted },  progressSubtext: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted, textAlign: 'right' },  timerRow: {
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },  progressSubtext: {
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted, textAlign: 'right' },  timerRow: {
 flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.xs },  timer: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 24, color: colors.primary },
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 24, color: COLORS.primary },
 });

@@ -42,9 +42,9 @@ const styles = StyleSheet.create({
  container: {
 gap: SPACING.sm },  divider: {
 flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.lg },  dividerLine: {
-flex: 1, height: 1, backgroundColor: colors.border },  dividerText: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textMuted, marginHorizontal: SPACING.md },  socialBtn: {
-   flexDirection: 'row', alignItems: 'center',    justifyContent: 'center',    gap: SPACING.sm,    backgroundColor: colors.surface + 'CC',    borderRadius: BORDER_RADIUS.md,    paddingVertical: SPACING.md,    borderWidth: 1,    borderColor: colors.border,  
+flex: 1, height: 1, backgroundColor: COLORS.border },  dividerText: {
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginHorizontal: SPACING.md },  socialBtn: {
+   flexDirection: 'row', alignItems: 'center',    justifyContent: 'center',    gap: SPACING.sm,    backgroundColor: COLORS.surface + 'CC',    borderRadius: BORDER_RADIUS.md,    paddingVertical: SPACING.md,    borderWidth: 1,    borderColor: COLORS.border,  
 },  socialBtnText: {
-fontFamily: 'Inter_500Medium', fontSize: 14, color: colors.textTitle },
+fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textTitle },
 });

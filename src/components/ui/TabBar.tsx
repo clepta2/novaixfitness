@@ -42,12 +42,12 @@ paddingHorizontal: SPACING.lg
 },  tabs: {
 flexDirection: 'row', gap: SPACING.xs 
 },  tab: {
-flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: colors.border 
+flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border 
 },  tabActive: {
-backgroundColor: colors.primary, borderColor: colors.primary 
+backgroundColor: COLORS.primary, borderColor: COLORS.primary 
 },  tabText: {
-fontFamily: 'Inter_500Medium', fontSize: 12, color: colors.textMuted 
+fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.textMuted 
 },  tabTextActive: {
-color: colors.background 
+color: COLORS.background 
 },
 });

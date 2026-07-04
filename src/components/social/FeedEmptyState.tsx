@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
 
 },  title: 
 {
-   fontFamily: 'Montserrat_700Bold', fontSize: 16,    color: colors.textTitle,    textAlign: 'center',  
+   fontFamily: 'Montserrat_700Bold', fontSize: 16,    color: COLORS.textTitle,    textAlign: 'center',  
 
 },  subtitle: 
 {
-   fontFamily: 'Inter_400Regular', fontSize: 13,    color: colors.textMuted,    textAlign: 'center',  
+   fontFamily: 'Inter_400Regular', fontSize: 13,    color: COLORS.textMuted,    textAlign: 'center',  
 
 },
 

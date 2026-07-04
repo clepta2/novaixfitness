@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 {
    ...TITLE_MD, },  label: 
 {
-   ...BODY_SM, color: colors.textMuted,  
+   ...BODY_SM, color: COLORS.textMuted,  
 
 },
 

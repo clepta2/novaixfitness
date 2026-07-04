@@ -32,10 +32,10 @@ color: statusColor }]
 const colors = useColors();
 const styles = StyleSheet.create({
  item: {
-flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.sm, borderWidth: 1, borderColor: colors.border },  info: {
+flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.sm, borderWidth: 1, borderColor: COLORS.border },  info: {
 flex: 1 },  date: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted },  amount: {
-fontFamily: 'Montserrat_700Bold', fontSize: 14, color: colors.textTitle, marginTop: 2 },  badge: {
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted },  amount: {
+fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textTitle, marginTop: 2 },  badge: {
 paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: BORDER_RADIUS.sm },  badgeText: {
 fontFamily: 'Montserrat_600SemiBold', fontSize: 11 },
 });

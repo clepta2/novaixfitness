@@ -53,8 +53,8 @@ return (    <View style={style
 }      </Text>    </View>  );
 }
 const styles = StyleSheet.create({
- text: { color: colors.textTitle,  
+ text: { color: COLORS.textTitle,  
 },  cursor: {
-   color: colors.primary, fontWeight: 'bold',  
+   color: COLORS.primary, fontWeight: 'bold',  
 },
 });

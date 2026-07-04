@@ -44,8 +44,8 @@ flexDirection: 'row', alignItems: 'center', gap: SPACING.md, opacity: 0.5 },  ac
 opacity: 1 },  icon: {
 width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },  info: {
 flex: 1 },  label: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.textMuted },  labelActive: {
-color: colors.textTitle },  done: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.success, marginTop: 2 },  progress: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.primary, marginTop: 2 },
+fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textMuted },  labelActive: {
+color: COLORS.textTitle },  done: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.success, marginTop: 2 },  progress: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.primary, marginTop: 2 },
 });

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 {
    paddingVertical: SPACING.sm, },  borderBottom: 
 {
-   borderBottomWidth: 1, borderBottomColor: colors.border,  
+   borderBottomWidth: 1, borderBottomColor: COLORS.border,  
 
 },  label: 
 {

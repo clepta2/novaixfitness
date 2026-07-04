@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
 },  content: {
    flex: 1, },  centerContent: {
    alignItems: 'center', },  title: {
-   fontFamily: 'Montserrat_700Bold', fontSize: 18,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_700Bold', fontSize: 18,    color: COLORS.textTitle,  
 },  subtitle: {
-   fontFamily: 'Inter_400Regular', fontSize: 12,    color: colors.textDescription,    marginTop: 2,  
+   fontFamily: 'Inter_400Regular', fontSize: 12,    color: COLORS.textDescription,    marginTop: 2,  
 },  iconBtn: {
-   width: 40, height: 40,    borderRadius: 20,    backgroundColor: colors.surface,    justifyContent: 'center',    alignItems: 'center',    borderWidth: 1,    borderColor: colors.border,  
+   width: 40, height: 40,    borderRadius: 20,    backgroundColor: COLORS.surface,    justifyContent: 'center',    alignItems: 'center',    borderWidth: 1,    borderColor: COLORS.border,  
 },
 });

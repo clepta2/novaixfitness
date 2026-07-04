@@ -51,6 +51,6 @@ return (    <Animated.View style={[styles.card, animatedStyle, style]
 }    </Animated.View>  );
 }
 const styles = StyleSheet.create({
- card: { backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.xl,    padding: SPACING.lg,    borderWidth: 1,    borderColor: colors.border,  
+ card: { backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.xl,    padding: SPACING.lg,    borderWidth: 1,    borderColor: COLORS.border,  
 },
 });

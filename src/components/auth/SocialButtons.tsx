@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
  
 divider: {
 flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.xl },  dividerLine: {
-flex: 1, height: 1, backgroundColor: colors.border },  dividerText: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textMuted, marginHorizontal: SPACING.md },  btn: {
-   flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: colors.surface + 'CC', borderRadius: BORDER_RADIUS.md,    paddingVertical: SPACING.md, borderWidth: 1, borderColor: colors.border, ...SHADOWS.sm,  
+flex: 1, height: 1, backgroundColor: COLORS.border },  dividerText: {
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, marginHorizontal: SPACING.md },  btn: {
+   flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface + 'CC', borderRadius: BORDER_RADIUS.md,    paddingVertical: SPACING.md, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.sm,  
 },  btnText: {
-fontFamily: 'Inter_500Medium', fontSize: 14, color: colors.textTitle },
+fontFamily: 'Inter_500Medium', fontSize: 14, color: COLORS.textTitle },
 });

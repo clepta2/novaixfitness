@@ -42,16 +42,16 @@ const styles = StyleSheet.create({
  container: {
    alignItems: 'center',    marginBottom: SPACING.xxl,  
 },  title: {
-   fontFamily: 'Montserrat_800ExtraBold',    fontSize: 26,    color: colors.textTitle,    textAlign: 'center',    lineHeight: 34,    marginBottom: SPACING.sm,  
+   fontFamily: 'Montserrat_800ExtraBold',    fontSize: 26,    color: COLORS.textTitle,    textAlign: 'center',    lineHeight: 34,    marginBottom: SPACING.sm,  
 },  subtitle: {
-   fontFamily: 'Inter_400Regular',    fontSize: 13,    color: colors.textMuted,    textAlign: 'center',  
+   fontFamily: 'Inter_400Regular',    fontSize: 13,    color: COLORS.textMuted,    textAlign: 'center',  
 },  progressRow: {
    width: '100%',    flexDirection: 'row',    alignItems: 'center',    gap: SPACING.sm,  
 },  track: {
-   flex: 1,    height: 4,    backgroundColor: colors.border,    borderRadius: 2,    overflow: 'hidden',  
+   flex: 1,    height: 4,    backgroundColor: COLORS.border,    borderRadius: 2,    overflow: 'hidden',  
 },  fill: {
-   height: '100%',    backgroundColor: colors.primary,    borderRadius: 2,  
+   height: '100%',    backgroundColor: COLORS.primary,    borderRadius: 2,  
 },  label: {
-   fontFamily: 'Inter_500Medium',    fontSize: 11,    color: colors.primary,    width: 36,  
+   fontFamily: 'Inter_500Medium',    fontSize: 11,    color: COLORS.primary,    width: 36,  
 },
 });

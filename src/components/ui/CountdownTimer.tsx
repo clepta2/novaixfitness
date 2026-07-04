@@ -57,6 +57,6 @@ const colors = useColors();
 const styles = StyleSheet.create({
  
 time: {
-   fontFamily: 'Montserrat_700Bold', color: colors.textTitle,    fontVariant: ['tabular-nums'],  
+   fontFamily: 'Montserrat_700Bold', color: COLORS.textTitle,    fontVariant: ['tabular-nums'],  
 },
 });

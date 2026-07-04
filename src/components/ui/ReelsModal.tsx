@@ -33,9 +33,9 @@ return (    <View style={reelStyles.container
 }
 const reelStyles = StyleSheet.create({
  container: {
-flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' 
+flex: 1, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' 
 },  title: {
-color: colors.textTitle, fontSize: 18, fontFamily: 'Inter_600SemiBold' 
+color: COLORS.textTitle, fontSize: 18, fontFamily: 'Inter_600SemiBold' 
 },
 });
 export 

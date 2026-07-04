@@ -49,23 +49,23 @@ const styles = StyleSheet.create({
 
 },  iconWrap: 
 {
-   width: 80, height: 80,    borderRadius: 40,    backgroundColor: colors.errorBg,    justifyContent: 'center',    alignItems: 'center',    marginBottom: SPACING.sm,  
+   width: 80, height: 80,    borderRadius: 40,    backgroundColor: COLORS.errorBg,    justifyContent: 'center',    alignItems: 'center',    marginBottom: SPACING.sm,  
 
 },  title: 
 {
-   fontFamily: 'Montserrat_700Bold', fontSize: 16,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_700Bold', fontSize: 16,    color: COLORS.textTitle,  
 
 },  message: 
 {
-   fontFamily: 'Inter_400Regular', fontSize: 14,    color: colors.textMuted,    textAlign: 'center',    lineHeight: 20,  
+   fontFamily: 'Inter_400Regular', fontSize: 14,    color: COLORS.textMuted,    textAlign: 'center',    lineHeight: 20,  
 
 },  retryBtn: 
 {
-   flexDirection: 'row', alignItems: 'center',    gap: SPACING.xs,    marginTop: SPACING.md,    paddingHorizontal: SPACING.lg,    paddingVertical: SPACING.sm,    backgroundColor: colors.primary,    borderRadius: BORDER_RADIUS.md,  
+   flexDirection: 'row', alignItems: 'center',    gap: SPACING.xs,    marginTop: SPACING.md,    paddingHorizontal: SPACING.lg,    paddingVertical: SPACING.sm,    backgroundColor: COLORS.primary,    borderRadius: BORDER_RADIUS.md,  
 
 },  retryText: 
 {
-   fontFamily: 'Montserrat_600SemiBold', fontSize: 13,    color: colors.background,  
+   fontFamily: 'Montserrat_600SemiBold', fontSize: 13,    color: COLORS.background,  
 
 },
 

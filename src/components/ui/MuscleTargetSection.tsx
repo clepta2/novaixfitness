@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
  container: {
 marginBottom: SPACING.lg 
 },  title: {
-fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.textMuted, letterSpacing: 0.5, marginBottom: SPACING.md 
+fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textMuted, letterSpacing: 0.5, marginBottom: SPACING.md 
 },  list: {
 gap: SPACING.sm 
 },  row: {
@@ -49,11 +49,11 @@ gap: SPACING.xs
 },  info: {
 flexDirection: 'row', justifyContent: 'space-between' 
 },  name: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textTitle 
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textTitle 
 },  pct: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textMuted 
+fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted 
 },  track: {
-height: 6, backgroundColor: colors.surfaceElevated, borderRadius: 3, overflow: 'hidden' 
+height: 6, backgroundColor: COLORS.surfaceElevated, borderRadius: 3, overflow: 'hidden' 
 },  fill: {
 height: '100%', borderRadius: 3 
 },

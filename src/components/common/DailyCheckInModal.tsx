@@ -80,21 +80,21 @@ const styles = StyleSheet.create({
  
 overlay: {
 ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 999 },  card: {
-width: '85%', backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: colors.border },  iconWrap: {
-width: 80, height: 80, borderRadius: 40, backgroundColor: colors.primary + '15', justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.lg },  iconMega: {
+width: '85%', backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },  iconWrap: {
+width: 80, height: 80, borderRadius: 40, backgroundColor: COLORS.primary + '15', justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.lg },  iconMega: {
 backgroundColor: '#FFD700' + '20' },  title: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 20, color: colors.textTitle, marginBottom: SPACING.xs },  subtitle: {
-fontFamily: 'Inter_400Regular', fontSize: 14, color: colors.textMuted, marginBottom: SPACING.lg },  xpBadge: {
-flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: colors.primary + '15', paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, marginBottom: SPACING.lg },  xpText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 18, color: colors.primary },  streakRow: {
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 20, color: COLORS.textTitle, marginBottom: SPACING.xs },  subtitle: {
+fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, marginBottom: SPACING.lg },  xpBadge: {
+flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.primary + '15', paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm, borderRadius: BORDER_RADIUS.full, marginBottom: SPACING.lg },  xpText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.primary },  streakRow: {
 flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.xl },  streakDot: {
-width: 32, height: 32, borderRadius: 16, backgroundColor: colors.surfaceElevated, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: colors.border },  streakDotActive: {
-backgroundColor: colors.primary + '20', borderColor: colors.primary },  streakDotMega: {
+width: 32, height: 32, borderRadius: 16, backgroundColor: COLORS.surfaceElevated, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },  streakDotActive: {
+backgroundColor: COLORS.primary + '20', borderColor: COLORS.primary },  streakDotMega: {
 backgroundColor: '#FFD700' + '20', borderColor: '#FFD700' },  streakDotText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 11, color: colors.textMuted },  streakDotTextActive: {
-color: colors.primary },  claimButton: {
-width: '100%', backgroundColor: colors.primary, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.md, alignItems: 'center', marginBottom: SPACING.md },  claimText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 15, color: colors.background },  dismissBtn: {
+fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.textMuted },  streakDotTextActive: {
+color: COLORS.primary },  claimButton: {
+width: '100%', backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.md, alignItems: 'center', marginBottom: SPACING.md },  claimText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 15, color: COLORS.background },  dismissBtn: {
 paddingVertical: SPACING.xs },  dismissText: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textMuted, textDecorationLine: 'underline' },
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, textDecorationLine: 'underline' },
 });

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 },  text: 
 {
-   fontFamily: 'Inter_400Regular', fontSize: 13,    color: colors.textMuted,  
+   fontFamily: 'Inter_400Regular', fontSize: 13,    color: COLORS.textMuted,  
 
 },
 

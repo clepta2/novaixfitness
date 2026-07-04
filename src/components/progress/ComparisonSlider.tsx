@@ -112,23 +112,23 @@ right: 8, left: 'auto' as any }]
 const makeStyles = (colors: any) => StyleSheet.create({
  container: {
 alignItems: 'center', paddingVertical: SPACING.lg } as ViewStyle,  sliderWrap: {
-borderRadius: BORDER_RADIUS.lg, overflow: 'hidden', backgroundColor: colors.surfaceOverlay } as ViewStyle,  image: {
+borderRadius: BORDER_RADIUS.lg, overflow: 'hidden', backgroundColor: COLORS.surfaceOverlay } as ViewStyle,  image: {
 position: 'absolute', top: 0, left: 0 } as any,  afterClip: {
 position: 'absolute', top: 0, left: 0 } as any,  placeholder: {
-justifyContent: 'center', alignItems: 'center', backgroundColor: colors.surfaceOverlay } as ViewStyle,  placeholderText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 14, color: colors.textMuted, letterSpacing: 2, marginTop: SPACING.sm } as TextStyle,  divider: {
+justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surfaceOverlay } as ViewStyle,  placeholderText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.textMuted, letterSpacing: 2, marginTop: SPACING.sm } as TextStyle,  divider: {
 position: 'absolute', top: 0, bottom: 0, width: 3, alignItems: 'center', justifyContent: 'center', zIndex: 5 } as any,  dividerLine: {
-flex: 1, width: 2, backgroundColor: colors.textTitle } as ViewStyle,  handle: {
-width: 32, height: 32, borderRadius: 16, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: colors.textTitle, ...shadow({
+flex: 1, width: 2, backgroundColor: COLORS.textTitle } as ViewStyle,  handle: {
+width: 32, height: 32, borderRadius: 16, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: COLORS.textTitle, ...shadow({
 y: 2, blur: 4, opacity: 0.3 }) 
 } as ViewStyle,  label: {
 position: 'absolute', bottom: SPACING.md, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: BORDER_RADIUS.sm, zIndex: 3 } as any,  labelText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 10, color: colors.textTitle, letterSpacing: 1 } as TextStyle,  measurementsTitle: {
-fontFamily: 'Montserrat_700Bold', fontSize: 11, color: colors.textMuted, letterSpacing: 1, marginBottom: SPACING.md } as TextStyle,  measureRow: {
-flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: SPACING.sm, borderBottomWidth: 1, borderBottomColor: colors.border } as ViewStyle,  measureLabel: {
-fontFamily: 'Inter_500Medium', fontSize: 13, color: colors.textTitle } as TextStyle,  measureValues: {
+fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.textTitle, letterSpacing: 1 } as TextStyle,  measurementsTitle: {
+fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md } as TextStyle,  measureRow: {
+flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: SPACING.sm, borderBottomWidth: 1, borderBottomColor: COLORS.border } as ViewStyle,  measureLabel: {
+fontFamily: 'Inter_500Medium', fontSize: 13, color: COLORS.textTitle } as TextStyle,  measureValues: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.xs } as ViewStyle,  measureBefore: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted, textDecorationLine: 'line-through' } as TextStyle,  measureAfter: {
-fontFamily: 'Montserrat_700Bold', fontSize: 13, color: colors.textTitle } as TextStyle,  measureDiff: {
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, textDecorationLine: 'line-through' } as TextStyle,  measureAfter: {
+fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.textTitle } as TextStyle,  measureDiff: {
 fontFamily: 'Montserrat_600SemiBold', fontSize: 11 } as TextStyle,
 });

@@ -42,9 +42,9 @@ const styles = StyleSheet.create({
 container: {
 alignItems: 'center', marginBottom: 40 },  mark: {
 flexDirection: 'row', alignItems: 'center' },  circle: {
-   width: 64, height: 64, borderRadius: 32, backgroundColor: colors.primary + '20', justifyContent: 'center', alignItems: 'center',    borderWidth: 2, borderColor: colors.primary,  
+   width: 64, height: 64, borderRadius: 32, backgroundColor: COLORS.primary + '20', justifyContent: 'center', alignItems: 'center',    borderWidth: 2, borderColor: COLORS.primary,  
 },  letter: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: colors.primary },  arrows: {
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: COLORS.primary },  arrows: {
 marginLeft: -2 },  suffix: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: colors.textTitle, marginLeft: 4 },
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 28, color: COLORS.textTitle, marginLeft: 4 },
 });

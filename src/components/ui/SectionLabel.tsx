@@ -26,7 +26,7 @@ return (    <Text style=
 const colors = useColors();
 const styles = StyleSheet.create({
  label: {
-   fontFamily: 'Montserrat_600SemiBold', fontSize: 11,    color: colors.textMuted,    textTransform: 'uppercase',    letterSpacing: 1.2,    marginTop: SPACING.xl,    marginBottom: SPACING.md,  
+   fontFamily: 'Montserrat_600SemiBold', fontSize: 11,    color: COLORS.textMuted,    textTransform: 'uppercase',    letterSpacing: 1.2,    marginTop: SPACING.xl,    marginBottom: SPACING.md,  
 
 },
 

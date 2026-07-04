@@ -41,14 +41,14 @@ row: {
    flexDirection: 'row', justifyContent: 'space-between',    alignItems: 'center',    marginBottom: SPACING.md,  
 },  left: {
    flex: 1, },  title: {
-   fontFamily: 'Montserrat_700Bold', fontSize: 14,    color: colors.textTitle,    letterSpacing: 1,  
+   fontFamily: 'Montserrat_700Bold', fontSize: 14,    color: COLORS.textTitle,    letterSpacing: 1,  
 },  subtitle: {
-   fontFamily: 'Inter_400Regular', fontSize: 12,    color: colors.textMuted,    marginTop: 2,  
+   fontFamily: 'Inter_400Regular', fontSize: 12,    color: COLORS.textMuted,    marginTop: 2,  
 },  right: {
    flexDirection: 'row', alignItems: 'center',    gap: SPACING.sm,  
 },  action: {
    flexDirection: 'row', alignItems: 'center',    gap: 2,  
 },  actionText: {
-   fontFamily: 'Inter_500Medium', fontSize: 12,    color: colors.primary,  
+   fontFamily: 'Inter_500Medium', fontSize: 12,    color: COLORS.primary,  
 },
 });

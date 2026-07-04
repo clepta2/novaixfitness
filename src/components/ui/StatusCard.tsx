@@ -34,6 +34,6 @@ borderColor: config.color, backgroundColor: config.color + '12' }]
 const styles = StyleSheet.create({
  card: { padding: SPACING.xl,    borderRadius: BORDER_RADIUS.lg,    borderLeftWidth: 4,    marginBottom: SPACING.lg,    gap: SPACING.xs,  
 },  title: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle },  message: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textDescription, lineHeight: 18 },
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },  message: {
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textDescription, lineHeight: 18 },
 });

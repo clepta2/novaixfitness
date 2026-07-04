@@ -59,17 +59,17 @@ const colors = useColors();
 const styles = StyleSheet.create({
  
 card: {
-backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: colors.border },  levelRow: {
+backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.lg, padding: SPACING.lg, borderWidth: 1, borderColor: COLORS.border },  levelRow: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: SPACING.md },  levelBadge: {
-flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.primary + '15', paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: BORDER_RADIUS.full },  levelText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.primary },  levelName: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: colors.textTitle },  progressBar: {
-height: 6, backgroundColor: colors.surfaceElevated, borderRadius: 3, marginBottom: SPACING.xs, overflow: 'hidden' },  progressFill: {
-height: '100%', backgroundColor: colors.primary, borderRadius: 3 },  progressLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textMuted, textAlign: 'right', marginBottom: SPACING.lg },  statsRow: {
+flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: COLORS.primary + '15', paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: BORDER_RADIUS.full },  levelText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.primary },  levelName: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textTitle },  progressBar: {
+height: 6, backgroundColor: COLORS.surfaceElevated, borderRadius: 3, marginBottom: SPACING.xs, overflow: 'hidden' },  progressFill: {
+height: '100%', backgroundColor: COLORS.primary, borderRadius: 3 },  progressLabel: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, textAlign: 'right', marginBottom: SPACING.lg },  statsRow: {
 flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },  stat: {
 alignItems: 'center', gap: 4 },  statValue: {
-fontFamily: 'Montserrat_700Bold', fontSize: 18, color: colors.textTitle },  statLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textMuted },  statDivider: {
-width: 1, height: 30, backgroundColor: colors.border },
+fontFamily: 'Montserrat_700Bold', fontSize: 18, color: COLORS.textTitle },  statLabel: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },  statDivider: {
+width: 1, height: 30, backgroundColor: COLORS.border },
 });

@@ -48,15 +48,15 @@ return ( <TouchableOpacity activeOpacity={0.7
 return content;
 }
 const styles = StyleSheet.create({
- container: { flexDirection: 'row',    alignItems: 'center',    padding: SPACING.md,    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.md,    borderWidth: 1,    borderColor: colors.border,    gap: SPACING.md,  
+ container: { flexDirection: 'row',    alignItems: 'center',    padding: SPACING.md,    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.md,    borderWidth: 1,    borderColor: COLORS.border,    gap: SPACING.md,  
 },  compact: {
    padding: SPACING.sm, gap: SPACING.sm,  
 },  iconWrap: {
    width: 40, height: 40,    borderRadius: 20,    justifyContent: 'center',    alignItems: 'center',  
 },  content: {
    flex: 1, },  title: {
-   fontFamily: 'Inter_500Medium', fontSize: 14,    color: colors.textTitle,  
+   fontFamily: 'Inter_500Medium', fontSize: 14,    color: COLORS.textTitle,  
 },  subtitle: {
-   fontFamily: 'Inter_400Regular', fontSize: 12,    color: colors.textDescription,    marginTop: 2,  
+   fontFamily: 'Inter_400Regular', fontSize: 12,    color: COLORS.textDescription,    marginTop: 2,  
 },
 });

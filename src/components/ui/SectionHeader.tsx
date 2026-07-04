@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
  container: {
 flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.md },  textGroup: {
 flex: 1 },  title: {
-fontFamily: 'Montserrat_700Bold', color: colors.textTitle, letterSpacing: 0.5 },  title_sm: {
+fontFamily: 'Montserrat_700Bold', color: COLORS.textTitle, letterSpacing: 0.5 },  title_sm: {
 fontSize: 12 },  title_md: {
 fontSize: 14 },  title_lg: {
 fontSize: 16 },  subtitle: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textMuted, marginTop: 2 },  action: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },  action: {
 flexDirection: 'row', alignItems: 'center', gap: 4 },  actionText: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.primary },
+fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.primary },
 });

@@ -45,13 +45,13 @@ const colors = useColors();
 const styles = StyleSheet.create({
  
 row: {
-   flexDirection: 'row', alignItems: 'center',    gap: SPACING.md,    paddingVertical: SPACING.md,    paddingHorizontal: SPACING.md,    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.md,    marginBottom: SPACING.xs,  
+   flexDirection: 'row', alignItems: 'center',    gap: SPACING.md,    paddingVertical: SPACING.md,    paddingHorizontal: SPACING.md,    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.md,    marginBottom: SPACING.xs,  
 },  iconWrap: {
    width: 36, height: 36,    borderRadius: 10,    justifyContent: 'center',    alignItems: 'center',  
 },  info: {
    flex: 1, },  label: {
-   fontFamily: 'Montserrat_600SemiBold', fontSize: 14,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_600SemiBold', fontSize: 14,    color: COLORS.textTitle,  
 },  subtitle: {
-   fontFamily: 'Inter_400Regular', fontSize: 12,    color: colors.textMuted,    marginTop: 2,  
+   fontFamily: 'Inter_400Regular', fontSize: 12,    color: COLORS.textMuted,    marginTop: 2,  
 },
 });

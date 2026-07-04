@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
  container: {
 marginBottom: SPACING.md 
 },  barBg: {
-height: 6, backgroundColor: colors.surfaceElevated, borderRadius: 3, overflow: 'hidden', marginBottom: SPACING.xs 
+height: 6, backgroundColor: COLORS.surfaceElevated, borderRadius: 3, overflow: 'hidden', marginBottom: SPACING.xs 
 },  barFill: {
 height: '100%', borderRadius: 3 
 },  label: {

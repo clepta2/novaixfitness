@@ -48,8 +48,8 @@ translateY: slideAnim }]
 const styles = StyleSheet.create({
  content: {
 flex: 1 },  title: {
-...typography.h2, color: colors.textTitle },  subtitle: {
+...typography.h2, color: COLORS.textTitle },  subtitle: {
 ...typography.bodyMuted, marginTop: SPACING.xs },  offlineBadge: {
 flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: SPACING.xs },  offlineText: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.attention },
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.attention },
 });

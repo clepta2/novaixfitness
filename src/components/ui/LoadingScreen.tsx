@@ -26,7 +26,7 @@ const colors = useColors();
 const styles = StyleSheet.create({
  container: 
 {
-   flex: 1, justifyContent: 'center',    alignItems: 'center',    backgroundColor: colors.background,  
+   flex: 1, justifyContent: 'center',    alignItems: 'center',    backgroundColor: COLORS.background,  
 
 },
 

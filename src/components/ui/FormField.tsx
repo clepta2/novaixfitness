@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
  container: {
 marginBottom: SPACING.md },  label: 
 {
-fontFamily: 'Montserrat_700Bold', fontSize: 11, color: colors.textMuted, marginBottom: SPACING.xs, letterSpacing: 0.5 },  input: 
+fontFamily: 'Montserrat_700Bold', fontSize: 11, color: COLORS.textMuted, marginBottom: SPACING.xs, letterSpacing: 0.5 },  input: 
 {
-backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: BORDER_RADIUS.md, color: colors.textTitle, padding: SPACING.md, fontFamily: 'Inter_400Regular', fontSize: 14 },
+backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border, borderRadius: BORDER_RADIUS.md, color: COLORS.textTitle, padding: SPACING.md, fontFamily: 'Inter_400Regular', fontSize: 14 },
 
 });

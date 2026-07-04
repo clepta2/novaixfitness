@@ -60,9 +60,9 @@ const styles = StyleSheet.create({
  base: {
 flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, borderRadius: BORDER_RADIUS.md 
 },  primary: {
-backgroundColor: colors.primary 
+backgroundColor: COLORS.primary 
 },  secondary: {
-backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.primary 
+backgroundColor: 'transparent', borderWidth: 1, borderColor: COLORS.primary 
 },  ghost: {
 backgroundColor: 'transparent' 
 },  size_sm: {
@@ -76,11 +76,11 @@ opacity: 0.5
 },  text: {
 fontFamily: 'Montserrat_700Bold', letterSpacing: 0.5 
 },  text_primary: {
-color: colors.background 
+color: COLORS.background 
 },  text_secondary: {
-color: colors.primary 
+color: COLORS.primary 
 },  text_ghost: {
-color: colors.primary 
+color: COLORS.primary 
 },  textSize_sm: {
 fontSize: 12 
 },  textSize_md: {

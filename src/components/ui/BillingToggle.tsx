@@ -40,16 +40,16 @@ true: colors.primary + '60' }
 const colors = useColors();
 const styles = StyleSheet.create({
  container: {
-   flexDirection: 'row', alignItems: 'center',    justifyContent: 'center',    gap: SPACING.md,    marginBottom: SPACING.xl,    paddingVertical: SPACING.md,    backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 1,    borderColor: colors.border,  
+   flexDirection: 'row', alignItems: 'center',    justifyContent: 'center',    gap: SPACING.md,    marginBottom: SPACING.xl,    paddingVertical: SPACING.md,    backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 1,    borderColor: COLORS.border,  
 
 },  label: 
 {
-fontFamily: 'Inter_500Medium', fontSize: 13, color: colors.textMuted },  labelActive: 
+fontFamily: 'Inter_500Medium', fontSize: 13, color: COLORS.textMuted },  labelActive: 
 {
-color: colors.primary, fontFamily: 'Montserrat_700Bold' },  badge: 
+color: COLORS.primary, fontFamily: 'Montserrat_700Bold' },  badge: 
 {
-backgroundColor: colors.success, paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: BORDER_RADIUS.full },  badgeText: 
+backgroundColor: COLORS.success, paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: BORDER_RADIUS.full },  badgeText: 
 {
-fontFamily: 'Montserrat_700Bold', fontSize: 10, color: colors.background },
+fontFamily: 'Montserrat_700Bold', fontSize: 10, color: COLORS.background },
 
 });

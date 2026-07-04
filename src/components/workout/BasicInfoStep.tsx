@@ -68,19 +68,19 @@ const styles = StyleSheet.create({
  
 error: {
 flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: SPACING.sm },  errorText: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.error },  label: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.textMuted, letterSpacing: 1, textTransform: 'uppercase', marginTop: SPACING.xl, marginBottom: SPACING.sm },  grid: {
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.error },  label: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: COLORS.textMuted, letterSpacing: 1, textTransform: 'uppercase', marginTop: SPACING.xl, marginBottom: SPACING.sm },  grid: {
 flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm },  catCard: {
-width: '48%', flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: colors.border },  catCardActive: {
-backgroundColor: colors.primary, borderColor: colors.primary },  catIcon: {
+width: '48%', flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },  catCardActive: {
+backgroundColor: COLORS.primary, borderColor: COLORS.primary },  catIcon: {
 width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },  catLabel: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textTitle },  levelRow: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textTitle },  levelRow: {
 flexDirection: 'row', gap: SPACING.sm },  levelCard: {
-flex: 1, alignItems: 'center', gap: SPACING.xs, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: colors.border },  levelLabel: {
-fontFamily: 'Inter_500Medium', fontSize: 11, color: colors.textMuted },  durationRow: {
+flex: 1, alignItems: 'center', gap: SPACING.xs, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, borderWidth: 1, borderColor: COLORS.border },  levelLabel: {
+fontFamily: 'Inter_500Medium', fontSize: 11, color: COLORS.textMuted },  durationRow: {
 flexDirection: 'row', gap: SPACING.sm },  durationCard: {
-flex: 1, alignItems: 'center', paddingVertical: SPACING.md, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: colors.border },  durationCardActive: {
-backgroundColor: colors.primary, borderColor: colors.primary },  durationText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle },  durationTextActive: {
-color: colors.background },
+flex: 1, alignItems: 'center', paddingVertical: SPACING.md, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border },  durationCardActive: {
+backgroundColor: COLORS.primary, borderColor: COLORS.primary },  durationText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },  durationTextActive: {
+color: COLORS.background },
 });

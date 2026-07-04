@@ -41,7 +41,7 @@ const colors = useColors();
 const styles = StyleSheet.create({
  container: {
 flex: 1, justifyContent: 'center', alignItems: 'center', gap: SPACING.md, paddingHorizontal: SPACING.xl },  message: {
-fontFamily: 'Inter_400Regular', fontSize: 14, color: colors.textMuted, textAlign: 'center' },  retryBtn: {
-flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: colors.primary, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, marginTop: SPACING.sm },  retryText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 13, color: colors.background, letterSpacing: 0.5 },
+fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, textAlign: 'center' },  retryBtn: {
+flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, marginTop: SPACING.sm },  retryText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.background, letterSpacing: 0.5 },
 });

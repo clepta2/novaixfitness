@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
  container: {
 width: '100%', flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },  track: 
 {
-flex: 1, height: 4, backgroundColor: colors.border, borderRadius: 2, overflow: 'hidden' },  fill: 
+flex: 1, height: 4, backgroundColor: COLORS.border, borderRadius: 2, overflow: 'hidden' },  fill: 
 {
-height: '100%', backgroundColor: colors.primary, borderRadius: 2 },  label: 
+height: '100%', backgroundColor: COLORS.primary, borderRadius: 2 },  label: 
 {
-fontFamily: 'Inter_500Medium', fontSize: 11, color: colors.primary, width: 36 },
+fontFamily: 'Inter_500Medium', fontSize: 11, color: COLORS.primary, width: 36 },
 
 });

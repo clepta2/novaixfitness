@@ -52,19 +52,19 @@ backgroundColor: color
 }
 const styles = StyleSheet.create({
  card: {
-   backgroundColor: colors.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 2,    borderColor: colors.border,    padding: SPACING.lg,    flexDirection: 'row',    alignItems: 'center',    gap: SPACING.lg,    ...SHADOWS.sm,  
+   backgroundColor: COLORS.surface,    borderRadius: BORDER_RADIUS.lg,    borderWidth: 2,    borderColor: COLORS.border,    padding: SPACING.lg,    flexDirection: 'row',    alignItems: 'center',    gap: SPACING.lg,    ...SHADOWS.sm,  
 },  cardActive: {
-   backgroundColor: colors.primary + '06',    ...SHADOWS.md,  
+   backgroundColor: COLORS.primary + '06',    ...SHADOWS.md,  
 },  iconWrap: {
    width: 54,    height: 54,    borderRadius: 16,    justifyContent: 'center',    alignItems: 'center',    flexShrink: 0,  
 },  info: {
 flex: 1 
 },  label: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle, marginBottom: 2 
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, marginBottom: 2 
 },  desc: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted, lineHeight: 18 
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, lineHeight: 18 
 },  radio: {
-   width: 22,    height: 22,    borderRadius: 11,    borderWidth: 2,    borderColor: colors.border,    justifyContent: 'center',    alignItems: 'center',    flexShrink: 0,  
+   width: 22,    height: 22,    borderRadius: 11,    borderWidth: 2,    borderColor: COLORS.border,    justifyContent: 'center',    alignItems: 'center',    flexShrink: 0,  
 },  radioDot: {
 width: 10, height: 10, borderRadius: 5 
 },

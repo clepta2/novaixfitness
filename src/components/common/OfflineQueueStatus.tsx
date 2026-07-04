@@ -14,10 +14,10 @@ import useNetworkStatus from '../../hooks/useNetworkStatus';
 export default function OfflineQueueStatus() {
   const colors = useColors();
   const styles = useMemo(() => StyleSheet.create({
-    container: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, backgroundColor: colors.primary + '10', borderRadius: BORDER_RADIUS.full, alignSelf: 'center' },
-    offline: { backgroundColor: colors.warning + '15' },
-    text: { fontFamily: 'Inter_500Medium', fontSize: 12, color: colors.primary },
-    textOffline: { color: colors.warning },
+    container: { flexDirection: 'row', alignItems: 'center', gap: SPACING.xs, paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, backgroundColor: COLORS.primary + '10', borderRadius: BORDER_RADIUS.full, alignSelf: 'center' },
+    offline: { backgroundColor: COLORS.warning + '15' },
+    text: { fontFamily: 'Inter_500Medium', fontSize: 12, color: COLORS.primary },
+    textOffline: { color: COLORS.warning },
   }), [colors]);
 
   const { isOnline } = useNetworkStatus();

@@ -40,14 +40,14 @@ const styles = StyleSheet.create({
  container: {
 alignItems: 'center', paddingVertical: SPACING.xxxl, gap: SPACING.md 
 },  iconWrap: {
-width: 80, height: 80, borderRadius: 40, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.sm 
+width: 80, height: 80, borderRadius: 40, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.sm 
 },  title: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle, textAlign: 'center' 
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, textAlign: 'center' 
 },  message: {
-fontFamily: 'Inter_400Regular', fontSize: 13, color: colors.textMuted, textAlign: 'center', maxWidth: 280 
+fontFamily: 'Inter_400Regular', fontSize: 13, color: COLORS.textMuted, textAlign: 'center', maxWidth: 280 
 },  ctaBtn: {
-backgroundColor: colors.primary, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, marginTop: SPACING.sm 
+backgroundColor: COLORS.primary, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.md, borderRadius: BORDER_RADIUS.md, marginTop: SPACING.sm 
 },  ctaText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 13, color: colors.background, letterSpacing: 0.5 
+fontFamily: 'Montserrat_700Bold', fontSize: 13, color: COLORS.background, letterSpacing: 0.5 
 },
 });

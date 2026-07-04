@@ -163,33 +163,33 @@ const makeStyles = (colors: any) => StyleSheet.create({
  header: {
 flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.lg },  headerLeft: {
 flexDirection: 'row', alignItems: 'center', gap: SPACING.sm },  title: {
-fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.textTitle, letterSpacing: 1 },  correlationBadge: {
-backgroundColor: colors.success + '20', paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: BORDER_RADIUS.sm },  correlationText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 12, color: colors.success },  chartContainer: {
+fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textTitle, letterSpacing: 1 },  correlationBadge: {
+backgroundColor: COLORS.success + '20', paddingHorizontal: SPACING.sm, paddingVertical: 3, borderRadius: BORDER_RADIUS.sm },  correlationText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.success },  chartContainer: {
 marginBottom: SPACING.lg },  chartHeader: {
 flexDirection: 'row', justifyContent: 'space-between', marginBottom: SPACING.sm },  chartLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted },  chart: {
-flexDirection: 'row', alignItems: 'flex-end', height: 160, backgroundColor: colors.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.sm },  barWrapper: {
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },  chart: {
+flexDirection: 'row', alignItems: 'flex-end', height: 160, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.sm },  barWrapper: {
 alignItems: 'center', flex: 1, position: 'relative' },  barColumn: {
 flexDirection: 'row', alignItems: 'flex-end', height: 130, gap: 2 },  bar: {
 width: 12, borderRadius: 4, minHeight: 4 },  barHeightIndicator: {
 width: 6, borderRadius: 3, minHeight: 4 },  barValue: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 8, color: colors.textMuted, marginBottom: 2 },  barLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 8, color: colors.textMuted, marginTop: 4 },  barLabelActive: {
-color: colors.primary },  tooltip: {
-position: 'absolute', top: -60, backgroundColor: colors.surfaceElevated, borderRadius: BORDER_RADIUS.sm, padding: SPACING.xs, borderWidth: 1, borderColor: colors.border, minWidth: 80 },  tooltipText: {
-fontFamily: 'Inter_400Regular', fontSize: 9, color: colors.textTitle },  chartLegend: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 8, color: COLORS.textMuted, marginBottom: 2 },  barLabel: {
+fontFamily: 'Inter_400Regular', fontSize: 8, color: COLORS.textMuted, marginTop: 4 },  barLabelActive: {
+color: COLORS.primary },  tooltip: {
+position: 'absolute', top: -60, backgroundColor: COLORS.surfaceElevated, borderRadius: BORDER_RADIUS.sm, padding: SPACING.xs, borderWidth: 1, borderColor: COLORS.border, minWidth: 80 },  tooltipText: {
+fontFamily: 'Inter_400Regular', fontSize: 9, color: COLORS.textTitle },  chartLegend: {
 flexDirection: 'row', justifyContent: 'center', gap: SPACING.lg, marginTop: SPACING.sm },  legendItem: {
 flexDirection: 'row', alignItems: 'center', gap: 4 },  legendDot: {
 width: 8, height: 8, borderRadius: 4 },  legendText: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted },  statsRow: {
-flexDirection: 'row', alignItems: 'center', backgroundColor: colors.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.md },  statItem: {
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },  statsRow: {
+flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, padding: SPACING.md, marginBottom: SPACING.md },  statItem: {
 flex: 1, alignItems: 'center', gap: 2 },  statValue: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle },  statLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 10, color: colors.textMuted },  statDivider: {
-width: 1, height: 28, backgroundColor: colors.border },  insightsContainer: {
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },  statLabel: {
+fontFamily: 'Inter_400Regular', fontSize: 10, color: COLORS.textMuted },  statDivider: {
+width: 1, height: 28, backgroundColor: COLORS.border },  insightsContainer: {
 gap: SPACING.xs },  insightRow: {
-flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, padding: SPACING.sm, backgroundColor: colors.background, borderRadius: BORDER_RADIUS.sm },  insightIcon: {
+flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, padding: SPACING.sm, backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.sm },  insightIcon: {
 width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },  insightText: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textDescription, flex: 1 },
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textDescription, flex: 1 },
 });

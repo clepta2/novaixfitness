@@ -36,8 +36,8 @@ row: {
    paddingVertical: SPACING.md, },  info: {
    flex: 1, marginRight: SPACING.md,  
 },  label: {
-   fontFamily: 'Montserrat_600SemiBold', fontSize: 14,    color: colors.textTitle,  
+   fontFamily: 'Montserrat_600SemiBold', fontSize: 14,    color: COLORS.textTitle,  
 },  description: {
-   fontFamily: 'Inter_400Regular', fontSize: 12,    color: colors.textMuted,    marginTop: 2,  
+   fontFamily: 'Inter_400Regular', fontSize: 12,    color: COLORS.textMuted,    marginTop: 2,  
 },
 });

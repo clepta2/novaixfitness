@@ -37,13 +37,13 @@ const colors = useColors();
 const styles = StyleSheet.create({
  
 option: {
-   flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.lg, borderRadius: BORDER_RADIUS.md,    backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.border,  
+   flexDirection: 'row', alignItems: 'center', gap: SPACING.md, padding: SPACING.lg, borderRadius: BORDER_RADIUS.md,    backgroundColor: COLORS.surface, borderWidth: 2, borderColor: COLORS.border,  
 },  active: {
-borderColor: colors.primary, backgroundColor: colors.primary + '10', ...SHADOWS.sm },  flag: {
+borderColor: COLORS.primary, backgroundColor: COLORS.primary + '10', ...SHADOWS.sm },  flag: {
 fontSize: 32 },  info: {
 flex: 1 },  label: {
-fontFamily: 'Montserrat_700Bold', fontSize: 16, color: colors.textTitle },  labelActive: {
-color: colors.primary },  native: {
-fontFamily: 'Inter_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 2 },  check: {
-width: 24, height: 24, borderRadius: 12, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center' },
+fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle },  labelActive: {
+color: COLORS.primary },  native: {
+fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textMuted, marginTop: 2 },  check: {
+width: 24, height: 24, borderRadius: 12, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
 });

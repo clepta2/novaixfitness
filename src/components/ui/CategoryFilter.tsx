@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
  
 container: {
 flexDirection: 'row', gap: SPACING.sm },  chip: {
-paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: colors.border },  chipActive: {
-backgroundColor: colors.primary, borderColor: colors.primary },  chipText: {
-fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textMuted },  chipTextActive: {
-color: colors.background },
+paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.full, borderWidth: 1, borderColor: COLORS.border },  chipActive: {
+backgroundColor: COLORS.primary, borderColor: COLORS.primary },  chipText: {
+fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: COLORS.textMuted },  chipTextActive: {
+color: COLORS.background },
 });

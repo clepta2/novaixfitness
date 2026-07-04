@@ -95,19 +95,19 @@ opacity: xpAnim }]
 }
 const styles = StyleSheet.create({
  card: {
-backgroundColor: colors.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: colors.border },  checkCircle: {
+backgroundColor: COLORS.surface, borderRadius: BORDER_RADIUS.xl, padding: SPACING.xl, alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },  checkCircle: {
 marginBottom: SPACING.lg },  title: {
-fontFamily: 'Montserrat_800ExtraBold', fontSize: 20, color: colors.success, marginBottom: SPACING.xs },  workoutName: {
-fontFamily: 'Inter_400Regular', fontSize: 14, color: colors.textMuted, marginBottom: SPACING.xl },  statsRow: {
+fontFamily: 'Montserrat_800ExtraBold', fontSize: 20, color: COLORS.success, marginBottom: SPACING.xs },  workoutName: {
+fontFamily: 'Inter_400Regular', fontSize: 14, color: COLORS.textMuted, marginBottom: SPACING.xl },  statsRow: {
 flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', width: '100%', marginBottom: SPACING.xl },  stat: {
 alignItems: 'center', gap: 4 },  statValue: {
-fontFamily: 'Montserrat_700Bold', fontSize: 20, color: colors.textTitle },  statLabel: {
-fontFamily: 'Inter_400Regular', fontSize: 11, color: colors.textMuted },  statDivider: {
-width: 1, height: 36, backgroundColor: colors.border },  actions: {
+fontFamily: 'Montserrat_700Bold', fontSize: 20, color: COLORS.textTitle },  statLabel: {
+fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted },  statDivider: {
+width: 1, height: 36, backgroundColor: COLORS.border },  actions: {
 width: '100%', gap: SPACING.md },  primaryBtn: {
-flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: colors.primary, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.md },  primaryBtnText: {
-fontFamily: 'Montserrat_700Bold', fontSize: 14, color: colors.background },  secondaryRow: {
+flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm, backgroundColor: COLORS.primary, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.md },  primaryBtnText: {
+fontFamily: 'Montserrat_700Bold', fontSize: 14, color: COLORS.background },  secondaryRow: {
 flexDirection: 'row', gap: SPACING.md },  secondaryBtn: {
-flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.xs, borderWidth: 1, borderColor: colors.border, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.sm },  secondaryBtnText: {
-fontFamily: 'Inter_500Medium', fontSize: 13, color: colors.textMuted },
+flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SPACING.xs, borderWidth: 1, borderColor: COLORS.border, borderRadius: BORDER_RADIUS.md, paddingVertical: SPACING.sm },  secondaryBtnText: {
+fontFamily: 'Inter_500Medium', fontSize: 13, color: COLORS.textMuted },
 });

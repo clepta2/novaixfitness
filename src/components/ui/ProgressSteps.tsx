@@ -34,16 +34,16 @@ container: {
    gap: SPACING.xs, },  bar: {
    flexDirection: 'row', gap: 4,  
 },  segment: {
-   flex: 1, height: 4,    borderRadius: 2,    backgroundColor: colors.surfaceOverlay,  
+   flex: 1, height: 4,    borderRadius: 2,    backgroundColor: COLORS.surfaceOverlay,  
 },  segmentActive: {
-   backgroundColor: colors.primary, },  segmentCurrent: {
-   backgroundColor: colors.primary, opacity: 0.6,  
+   backgroundColor: COLORS.primary, },  segmentCurrent: {
+   backgroundColor: COLORS.primary, opacity: 0.6,  
 },  labels: {
    flexDirection: 'row', justifyContent: 'space-between',  
 },  label: {
-   fontFamily: 'Inter_400Regular', fontSize: 10,    color: colors.textMuted,  
+   fontFamily: 'Inter_400Regular', fontSize: 10,    color: COLORS.textMuted,  
 },  labelActive: {
-   color: colors.primary, },  counter: {
-   fontFamily: 'Inter_500Medium', fontSize: 11,    color: colors.textMuted,    textAlign: 'right',  
+   color: COLORS.primary, },  counter: {
+   fontFamily: 'Inter_500Medium', fontSize: 11,    color: COLORS.textMuted,    textAlign: 'right',  
 },
 });
