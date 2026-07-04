@@ -54,8 +54,9 @@ export default function useWorkoutTimer(workout: Workout | null) {
     const exercises = workout?.exercises || [];
     const exercise = exercises[idx];
     if (!exercise) { completeWorkout(); return; }
-    setTimeRemaining(0);
-    setTotalTime(0);
+    const exerciseTime = (exercise.rest || 60);
+    setTimeRemaining(exerciseTime);
+    setTotalTime(exerciseTime);
     setPhase('exercising');
     speakNextExercise(exercise.name, exercise.reps, exercise.weight, idx + 1, exercises.length);
   }, [workout, completeWorkout]);
