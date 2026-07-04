@@ -8,9 +8,31 @@ import type {
 import { DEFAULT_CONFIG } from './types';
 import { DICTIONARY } from './dictionary';
 import { applyRules } from './rules';
-import { PATTERNS, interpolatePattern } from './patterns';
+import { PATTERNS } from './patterns';
 import * as Cache from './cache';
 import { resolveICU, hasICUMessages } from '../modules/icu';
+
+// ── Regex de interpolação (pré-compilado) ──────────────────
+const INTERPOLATE_REGEX = /\{(\w+)\}/g;
+
+// ── Patterns pré-computados (lowercase) ────────────────────
+const PRECOMPUTED_PATTERNS = Object.entries(PATTERNS).map(([key, pattern]) => ({
+  key,
+  ptLower: pattern.pt.toLowerCase(),
+  ptOriginal: pattern.pt,
+  translations: pattern as Record<string, string>,
+}));
+
+// ── Interpolação de parâmetros (reutilizável) ──────────────
+function interpolateParams(
+  text: string,
+  params?: Record<string, string | number>
+): string {
+  if (!params) return text;
+  return text.replace(INTERPOLATE_REGEX, (_, key) =>
+    params[key] !== undefined ? String(params[key]) : `{${key}}`
+  );
+}
 
 interface Translator {
   translate(text: TranslationKey, options?: Partial<TranslateOptions>): TranslationResult;
@@ -33,34 +55,17 @@ export function createTranslator(
     Cache.configure({ maxSize: cfg.cacheMaxSize, ttlMs: cfg.cacheTtlMs });
   }
 
-  function lookupInDict(
-    text: string,
-    target: Language
-  ): string | null {
+  function lookupInDict(text: string, target: Language): string | null {
     const entry = DICTIONARY[text];
     if (!entry) return null;
     return entry[target] || null;
   }
 
-  function interpolateParams(
-    text: string,
-    params?: Record<string, string | number>
-  ): string {
-    if (!params) return text;
-    return text.replace(/\{(\w+)\}/g, (_, key) =>
-      params[key] !== undefined ? String(params[key]) : `{${key}}`
-    );
-  }
-
-  function tryPattern(
-    text: string,
-    target: Language
-  ): string | null {
+  function tryPattern(text: string, target: Language): string | null {
     const normalized = text.trim().toLowerCase();
-    for (const [key, pattern] of Object.entries(PATTERNS)) {
-      const ptLower = pattern.pt.toLowerCase();
-      if (normalized === ptLower || text === pattern.pt) {
-        return pattern[target];
+    for (const pattern of PRECOMPUTED_PATTERNS) {
+      if (normalized === pattern.ptLower || text === pattern.ptOriginal) {
+        return pattern.translations[target];
       }
     }
     return null;
