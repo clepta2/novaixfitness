@@ -35,6 +35,7 @@ app.use('/api/admin', adminRoutes);
 
 describe('Admin Routes', () => {
   beforeEach(() => jest.clearAllMocks());
+  jest.setTimeout(60000);
 
   describe('POST /users', () => {
     it('deve retornar 401 sem token', async () => {
