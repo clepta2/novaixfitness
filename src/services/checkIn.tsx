@@ -14,13 +14,14 @@ interface CheckInResult {
 
 export async function getTodayCheckIn(userId: string): Promise<DailyCheckIn | null> {
   const today = new Date().toISOString().split('T')[0];
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from(TABLES.DAILY_CHECK_INS)
     .select('*')
     .eq('user_id', userId)
     .eq('check_in_date', today)
-    .single();
+    .maybeSingle();
 
+  if (error) throw error;
   return data as DailyCheckIn | null;
 }
 
