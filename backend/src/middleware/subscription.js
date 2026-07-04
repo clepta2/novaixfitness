@@ -1,9 +1,18 @@
-// src/middleware/subscription.js
+// src/middleware/subscription.ts
 // Middleware de validação de assinatura - NOVAIX FITNESS
 
-const supabase = require('../config/supabase');
+import { Request, Response, NextFunction } from 'express';
+import supabase from '../config/supabase';
 
-const PLANS = {
+interface PlanConfig {
+  maxWorkouts: number;
+  maxMessages: number;
+  maxCustomWorkouts: number;
+  maxFavorites: number;
+  features: string[];
+}
+
+const PLANS: Record<string, PlanConfig> = {
   free: { 
     maxWorkouts: 3, 
     maxMessages: 0, 
@@ -42,8 +51,8 @@ const PLANS = {
 };
 
 const requireSubscription = (requiredPlan = 'basic') => {
-  return async (req, res, next) => {
-    if (!req.user) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!(req as any).user) {
       return res.status(401).json({ error: 'Usuário não autenticado' });
     }
 
@@ -51,7 +60,7 @@ const requireSubscription = (requiredPlan = 'basic') => {
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('subscription_status, subscription_plan')
-        .eq('id', req.user.id)
+        .eq('id', (req as any).user.id)
         .single();
 
       if (error || !profile) {
@@ -78,7 +87,7 @@ const requireSubscription = (requiredPlan = 'basic') => {
         });
       }
 
-      req.subscription = {
+      (req as any).subscription = {
         plan: profile.subscription_plan,
         status: profile.subscription_status,
         config: PLANS[profile.subscription_plan] || PLANS.free,
@@ -91,36 +100,38 @@ const requireSubscription = (requiredPlan = 'basic') => {
   };
 };
 
-const checkFeature = (feature) => (req, res, next) => {
-  if (!req.subscription) {
+const checkFeature = (feature: string) => (req: Request, res: Response, next: NextFunction) => {
+  const sub = (req as any).subscription;
+  if (!sub) {
     return res.status(403).json({ error: 'Assinatura não verificada' });
   }
 
-  if (!req.subscription.config.features.includes(feature)) {
+  if (!sub.config.features.includes(feature)) {
     return res.status(403).json({ 
       error: `Recurso '${feature}' não disponível no seu plano`,
       feature,
-      currentPlan: req.subscription.plan
+      currentPlan: sub.plan
     });
   }
 
   next();
 };
 
-const checkLimit = (limitType) => (req, res, next) => {
-  if (!req.subscription) {
+const checkLimit = (limitType: keyof Omit<PlanConfig, 'features'>) => (req: Request, res: Response, next: NextFunction) => {
+  const sub = (req as any).subscription;
+  if (!sub) {
     return res.status(403).json({ error: 'Assinatura não verificada' });
   }
 
-  const limit = req.subscription.config[limitType];
+  const limit = sub.config[limitType];
   if (limit === undefined) return next();
 
-  req.subscriptionLimit = limit;
-  req.subscriptionLimitType = limitType;
+  (req as any).subscriptionLimit = limit;
+  (req as any).subscriptionLimitType = limitType;
   next();
 };
 
-module.exports = {
+export {
   PLANS,
   requireSubscription,
   checkFeature,

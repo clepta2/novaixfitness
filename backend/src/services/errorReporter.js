@@ -1,16 +1,16 @@
-// src/services/errorReporter.js
+// src/services/errorReporter.ts
 // Servicio de reporte de erros - NOVAIX FITNESS
 // Pluggable: Sentry, Logtail, ou arquivo local
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const SENTRY_DSN = process.env.SENTRY_DSN;
 const LOG_DIR = path.join(__dirname, '../../logs');
 
 let sentryInitialized = false;
 
-function initSentry() {
+function initSentry(): void {
   if (sentryInitialized || !SENTRY_DSN) return;
   try {
     const Sentry = require('@sentry/node');
@@ -19,19 +19,19 @@ function initSentry() {
   } catch {}
 }
 
-function ensureLogDir() {
+function ensureLogDir(): void {
   try {
     if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR, { recursive: true });
   } catch {}
 }
 
-function reportError(err, context = {}) {
+function reportError(err: Error | any, context: Record<string, any> = {}): void {
   initSentry();
 
   if (sentryInitialized) {
     try {
       const Sentry = require('@sentry/node');
-      Sentry.withScope((scope) => {
+      Sentry.withScope((scope: any) => {
         Object.entries(context).forEach(([k, v]) => scope.setExtra(k, v));
         Sentry.captureException(err);
       });
@@ -44,7 +44,7 @@ function reportError(err, context = {}) {
     const logFile = path.join(LOG_DIR, `errors-${date}.jsonl`);
     const entry = {
       timestamp: new Date().toISOString(),
-      message: err.message,
+      message: err.message || String(err),
       stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
       ...context,
     };
@@ -52,13 +52,13 @@ function reportError(err, context = {}) {
   } catch {}
 }
 
-function reportMessage(message, level = 'info', context = {}) {
+function reportMessage(message: string, level = 'info', context: Record<string, any> = {}): void {
   initSentry();
 
   if (sentryInitialized) {
     try {
       const Sentry = require('@sentry/node');
-      Sentry.withScope((scope) => {
+      Sentry.withScope((scope: any) => {
         scope.setLevel(level);
         Object.entries(context).forEach(([k, v]) => scope.setExtra(k, v));
         Sentry.captureMessage(message, level);
@@ -67,4 +67,4 @@ function reportMessage(message, level = 'info', context = {}) {
   }
 }
 
-module.exports = { reportError, reportMessage, initSentry };
+export { reportError, reportMessage, initSentry };

@@ -1,26 +1,27 @@
-// src/routes/users.js
+// src/routes/users.ts
 // Rotas de Usuários
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { validateBody, sanitizeString, sanitizeObject } = require('../middleware/validate');
-const { sanitizeError } = require('../middleware/errorHandler');
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { validateBody, sanitizeString, sanitizeObject } from '../middleware/validate';
+import { sanitizeError } from '../middleware/errorHandler';
+
+const router: Router = express.Router();
 
 // Buscar perfil do usuário
-router.get('/profile', authenticate, async (req, res) => {
+router.get('/profile', authenticate, async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', req.user.id)
+      .eq('id', (req as any).user.id)
       .single();
 
     if (error) throw error;
 
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
@@ -29,11 +30,11 @@ router.get('/profile', authenticate, async (req, res) => {
 router.put('/profile', authenticate, validateBody({
   name: { type: 'string', minLength: 2, maxLength: 100 },
   avatar_url: { type: 'string', maxLength: 500 }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { name, avatar_url, onboarding } = req.body;
     
-    const updateData = { updated_at: new Date() };
+    const updateData: any = { updated_at: new Date() };
     if (name !== undefined) updateData.name = sanitizeString(name);
     if (avatar_url !== undefined) updateData.avatar_url = sanitizeString(avatar_url);
     if (onboarding !== undefined) updateData.onboarding = sanitizeObject(onboarding);
@@ -41,36 +42,36 @@ router.put('/profile', authenticate, validateBody({
     const { data, error } = await supabase
       .from('profiles')
       .update(updateData)
-      .eq('id', req.user.id)
+      .eq('id', (req as any).user.id)
       .select()
       .single();
 
     if (error) throw error;
 
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Salvar onboarding
-router.post('/onboarding', authenticate, async (req, res) => {
+router.post('/onboarding', authenticate, async (req: Request, res: Response) => {
   try {
     const onboardingData = sanitizeObject(req.body);
     
     const { data, error } = await supabase
       .from('profiles')
       .update({ onboarding: onboardingData, updated_at: new Date() })
-      .eq('id', req.user.id)
+      .eq('id', (req as any).user.id)
       .select()
       .single();
 
     if (error) throw error;
 
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+export = router;

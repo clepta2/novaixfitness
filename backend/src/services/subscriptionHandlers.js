@@ -1,16 +1,16 @@
-// src/services/subscriptionHandlers.js
+// src/services/subscriptionHandlers.ts
 // Handlers para eventos de Assinatura do Asaas
 
-const supabase = require('../config/supabase');
+import supabase from '../config/supabase';
 
-function determinePlanType(value) {
+function determinePlanType(value: number): string {
   if (value <= 49.90) return 'basic';
   if (value <= 79.90) return 'intermediate';
   if (value <= 119.90) return 'premium';
   return 'ultra';
 }
 
-async function handleSubscriptionCreated(subscription) {
+async function handleSubscriptionCreated(subscription: any): Promise<void> {
   const customerId = subscription.customer;
   const { data: profile } = await supabase
     .from('profiles')
@@ -41,17 +41,17 @@ async function handleSubscriptionCreated(subscription) {
     })
     .eq('id', profile.id);
 
-  console.log('✅ Assinatura criada para user:', profile.id);
+  console.info('✅ Assinatura criada para user:', profile.id);
 }
 
-async function handleSubscriptionUpdated(subscription) {
+async function handleSubscriptionUpdated(subscription: any): Promise<void> {
   await supabase
     .from('subscriptions')
     .update({ status: subscription.status })
     .eq('asaas_subscription_id', subscription.id);
 }
 
-async function handleSubscriptionDeleted(subscription) {
+async function handleSubscriptionDeleted(subscription: any): Promise<void> {
   const { data: sub } = await supabase
     .from('subscriptions')
     .select('user_id')
@@ -74,10 +74,10 @@ async function handleSubscriptionDeleted(subscription) {
     })
     .eq('id', sub.user_id);
 
-  console.log('❌ Assinatura cancelada para user:', sub.user_id);
+  console.info('❌ Assinatura cancelada para user:', sub.user_id);
 }
 
-async function handleSubscriptionInactivated(subscription) {
+async function handleSubscriptionInactivated(subscription: any): Promise<void> {
   const { data: sub } = await supabase
     .from('subscriptions')
     .select('user_id')
@@ -100,7 +100,7 @@ async function handleSubscriptionInactivated(subscription) {
     .eq('id', sub.user_id);
 }
 
-async function handleSubscriptionReactivated(subscription) {
+async function handleSubscriptionReactivated(subscription: any): Promise<void> {
   const { data: sub } = await supabase
     .from('subscriptions')
     .select('user_id')
@@ -123,7 +123,7 @@ async function handleSubscriptionReactivated(subscription) {
     .eq('id', sub.user_id);
 }
 
-module.exports = {
+export {
   determinePlanType,
   handleSubscriptionCreated,
   handleSubscriptionUpdated,

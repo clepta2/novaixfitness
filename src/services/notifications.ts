@@ -1,0 +1,41 @@
+// src/services/notifications.ts
+// Re-export shim → notifications/index.ts
+
+export {
+  sendWorkoutCompletedNotification,
+  sendStreakNotification,
+  sendAchievementNotification,
+  sendLevelUpNotification,
+  sendNewWorkoutNotification,
+  sendWeeklySummaryNotification,
+  sendRestReminder,
+  sendMotivationalNotification,
+  sendWorkoutReminder,
+  getNotifications,
+  markAsRead,
+  deleteNotification,
+  markAllAsRead,
+  setupWorkoutReminders,
+  sendStreakProtectionReminder,
+  sendPostWorkoutReminder,
+  sendWeeklySummaryReminder,
+  scheduleHydrationReminder,
+  cancelAllScheduled,
+  cancelAllWorkoutReminders,
+  getActiveReminders,
+  setupNotificationListeners,
+  saveNotificationToDB,
+  getUnreadCount,
+  getPrefsForSettings,
+  setNotificationPref,
+  getNotificationPrefs,
+  registerForPushNotificationsAsync,
+  addNotificationReceivedListener,
+  addNotificationResponseListener,
+  scheduleWorkoutReminder,
+  scheduleWeeklyPlanReminder,
+  scheduleRestDayReminder,
+  requestNotificationPermission,
+} from './notifications/index';
+
+export { clearAllNotifications, getScheduledNotifications } from './notifications/index';

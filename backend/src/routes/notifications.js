@@ -1,16 +1,17 @@
-// src/routes/notifications.js
+// src/routes/notifications.ts
 // Rotas de Notificacoes Push - NOVAIX FITNESS
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { validateBody, sanitizeString } = require('../middleware/validate');
-const { sanitizeError } = require('../middleware/errorHandler');
+import express, { Request, Response, Router } from 'express';
+import fetch from 'node-fetch';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { validateBody, sanitizeString } from '../middleware/validate';
+import { sanitizeError } from '../middleware/errorHandler';
 
+const router: Router = express.Router();
 const EXPO_API_URL = 'https://exp.host/--/api/v2/push/send';
 
-async function sendPushNotification(pushToken, title, body, data = {}) {
+async function sendPushNotification(pushToken: string, title: string, body: string, data: any = {}): Promise<any> {
   const message = {
     to: pushToken,
     sound: 'default',
@@ -33,11 +34,11 @@ router.post('/send', authenticate, validateBody({
   body: { required: true, type: 'string', minLength: 1, maxLength: 500 },
   userId: { type: 'string', maxLength: 50 },
   type: { enum: ['marketing', 'reminder', 'achievement', 'system'] }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { title, body, userId, type } = req.body;
 
-    let targetUserId = userId || req.user.id;
+    const targetUserId = userId || (req as any).user.id;
 
     const { data: profile } = await supabase
       .from('profiles')
@@ -67,7 +68,7 @@ router.post('/send-bulk', authenticate, validateBody({
   body: { required: true, type: 'string', minLength: 1, maxLength: 500 },
   type: { enum: ['marketing', 'reminder', 'system'] },
   filter: { type: 'object' }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { title, body, type, filter } = req.body;
 
@@ -90,7 +91,7 @@ router.post('/send-bulk', authenticate, validateBody({
       return res.json({ sent: 0 });
     }
 
-    const messages = profiles
+    const messages = (profiles || [])
       .filter(p => p.push_token)
       .map(p => ({
         to: p.push_token,
@@ -118,14 +119,14 @@ router.post('/send-bulk', authenticate, validateBody({
 router.post('/schedule-reminder', authenticate, validateBody({
   hour: { type: 'number', min: 0, max: 23 },
   minute: { type: 'number', min: 0, max: 59 }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { hour, minute } = req.body;
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('push_token')
-      .eq('id', req.user.id)
+      .eq('id', (req as any).user.id)
       .single();
 
     if (!profile?.push_token) {
@@ -149,4 +150,4 @@ router.post('/schedule-reminder', authenticate, validateBody({
   }
 });
 
-module.exports = router;
+export = router;

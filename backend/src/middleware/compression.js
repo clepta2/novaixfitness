@@ -1,9 +1,10 @@
-// src/middleware/compression.js
+// src/middleware/compression.ts
 // Middleware de compressão de respostas - NOVAIX FITNESS
 
-const compression = require('compression');
+import { Request, Response } from 'express';
+import compression from 'compression';
 
-const shouldCompress = (req, res) => {
+const shouldCompress = (req: Request, res: Response): boolean => {
   if (req.headers['x-no-compression']) {
     return false;
   }
@@ -24,7 +25,7 @@ const aggressiveCompression = compression({
   memLevel: 9,
 });
 
-module.exports = {
+export {
   compressionMiddleware,
   aggressiveCompression,
 };

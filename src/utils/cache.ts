@@ -6,6 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const CACHE_PREFIX = '@novaix:cache:';
 const DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
 
+export const CACHE_KEYS = {
+  WORKOUTS: '@novaix:workouts',
+  WORKOUT_DETAILS: '@novaix:workout_details',
+  FAVORITES: '@novaix:favorites',
+  PROFILE: '@novaix:profile',
+  LAST_SYNC: '@novaix:last_sync',
+  PENDING_ACTIONS: '@novaix:pending_actions',
+} as const;
+
 interface CacheEntry<T> {
   data: T;
   timestamp: number;

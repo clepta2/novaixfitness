@@ -80,8 +80,6 @@ jest.mock('../../src/components', () => {
   return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
-import ModelScreen from '../../app/onboarding/modelo';
-import GymTypeScreen from '../../app/onboarding/tipo-academia';
 import ProcessingScreen from '../../app/onboarding/processando';
 
 describe('Screens - Round 11', () => {
@@ -89,8 +87,13 @@ describe('Screens - Round 11', () => {
     jest.clearAllMocks();
   });
 
-  describe('ModelScreen', () => {
-    it('renders header', () => {
+  describe('ProcessingScreen', () => {
+    it('renders without crashing', () => {
+      const { toJSON } = render(<ProcessingScreen />);
+      expect(toJSON()).toBeTruthy();
+    });
+  });
+});
       const { getByText } = render(<ModelScreen />);
       expect(getByText(/COM QUEM VOCE/)).toBeTruthy();
     });

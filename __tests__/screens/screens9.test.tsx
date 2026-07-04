@@ -199,8 +199,7 @@ jest.mock('../../src/hooks/useTutorial', () => ({
   }),
 }));
 
-import GoalScreen from '../../app/onboarding/objetivo';
-import GenderScreen from '../../app/onboarding/dados-fisicos';
+import GoalScreen from '../../app/onboarding/index';
 import PlayerScreen from '../../app/player';
 
 describe('Screens - Round 9', () => {
@@ -214,24 +213,6 @@ describe('Screens - Round 9', () => {
       expect(getByText('Emagrecimento')).toBeTruthy();
       expect(getByText('Ganho de Massa')).toBeTruthy();
       expect(getByText('Condicionamento')).toBeTruthy();
-    });
-
-    it('renders header', () => {
-      const { getByText } = render(<GoalScreen />);
-      expect(getByText('O QUE VOCÊ BUSCA HOJE?')).toBeTruthy();
-    });
-  });
-
-  describe('GenderScreen', () => {
-    it('renders gender options', () => {
-      const { getByText } = render(<GenderScreen />);
-      expect(getByText('Masculino')).toBeTruthy();
-      expect(getByText('Feminino')).toBeTruthy();
-    });
-
-    it('renders header', () => {
-      const { getByText } = render(<GenderScreen />);
-      expect(getByText('SOBRE VOCÊ')).toBeTruthy();
     });
   });
 

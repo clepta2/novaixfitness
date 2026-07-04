@@ -74,6 +74,12 @@ jest.mock('../../src/config/api', () => ({
   GOOGLE_API_KEY: 'mock-api-key',
 }));
 
+jest.mock('../../src/services/ai/aiProxy', () => ({
+  askGeminiCoach: jest.fn().mockResolvedValue('Resposta do Coach IA'),
+  generateMealAnalysis: jest.fn().mockResolvedValue({ calories: 300, protein: 25, carbs: 30, fat: 10 }),
+}));
+}));
+
 jest.mock('../../src/utils/aiSanitize', () => ({
   sanitizeAIOutput: (s) => s,
 }));

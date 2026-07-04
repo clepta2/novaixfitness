@@ -1,23 +1,24 @@
-// src/middleware/logger.js
+// src/middleware/logger.ts
 // Middleware de logging detalhado - NOVAIX FITNESS
 
-const morgan = require('morgan');
+import { Request, Response, NextFunction } from 'express';
+import morgan from 'morgan';
 
 const devLogger = morgan('dev');
 
 const prodLogger = morgan('combined', {
-  skip: (req, res) => res.statusCode < 400,
+  skip: (req: Request, res: Response) => res.statusCode < 400,
 });
 
 const apiLogger = morgan(':method :url :status :response-time ms - :res[content-length]', {
-  skip: (req, res) => req.path === '/health',
+  skip: (req: Request) => req.path === '/health',
 });
 
 const errorLogger = morgan('combined', {
-  skip: (req, res) => res.statusCode < 400,
+  skip: (req: Request, res: Response) => res.statusCode < 400,
 });
 
-const requestLogger = (req, res, next) => {
+const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
   
   res.on('finish', () => {
@@ -27,23 +28,23 @@ const requestLogger = (req, res, next) => {
       url: req.originalUrl,
       status: res.statusCode,
       duration: `${duration}ms`,
-      ip: req.ip || req.connection?.remoteAddress,
+      ip: req.ip || req.socket?.remoteAddress,
       userAgent: req.get('user-agent'),
-      userId: req.user?.id,
+      userId: (req as any).user?.id,
       timestamp: new Date().toISOString(),
     };
 
     if (res.statusCode >= 400) {
       console.error('[ERROR]', JSON.stringify(log));
     } else if (process.env.NODE_ENV === 'development') {
-      console.log('[REQUEST]', JSON.stringify(log));
+      console.info('[REQUEST]', JSON.stringify(log));
     }
   });
 
   next();
 };
 
-module.exports = {
+export {
   devLogger,
   prodLogger,
   apiLogger,

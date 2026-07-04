@@ -1,7 +1,7 @@
-// src/middleware/rateLimiter.js
+// src/middleware/rateLimiter.ts
 // Rate limiting granular por usuário e endpoint - NOVAIX FITNESS
 
-const rateLimit = require('express-rate-limit');
+import rateLimit from 'express-rate-limit';
 
 // Rate limiter padrão (100 req / 15 min)
 const defaultLimiter = rateLimit({
@@ -76,7 +76,7 @@ const webhookLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-module.exports = {
+export {
   defaultLimiter,
   authLimiter,
   passwordResetLimiter,

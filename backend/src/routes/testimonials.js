@@ -1,16 +1,18 @@
-// src/routes/testimonials.js
+// src/routes/testimonials.ts
 // Rotas de depoimentos - NOVAIX FITNESS
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { sanitizeError } = require('../middleware/errorHandler');
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { sanitizeError } from '../middleware/errorHandler';
+
+const router: Router = express.Router();
 
 // Listar depoimentos aprovados (publico)
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
-    const { limit = 10, featured } = req.query;
+    const limit = parseInt(req.query.limit as string || '10', 10);
+    const { featured } = req.query;
 
     let query = supabase
       .from('testimonials')
@@ -28,14 +30,14 @@ router.get('/', async (req, res) => {
     if (error) throw error;
 
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     console.error('Erro ao buscar depoimentos:', err);
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Criar depoimento
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticate, async (req: Request, res: Response) => {
   try {
     const { name, role, content, rating } = req.body;
 
@@ -49,8 +51,8 @@ router.post('/', authenticate, async (req, res) => {
 
     const initials = name
       .split(' ')
-      .filter(w => w.length > 1)
-      .map(w => w[0])
+      .filter((w: string) => w.length > 1)
+      .map((w: string) => w[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -58,7 +60,7 @@ router.post('/', authenticate, async (req, res) => {
     const { data, error } = await supabase
       .from('testimonials')
       .insert({
-        user_id: req.user.id,
+        user_id: (req as any).user.id,
         name,
         initials,
         role: role || 'Aluno',
@@ -71,44 +73,44 @@ router.post('/', authenticate, async (req, res) => {
     if (error) throw error;
 
     res.json({ message: 'Depoimento enviado para aprovacao', testimonial: data });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Erro ao criar depoimento:', err);
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Listar meus depoimentos
-router.get('/my', authenticate, async (req, res) => {
+router.get('/my', authenticate, async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('testimonials')
       .select('*')
-      .eq('user_id', req.user.id)
+      .eq('user_id', (req as any).user.id)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
 
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Deletar meu depoimento
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const { error } = await supabase
       .from('testimonials')
       .delete()
       .eq('id', req.params.id)
-      .eq('user_id', req.user.id);
+      .eq('user_id', (req as any).user.id);
 
     if (error) throw error;
 
     res.json({ message: 'Depoimento removido' });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+export = router;

@@ -1,7 +1,8 @@
-// src/middleware/cache.js
+// src/middleware/cache.ts
 // Middleware de cache para respostas - NOVAIX FITNESS
 
-const NodeCache = require('node-cache');
+import { Request, Response, NextFunction } from 'express';
+import NodeCache from 'node-cache';
 
 const cache = new NodeCache({ 
   stdTTL: 60 * 5, 
@@ -9,7 +10,7 @@ const cache = new NodeCache({
   useClones: false 
 });
 
-const cacheMiddleware = (ttl = 300) => (req, res, next) => {
+const cacheMiddleware = (ttl = 300) => (req: Request, res: Response, next: NextFunction) => {
   if (req.method !== 'GET') {
     return next();
   }
@@ -32,7 +33,7 @@ const cacheMiddleware = (ttl = 300) => (req, res, next) => {
   next();
 };
 
-const invalidateCache = (pattern) => (req, res, next) => {
+const invalidateCache = (pattern: string) => (req: Request, res: Response, next: NextFunction) => {
   const originalSend = res.send.bind(res);
   res.send = (body) => {
     if (res.statusCode >= 200 && res.statusCode < 400) {
@@ -45,7 +46,7 @@ const invalidateCache = (pattern) => (req, res, next) => {
   next();
 };
 
-const clearCache = () => {
+const clearCache = (): void => {
   cache.flushAll();
 };
 
@@ -57,7 +58,7 @@ const getCacheStats = () => ({
   vsize: cache.getStats().vsize,
 });
 
-module.exports = {
+export {
   cacheMiddleware,
   invalidateCache,
   clearCache,

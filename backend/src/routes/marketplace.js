@@ -1,23 +1,23 @@
-// src/routes/marketplace.js
+// src/routes/marketplace.ts
 // Rotas do marketplace - NOVAIX FITNESS
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { requireRole } = require('../middleware/role');
-const { sanitizeError } = require('../middleware/errorHandler');
-const { contentCreationLimiter } = require('../middleware/rateLimiter');
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { requireRole } from '../middleware/role';
+import { sanitizeError } from '../middleware/errorHandler';
+import { contentCreationLimiter } from '../middleware/rateLimiter';
 
+const router: Router = express.Router();
 const MAX_LIMIT = 50;
 
-function sanitizeSearch(str) {
+function sanitizeSearch(str: any): string {
   if (!str || typeof str !== 'string') return '';
   return str.replace(/[%_]/g, '').trim().slice(0, 100);
 }
 
-function validateProductInput(body, isUpdate = false) {
-  const errors = [];
+function validateProductInput(body: any, isUpdate: boolean = false): string[] {
+  const errors: string[] = [];
   if (!isUpdate) {
     if (!body.name || body.name.length < 2) errors.push('Nome deve ter pelo menos 2 caracteres');
     if (!body.category_id) errors.push('Categoria e obrigatoria');
@@ -31,9 +31,9 @@ function validateProductInput(body, isUpdate = false) {
 }
 
 // Listar produtos (publico)
-router.get('/products', async (req, res) => {
+router.get('/products', async (req: Request, res: Response) => {
   try {
-    const { category, brand, search, minPrice, maxPrice, limit = 20, offset = 0, featured } = req.query;
+    const { category, brand, search, minPrice, maxPrice, limit = '20', offset = '0', featured } = req.query;
     const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), MAX_LIMIT);
     const safeOffset = Math.max(Number(offset) || 0, 0);
 
@@ -58,13 +58,13 @@ router.get('/products', async (req, res) => {
     const { data, error } = await query;
     if (error) throw error;
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Detalhe do produto (publico)
-router.get('/products/:id', async (req, res) => {
+router.get('/products/:id', async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('marketplace_products')
@@ -73,24 +73,24 @@ router.get('/products/:id', async (req, res) => {
       .single();
     if (error) throw error;
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(404).json({ error: 'Produto nao encontrado' });
   }
 });
 
 // Categorias (publico)
-router.get('/categories', async (req, res) => {
+router.get('/categories', async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase.from('marketplace_categories').select('*').order('sort_order');
     if (error) throw error;
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Produtos em destaque (publico)
-router.get('/featured', async (req, res) => {
+router.get('/featured', async (req: Request, res: Response) => {
   try {
     const limit = Math.min(Math.max(Number(req.query.limit) || 6, 1), 20);
     const { data, error } = await supabase
@@ -102,7 +102,7 @@ router.get('/featured', async (req, res) => {
       .limit(limit);
     if (error) throw error;
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
@@ -110,7 +110,7 @@ router.get('/featured', async (req, res) => {
 // ===== ADMIN =====
 
 // Criar produto (admin)
-router.post('/admin/products', authenticate, requireRole(['admin']), contentCreationLimiter, async (req, res) => {
+router.post('/admin/products', authenticate, requireRole(['admin']), contentCreationLimiter, async (req: Request, res: Response) => {
   try {
     const errors = validateProductInput(req.body);
     if (errors.length > 0) return res.status(400).json({ error: errors.join('. ') });
@@ -130,18 +130,18 @@ router.post('/admin/products', authenticate, requireRole(['admin']), contentCrea
       .single();
     if (error) throw error;
     res.status(201).json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Editar produto (admin)
-router.put('/admin/products/:id', authenticate, requireRole(['admin']), contentCreationLimiter, async (req, res) => {
+router.put('/admin/products/:id', authenticate, requireRole(['admin']), contentCreationLimiter, async (req: Request, res: Response) => {
   try {
     const errors = validateProductInput(req.body, true);
     if (errors.length > 0) return res.status(400).json({ error: errors.join('. ') });
 
-    const updates = {};
+    const updates: any = {};
     const fields = ['category_id', 'name', 'description', 'price', 'original_price', 'brand', 'image_url', 'images', 'affiliate_url', 'stock_type', 'tags', 'is_featured', 'is_active'];
     fields.forEach(f => {
       if (req.body[f] !== undefined) {
@@ -158,20 +158,20 @@ router.put('/admin/products/:id', authenticate, requireRole(['admin']), contentC
       .single();
     if (error) throw error;
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Deletar produto (admin)
-router.delete('/admin/products/:id', authenticate, requireRole(['admin']), contentCreationLimiter, async (req, res) => {
+router.delete('/admin/products/:id', authenticate, requireRole(['admin']), contentCreationLimiter, async (req: Request, res: Response) => {
   try {
     const { error } = await supabase.from('marketplace_products').delete().eq('id', req.params.id);
     if (error) throw error;
     res.json({ message: 'Produto removido' });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+export = router;

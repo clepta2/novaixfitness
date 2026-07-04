@@ -1,14 +1,16 @@
-// src/middleware/validate.js
+// src/middleware/validate.ts
 // Middleware de validação de entrada - NOVAIX FITNESS
 
-const sanitizeString = (str) => {
+import { Request, Response, NextFunction } from 'express';
+
+const sanitizeString = (str: any): any => {
   if (typeof str !== 'string') return str;
   return str.replace(/[<>]/g, '').trim();
 };
 
-const sanitizeObject = (obj) => {
+const sanitizeObject = (obj: any): any => {
   if (!obj || typeof obj !== 'object') return obj;
-  const sanitized = {};
+  const sanitized: any = {};
   for (const [key, value] of Object.entries(obj)) {
     if (typeof value === 'string') {
       sanitized[key] = sanitizeString(value);
@@ -21,35 +23,35 @@ const sanitizeObject = (obj) => {
   return sanitized;
 };
 
-const validateEmail = (email) => {
+const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
-const validateCpf = (cpf) => {
+const validateCpf = (cpf: string): boolean => {
   if (!cpf || typeof cpf !== 'string') return false;
   const digits = cpf.replace(/\D/g, '');
   if (digits.length !== 11) return false;
   if (/^(\d)\1{10}$/.test(digits)) return false;
 
   let sum = 0;
-  for (let i = 0; i < 9; i++) sum += parseInt(digits[i]) * (10 - i);
+  for (let i = 0; i < 9; i++) sum += parseInt(digits[i], 10) * (10 - i);
   let rest = (sum * 10) % 11;
   if (rest === 10) rest = 0;
-  if (rest !== parseInt(digits[9])) return false;
+  if (rest !== parseInt(digits[9], 10)) return false;
 
   sum = 0;
-  for (let i = 0; i < 10; i++) sum += parseInt(digits[i]) * (11 - i);
+  for (let i = 0; i < 10; i++) sum += parseInt(digits[i], 10) * (11 - i);
   rest = (sum * 10) % 11;
   if (rest === 10) rest = 0;
-  return rest === parseInt(digits[10]);
+  return rest === parseInt(digits[10], 10);
 };
 
-const validatePassword = (password) => {
+const validatePassword = (password: string): boolean => {
   return typeof password === 'string' && password.length >= 6;
 };
 
-const validateRequired = (fields, body) => {
+const validateRequired = (fields: string[], body: any): string | null => {
   const missing = fields.filter(f => !body[f]);
   if (missing.length > 0) {
     return `Campos obrigatórios: ${missing.join(', ')}`;
@@ -57,7 +59,7 @@ const validateRequired = (fields, body) => {
   return null;
 };
 
-const validateRange = (value, min, max, name) => {
+const validateRange = (value: any, min: number, max: number, name: string): string | number => {
   const num = parseInt(value, 10);
   if (isNaN(num) || num < min || num > max) {
     return `${name} deve ser entre ${min} e ${max}`;
@@ -65,11 +67,26 @@ const validateRange = (value, min, max, name) => {
   return num;
 };
 
-const validateQuery = (schema) => (req, res, next) => {
-  const errors = [];
+export interface ValidationRule {
+  required?: boolean;
+  type?: 'string' | 'number' | 'email' | 'cpf' | 'password' | 'array' | 'object';
+  min?: number;
+  max?: number;
+  minLength?: number;
+  maxLength?: number;
+  minItems?: number;
+  maxItems?: number;
+  enum?: any[];
+  pattern?: RegExp;
+}
+
+export type ValidationSchema = Record<string, ValidationRule>;
+
+const validateQuery = (schema: ValidationSchema) => (req: Request, res: Response, next: NextFunction) => {
+  const errors: string[] = [];
   
   for (const [key, rules] of Object.entries(schema)) {
-    const value = req.query[key];
+    const value = req.query[key] as string | undefined;
     
     if (rules.required && (value === undefined || value === '')) {
       errors.push(`${key} é obrigatório`);
@@ -82,7 +99,7 @@ const validateQuery = (schema) => (req, res, next) => {
         if (typeof num === 'string') {
           errors.push(num);
         } else {
-          req.query[key] = num;
+          req.query[key] = num as any;
         }
       }
       
@@ -103,8 +120,8 @@ const validateQuery = (schema) => (req, res, next) => {
   next();
 };
 
-const validateBody = (schema) => (req, res, next) => {
-  const errors = [];
+const validateBody = (schema: ValidationSchema) => (req: Request, res: Response, next: NextFunction) => {
+  const errors: string[] = [];
   
   req.body = sanitizeObject(req.body);
   
@@ -175,6 +192,12 @@ const validateBody = (schema) => (req, res, next) => {
           }
         }
       }
+
+      if (rules.type === 'object') {
+        if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+          errors.push(`${key} deve ser um objeto`);
+        }
+      }
     }
   }
   
@@ -185,7 +208,7 @@ const validateBody = (schema) => (req, res, next) => {
   next();
 };
 
-module.exports = {
+export {
   sanitizeString,
   sanitizeObject,
   validateEmail,

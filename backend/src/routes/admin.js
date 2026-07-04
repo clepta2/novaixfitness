@@ -1,72 +1,37 @@
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { requireRole } = require('../middleware/role');
-const { validateBody, sanitizeString } = require('../middleware/validate');
-const { sanitizeError } = require('../middleware/errorHandler');
+// src/routes/admin.ts
+// Rotas Administrativas - NOVAIX FITNESS
 
-// Criar novo usuário (Administrador, Gerente ou Funcionário cadastrando alguém)
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { requireRole, ROLE_HIERARCHY } from '../middleware/role';
+import { validateBody, sanitizeString } from '../middleware/validate';
+import { sanitizeError } from '../middleware/errorHandler';
+
+const router: Router = express.Router();
+
+// Criar novo usuário
 router.post('/users', authenticate, requireRole(['admin', 'manager', 'employee']), validateBody({
   email: { required: true, type: 'email' },
   password: { required: true, type: 'password' },
   name: { required: true, type: 'string', minLength: 2, maxLength: 100 },
-  role: { enum: ['admin', 'manager', 'employee', 'user'] },
+  role: { enum: ['superadmin', 'admin', 'community_admin', 'workout_admin', 'manager', 'employee', 'creator', 'user'] },
   subscription_plan: { enum: ['free', 'basic', 'intermediate', 'premium', 'ultra'] }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   const { email, password, name, role = 'user', subscription_plan = 'free' } = req.body;
-  const creatorRole = req.userRole;
-
-  // Enforçar restrições de hierarquia de cargos
-  if (creatorRole === 'manager' && (role === 'admin' || role === 'manager')) {
-    return res.status(403).json({ error: 'Gerentes só podem criar cargos de Funcionário ou Usuário comum.' });
+  if ((ROLE_HIERARCHY[role] || 0) >= (ROLE_HIERARCHY[(req as any).userRole] || 0)) {
+    return res.status(403).json({ error: 'Você não pode criar uma conta com cargo igual ou superior ao seu.' });
   }
-  if (creatorRole === 'employee' && role !== 'user') {
-    return res.status(403).json({ error: 'Funcionários só podem cadastrar novos alunos (Usuários).' });
-  }
-
   try {
-    // Cadastrar na tabela de autenticação auth.users (necessita Service Role no backend)
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
-      email: email.toLowerCase(),
-      password,
-      email_confirm: true,
-      user_metadata: { name: sanitizeString(name), role }
+      email: email.toLowerCase(), password, email_confirm: true, user_metadata: { name: sanitizeString(name), role }
     });
-
-    if (authError || !authUser?.user) {
-      throw new Error(authError?.message || 'Falha ao criar credenciais de acesso.');
-    }
-
-    const userId = authUser.user.id;
-
-    // Atualizar plano de assinatura e status de pagamento no perfil (o perfil é inserido automaticamente via Trigger DB)
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .update({
-        subscription_plan,
-        subscription_status: subscription_plan === 'free' ? 'free' : 'active',
-        updated_at: new Date()
-      })
-      .eq('id', userId)
-      .select()
-      .single();
-
-    if (profileError) {
-      console.error('Erro ao atualizar plano do novo perfil:', profileError.message);
-    }
-
-    res.status(201).json({
-      message: 'Conta criada com sucesso!',
-      user: {
-        id: userId,
-        email,
-        name,
-        role,
-        subscription_plan,
-        profile
-      }
-    });
+    if (authError || !authUser?.user) throw new Error(authError?.message || 'Falha ao criar credenciais.');
+    const { data: profile, error: pErr } = await supabase.from('profiles').update({
+      subscription_plan, subscription_status: subscription_plan === 'free' ? 'free' : 'active', updated_at: new Date()
+    }).eq('id', authUser.user.id).select().single();
+    if (pErr) console.error('Erro ao atualizar novo perfil:', pErr.message);
+    res.status(201).json({ message: 'Conta criada com sucesso!', user: { id: authUser.user.id, email, name, role, subscription_plan, profile } });
   } catch (err) {
     res.status(400).json({ error: sanitizeError(err) });
   }
@@ -76,90 +41,85 @@ router.post('/users', authenticate, requireRole(['admin', 'manager', 'employee']
 router.put('/users/:id', authenticate, requireRole(['admin', 'manager']), validateBody({
   name: { type: 'string', minLength: 2, maxLength: 100 },
   email: { type: 'email' },
-  role: { enum: ['admin', 'manager', 'employee', 'user'] },
+  role: { enum: ['superadmin', 'admin', 'community_admin', 'workout_admin', 'manager', 'employee', 'creator', 'user'] },
   subscription_plan: { enum: ['free', 'basic', 'intermediate', 'premium', 'ultra'] },
-  subscription_status: { enum: ['free', 'active', 'cancelled', 'past_due'] }
-}), async (req, res) => {
-  const { id } = req.params;
+  subscription_status: { enum: ['free', 'active', 'cancelled', 'past_due', 'overdue', 'inactive'] }
+}), async (req: Request, res: Response) => {
+  const id = req.params.id as string;
   const { name, email, role, subscription_plan, subscription_status } = req.body;
-  const creatorRole = req.userRole;
-
   try {
-    // 1. Obter o perfil do usuário alvo para checar permissão hierárquica
-    const { data: targetUser, error: getError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', id)
-      .single();
+    const { data: targetUser, error: getError } = await supabase.from('profiles').select('role').eq('id', id).single();
+    if (getError || !targetUser) return res.status(404).json({ error: 'Usuário não encontrado.' });
 
-    if (getError || !targetUser) {
-      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    const creatorLevel = ROLE_HIERARCHY[(req as any).userRole] || 0;
+    if ((ROLE_HIERARCHY[targetUser.role] || 0) >= creatorLevel) {
+      return res.status(403).json({ error: 'Você não pode alterar contas com cargo igual ou superior ao seu.' });
+    }
+    if (role && (ROLE_HIERARCHY[role] || 0) >= creatorLevel) {
+      return res.status(403).json({ error: 'Você não pode atribuir um cargo igual ou superior ao seu.' });
     }
 
-    // Gerente não pode modificar administradores
-    if (creatorRole === 'manager' && targetUser.role === 'admin') {
-      return res.status(403).json({ error: 'Gerentes não possuem permissão para alterar contas de Administrador.' });
-    }
-    // Gerente não pode promover alguém a administrador
-    if (creatorRole === 'manager' && role === 'admin') {
-      return res.status(403).json({ error: 'Gerentes não podem atribuir o cargo de Administrador.' });
-    }
-
-    // 2. Atualizar perfil no banco de dados public.profiles
-    const updates = {};
-    if (name !== undefined) updates.name = sanitizeString(name);
-    if (email !== undefined) updates.email = email.toLowerCase();
-    if (role !== undefined) updates.role = role;
-    if (subscription_plan !== undefined) updates.subscription_plan = subscription_plan;
-    if (subscription_status !== undefined) updates.subscription_status = subscription_status;
-    updates.updated_at = new Date();
-
-    const { data: updatedProfile, error: updateError } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
+    const updates: any = {
+      ...(name !== undefined && { name: sanitizeString(name) }),
+      ...(email !== undefined && { email: email.toLowerCase() }),
+      ...(role !== undefined && { role }),
+      ...(subscription_plan !== undefined && { subscription_plan }),
+      ...(subscription_status !== undefined && { subscription_status }),
+      updated_at: new Date()
+    };
+    const { data: updatedProfile, error: updateError } = await supabase.from('profiles').update(updates).eq('id', id).select().single();
     if (updateError) throw updateError;
 
-    // 3. Se email ou role mudou, atualizar também na tabela de auth
-    const authUpdates = {};
-    if (email) authUpdates.email = email;
-    if (name || role) {
-      authUpdates.user_metadata = {
-        ...(name && { name }),
-        ...(role && { role })
-      };
-    }
-
-    if (Object.keys(authUpdates).length > 0) {
-      await supabase.auth.admin.updateUserById(id, authUpdates);
-    }
-
-    res.json({
-      message: 'Conta atualizada com sucesso!',
-      profile: updatedProfile
-    });
+    const authUpdates: any = {
+      ...(email && { email }),
+      ...((name || role) && { user_metadata: { ...(name && { name }), ...(role && { role }) } })
+    };
+    if (Object.keys(authUpdates).length > 0) await supabase.auth.admin.updateUserById(id, authUpdates);
+    res.json({ message: 'Conta atualizada com sucesso!', profile: updatedProfile });
   } catch (err) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Deletar conta (Somente Administrador Master)
-router.delete('/users/:id', authenticate, requireRole(['admin']), async (req, res) => {
-  const { id } = req.params;
-
+router.delete('/users/:id', authenticate, requireRole(['admin', 'superadmin']), async (req: Request, res: Response) => {
   try {
-    // Deletar da autenticação do Supabase (os perfis e dados vinculados serão deletados via CASCADE)
-    const { error } = await supabase.auth.admin.deleteUser(id);
-
+    const { error } = await supabase.auth.admin.deleteUser(req.params.id as string);
     if (error) throw error;
-
     res.json({ message: 'Conta excluída com sucesso!' });
   } catch (err) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+// Obter estatísticas financeiras consolidadas para o admin
+router.get('/financial-stats', authenticate, requireRole(['admin', 'superadmin']), async (req: Request, res: Response) => {
+  try {
+    const { data: profiles, error: pErr } = await supabase.from('profiles').select('subscription_status, subscription_plan, created_at');
+    if (pErr) throw pErr;
+
+    const PLAN_PRICES: Record<string, number> = { free: 0, basic: 49.9, intermediate: 79.9, premium: 119.9, ultra: 199.9 };
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+
+    const active = (profiles || []).filter(p => p.subscription_status === 'active' || p.subscription_status === 'premium');
+    const mrr = active.reduce((sum, p) => sum + (PLAN_PRICES[p.subscription_plan || 'free'] || 0), 0);
+    const thisMonthNew = (profiles || []).filter(p => p.created_at && p.created_at >= monthStart).length;
+    
+    const cancelledCount = (profiles || []).filter(p => p.subscription_status === 'cancelled').length;
+    const totalSubs = active.length + cancelledCount;
+    const churn = totalSubs > 0 ? ((cancelledCount / totalSubs) * 100).toFixed(1) : '0.0';
+
+    const breakdown: Record<string, number> = { free: 0, basic: 0, intermediate: 0, premium: 0, ultra: 0 };
+    (profiles || []).forEach(p => {
+      const plan = p.subscription_plan || 'free';
+      if (breakdown[plan] !== undefined) breakdown[plan]++;
+    });
+
+    const { data: recentPayments } = await supabase.from('payments').select('id, amount, status, billing_type, created_at').order('created_at', { ascending: false }).limit(10);
+    res.json({ mrr, activeCount: active.length, churnRate: parseFloat(churn), newMonth: thisMonthNew, breakdown, recentPayments: recentPayments || [] });
+  } catch (err) {
+    res.status(400).json({ error: sanitizeError(err) });
+  }
+});
+
+export = router;

@@ -1,19 +1,26 @@
-// src/middleware/errorHandler.js
+// src/middleware/errorHandler.ts
 // Handler centralizado de erros - NOVAIX FITNESS
 
-const { reportError } = require('../services/errorReporter');
+import { Request, Response, NextFunction } from 'express';
+import { reportError } from '../services/errorReporter';
 
 class AppError extends Error {
-  constructor(message, statusCode = 500, code = 'INTERNAL_ERROR') {
+  public statusCode: number;
+  public code: string;
+  public isOperational: boolean;
+  public details?: any;
+
+  constructor(message: string, statusCode = 500, code = 'INTERNAL_ERROR') {
     super(message);
     this.statusCode = statusCode;
     this.code = code;
     this.isOperational = true;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 class ValidationError extends AppError {
-  constructor(message, details = {}) {
+  constructor(message: string, details: any = {}) {
     super(message, 400, 'VALIDATION_ERROR');
     this.details = details;
   }
@@ -49,7 +56,7 @@ class RateLimitError extends AppError {
   }
 }
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       error: err.message,
@@ -67,7 +74,7 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-const notFoundHandler = (req, res) => {
+const notFoundHandler = (req: Request, res: Response) => {
   res.status(404).json({
     error: 'Rota não encontrada',
     code: 'ROUTE_NOT_FOUND',
@@ -75,11 +82,11 @@ const notFoundHandler = (req, res) => {
   });
 };
 
-const asyncHandler = (fn) => (req, res, next) => {
+const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-const SAFE_MESSAGES = {
+const SAFE_MESSAGES: Record<string, string> = {
   'Invalid login credentials': 'Credenciais invalidas',
   'User already registered': 'Email ja cadastrado',
   'Email not confirmed': 'Email nao confirmado',
@@ -90,7 +97,7 @@ const SAFE_MESSAGES = {
   'Invalid or expired token': 'Sessao expirada, faca login novamente',
 };
 
-function sanitizeError(err) {
+function sanitizeError(err: any): string {
   if (err.isOperational) return err.message;
   const msg = err.message || '';
   if (SAFE_MESSAGES[msg]) return SAFE_MESSAGES[msg];
@@ -101,7 +108,7 @@ function sanitizeError(err) {
   return 'Erro interno do servidor';
 }
 
-module.exports = {
+export {
   AppError,
   ValidationError,
   NotFoundError,

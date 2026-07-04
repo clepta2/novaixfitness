@@ -1,9 +1,9 @@
-// src/config/swagger.js
+// src/config/swagger.ts
 // Configuração do Swagger/OpenAPI - NOVAIX FITNESS
 
-const swaggerJsdoc = require('swagger-jsdoc');
+import swaggerJsdoc from 'swagger-jsdoc';
 
-const options = {
+const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -64,9 +64,9 @@ const options = {
       bearerAuth: []
     }]
   },
-  apis: ['./src/routes/*.js']
+  apis: ['./src/routes/*.ts', './src/routes/*.js']
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-module.exports = swaggerSpec;
+export default swaggerSpec;

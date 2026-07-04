@@ -1,10 +1,10 @@
-// src/services/paymentHandlers.js
+// src/services/paymentHandlers.ts
 // Handlers para eventos de Pagamento do Asaas
 
-const supabase = require('../config/supabase');
-const { determinePlanType } = require('./subscriptionHandlers');
+import supabase from '../config/supabase';
+import { determinePlanType } from './subscriptionHandlers';
 
-async function handlePaymentReceived(payment) {
+async function handlePaymentReceived(payment: any): Promise<void> {
   const customerId = payment.customer;
   const { data: profile } = await supabase
     .from('profiles')
@@ -43,10 +43,10 @@ async function handlePaymentReceived(payment) {
     })
     .eq('id', profile.id);
 
-  console.log('✅ Pagamento confirmado para user:', profile.id, 'plano:', planType);
+  console.info('✅ Pagamento confirmado para user:', profile.id, 'plano:', planType);
 }
 
-async function handlePaymentCreated(payment) {
+async function handlePaymentCreated(payment: any): Promise<void> {
   const customerId = payment.customer;
   const { data: profile } = await supabase
     .from('profiles')
@@ -66,14 +66,14 @@ async function handlePaymentCreated(payment) {
   }, { onConflict: 'asaas_payment_id' });
 }
 
-async function handlePaymentUpdated(payment) {
+async function handlePaymentUpdated(payment: any): Promise<void> {
   await supabase
     .from('payments')
     .update({ status: payment.status })
     .eq('asaas_payment_id', payment.id);
 }
 
-async function handlePaymentOverdue(payment) {
+async function handlePaymentOverdue(payment: any): Promise<void> {
   const customerId = payment.customer;
   const { data: profile } = await supabase
     .from('profiles')
@@ -96,17 +96,17 @@ async function handlePaymentOverdue(payment) {
     })
     .eq('id', profile.id);
 
-  console.log('⚠️ Pagamento atrasado para user:', profile.id);
+  console.warn('⚠️ Pagamento atrasado para user:', profile.id);
 }
 
-async function handlePaymentDeleted(payment) {
+async function handlePaymentDeleted(payment: any): Promise<void> {
   await supabase
     .from('payments')
     .update({ status: 'DELETED' })
     .eq('asaas_payment_id', payment.id);
 }
 
-async function handlePaymentRefunded(payment) {
+async function handlePaymentRefunded(payment: any): Promise<void> {
   const customerId = payment.customer;
   const { data: profile } = await supabase
     .from('profiles')
@@ -130,10 +130,10 @@ async function handlePaymentRefunded(payment) {
     })
     .eq('id', profile.id);
 
-  console.log('💸 Reembolso processado para user:', profile.id);
+  console.info('💸 Reembolso processado para user:', profile.id);
 }
 
-module.exports = {
+export {
   handlePaymentReceived,
   handlePaymentCreated,
   handlePaymentUpdated,

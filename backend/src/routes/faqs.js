@@ -1,15 +1,16 @@
-// src/routes/faqs.js
+// src/routes/faqs.ts
 // Rotas de FAQs - NOVAIX FITNESS
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
-const { requireRole } = require('../middleware/role');
-const { sanitizeError } = require('../middleware/errorHandler');
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { authenticate } from '../middleware/auth';
+import { requireRole } from '../middleware/role';
+import { sanitizeError } from '../middleware/errorHandler';
+
+const router: Router = express.Router();
 
 // Listar FAQs ativos (publico)
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const { category } = req.query;
 
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
       .order('sort_order', { ascending: true });
 
     if (category) {
-      query = query.eq('category', category);
+      query = query.eq('category', category as string);
     }
 
     const { data, error } = await query;
@@ -28,14 +29,14 @@ router.get('/', async (req, res) => {
     if (error) throw error;
 
     res.json(data || []);
-  } catch (err) {
+  } catch (err: any) {
     console.error('Erro ao buscar FAQs:', err);
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Criar FAQ (admin)
-router.post('/', authenticate, requireRole(['admin']), async (req, res) => {
+router.post('/', authenticate, requireRole(['admin']), async (req: Request, res: Response) => {
   try {
     const { question, answer, category, sort_order } = req.body;
 
@@ -57,14 +58,14 @@ router.post('/', authenticate, requireRole(['admin']), async (req, res) => {
     if (error) throw error;
 
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     console.error('Erro ao criar FAQ:', err);
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Atualizar FAQ (admin)
-router.put('/:id', authenticate, requireRole(['admin']), async (req, res) => {
+router.put('/:id', authenticate, requireRole(['admin']), async (req: Request, res: Response) => {
   try {
     const { question, answer, category, sort_order, active } = req.body;
 
@@ -78,13 +79,13 @@ router.put('/:id', authenticate, requireRole(['admin']), async (req, res) => {
     if (error) throw error;
 
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
 // Deletar FAQ (admin)
-router.delete('/:id', authenticate, requireRole(['admin']), async (req, res) => {
+router.delete('/:id', authenticate, requireRole(['admin']), async (req: Request, res: Response) => {
   try {
     const { error } = await supabase
       .from('faqs')
@@ -94,9 +95,9 @@ router.delete('/:id', authenticate, requireRole(['admin']), async (req, res) => 
     if (error) throw error;
 
     res.json({ message: 'FAQ removido' });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+export = router;

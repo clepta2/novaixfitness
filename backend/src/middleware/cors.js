@@ -1,17 +1,17 @@
-// src/middleware/cors.js
+// src/middleware/cors.ts
 // Configuração CORS personalizada - NOVAIX FITNESS
 
-const cors = require('cors');
+import cors from 'cors';
 
-const allowedOrigins = [
+const allowedOrigins: string[] = [
   process.env.CLIENT_URL || 'http://localhost:8081',
   process.env.ADMIN_URL || 'http://localhost:3000',
   'https://novaixfitness.com',
   'https://www.novaixfitness.com',
 ];
 
-const corsOptions = {
-  origin: (origin, callback) => {
+const corsOptions: cors.CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -43,7 +43,7 @@ const corsMiddleware = cors(corsOptions);
 
 const strictCors = cors({
   ...corsOptions,
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (origin && allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -59,7 +59,7 @@ const publicCors = cors({
   maxAge: 3600,
 });
 
-module.exports = {
+export {
   corsMiddleware,
   strictCors,
   publicCors,

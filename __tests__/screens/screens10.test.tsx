@@ -119,17 +119,27 @@ jest.mock('../../src/components', () => {
   return new Proxy(base, { get: (target, key) => target[key] || Stub(key) });
 });
 
-import PhysicalDataScreen from '../../app/onboarding/dados-fisicos';
-import ExperienceScreen from '../../app/onboarding/experiencia';
-import AvailabilityScreen from '../../app/onboarding/disponibilidade';
+import OnboardingScreen from '../../app/onboarding/index';
 
 describe('Screens - Round 10', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('PhysicalDataScreen', () => {
+  describe('OnboardingScreen', () => {
     it('renders header', () => {
+      const { getByText } = render(<OnboardingScreen />);
+      expect(getByText('O QUE VOCÊ BUSCA?')).toBeTruthy();
+    });
+
+    it('renders goal options', () => {
+      const { getByText } = render(<OnboardingScreen />);
+      expect(getByText('Emagrecimento')).toBeTruthy();
+      expect(getByText('Ganho de Massa')).toBeTruthy();
+      expect(getByText('Condicionamento')).toBeTruthy();
+    });
+  });
+});
       const { getByText } = render(<PhysicalDataScreen />);
       expect(getByText('SOBRE VOCÊ')).toBeTruthy();
     });

@@ -1,6 +1,9 @@
 // src/services/notifications/index.ts
 // Exportações centralizadas de notificações
 
+import { registerForPushNotificationsAsync } from './pushNotifications';
+import { cancelAllScheduled, getActiveReminders } from './notificationScheduler';
+
 export {
   sendWorkoutCompletedNotification,
   sendStreakNotification,
@@ -47,3 +50,12 @@ export {
   scheduleWeeklyPlanReminder,
   scheduleRestDayReminder,
 } from './notifications';
+
+// Aliases para compatibilidade com testes
+export async function requestNotificationPermission(): Promise<boolean> {
+  const token = await registerForPushNotificationsAsync();
+  return token !== null;
+}
+
+export const clearAllNotifications = cancelAllScheduled;
+export const getScheduledNotifications = getActiveReminders;

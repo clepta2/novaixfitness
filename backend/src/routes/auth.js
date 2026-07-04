@@ -1,12 +1,12 @@
-// src/routes/auth.js
+// src/routes/auth.ts
 // Rotas de Autenticação
 
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const { validateBody, sanitizeString } = require('../middleware/validate');
-const { sanitizeError } = require('../middleware/errorHandler');
-const { validateCpf } = require('../middleware/validate');
+import express, { Request, Response, Router } from 'express';
+import supabase from '../config/supabase';
+import { validateBody, sanitizeString, validateCpf } from '../middleware/validate';
+import { sanitizeError } from '../middleware/errorHandler';
+
+const router: Router = express.Router();
 
 /**
  * @swagger
@@ -41,7 +41,7 @@ router.post('/signup', validateBody({
   email: { required: true, type: 'email' },
   password: { required: true, type: 'password' },
   name: { required: true, type: 'string', minLength: 2, maxLength: 100 }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { email, password, name, cpf, phone } = req.body;
     const sanitizedName = sanitizeString(name);
@@ -67,7 +67,7 @@ router.post('/signup', validateBody({
     }
 
     res.json({ user: data.user, session: data.session });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
@@ -99,7 +99,7 @@ router.post('/signup', validateBody({
 router.post('/login', validateBody({
   email: { required: true, type: 'email' },
   password: { required: true, type: 'string' }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -111,7 +111,7 @@ router.post('/login', validateBody({
     if (error) throw error;
 
     res.json({ user: data.user, session: data.session });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
@@ -140,7 +140,7 @@ router.post('/login', validateBody({
  */
 router.post('/reset-password', validateBody({
   email: { required: true, type: 'email' }
-}), async (req, res) => {
+}), async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
@@ -149,9 +149,9 @@ router.post('/reset-password', validateBody({
     if (error) throw error;
 
     res.json({ message: 'E-mail de recuperação enviado' });
-  } catch (err) {
+  } catch (err: any) {
     res.status(400).json({ error: sanitizeError(err) });
   }
 });
 
-module.exports = router;
+export = router;
