@@ -99,8 +99,8 @@ export async function getGamificationData(userId: string): Promise<GamificationD
       level: level.level,
       social_first_post_count: postsCount >= 1 ? 1 : 0,
       social_10_posts_count: postsCount >= 10 ? 1 : 0,
-      social_50_likes_count: likesCount || 0,
-      social_25_comments_count: commentsCount || 0,
+      social_50_likes_count: likesCount >= 50 ? 1 : 0,
+      social_25_comments_count: commentsCount >= 25 ? 1 : 0,
     };
 
     const achievements = getUnlockedAchievements(stats);
