@@ -37,7 +37,8 @@ export function useGoals() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [unlocked, setUnlocked] = useState<string[]>([]);
   const [stats, setStats] = useState<GoalStats>({
-    totalWorkouts: 0, streak: 0, totalMeals: 0, waterStreak: 0, totalXp: 0,
+    totalWorkouts: 0, streak: 0, maxStreak: 0, totalMeals: 0, waterStreak: 0,
+    totalXp: 0, totalXP: 0, totalMinutes: 0, level: 0,
   });
   const [showAddModal, setShowAddModal] = useState(false);
   const [newGoalType, setNewGoalType] = useState<string | null>(null);
