@@ -8,7 +8,6 @@ import { SPACING } from '../src/constants/spacing';
 import { ErrorBoundary, DeviceCard, HeartRateWidget, ActivitySummary } from '../src/components';
 import { checkWatchAvailability, connectWatch, isWatchConnected, getWatchHeartRate } from '../src/services/appleWatch';
 import { checkHealthAvailability, requestHealthPermissions, getHealthStats, getStepsToday, getCaloriesBurnedToday } from '../src/services/healthConnect';
-import { checkStravaAvailability, connectStrava, isStravaConnected, syncRunningActivities, disconnectStrava } from '../src/services/strava';
 import { useAuth } from '../src/context/AuthContext';
 import { useI18n } from '../src/i18n';
 
@@ -23,10 +22,8 @@ export default function WearablesScreen() {
   const [syncing, setSyncing] = useState(null);
   const [wAvail, setWAvail] = useState(false);
   const [hAvail, setHAvail] = useState(false);
-  const [sAvail, setSAvail] = useState(false);
   const [wConn, setWConn] = useState(false);
   const [hConn, setHConn] = useState(false);
-  const [sConn, setSConn] = useState(false);
   const [heartRate, setHeartRate] = useState(null);
   const [restingHR, setRestingHR] = useState(null);
   const [maxHR, setMaxHR] = useState(null);
@@ -36,11 +33,10 @@ export default function WearablesScreen() {
 
   const init = useCallback(async () => {
     try {
-      const [w, h, s] = await Promise.allSettled([checkWatchAvailability(), checkHealthAvailability(), checkStravaAvailability()]);
+      const [w, h] = await Promise.allSettled([checkWatchAvailability(), checkHealthAvailability()]);
       setWAvail(w.status === 'fulfilled' && w.value.available);
       setHAvail(h.status === 'fulfilled' && h.value.available);
-      setSAvail(s.status === 'fulfilled' && s.value.available);
-      setWConn(isWatchConnected()); setSConn(isStravaConnected());
+      setWConn(isWatchConnected());
       if (h.status === 'fulfilled' && h.value.available) {
         const p = await requestHealthPermissions();
         setHConn(p.granted);
@@ -71,13 +67,11 @@ export default function WearablesScreen() {
 
   const handleToggle = async (type) => {
     if (type === 'watch') { const r = await connectWatch(); setWConn(r.connected); }
-    else if (type === 'strava') { if (sConn) { await disconnectStrava(); setSConn(false); } else { const r = await connectStrava(); if (r.started) setSConn(true); } }
     else if (type === 'health') { if (hConn) { setHConn(false); } else { const p = await requestHealthPermissions(); setHConn(p.granted); } }
   };
 
   const handleSync = useCallback(async (type) => {
     setSyncing(type);
-    if (type === 'strava') await syncRunningActivities();
     if (type === 'watch') await getWatchHeartRate();
     if (type === 'health') await init();
     const timeout = setTimeout(() => setSyncing(null), 1500);
@@ -87,7 +81,6 @@ export default function WearablesScreen() {
   const devices = [
     { name: t('wearables.appleWatch'), type: 'watch', connected: wConn, battery: wConn ? 85 : null, lastSync: wConn ? new Date().toISOString() : null, subtitle: wAvail ? (Platform.OS === 'ios' ? t('wearables.appleWatchAvailable') : t('wearables.notAvailable')) : t('wearables.notAvailable') },
     { name: t('wearables.healthConnect'), type: 'health', connected: hConn, lastSync: hConn ? new Date().toISOString() : null, subtitle: hAvail ? (Platform.OS === 'android' ? t('wearables.healthConnect') : t('wearables.appleHealth')) : t('wearables.notAvailable') },
-    { name: t('wearables.strava'), type: 'strava', connected: sConn, lastSync: sConn ? new Date().toISOString() : null, subtitle: sAvail ? t('wearables.runningAndActivities') : t('wearables.notAvailable') },
   ];
 
   return (

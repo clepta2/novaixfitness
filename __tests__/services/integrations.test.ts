@@ -72,19 +72,6 @@ describe('Apple Watch', () => {
   });
 });
 
-describe('Strava', () => {
-  const strava = require('../../src/services/strava');
-
-  it('checks availability', async () => {
-    const result = await strava.checkStravaAvailability();
-    expect(result.available).toBe(true);
-  });
-
-  it('returns not connected initially', () => {
-    expect(strava.isStravaConnected()).toBe(false);
-  });
-});
-
 describe('Podcast', () => {
   const podcast = require('../../src/services/podcast');
 
