@@ -48,7 +48,21 @@ export default function SocialScreen() {
     serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); });
     loadStories();
     loadCheckIns();
+    loadUserLikes();
   }, [user?.id]);
+
+  const loadUserLikes = async () => {
+    if (!user?.id) return;
+    try {
+      const { data } = await supabase.from('post_likes').select('post_id').eq('user_id', user.id);
+      if (data) {
+        const likedIds = new Set(data.map((l: { post_id: string }) => l.post_id));
+        setPosts(prev => prev.map(p => ({ ...p, isLiked: likedIds.has(p.id) })));
+      }
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar likes:', err);
+    }
+  };
   const loadStories = async () => {
     if (!user?.id) return;
     try {
