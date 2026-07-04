@@ -147,7 +147,7 @@ export default function SocialScreen() {
     }
   };
   const handleComment = async (postId, text) => {
-    if (!user) return;
+    if (!user || !text?.trim()) return;
     const prevComments = posts.find(p => p.id === postId)?.comments || 0;
     try {
       await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
