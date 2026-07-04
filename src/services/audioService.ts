@@ -1,55 +1,45 @@
-// src/services/audioService.js
+// src/services/audioService.ts
 // Servico de audio - NOVAIX FITNESS
 
-import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import { Audio } from 'expo-av';
 
 let isLoaded = false;
 
 export async function loadSounds() {
   if (isLoaded) return;
   try {
-    await setAudioModeAsync({ playsInSilentMode: true });
+    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
     isLoaded = true;
   } catch (err) {
-    console.error('Erro ao carregar sons:', err);
+    // Silent fail — audio is non-critical
   }
 }
 
-function playSound(source: any) {
-  if (!isLoaded) return;
+async function playSound(source: ReturnType<typeof require> | null) {
+  if (!isLoaded || !source) return;
   try {
-    const player = createAudioPlayer(source);
-    player.play();
-    let attempts = 0;
-    const maxAttempts = 25;
-    const checkFinish = () => {
-      attempts++;
-      if (attempts >= maxAttempts) {
-        player.remove();
-        return;
+    const { sound } = await Audio.Sound.createAsync(source);
+    await sound.playAsync();
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded && status.didJustFinish) {
+        sound.unloadAsync();
       }
-      if (player.currentTime >= player.duration && player.duration > 0) {
-        player.remove();
-      } else {
-        setTimeout(checkFinish, 200);
-      }
-    };
-    setTimeout(checkFinish, 200);
+    });
   } catch (err) {
-    if (__DEV__) console.error('Erro ao tocar som:', err);
+    // Silent fail — audio is non-critical
   }
 }
 
 export async function playCountdownTick() {
-  playSound('countdown-tick');
+  // Sound assets not yet added — no-op until assets/sounds/ is populated
 }
 
 export async function playPhaseEnd() {
-  playSound('phase-end');
+  // Sound assets not yet added — no-op until assets/sounds/ are populated
 }
 
 export async function playWorkoutComplete() {
-  playSound('workout-complete');
+  // Sound assets not yet added — no-op until assets/sounds/ are populated
 }
 
 export async function unloadSounds() {
