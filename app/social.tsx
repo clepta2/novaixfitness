@@ -85,7 +85,7 @@ export default function SocialScreen() {
 
   useEffect(() => {
     if (!user?.id) return;
-    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); });
+    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); }).catch(() => {});
     loadStories();
     loadCheckIns();
   }, [user?.id, loadStories, loadCheckIns]);
