@@ -1,21 +1,12 @@
-jest.mock('expo-av', () => ({
-  Audio: {
-    setAudioModeAsync: jest.fn().mockResolvedValue({}),
-    Sound: {
-      createAsync: jest.fn().mockResolvedValue({
-        sound: {
-          playAsync: jest.fn().mockResolvedValue({}),
-          setOnPlaybackStatusUpdate: jest.fn(),
-          unloadAsync: jest.fn().mockResolvedValue({}),
-        },
-      }),
-    },
-  },
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    remove: jest.fn(),
+    currentTime: 0,
+    duration: 1,
+  })),
+  setAudioModeAsync: jest.fn().mockResolvedValue({}),
 }));
-
-jest.mock('../../assets/sounds/countdown-tick.mp3', () => 'tick', { virtual: true });
-jest.mock('../../assets/sounds/phase-end.mp3', () => 'phase', { virtual: true });
-jest.mock('../../assets/sounds/workout-complete.mp3', () => 'complete', { virtual: true });
 
 import {
   loadSounds,
@@ -25,7 +16,7 @@ import {
   unloadSounds,
 } from '../../src/services/audioService';
 
-const { Audio } = require('expo-av');
+const { createAudioPlayer, setAudioModeAsync } = require('expo-audio');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -35,14 +26,14 @@ describe('Audio Service', () => {
   describe('loadSounds', () => {
     it('sets audio mode', async () => {
       await loadSounds();
-      expect(Audio.setAudioModeAsync).toHaveBeenCalled();
+      expect(setAudioModeAsync).toHaveBeenCalled();
     });
 
     it('skips loading if already loaded', async () => {
       await loadSounds();
-      Audio.setAudioModeAsync.mockClear();
+      setAudioModeAsync.mockClear();
       await loadSounds();
-      expect(Audio.setAudioModeAsync).not.toHaveBeenCalled();
+      expect(setAudioModeAsync).not.toHaveBeenCalled();
     });
   });
 
@@ -50,20 +41,18 @@ describe('Audio Service', () => {
     it('creates and plays sound', async () => {
       await loadSounds();
       await playCountdownTick();
-      expect(Audio.Sound.createAsync).toHaveBeenCalled();
+      expect(createAudioPlayer).toHaveBeenCalled();
     });
 
     it('does nothing if not loaded', async () => {
       jest.resetModules();
-      jest.mock('expo-av', () => ({
-        Audio: {
-          setAudioModeAsync: jest.fn().mockResolvedValue({}),
-          Sound: { createAsync: jest.fn() },
-        },
+      jest.mock('expo-audio', () => ({
+        createAudioPlayer: jest.fn(),
+        setAudioModeAsync: jest.fn().mockResolvedValue({}),
       }));
       const { playCountdownTick: freshPlay } = require('../../src/services/audioService');
       await freshPlay();
-      expect(require('expo-av').Audio.Sound.createAsync).not.toHaveBeenCalled();
+      expect(require('expo-audio').createAudioPlayer).not.toHaveBeenCalled();
     });
   });
 
@@ -71,7 +60,7 @@ describe('Audio Service', () => {
     it('creates and plays sound', async () => {
       await loadSounds();
       await playPhaseEnd();
-      expect(Audio.Sound.createAsync).toHaveBeenCalled();
+      expect(createAudioPlayer).toHaveBeenCalled();
     });
   });
 
@@ -79,7 +68,7 @@ describe('Audio Service', () => {
     it('creates and plays sound', async () => {
       await loadSounds();
       await playWorkoutComplete();
-      expect(Audio.Sound.createAsync).toHaveBeenCalled();
+      expect(createAudioPlayer).toHaveBeenCalled();
     });
   });
 
