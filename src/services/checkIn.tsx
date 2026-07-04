@@ -86,7 +86,6 @@ export async function getCheckInStreak(userId: string): Promise<number> {
     .order('check_in_date', { ascending: false })
     .limit(1)
     .maybeSingle();
-    .single();
 
   return data?.streak_day || 0;
 }
