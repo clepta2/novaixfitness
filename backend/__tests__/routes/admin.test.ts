@@ -15,6 +15,8 @@ jest.mock('../../src/middleware/auth', () => ({
   }
 }));
 
+const ROLE_HIERARCHY = { user: 0, employee: 2, manager: 3, admin: 4 };
+
 jest.mock('../../src/middleware/role', () => ({
   requireRole: (roles) => (req, res, next) => {
     const userRole = req.user?.app_metadata?.role || 'user';
@@ -23,7 +25,17 @@ jest.mock('../../src/middleware/role', () => ({
     }
     req.userRole = userRole;
     next();
-  }
+  },
+  ROLE_HIERARCHY: { user: 0, employee: 2, manager: 3, admin: 4 },
+}));
+
+jest.mock('../../src/middleware/validate', () => ({
+  validateBody: () => (req, res, next) => next(),
+  sanitizeString: (s) => s,
+}));
+
+jest.mock('../../src/middleware/errorHandler', () => ({
+  sanitizeError: (e) => e?.message || 'Erro',
 }));
 
 const mockSupabase = require('../../src/config/supabase');
@@ -33,9 +45,12 @@ const app = express();
 app.use(express.json());
 app.use('/api/admin', adminRoutes);
 
+let server;
+beforeAll((done) => { server = app.listen(0, done); });
+afterAll((done) => { server.close(done); });
+
 describe('Admin Routes', () => {
   beforeEach(() => jest.clearAllMocks());
-  jest.setTimeout(60000);
 
   describe('POST /users', () => {
     it('deve retornar 401 sem token', async () => {
