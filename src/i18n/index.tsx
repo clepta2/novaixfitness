@@ -3,8 +3,8 @@
 // Mantém a mesma interface para compatibilidade
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { createTranslator } from '../../../tradninja/src/core/engine';
-import type { Language } from '../../../tradninja/src/core/types';
+import { createTranslator } from 'tradninja';
+import type { Language } from 'tradninja';
 
 interface I18nContextValue {
   locale: string;
