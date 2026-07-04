@@ -1,7 +1,7 @@
 // src/hooks/useGoals.ts
 // Hook de metas de curto prazo - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '../config/supabase';
 import { useAuth } from '../context/AuthContext';
 import { GOAL_TYPES, getUnlockedAchievements } from '../data/achievements';
@@ -95,8 +95,8 @@ export function useGoals() {
     }
   }, [newGoalType, newGoalTarget, user?.id, loadData]);
 
-  const unlockedNow = getUnlockedAchievements(stats);
-  const newAchievements = unlockedNow.filter((a: any) => !unlocked.includes(a.id));
+  const unlockedNow = useMemo(() => getUnlockedAchievements(stats), [stats]);
+  const newAchievements = useMemo(() => unlockedNow.filter((a: Achievement) => !unlocked.includes(a.id)), [unlockedNow, unlocked]);
 
   return {
     goals, unlocked, stats, newAchievements, showAddModal,
