@@ -27,7 +27,7 @@ export default function MarketplaceDetailScreen() {
   const mountedRef = useRef(true);
 
   useEffect(() => {
-    mountedRef.current = true;
+    let cancelled = false;
     setLoading(true);
     setProduct(null);
     setRelated([]);
@@ -39,25 +39,25 @@ export default function MarketplaceDetailScreen() {
       }
       try {
         const p = await getProductById(productId);
-        if (!mountedRef.current) return;
+        if (cancelled) return;
         if (!p) { return; }
         setProduct(p);
         if (p.category_id) {
           const rel = await getRelatedProducts(productId, p.category_id);
-          if (mountedRef.current) setRelated(rel);
+          if (!cancelled) setRelated(rel);
         }
         if (user?.id) {
           const fav = await isFavorited(user.id, productId);
-          if (mountedRef.current) setFavorited(fav);
+          if (!cancelled) setFavorited(fav);
         }
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar produto:', err);
       } finally {
-        if (mountedRef.current) setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     load();
-    return () => { mountedRef.current = false; };
+    return () => { cancelled = true; };
   }, [productId, user?.id]);
 
   const isTogglingRef = useRef(false);
