@@ -169,8 +169,6 @@ export default function MarketplaceDetailScreen() {
                     <ProductCard
                       product={p}
                       onPress={() => router.push({ pathname: '/marketplace-detail', params: { id: p.id } })}
-                      isFavorited={false}
-                      onToggleFavorite={() => {}}
                     />
                   </View>
                 ))}
