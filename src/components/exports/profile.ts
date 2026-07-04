@@ -15,3 +15,8 @@ export { default as RankingCard } from '../profile/RankingCard';
 export { default as WeeklyChallenges } from '../profile/WeeklyChallenges';
 export { default as WeightLogger } from '../profile/WeightLogger';
 export { default as EditNameModal } from '../profile/EditNameModal';
+export { default as ProfileConfigScreen } from '../profile/ProfileConfigScreen';
+export { default as CoachCommissionsPanel } from '../profile/CoachCommissionsPanel';
+export { default as MuscleMiniRadar } from '../profile/MuscleMiniRadar';
+export { default as ProfilePostsTab } from '../profile/ProfilePostsTab';
+export { default as ProfileOptionsTab } from '../profile/ProfileOptionsTab';

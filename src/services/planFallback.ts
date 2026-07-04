@@ -1,7 +1,7 @@
 // src/services/planFallback.ts
 // Gerador de planos fallback para Gemini - NOVAIX FITNESS
 
-import { getAvailableExercises, DifficultyLevel } from '../data/exerciseCatalog';
+import { getAvailableExercises, DifficultyLevel, GymType } from '../data/exerciseCatalog';
 
 export function generateFallbackMealPlan(ctx: Record<string, unknown>): Record<string, unknown> {
   const days = ['Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo'];
@@ -20,7 +20,7 @@ export function generateFallbackWorkoutPlan(ctx: Record<string, unknown>): Recor
   const mappedLevel = (levelStr === 'iniciante' ? 'beginner' : levelStr === 'avancado' ? 'advanced' : 'intermediate') as DifficultyLevel;
   const rawInjuries = (ctx?.injuries as any[]) || [];
   const mappedInjuries = rawInjuries.map(i => typeof i === 'string' ? i : i.bodyPart || '');
-  const exercises = getAvailableExercises({ level: mappedLevel, injuries: mappedInjuries, gymType: (ctx?.gymType as string) || 'gym' });
+  const exercises = getAvailableExercises({ level: mappedLevel, injuries: mappedInjuries, gymType: ((ctx?.gymType as string) || 'gym') as GymType });
 
   const muscleGroups = ['chest', 'back', 'legs', 'shoulders', 'arms'];
   const daySplits = [

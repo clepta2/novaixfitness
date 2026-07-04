@@ -30,12 +30,16 @@ function FlameIcon({ level, size = 24 }) {
 
   return (
     <Animated.View style={[styles.flameContainer, { transform: [{ scale: pulseAnim }] }]}>
-      <Ionicons name={config.icon} size={size} color={config.color} />
+      <Ionicons name={config.icon as any} size={size} color={config.color} />
     </Animated.View>
   );
 }
 
-export default function WorkoutStreak({ userId }) {
+type Props = {
+  userId?: string;
+};
+
+export default function WorkoutStreak({ userId }: Props) {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [weekDots, setWeekDots] = useState([]);

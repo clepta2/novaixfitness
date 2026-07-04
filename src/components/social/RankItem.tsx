@@ -7,7 +7,13 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const RANK_COLORS = [COLORS.attention, COLORS.textMuted, COLORS.secondary];
 const RANK_ICONS = ['trophy', 'medal', 'ribbon'];
 
-export default memo(function RankItem({ item, index, isCurrentUser }) {
+type Props = {
+  item?: any;
+  index?: number;
+  isCurrentUser?: boolean;
+};
+
+export default memo(function RankItem({ item = {}, index = 0, isCurrentUser = false }: Props) {
   const rankColor = index < 3 ? RANK_COLORS[index] : COLORS.textMuted;
   const rankIcon = index < 3 ? RANK_ICONS[index] : null;
 
@@ -15,7 +21,7 @@ export default memo(function RankItem({ item, index, isCurrentUser }) {
     <View style={[styles.container, isCurrentUser && styles.current]}>
       <View style={[styles.badge, { backgroundColor: rankColor + '20' }]}>
         {rankIcon ? (
-          <Ionicons name={rankIcon} size={16} color={rankColor} />
+          <Ionicons name={rankIcon as any} size={16} color={rankColor} />
         ) : (
           <Text style={[styles.number, { color: rankColor }]}>{index + 1}</Text>
         )}

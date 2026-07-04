@@ -1,4 +1,4 @@
-﻿// app/(tabs)/feed.tsx
+// app/(tabs)/feed.tsx
 // Tela de Comunidade/Feed - NOVAIX FITNESS
 
 import { useState, useEffect, useMemo , useRef} from 'react';
@@ -8,9 +8,9 @@ import { COLORS } from '../../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../src/constants/spacing';
 import { SHADOWS } from '../../src/constants/shadows';
 import { PostCard, CreatePostModal, NotificationModal, ChallengesList, TutorialOverlay, ErrorBoundary, PostSkeleton, FeedEmptyState, FeedHeader, FeedFilters, StoryRing, FeedStoryViewer, StoryCreateModal, DailyCheckIn, Loading, ReelItem } from '../../src/components';
-import { ComposerCard } from '../../src/components/feed/ComposerCard';
-import { ReelsBar } from '../../src/components/feed/ReelsBar';
-import { DuelsSection } from '../../src/components/feed/DuelsSection';
+import ComposerCard from '../../src/components/feed/ComposerCard';
+import ReelsBar from '../../src/components/feed/ReelsBar';
+import DuelsSection from '../../src/components/feed/DuelsSection';
 import { useTutorial } from '../../src/hooks/useTutorial';
 import { useFeedData } from '../../src/hooks/useFeedData';
 import { performCheckIn, getTodayCheckIn, getCheckInStreak } from '../../src/services/checkIn';

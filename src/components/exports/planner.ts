@@ -8,3 +8,4 @@ export { default as DayDetailView } from '../planner/DayDetailView';
 export { default as DayEditorModal } from '../planner/DayEditorModal';
 export { default as WeekOverview } from '../planner/WeekOverview';
 export { default as WorkoutPicker } from '../planner/WorkoutPicker';
+export { TodayCard } from '../planner/DayDetailView';

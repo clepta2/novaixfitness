@@ -8,7 +8,18 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export function Header({ title, subtitle, showBack, rightIcon, onRightPress, rightIcon2, onRightPress2 }) {
+interface HeaderProps {
+  title: string;
+  subtitle?: string;
+  showBack?: boolean;
+  onBack?: () => void;
+  rightIcon?: string;
+  onRightPress?: () => void;
+  rightIcon2?: string;
+  onRightPress2?: () => void;
+}
+
+export function Header({ title, subtitle, showBack, onBack, rightIcon, onRightPress, rightIcon2, onRightPress2 }: HeaderProps) {
   const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -19,7 +30,7 @@ export function Header({ title, subtitle, showBack, rightIcon, onRightPress, rig
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       {showBack ? (
-        <TouchableOpacity onPress={() => router.back()} style={styles.iconBtn} accessibilityLabel="Voltar" accessibilityRole="button">
+        <TouchableOpacity onPress={onBack || (() => router.back())} style={styles.iconBtn} accessibilityLabel="Voltar" accessibilityRole="button">
           <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
         </TouchableOpacity>
       ) : <View style={styles.iconBtn} />}

@@ -88,7 +88,7 @@ export default function BudgetMealPlanner() {
             style={[styles.tierBtn, selectedTier === tier.id && { backgroundColor: tier.color }]}
             onPress={() => setSelectedTier(tier.id)}
           >
-            <Ionicons name={tier.icon} size={16} color={selectedTier === tier.id ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={tier.icon as any} size={16} color={selectedTier === tier.id ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.tierLabel, selectedTier === tier.id && styles.tierLabelActive]}>{tier.label}</Text>
             <Text style={[styles.tierRange, selectedTier === tier.id && styles.tierRangeActive]}>{tier.range}</Text>
           </TouchableOpacity>

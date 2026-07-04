@@ -7,7 +7,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function WorkoutShare({ workout, xp, duration, exercises, onShare }) {
+type Props = {
+  workout?: any;
+  xp?: number;
+  duration?: number;
+  exercises?: any;
+  onShare?: () => void;
+};
+
+export default memo(function WorkoutShare({ workout, xp = 0, duration = 0, exercises = 0, onShare }: Props) {
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 

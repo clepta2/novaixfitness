@@ -14,9 +14,9 @@ interface ThemedInputProps extends TextInputProps
 }
 
 export function ThemedInput(
-{ style, ...props }: ThemedInputProps) 
+{ style, ...props }: ThemedInputProps)
 {
-
+const colors = useColors();
 return (
     <TextInput
       style={[ {

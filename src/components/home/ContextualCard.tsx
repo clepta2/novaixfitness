@@ -59,7 +59,7 @@ export default function ContextualCard({ card, onAction, streak = 0 }) {
 
       {motivation && (
         <View style={[styles.motivationRow, { backgroundColor: motivation.color + '15' }]}>
-          <Ionicons name={motivation.icon} size={14} color={motivation.color} />
+          <Ionicons name={motivation.icon as any} size={14} color={motivation.color} />
           <Text style={[styles.motivationText, { color: motivation.color }]}>{motivation.text}</Text>
         </View>
       )}

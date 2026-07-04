@@ -10,3 +10,4 @@ export { default as SubtypeStep } from '../onboarding/SubtypeStep';
 export { default as DaysStep } from '../onboarding/DaysStep';
 export { default as RestStep } from '../onboarding/RestStep';
 export { default as OnboardingNavButtons } from '../onboarding/OnboardingNavButtons';
+export { default as OnboardingStep } from '../onboarding/OnboardingStep';

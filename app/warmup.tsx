@@ -1,4 +1,4 @@
-﻿
+
 import { useState, useEffect, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -82,7 +82,7 @@ export default function WarmupScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Animated.View style={[styles.exerciseCard, { opacity: anim, transform: [{ scale: anim.interpolate({ inputRange: [0, 1], outputRange: [0.95, 1] }) }] }]}>
           <View style={styles.exerciseIcon}>
-            <Ionicons name={current.icon} size={40} color={COLORS.primary} />
+            <Ionicons name={current.icon as any} size={40} color={COLORS.primary} />
           </View>
           <Text style={styles.exerciseName}>{current.name}</Text>
           <Text style={styles.exerciseDesc}>{current.desc}</Text>

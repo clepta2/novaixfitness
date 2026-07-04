@@ -38,7 +38,7 @@ export default function ProcessingScreen() {
       <View style={styles.stepsContainer}>
         {steps.map((step, index) => (
           <View key={index} style={[styles.stepItem, index <= currentStep && styles.stepItemActive]}>
-            <Ionicons name={step.icon} size={16} color={index <= currentStep ? COLORS.primary : COLORS.textMuted} />
+            <Ionicons name={step.icon as any} size={16} color={index <= currentStep ? COLORS.primary : COLORS.textMuted} />
             <Text style={[typography.caption, index <= currentStep && { color: COLORS.primary }]}>{step.label}</Text>
           </View>
         ))}

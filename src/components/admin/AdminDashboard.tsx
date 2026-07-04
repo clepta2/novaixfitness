@@ -62,7 +62,7 @@ export default function AdminDashboard({ onNavigate }) {
         {summaryCards.map((card) => (
           <View key={card.key} style={[styles.statCard, { borderLeftColor: card.color }]}>
             <View style={styles.statHeader}>
-              <Ionicons name={card.icon} size={18} color={card.color} />
+              <Ionicons name={card.icon as any} size={18} color={card.color} />
               <Text style={styles.statLabel}>{card.label}</Text>
             </View>
             <Text style={[styles.statValue, { color: card.color }]}>{card.value}</Text>
@@ -75,7 +75,7 @@ export default function AdminDashboard({ onNavigate }) {
         {quickActions.map((action) => (
           <TouchableOpacity key={action.key} style={styles.actionCard} onPress={() => onNavigate?.(action.key)} accessibilityLabel={action.label} accessibilityRole="button" accessibilityHint={`Navega para a seção de ${action.label.toLowerCase()}`}>
             <View style={[styles.actionIcon, { backgroundColor: action.color + '20' }]}>
-              <Ionicons name={action.icon} size={22} color={action.color} />
+              <Ionicons name={action.icon as any} size={22} color={action.color} />
             </View>
             <Text style={styles.actionLabel}>{action.label}</Text>
           </TouchableOpacity>

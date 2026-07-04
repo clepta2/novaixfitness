@@ -1,4 +1,4 @@
-﻿
+
 // app/notificacoes.tsx
 // Notificacoes com animacoes de entrada - NOVAIX FITNESS
 
@@ -106,7 +106,7 @@ export default function NotificationsScreen() {
                 style={[styles.tab, activeTab === tab.key && styles.tabActive]}
                 onPress={() => setActiveTab(tab.key)}
               >
-                <Ionicons name={tab.icon} size={16} color={activeTab === tab.key ? COLORS.primary : COLORS.textMuted} />
+                <Ionicons name={tab.icon as any} size={16} color={activeTab === tab.key ? COLORS.primary : COLORS.textMuted} />
                 <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextActive]}>{tab.label}</Text>
               </TouchableOpacity>
             ))}

@@ -28,7 +28,7 @@ function BottomTabBar({ activeTab }) {
             accessibilityLabel={tab.label}
             accessibilityRole="tab"
           >
-            <Ionicons name={focused ? tab.icon : tab.iconOutline} size={22} color={color} />
+            <Ionicons name={(focused ? tab.icon : tab.iconOutline) as any} size={22} color={color} />
             <Text style={[styles.label, { color }]}>{tab.label}</Text>
           </TouchableOpacity>
         );

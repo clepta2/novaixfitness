@@ -4,7 +4,7 @@
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
-import { trackEvent, EVENT_TYPES } from './analytics/eventTracker';
+import { trackEvent, EVENTS } from './analytics';
 import type { Post as PostType, PostComment } from '../types';
 
 const guard = createServiceGuard({ serviceName: 'socialFeed' });
@@ -40,7 +40,7 @@ export async function createPost(userId: string, content: string, imageUrl: stri
       .select('*, profiles:user_id (name, avatar_url, level)')
       .maybeSingle();
     if (error) throw error;
-    trackEvent(EVENT_TYPES.SHARE_CLICKED, { type: 'post' }, userId);
+    trackEvent(EVENTS.SHARE_CLICKED, { type: 'post' }, userId);
     return data as Post;
   });
   return result.ok ? result.data : null;

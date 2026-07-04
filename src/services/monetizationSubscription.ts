@@ -4,7 +4,7 @@
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 import { createServiceGuard } from '../utils/serviceGuard';
-import { trackEvent, EVENT_TYPES } from './eventTracker';
+import { trackEvent, EVENTS } from './analytics';
 import { PLANS, type Plan, type Subscription } from './monetizationPlans';
 
 const guard = createServiceGuard({ serviceName: 'monetizationSubscription' });
@@ -72,7 +72,7 @@ export async function createSubscription(userId: string, planId: string, payment
 
   if (error) throw error;
   await supabase.from(TABLES.PROFILES).update({ subscription_plan: planId }).eq('id', userId);
-  trackEvent(EVENT_TYPES.SUBSCRIPTION_STARTED, { plan_id: planId, price: plan.price }, userId);
+  trackEvent(EVENTS.SUBSCRIPTION_STARTED, { plan_id: planId, price: plan.price }, userId);
   return data as Subscription;
 }
 
@@ -82,7 +82,7 @@ export async function cancelSubscription(userId: string): Promise<void> {
     .eq('user_id', userId).eq('status', 'active');
   if (error) throw error;
   await supabase.from(TABLES.PROFILES).update({ subscription_plan: 'free' }).eq('id', userId);
-  trackEvent(EVENT_TYPES.SUBSCRIPTION_CANCELLED, {}, userId);
+  trackEvent(EVENTS.SUBSCRIPTION_CANCELLED, {}, userId);
 }
 
 export async function getSubscriptionHistory(userId: string): Promise<Subscription[]> {

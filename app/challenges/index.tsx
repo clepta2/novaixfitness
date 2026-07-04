@@ -1,4 +1,4 @@
-﻿
+
 // app/challenges/index.tsx
 // Desafios diarios com cards animados - NOVAIX FITNESS
 
@@ -116,7 +116,7 @@ export default function ChallengesScreen() {
                 >
                   <View style={styles.cardLeft}>
                     <View style={[styles.iconWrap, { backgroundColor: (isDone ? COLORS.primary : COLORS.textMuted) + '15' }]}>
-                      <Ionicons name={typeInfo?.icon || 'flag'} size={22} color={isDone ? COLORS.primary : COLORS.textMuted} />
+                      <Ionicons name={(typeInfo?.icon || 'flag') as any} size={22} color={isDone ? COLORS.primary : COLORS.textMuted} />
                     </View>
                     <View style={styles.cardInfo}>
                       <Text style={[styles.cardText, isDone && styles.cardTextDone]}>{item.text}</Text>

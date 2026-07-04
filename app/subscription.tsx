@@ -1,4 +1,4 @@
-﻿
+
 // app/subscription.tsx
 // Assinatura com animacoes de transicao - NOVAIX FITNESS
 
@@ -111,7 +111,7 @@ export default function SubscriptionScreen() {
             {INFO_ITEMS.map((item, i) => (
               <View key={i} style={styles.infoRow}>
                 <View style={[styles.infoIcon, { backgroundColor: item.color + '15' }]}>
-                  <Ionicons name={item.icon} size={18} color={item.color} />
+                  <Ionicons name={item.icon as any} size={18} color={item.color} />
                 </View>
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>{item.label}</Text>

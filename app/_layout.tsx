@@ -80,7 +80,7 @@ function AuthRedirect() {
     const inOnboarding = segments[0] === 'onboarding';
     const inPaywall = segments[0] === 'paywall';
     const currentRoute = segments[0] || 'index';
-    const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute);
+    const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute as any);
 
     if (user) {
       if (!profile) return;

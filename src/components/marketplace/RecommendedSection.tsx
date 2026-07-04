@@ -4,7 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function RecommendedSection({ products, onPress, favorites, onToggleFavorite }) {
+type Props = {
+  products: any[];
+  onPress: (product: any) => void;
+  favorites?: Set<string>;
+  onToggleFavorite?: (id: string) => void;
+};
+
+export default memo(function RecommendedSection({ products, onPress, favorites, onToggleFavorite }: Props) {
   if (!products || products.length === 0) return null;
 
   return (

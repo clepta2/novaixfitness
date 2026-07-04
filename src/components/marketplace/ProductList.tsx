@@ -9,7 +9,19 @@ import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default memo(function ProductList({ products, onProductPress, favorites, onToggleFavorite, loading, refreshing, onRefresh, onLoadMore, hasMore }) {
+type Props = {
+  products: any[];
+  onProductPress: (product: any) => void;
+  favorites?: Set<string>;
+  onToggleFavorite?: (id: string) => void;
+  loading?: boolean;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+};
+
+export default memo(function ProductList({ products, onProductPress, favorites, onToggleFavorite, loading, refreshing, onRefresh, onLoadMore, hasMore }: Props) {
   if (loading && (!products || products.length === 0)) {
     return <ProductListSkeleton count={4} />;
   }

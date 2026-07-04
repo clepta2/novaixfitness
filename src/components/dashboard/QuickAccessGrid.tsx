@@ -24,7 +24,7 @@ export default function QuickAccessGrid({ router }) {
         {ITEMS.map((item) => (
           <TouchableOpacity key={item.label} style={styles.item} onPress={() => router.push(item.route)} accessibilityLabel={`Acesso rápido: ${item.label}`} accessibilityRole="button">
             <View style={[styles.iconContainer, { backgroundColor: item.color + '20' }]}>
-              <Ionicons name={item.icon} size={22} color={item.color} />
+              <Ionicons name={item.icon as any} size={22} color={item.color} />
             </View>
             <Text style={styles.label}>{item.label}</Text>
           </TouchableOpacity>

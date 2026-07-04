@@ -45,7 +45,7 @@ export default function MonthlyReviewScreen() {
       <Text style={styles.subtitle}>Como foi seu mês?</Text>
 
       <View style={styles.statsCard}>
-        <Ionicons name={msg.icon} size={40} color={msg.color} />
+        <Ionicons name={msg.icon as any} size={40} color={msg.color} />
         <Text style={[styles.statsText, { color: msg.color }]}>{msg.text}</Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
@@ -77,7 +77,7 @@ export default function MonthlyReviewScreen() {
       <View style={styles.actionRow}>
         {[{ id: 'increase', label: 'Aumentar', icon: 'trending-up', color: COLORS.primary }, { id: 'maintain', label: 'Continuar', icon: 'equal', color: COLORS.info }, { id: 'decrease', label: 'Reduzir', icon: 'trending-down', color: COLORS.warning }].map((a) => (
           <TouchableOpacity key={a.id} accessibilityLabel={a.label} accessibilityRole="button" style={[styles.actionCard, action === a.id && { borderColor: a.color, backgroundColor: a.color + '10' }]} onPress={() => setAction(a.id)}>
-            <Ionicons name={a.icon} size={24} color={action === a.id ? a.color : COLORS.textMuted} />
+            <Ionicons name={a.icon as any} size={24} color={action === a.id ? a.color : COLORS.textMuted} />
             <Text style={[styles.actionLabel, action === a.id && { color: a.color }]}>{a.label}</Text>
           </TouchableOpacity>
         ))}

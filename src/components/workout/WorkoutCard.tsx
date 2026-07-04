@@ -87,7 +87,7 @@ function WorkoutCard({ workout, onPress, onFavorite, isFavorite = false, showFav
             </View>
             <View style={styles.metaDot} />
             <View style={styles.metaItem}>
-              <Ionicons name={levelConfig.icon} size={12} color={levelConfig.color} />
+              <Ionicons name={levelConfig.icon as any} size={12} color={levelConfig.color} />
               <Text style={[styles.metaText, { color: levelConfig.color }]}>{workout.level || 'Intermediário'}</Text>
             </View>
             {rating > 0 && (

@@ -18,7 +18,7 @@ function ChallengeCard({ item, index, joined, onJoin }) {
     <View style={[styles.card, joined && styles.cardJoined]}>
       <View style={styles.cardHeader}>
         <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-          <Ionicons name={icon} size={24} color={color} />
+          <Ionicons name={icon as any} size={24} color={color} />
         </View>
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle}>{item.title}</Text>

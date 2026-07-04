@@ -6,7 +6,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useRealNotifications } from '../../hooks/useRealNotifications';
 
-export default function NotificationModal({ visible, onClose }) {
+export default function NotificationModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const { notifications, loading, markAllRead, markRead, remove } = useRealNotifications();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function NotificationModal({ visible, onClose }) {
                   onLongPress={() => remove(n.id)}
                 >
                   <View style={[styles.iconContainer, { backgroundColor: n.color + '20' }]}>
-                    <Ionicons name={n.icon} size={20} color={n.color} />
+                    <Ionicons name={n.icon as any} size={20} color={n.color} />
                   </View>
                   <View style={styles.content}>
                     <Text style={styles.text}>{n.body || n.title}</Text>

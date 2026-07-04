@@ -4,7 +4,13 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default memo(function FeedFilters({ filters, selected, onSelect }) {
+type Props = {
+  filters?: string[];
+  selected?: string;
+  onSelect?: (f: string) => void;
+};
+
+export default memo(function FeedFilters({ filters = [], selected = '', onSelect }: Props) {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
       <View style={styles.container}>

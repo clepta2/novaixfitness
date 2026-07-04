@@ -119,8 +119,8 @@ export function useLibraryData() {
   }, [dbWorkouts, selectedCategory, searchQuery, filterByMyLevel, userPhysicalLevel, levelFilter, durationFilter, accessFilter, equipmentFilter, muscleFilter]);
 
   const mapWorkout = useCallback((w: WorkoutItem): WorkoutItem => ({
-    id: w.id, name: w.title || w.name, category: w.category || 'Treino',
-    duration: w.duration_minutes || w.duration || 30, level: w.level || 'Intermediário',
+    id: w.id, name: (w.title as string) || w.name, category: w.category || 'Treino',
+    duration: (w.duration_minutes as number) || w.duration || 30, level: w.level || 'Intermediário',
     is_premium: w.is_premium || false, locked: (w.is_premium || false) && !isSubscribed
   }), [isSubscribed]);
 

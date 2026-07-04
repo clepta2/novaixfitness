@@ -6,7 +6,11 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import RankItem from './RankItem';
 
-function Leaderboard({ userId }) {
+type Props = {
+  userId?: string;
+};
+
+function Leaderboard({ userId }: Props) {
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('all');

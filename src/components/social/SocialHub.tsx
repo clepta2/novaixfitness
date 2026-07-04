@@ -1,5 +1,5 @@
 import React, { useState, useRef, memo } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated, type ViewStyle } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
@@ -13,7 +13,6 @@ const TABS = [
 function SocialHub({ children, badgeCounts = {}, refreshControl }) {
   const [activeTab, setActiveTab] = useState('feed');
   const indicatorAnim = useRef(new Animated.Value(0)).current;
-  const tabWidth = `${100 / TABS.length}%`;
 
   const handleTabPress = (index) => {
     setActiveTab(TABS[index].id);
@@ -32,7 +31,7 @@ function SocialHub({ children, badgeCounts = {}, refreshControl }) {
           const isActive = activeTab === tab.id;
           const badge = badgeCounts[tab.id];
           return (
-            <TouchableOpacity key={tab.id} style={[styles.tab, { width: tabWidth }]} onPress={() => handleTabPress(index)} accessibilityRole="tab" accessibilityState={{ selected: isActive }}>
+            <TouchableOpacity key={tab.id} style={[styles.tab, { flex: 1 }]} onPress={() => handleTabPress(index)} accessibilityRole="tab" accessibilityState={{ selected: isActive }}>
               <View style={styles.tabContent}>
                 <Text style={[styles.tabText, isActive && styles.tabTextActive]}>{tab.label}</Text>
                 {badge > 0 && <View style={styles.tabBadge}><Text style={styles.tabBadgeText}>{badge}</Text></View>}
@@ -40,7 +39,7 @@ function SocialHub({ children, badgeCounts = {}, refreshControl }) {
             </TouchableOpacity>
           );
         })}
-        <Animated.View style={[styles.indicator, { width: tabWidth, transform: [{ translateX }] }]} />
+        <Animated.View style={[styles.indicator, { width: `${100 / TABS.length}%`, transform: [{ translateX }] } as ViewStyle]} />
       </View>
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false} refreshControl={refreshControl}>
         {children}

@@ -47,7 +47,7 @@ export default memo(function WorkoutPreview({ name, category, level, exercises =
           {level && <View style={[s.badge, { backgroundColor: COLORS.primary + '20' }]}><Text style={[s.badgeTxt, { color: COLORS.primary }]}>{level}</Text></View>}
         </View>
         <View style={s.sg}>{stats.map((st, i) => (
-          <View key={i} style={s.si}><Ionicons name={st.icon} size={16} color={st.c} /><Text style={s.sv}>{st.val}</Text><Text style={s.sl2}>{st.lbl}</Text></View>
+          <View key={i} style={s.si}><Ionicons name={st.icon as any} size={16} color={st.c} /><Text style={s.sv}>{st.val}</Text><Text style={s.sl2}>{st.lbl}</Text></View>
         ))}</View>
         {muscles.length > 0 && <View style={s.mr}>{muscles.map((m, i) => (
           <View key={i} style={[s.mb, { backgroundColor: (MC[m!] || COLORS.primary) + '20' }]}><Text style={[s.mt, { color: MC[m!] || COLORS.primary }]}>{m}</Text></View>

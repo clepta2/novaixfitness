@@ -176,7 +176,6 @@ export {
   isWeb,
   screenWidth,
   screenHeight,
-  scale,
   verticalScale,
   moderateScale,
   pxToDp,
@@ -193,8 +192,6 @@ export { storage } from './storage';
 // Performance (NEW)
 export {
   performanceMonitor,
-  measureAsync,
-  measureSync,
   debounce,
   throttle,
 } from './performance';

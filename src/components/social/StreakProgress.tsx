@@ -4,7 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function StreakProgress({ streak, nextLevel, config }) {
+type Props = {
+  streak?: number;
+  nextLevel?: any;
+  config?: any;
+};
+
+export default memo(function StreakProgress({ streak = 0, nextLevel, config = {} }: Props) {
   if (!nextLevel) return null;
   const progress = (streak / nextLevel.min) * 100;
 

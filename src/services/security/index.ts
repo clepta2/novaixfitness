@@ -9,7 +9,7 @@ export { flagContent, getFlaggedContent, reviewFlag } from './moderation';
 export { getTrustScore, getAllUsersWithTrust } from './trust';
 export { getUserAuditHistory, searchAuditLogs } from './auditHistory';
 export { canPerformAction, guardedAction } from './middleware';
-export { logAuditAction, getAuditLogs, cleanupAuditLogs, checkSecurityAlerts } from './auditLog';
+export { logAction as logAuditAction, getAuditLogs, cleanupAuditLogs, checkSecurityAlerts } from './auditLog';
 export { logLoginAttempt, logPayment, logInjectionAttempt, logRootDetected, logAdminAction } from './auditLogHelpers';
 export { RATE_LIMIT_CONFIGS, getRateLimitHeaders } from './rateLimitConfigs';
 export type { RateLimitConfig } from './rateLimitConfigs';

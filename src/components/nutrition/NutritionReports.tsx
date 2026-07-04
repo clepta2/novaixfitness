@@ -116,7 +116,7 @@ export default function NutritionReports({ userId }) {
         {REPORT_TYPES.map(report => (
           <TouchableOpacity key={report.id} style={styles.reportCard} onPress={() => generateReport(report.id)} disabled={loading}>
             <View style={[styles.reportIcon, { backgroundColor: report.color + '20' }]}>
-              <Ionicons name={report.icon} size={20} color={report.color} />
+              <Ionicons name={report.icon as any} size={20} color={report.color} />
             </View>
             <View style={styles.reportInfo}>
               <Text style={styles.reportTitle}>{report.title}</Text>

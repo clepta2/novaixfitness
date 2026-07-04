@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING } from '../src/constants/spacing';
 import { ErrorBoundary, DeviceCard, HeartRateWidget, ActivitySummary } from '../src/components';
-import { ActivitySection } from '../src/components/activity/ActivitySection';
+import ActivitySection from '../src/components/activity/ActivitySection';
 import { checkWatchAvailability, connectWatch, isWatchConnected, getWatchHeartRate } from '../src/services/appleWatch';
 import { checkHealthAvailability, requestHealthPermissions, getHealthStats, getStepsToday, getCaloriesBurnedToday } from '../src/services/healthConnect';
 import { startActivity, finishActivity, getActivityHistory, getActiveActivityId } from '../src/services/activityTracker';

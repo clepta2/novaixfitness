@@ -89,7 +89,7 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
         <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
         <View style={styles.header}>
           <View style={{ width: 24 }} />
-          <View style={styles.headerIconWrap}><Ionicons name={headerIcon} size={20} color={COLORS.primary} /></View>
+          <View style={styles.headerIconWrap}><Ionicons name={headerIcon as any} size={20} color={COLORS.primary} /></View>
           <View style={{ width: 24 }} />
         </View>
 

@@ -8,7 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
-function RecordItem({ record }) {
+function RecordItem({ record }: { record: { exercise: string; weight: number; reps: number; date: string; isNew: boolean } }) {
   const isNew = record.isNew;
 
   return (
@@ -42,7 +42,7 @@ function RecordItem({ record }) {
   );
 }
 
-export default function PersonalRecords({ userId }) {
+export default function PersonalRecords({ userId }: { userId: string }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +62,7 @@ export default function PersonalRecords({ userId }) {
         return;
       }
 
-      const exerciseMap = {};
+      const exerciseMap: Record<string, { exercise: string; weight: number; reps: number; date: string; isNew: boolean }> = {};
       data.forEach(log => {
         const name = log.exercise_name;
         if (!exerciseMap[name]) {

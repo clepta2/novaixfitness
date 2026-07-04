@@ -8,3 +8,4 @@ export { default as BillingToggle } from '../paywall/BillingToggle';
 export { default as VariantBView } from '../paywall/VariantBView';
 export { default as GuaranteeSection } from '../paywall/GuaranteeSection';
 export { default as DiscountBanner } from '../paywall/DiscountBanner';
+export { default as ProcessingModal } from '../paywall/ProcessingModal';

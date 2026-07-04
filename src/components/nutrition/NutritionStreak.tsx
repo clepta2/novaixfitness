@@ -104,7 +104,7 @@ export default function NutritionStreak({ userId }) {
         <View style={styles.streakMain}>
           {currentBadge && (
             <View style={[styles.badgeIcon, { backgroundColor: currentBadge.color + '20' }]}>
-              <Ionicons name={currentBadge.icon} size={28} color={currentBadge.color} />
+              <Ionicons name={currentBadge.icon as any} size={28} color={currentBadge.color} />
             </View>
           )}
           <View style={styles.streakInfo}>

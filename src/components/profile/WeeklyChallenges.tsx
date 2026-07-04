@@ -12,9 +12,11 @@ import { WEEKLY_CHALLENGES } from '../../constants/gamification';
 import { addXP } from '../../services/gamification';
 import { SECTION_TITLES, LABELS, BUTTONS, MESSAGES } from '../../data/profileTexts';
 
-export default function WeeklyChallenges({ userId, compact = false }) {
+interface Props { userId?: string; compact?: boolean }
+
+export default function WeeklyChallenges({ userId, compact = false }: Props) {
   const router = useRouter();
-  const [progress, setProgress] = useState({});
+  const [progress, setProgress] = useState<Record<string, number>>({});
   const [claimed, setClaimed] = useState(new Set());
 
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function WeeklyChallenges({ userId, compact = false }) {
         return (
           <View key={challenge.id} style={[styles.challengeItem, completed && !isClaimed && styles.challengeCompleted]}>
             <View style={[styles.challengeIcon, completed && styles.challengeIconDone]}>
-              <Ionicons name={challenge.icon} size={18} color={completed ? COLORS.background : COLORS.primary} />
+              <Ionicons name={challenge.icon as any} size={18} color={completed ? COLORS.background : COLORS.primary} />
             </View>
             <View style={styles.challengeInfo}>
               <View style={styles.challengeHeader}>

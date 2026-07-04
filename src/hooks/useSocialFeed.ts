@@ -68,7 +68,7 @@ export function useSocialFeed(user: User | null | undefined, t: (key: string) =>
 
   const loadInitial = useCallback(async () => {
     if (!user?.id) return;
-    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(r.data); }).catch(() => {});
+    serviceCall(() => getUnreadCount(user.id)).then(r => { if (r.ok) setUnreadCount(Number(r.data) || 0); }).catch(() => {});
     await loadStories();
     await loadCheckIns();
   }, [user?.id, loadStories, loadCheckIns, serviceCall]);

@@ -4,10 +4,27 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import type { ComponentProps } from 'react';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { SHADOWS } from '../../constants/shadows';
 import { scale } from '../../utils/responsive';
+
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'back' | 'danger' | 'google' | 'apple';
+type ButtonSize = 'sm' | 'md' | 'lg';
+type IconPosition = 'left' | 'right';
+
+interface ButtonProps {
+  title: string;
+  onPress: () => void;
+  variant?: ButtonVariant;
+  icon?: ComponentProps<typeof Ionicons>['name'];
+  iconPosition?: IconPosition;
+  size?: ButtonSize;
+  loading?: boolean;
+  disabled?: boolean;
+  style?: object;
+}
 
 const SIZES = {
   sm: { height: scale(40), fontSize: scale(12), iconSize: 14 },
@@ -15,7 +32,7 @@ const SIZES = {
   lg: { height: scale(58), fontSize: scale(15), iconSize: ICON_SIZES.md },
 };
 
-export function Button({ title, onPress, variant = 'primary', icon, iconPosition = 'left', size = 'md', loading, disabled, style }) {
+export function Button({ title, onPress, variant = 'primary', icon, iconPosition = 'left', size = 'md', loading, disabled, style }: ButtonProps) {
   const [pressed, setPressed] = useState(false);
   const s = SIZES[size] || SIZES.md;
 

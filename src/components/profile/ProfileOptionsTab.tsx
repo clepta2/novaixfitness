@@ -46,7 +46,7 @@ export default function ProfileOptionsTab({ themeMode, setThemeMode, signOut, is
         <View style={styles.themeRow}>
           {THEME_OPTIONS.map((opt) => (
             <TouchableOpacity key={opt.key} style={[styles.themeBtn, themeMode === opt.key && styles.themeBtnActive]} onPress={() => setThemeMode(opt.key)}>
-              <Ionicons name={opt.icon} size={20} color={themeMode === opt.key ? COLORS.background : COLORS.textMuted} />
+              <Ionicons name={opt.icon as any} size={20} color={themeMode === opt.key ? COLORS.background : COLORS.textMuted} />
               <Text style={[styles.themeBtnText, themeMode === opt.key && styles.themeBtnTextActive]}>{opt.label}</Text>
             </TouchableOpacity>
           ))}
@@ -61,7 +61,7 @@ export default function ProfileOptionsTab({ themeMode, setThemeMode, signOut, is
         {links.map((link, index) => (
           <TouchableOpacity key={link.route} style={styles.quickLink} onPress={() => router.push(link.route)}>
             <View style={[styles.quickLinkIcon, { backgroundColor: link.color + '15' }]}>
-              <Ionicons name={link.icon} size={18} color={link.color} />
+              <Ionicons name={link.icon as any} size={18} color={link.color} />
             </View>
             <Text style={styles.quickLinkText}>{link.label}</Text>
             <Ionicons name="chevron-forward" size={16} color={COLORS.textMuted} />

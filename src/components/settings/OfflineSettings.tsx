@@ -52,7 +52,7 @@ export default function OfflineSettings() {
     setSyncing(true);
     try {
       const result = await forceSyncNow();
-      Alert.alert(OFFLINE.syncTitle, OFFLINE.syncMessage.replace('{synced}', result.synced).replace('{failed}', result.failed));
+      Alert.alert(OFFLINE.syncTitle, OFFLINE.syncMessage.replace('{synced}', String(result.synced)).replace('{failed}', String(result.failed)));
       await loadInfo();
     } catch {
       Alert.alert(OFFLINE.errorTitle, OFFLINE.syncError);
@@ -106,7 +106,7 @@ export default function OfflineSettings() {
             <View style={[styles.barFill, { width: `${Math.min((info.totalSize / (50 * 1024 * 1024)) * 100, 100)}%` }, !info.withinLimit && styles.barWarning]} />
           </View>
 
-          {Object.entries(info.breakdown).map(([key, data]) => (
+          {Object.entries(info.breakdown).map(([key, data]: [string, { size: number }]) => (
             <View key={key} style={styles.itemRow}>
               <Text style={styles.itemLabel}>{key}</Text>
               <Text style={styles.itemValue}>{formatSize(data.size)}</Text>

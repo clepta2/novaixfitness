@@ -84,8 +84,8 @@ export function useDashboard() {
       const p: any = profile.data || {};
       const weekData = weekWorkouts.data || [];
 
-      const formattedFreq = Object.entries(freq || {}).map(([week, count]) => ({ week, count: count as number }));
-      const formattedMonthly = Object.entries(monthly || {}).map(([month, workouts]) => ({ month, workouts: workouts as number }));
+      const formattedFreq = Object.entries(freq || {}).map(([week, count]) => ({ week, count: Number(count) || 0 }));
+      const formattedMonthly = Object.entries(monthly || {}).map(([month, workouts]) => ({ month, workouts: Number(workouts) || 0 }));
 
       const mappedRecent = (recentWorkouts.data || []).map((w: any) => ({
         ...w,

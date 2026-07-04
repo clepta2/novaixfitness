@@ -4,7 +4,13 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default memo(function RecentSearches({ searches, onSelect, onClear }) {
+type Props = {
+  searches: string[];
+  onSelect: (term: string) => void;
+  onClear: () => void;
+};
+
+export default memo(function RecentSearches({ searches, onSelect, onClear }: Props) {
   if (!searches.length) return null;
 
   return (

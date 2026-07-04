@@ -33,7 +33,7 @@ function StatsSummary({ data, unlockedCount }) {
     <View style={styles.statsGrid}>
       {stats.map((s) => (
         <View key={s.key} style={[styles.statCard, { borderLeftColor: s.color, borderLeftWidth: 3 }]}>
-          <Ionicons name={s.icon} size={18} color={s.color} />
+          <Ionicons name={s.icon as any} size={18} color={s.color} />
           <Text style={styles.statValue}>{values[s.key]}</Text>
           <Text style={styles.statLabel}>{s.label}</Text>
         </View>

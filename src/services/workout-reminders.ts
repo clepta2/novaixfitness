@@ -7,13 +7,7 @@ export {
   sendPostWorkoutReminder,
   sendWeeklySummaryReminder,
   scheduleHydrationReminder,
-  cancelAllScheduled,
   cancelAllWorkoutReminders,
   getActiveReminders,
-  setupNotificationListeners,
-  saveNotificationToDB,
   requestNotificationPermissions,
-  scheduleWorkoutReminder,
-  scheduleWeeklyPlanReminder,
-  scheduleRestDayReminder,
 } from './workout/workout-reminders';

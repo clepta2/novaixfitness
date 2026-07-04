@@ -45,7 +45,7 @@ export default function FinanceStats() {
     <View style={styles.grid}>
       {cards.map((card, i) => (
         <View key={i} style={styles.card}>
-          <Ionicons name={card.icon} size={16} color={card.color} />
+          <Ionicons name={card.icon as any} size={16} color={card.color} />
           <Text style={styles.label}>{card.label}</Text>
           <Text style={[styles.value, { color: card.color }]}>{card.value}</Text>
         </View>

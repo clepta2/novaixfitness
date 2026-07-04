@@ -8,7 +8,12 @@ import { SPACING } from '../../constants/spacing';
 
 const { width } = Dimensions.get('window');
 
-export default memo(function ImageCarousel({ images, height = 280 }) {
+type Props = {
+  images: string[];
+  height?: number;
+};
+
+export default memo(function ImageCarousel({ images, height = 280 }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 

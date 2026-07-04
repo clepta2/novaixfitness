@@ -29,7 +29,7 @@ function AchievementBadge({ achievement, index }: AchievementBadgeProps): React.
   return (
     <Animated.View style={[styles.card, { transform: [{ scale: scaleAnim }] }]}>
       <View style={styles.iconContainer}>
-        <Ionicons name={achievement.icon || 'trophy'} size={20} color={COLORS.primary} />
+        <Ionicons name={(achievement.icon || 'trophy') as any} size={20} color={COLORS.primary} />
       </View>
       <View style={styles.info}>
         <Text style={styles.title}>{achievement.title}</Text>

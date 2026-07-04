@@ -130,8 +130,8 @@ export function useFeedData(): UseFeedDataReturn {
     setLoadingMore(false);
   }, [page, loadingMore, hasMore, fetchPosts]);
 
-  const handleRealtimeInsert = useCallback((newPost: FeedPost): void => {
-    setPosts(prev => prev.some(p => p.id === newPost.id) ? prev : [newPost, ...prev]);
+  const handleRealtimeInsert = useCallback((newPost: { id: string; userId: string; user: { name: string; avatar: string | null }; content: string; image: string | null; postType: string; secondImage: string | null; createdAt: string; likes: number; comments: number; isLiked: boolean }): void => {
+    setPosts(prev => prev.some(p => p.id === newPost.id) ? prev : [newPost as FeedPost, ...prev]);
   }, []);
   const handleRealtimeUpdate = useCallback((update: { id: string; likes: number; comments: number }): void => {
     setPosts(prev => prev.map(p => p.id === update.id ? { ...p, likes: update.likes, comments: update.comments } : p));

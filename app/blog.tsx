@@ -61,7 +61,7 @@ export default function BlogScreen() {
                 accessibilityRole="tab"
                 accessibilityState={{ selected: isActive }}
               >
-                <Ionicons name={cat.icon} size={14} color={isActive ? COLORS.background : COLORS.textMuted} />
+                <Ionicons name={cat.icon as any} size={14} color={isActive ? COLORS.background : COLORS.textMuted} />
                 <Text style={[styles.categoryPillText, isActive && styles.categoryPillTextActive]}>
                   {cat.label}
                 </Text>

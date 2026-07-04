@@ -69,7 +69,7 @@ export default function MealLogModal({ visible, onClose, userId, profileContext,
                 onPress={() => setMealType(t.key)}
                 accessibilityLabel={t.label}
               >
-                <Ionicons name={t.icon} size={18} color={mealType === t.key ? COLORS.background : COLORS.textDescription} />
+                <Ionicons name={t.icon as any} size={18} color={mealType === t.key ? COLORS.background : COLORS.textDescription} />
                 <Text style={[styles.typeLabel, mealType === t.key && styles.typeLabelActive]}>{t.label}</Text>
               </TouchableOpacity>
             ))}

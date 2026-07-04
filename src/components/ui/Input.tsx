@@ -1,4 +1,4 @@
-// src/components/ui/Input.js
+// src/components/ui/Input.tsx
 // Componente de Input NOVAIX FITNESS — com foco animado e visual premium
 
 import React, { useState, useCallback } from 'react';
@@ -8,10 +8,24 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 
+interface InputProps {
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder: string;
+  label?: string;
+  error?: string;
+  icon?: keyof typeof Ionicons.glyphMap;
+  secureTextEntry?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  translucent?: boolean;
+  style?: object;
+}
+
 export function Input({
   label, value, onChangeText, placeholder, error,
   icon, secureTextEntry, keyboardType, autoCapitalize, style,
-}) {
+}: InputProps) {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

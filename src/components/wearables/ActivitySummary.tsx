@@ -23,7 +23,7 @@ export default function ActivitySummary({ steps, stepsGoal, calories, caloriesGo
             <View style={[st.circle, { borderColor: m.color + '40' }]}>  
               <Text style={[st.circleVal, { color: m.color }]}>{m.value}</Text>
             </View>
-            <Ionicons name={m.icon} size={20} color={m.color} style={{ marginTop: SPACING.xs }} />
+            <Ionicons name={m.icon as any} size={20} color={m.color} style={{ marginTop: SPACING.xs }} />
             <Text style={st.label}>{m.label}</Text>
             {m.pct != null && <Text style={[st.pct, { color: m.pct >= 100 ? COLORS.success : COLORS.textMuted }]}>{m.pct}%</Text>}
           </View>

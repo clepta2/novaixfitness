@@ -2,7 +2,8 @@
 // Hook para operações com retry automático - NOVAIX FITNESS
 
 import { useState, useCallback, useRef } from 'react';
-import { retry, RetryOptions } from '../utils/async/retry';
+import { retry } from '../utils/async/retry';
+import type { RetryOptions } from '../utils/async/retry';
 
 interface UseRetryOptions extends RetryOptions {
   immediate?: boolean;

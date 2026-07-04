@@ -9,7 +9,11 @@ import * as Haptics from 'expo-haptics';
 import ChallengeModal from './ChallengeModal';
 import ChallengeCard from './ChallengeCard';
 
-export default memo(function ChallengesList({ userId }) {
+type Props = {
+  userId?: string;
+};
+
+export default memo(function ChallengesList({ userId }: Props) {
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChallenge, setSelectedChallenge] = useState(null);

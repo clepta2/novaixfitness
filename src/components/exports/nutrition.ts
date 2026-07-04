@@ -14,3 +14,5 @@ export { default as ActivitySummary } from '../wearables/ActivitySummary';
 export { default as SyncButton } from '../wearables/SyncButton';
 export { default as QuickAccessGrid } from '../dashboard/QuickAccessGrid';
 export { default as WeeklySummary } from '../dashboard/WeeklySummary';
+export { default as NutritionTips } from '../nutrition/NutritionTips';
+export { default as MacroChart } from '../nutrition/MacroChart';

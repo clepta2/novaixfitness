@@ -31,3 +31,5 @@ export { default as PlayerFullscreen } from '../workout/PlayerFullscreen';
 export { default as PlaybackSpeed } from '../workout/PlaybackSpeed';
 export { default as VideoSeekBar } from '../workout/VideoSeekBar';
 export { default as LoopToggle } from '../workout/LoopToggle';
+export { default as WorkoutCoachChat } from '../workout/WorkoutCoachChat';
+export { default as ExerciseVideo } from '../workout/ExerciseVideo';

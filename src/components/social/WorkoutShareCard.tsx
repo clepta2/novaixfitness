@@ -5,9 +5,16 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { shareWorkout } from '../../services/share';
 
-function WorkoutShareCard({ workout }) {
+interface WorkoutShareItem {
+  name: string;
+  duration: number;
+  exercisesCount: number;
+  xpEarned: number;
+}
+
+function WorkoutShareCard({ workout }: { workout: WorkoutShareItem }) {
   const handleShare = () => {
-    shareWorkout({ name: workout.name, duration: workout.duration, exercises: workout.exercisesCount, xp: workout.xpEarned }).catch(() => {});
+    shareWorkout({ id: 'share', name: workout.name, category: 'share', level: 'Intermediário', duration: workout.duration, description: '', equipment: [], exercises: [] } as any).catch(() => {});
   };
 
   return (

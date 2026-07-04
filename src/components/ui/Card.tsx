@@ -1,8 +1,8 @@
 // src/components/ui/Card.js
 // Componente de Card premium - NOVAIX FITNESS
 
-import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import React, { useRef, useEffect, ReactNode, ComponentProps } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
@@ -16,7 +16,19 @@ const VARIANTS = {
   error: { bg: COLORS.error + '10', border: COLORS.error },
 };
 
-export function Card({ children, onPress, variant = 'default', icon, title, subtitle, badge, style, animated = false }) {
+interface CardProps {
+  children: ReactNode;
+  onPress?: () => void;
+  variant?: keyof typeof VARIANTS;
+  icon?: ComponentProps<typeof Ionicons>['name'];
+  title?: string;
+  subtitle?: string;
+  badge?: string;
+  style?: ViewStyle;
+  animated?: boolean;
+}
+
+export function Card({ children, onPress, variant = 'default', icon, title, subtitle, badge, style, animated = false }: CardProps) {
   const fadeAnim = useRef(new Animated.Value(animated ? 0 : 1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 

@@ -11,7 +11,11 @@ const ACTIVITY_TYPES = {
   meal: { icon: 'nutrition', color: COLORS.info, label: 'Refeição' },
 };
 
-export default memo(function ActivityItem({ activity }) {
+type Props = {
+  activity?: any;
+};
+
+export default memo(function ActivityItem({ activity = {} }: Props) {
   const config = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.workout;
 
   return (

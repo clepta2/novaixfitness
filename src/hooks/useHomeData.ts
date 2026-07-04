@@ -125,7 +125,7 @@ export function useHomeData(userId: string | undefined) {
         setCategoryCounts(c);
       }
       if (profile?.onboarding?.level) {
-        const level = calculateLevel(profile?.total_xp || 0);
+        const level = calculateLevel(Number(profile?.total_xp) || 0);
         setLevelData({ color: COLORS.primary, icon: 'flash', level: level || 1 });
       }
     } else {

@@ -17,7 +17,7 @@ export default function DashboardStats({ data, onPress }) {
     <View style={styles.grid}>
       {items.map((item, i) => (
         <TouchableOpacity key={i} style={styles.card} onPress={onPress} accessibilityLabel={`${item.label}: ${item.value}`} accessibilityRole="button">
-          <Ionicons name={item.icon} size={22} color={COLORS.primary} />
+          <Ionicons name={item.icon as any} size={22} color={COLORS.primary} />
           <Text style={styles.value}>{item.value}</Text>
           <Text style={styles.label}>{item.label}</Text>
         </TouchableOpacity>

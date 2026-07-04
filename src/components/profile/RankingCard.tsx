@@ -10,7 +10,9 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
 
-export default memo(function RankingCard({ userId, compact = false }) {
+interface Props { userId?: string; compact?: boolean }
+
+export default memo(function RankingCard({ userId, compact = false }: Props) {
   const router = useRouter();
   const [rankings, setRankings] = useState([]);
   const [userRank, setUserRank] = useState(null);

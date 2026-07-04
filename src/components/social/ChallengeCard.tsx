@@ -20,7 +20,14 @@ function AnimatedProgressBar({ progress, target, color }) {
   );
 }
 
-export default memo(function ChallengeCard({ challenge, index, onPress, onShare }) {
+type Props = {
+  challenge?: any;
+  index?: number;
+  onPress?: (c: any) => void;
+  onShare?: (c: any) => void;
+};
+
+export default memo(function ChallengeCard({ challenge = {}, index = 0, onPress, onShare }: Props) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const icon = ICON_MAP[challenge.category] || 'fitness';
   const color = COLOR_MAP[challenge.category] || COLORS.primary;

@@ -4,7 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { layout, typography } from '../../styles';
 
-export default memo(function FeedHeader({ hasNotif, onNotificationsPress }) {
+type Props = {
+  hasNotif?: boolean;
+  onNotificationsPress?: () => void;
+};
+
+export default memo(function FeedHeader({ hasNotif, onNotificationsPress }: Props) {
   return (
     <View style={layout.header}>
       <View>

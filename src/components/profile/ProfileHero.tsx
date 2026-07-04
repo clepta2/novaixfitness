@@ -57,7 +57,7 @@ function ProfileHero({ name, email, memberSince, uri, onPressAvatar, onEditName,
           {/* Level badge + XP bar */}
           <View style={styles.levelRow}>
             <View style={[styles.levelBadge, { backgroundColor: current.color + '22' }]}>
-              <Ionicons name={current.icon} size={12} color={current.color} />
+              <Ionicons name={current.icon as any} size={12} color={current.color} />
               <Text style={[styles.levelText, { color: current.color }]}>Nv.{current.level} {current.name}</Text>
             </View>
             <Text style={styles.xpText}>{xp} XP</Text>

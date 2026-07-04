@@ -16,7 +16,7 @@ import {
 import { Achievement } from '../types';
 
 interface GamificationProfile {
-  xp: number;
+  xp?: number;
   [key: string]: unknown;
 }
 
@@ -28,6 +28,13 @@ interface UserRank {
 interface AwardResult {
   xpGained?: number;
   [key: string]: unknown;
+}
+
+interface XpBreakdown {
+  workout: number;
+  streak: number;
+  social: number;
+  achievements: number;
 }
 
 interface UseGamificationReturn {
@@ -45,6 +52,8 @@ interface UseGamificationReturn {
   refreshing?: boolean;
   error?: string | null;
   onRefresh?: () => void;
+  unlockedIds: string[];
+  xpBreakdown: XpBreakdown | Record<string, never>;
 }
 
 interface UseAchievementsReturn {
@@ -116,12 +125,12 @@ export function useGamification(): UseGamificationReturn {
   }, [user?.id]);
 
   const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
-  const xpBreakdown = profile ? {
-    workout: (profile.totalWorkouts ?? 0) * 50,
-    streak: (profile.streak ?? 0) * 5,
-    social: (profile.social_first_post_count ?? 0) * 15,
+  const xpBreakdown: XpBreakdown = profile ? {
+    workout: Number(profile.totalWorkouts ?? 0) * 50,
+    streak: Number(profile.streak ?? 0) * 5,
+    social: Number(profile.social_first_post_count ?? 0) * 15,
     achievements: achievements.filter(a => a.unlocked).reduce((sum, a) => sum + (a.xpReward ?? 0), 0),
-  } : {};
+  } : { workout: 0, streak: 0, social: 0, achievements: 0 };
 
   return {
     profile,
@@ -137,9 +146,9 @@ export function useGamification(): UseGamificationReturn {
     onRefresh: refresh,
     unlockedIds,
     xpBreakdown,
-    level: calculateLevel(profile?.total_xp ?? profile?.xp ?? 0),
-    xpForNext: getXPForNextLevel(calculateLevel(profile?.total_xp ?? profile?.xp ?? 0)),
-    levelProgress: getLevelProgress(profile?.total_xp ?? profile?.xp ?? 0),
+    level: calculateLevel(Number(profile?.total_xp ?? profile?.xp ?? 0)),
+    xpForNext: getXPForNextLevel(calculateLevel(Number(profile?.total_xp ?? profile?.xp ?? 0))),
+    levelProgress: getLevelProgress(Number(profile?.total_xp ?? profile?.xp ?? 0)),
   };
 }
 

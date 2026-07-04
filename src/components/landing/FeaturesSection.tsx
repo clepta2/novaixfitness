@@ -20,7 +20,7 @@ export default function FeaturesSection() {
         {features.map((feature, index) => (
           <View key={index} style={styles.featureCard}>
             <View style={styles.featureIconContainer}>
-              <Ionicons name={feature.icon} size={26} color={COLORS.primary} />
+              <Ionicons name={feature.icon as any} size={26} color={COLORS.primary} />
             </View>
             <View style={styles.featureInfo}>
               <Text style={styles.featureTitle}>{feature.title}</Text>

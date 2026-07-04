@@ -8,13 +8,14 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing'
 
 import { useColors } from '../../context/ThemeContext';
 
-interface StatsRowProps {
- value: string; label: string;
-
+interface Stat {
+  value: string;
+  label: string;
 }
 
 interface StatsRowProps {
- stats: Stat[]; }
+  stats: Stat[];
+}
 export function StatsRow(
 {
 stats }: StatsRowProps) 

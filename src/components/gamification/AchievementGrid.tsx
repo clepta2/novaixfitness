@@ -43,7 +43,7 @@ function AchievementGrid({ unlockedIds = [], onAchievementPress }) {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabs} contentContainerStyle={styles.tabsContent}>
         {CATEGORIES.map(cat => (
           <TouchableOpacity key={cat.id} style={[styles.tab, activeCategory === cat.id && styles.tabActive]} onPress={() => setActiveCategory(cat.id)} accessibilityLabel={`Filtrar por ${cat.label}`} accessibilityRole="button">
-            <Ionicons name={cat.icon} size={12} color={activeCategory === cat.id ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={cat.icon as any} size={12} color={activeCategory === cat.id ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.tabText, activeCategory === cat.id && styles.tabTextActive]}>{cat.label}</Text>
           </TouchableOpacity>
         ))}

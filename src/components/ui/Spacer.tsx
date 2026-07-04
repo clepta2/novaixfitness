@@ -31,7 +31,6 @@ interface SpacerProps {
 export function Spacer(
 { size = 16, horizontal = false }: SpacerProps) 
 {
-const colors = useColors();
 const value = SPACER_SIZES[size] || size;
   
 return (

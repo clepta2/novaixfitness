@@ -7,7 +7,7 @@ import { useColors  } from '../../context/ThemeContext';
 interface PasswordStrengthIndicatorProps {
  password: string;
  strength: number;
-// 0-5  label: string;
+ label: string;
  color: string;
 }
 const CHECKS = [  {

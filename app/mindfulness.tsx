@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { layout, typography } from '../src/styles';
-import { breathingExercises } from '../src/data/breathingExercises';
+import { BREATHING_EXERCISES as breathingExercises } from '../src/data/breathingExercises';
 import { BreathingExercise, ErrorBoundary } from '../src/components';
 import { styles } from '../src/styles/mindfulnessStyles';
 

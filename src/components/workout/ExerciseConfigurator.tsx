@@ -56,7 +56,7 @@ export default function ExerciseConfigurator({ exercise, config, onChange, onRem
       <View style={styles.presetRow}>
         {PRESETS.map(p => (
           <TouchableOpacity key={p.id} style={styles.presetBtn} onPress={() => onChange?.({ ...cfg, sets: p.sets, reps: p.reps, rest: p.rest })}>
-            <Ionicons name={p.icon} size={14} color={p.color} />
+            <Ionicons name={p.icon as any} size={14} color={p.color} />
             <Text style={styles.presetLabel}>{p.label}</Text>
             <Text style={styles.presetDetail}>{p.sets}x{p.reps}</Text>
           </TouchableOpacity>

@@ -15,7 +15,7 @@ function GamificationSummary({ xp = 0, streak = 0, achievements = 0, totalAchiev
       <View style={styles.header}>
         <View style={styles.levelInfo}>
           <View style={[styles.levelBadge, { backgroundColor: current.color + '20' }]}>
-            <Ionicons name={current.icon} size={16} color={current.color} />
+            <Ionicons name={current.icon as any} size={16} color={current.color} />
             <Text style={[styles.levelName, { color: current.color }]}>{current.name}</Text>
           </View>
           <Text style={styles.xpText}>{xp} XP</Text>

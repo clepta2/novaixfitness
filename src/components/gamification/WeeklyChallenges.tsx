@@ -17,7 +17,7 @@ function WeeklyChallenges({ progress = {} }) {
       const endOfWeek = new Date(now);
       endOfWeek.setDate(now.getDate() + (7 - now.getDay()));
       endOfWeek.setHours(23, 59, 59, 999);
-      const diff = endOfWeek - now;
+      const diff = endOfWeek.getTime() - now.getTime();
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       setTimeLeft(days > 0 ? `${days}d ${hours}h restantes` : `${hours}h restantes`);
@@ -43,7 +43,7 @@ function WeeklyChallenges({ progress = {} }) {
         return (
           <View key={challenge.id} style={[styles.item, completed && styles.itemDone]}>
             <View style={[styles.iconWrap, completed && styles.iconDone]}>
-              <Ionicons name={completed ? 'checkmark' : challenge.icon} size={16} color={completed ? COLORS.background : COLORS.primary} />
+              <Ionicons name={(completed ? 'checkmark' : challenge.icon) as any} size={16} color={completed ? COLORS.background : COLORS.primary} />
             </View>
             <View style={styles.info}>
               <View style={styles.infoRow}>

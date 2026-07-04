@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { CATEGORY_COLORS } from '../../constants/categoryColors';
-import { Badge } from '../ui/Badge';
+import Badge from '../ui/Badge';
 
 interface Workout {
   title?: string;

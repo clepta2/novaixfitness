@@ -16,7 +16,7 @@ function MealItem({ meal }) {
   return (
     <View style={styles.mealItem}>
       <View style={[styles.mealIcon, { backgroundColor: color + '20' }]}>
-        <Ionicons name={icon} size={20} color={color} />
+        <Ionicons name={icon as any} size={20} color={color} />
       </View>
       <View style={styles.mealInfo}>
         <View style={styles.mealHeader}>

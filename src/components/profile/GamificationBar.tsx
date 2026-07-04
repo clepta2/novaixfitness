@@ -9,7 +9,9 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { getXPProgress } from '../../constants/gamification';
 import { LABELS } from '../../data/profileTexts';
 
-export default memo(function GamificationBar({ xp = 0 }) {
+interface Props { xp?: number }
+
+export default memo(function GamificationBar({ xp = 0 }: Props) {
   const { current, next, progress, xpInLevel, xpNeeded } = getXPProgress(xp);
   const progressAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -27,7 +29,7 @@ export default memo(function GamificationBar({ xp = 0 }) {
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
         <View style={[styles.levelBadge, { backgroundColor: current.color + '15' }]}>
-          <Ionicons name={current.icon} size={16} color={current.color} />
+          <Ionicons name={current.icon as any} size={16} color={current.color} />
           <Text style={[styles.levelText, { color: current.color }]}>Nv. {current.level}</Text>
         </View>
         <Text style={styles.levelName}>{current.name}</Text>

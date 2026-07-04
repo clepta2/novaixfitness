@@ -29,3 +29,7 @@ export { default as ProgressHero } from '../progress/ProgressHero';
 export { default as ProgressStats } from '../progress/ProgressStats';
 export { default as MeasurementTrends } from '../progress/MeasurementTrends';
 export { default as ProgressQuickActionsGrid } from '../progress/QuickActionsGrid';
+export { default as ProgressTabs } from '../progress/ProgressTabs';
+export { default as ProgressOverview } from '../progress/ProgressOverview';
+export { default as ProgressMeasurements } from '../progress/ProgressMeasurements';
+export { default as ProgressWeekly } from '../progress/ProgressWeekly';

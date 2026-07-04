@@ -8,7 +8,14 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import FavoriteButton from './FavoriteButton';
 
-export default memo(function ProductCard({ product, onPress, isFavorited, onToggleFavorite }) {
+type Props = {
+  product: any;
+  onPress: () => void;
+  isFavorited?: boolean;
+  onToggleFavorite?: () => void;
+};
+
+export default memo(function ProductCard({ product, onPress, isFavorited, onToggleFavorite }: Props) {
   const category = product?.marketplace_categories;
   const hasDiscount = product.original_price && product.original_price > product.price;
   const discountPercent = hasDiscount ? Math.round((1 - product.price / product.original_price) * 100) : 0;

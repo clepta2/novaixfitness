@@ -20,7 +20,7 @@ export function ChallengeMeta({ item }) {
   return (
     <>
       <View style={[metaStyles.iconContainer, { backgroundColor: color + '20' }]}>
-        <Ionicons name={icon} size={24} color={color} />
+        <Ionicons name={icon as any} size={24} color={color} />
       </View>
       <View style={metaStyles.info}>
         <Text style={metaStyles.title}>{item.title}</Text>

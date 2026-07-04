@@ -36,6 +36,10 @@ export interface ThemeColors {
   infoBg: string;
   waterBg: string;
 
+  // Overlays
+  overlay: string;
+  overlayDark: string;
+
   // Text
   textTitle: string;
   textDescription: string;
@@ -101,6 +105,10 @@ const darkTheme: ThemeColors = {
   infoBg: '#3B82F615',
   waterBg: '#3B82F615',
 
+  // Overlays
+  overlay: '#00000080',
+  overlayDark: '#000000CC',
+
   // Text
   textTitle: '#FFFFFF',
   textDescription: '#94A3B8',
@@ -165,6 +173,10 @@ const lightTheme: ThemeColors = {
   errorBg: '#EF444415',
   infoBg: '#3B82F615',
   waterBg: '#3B82F615',
+
+  // Overlays
+  overlay: '#00000040',
+  overlayDark: '#00000080',
 
   // Text
   textTitle: '#0F172A',

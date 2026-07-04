@@ -109,10 +109,9 @@ export {
   cacheExerciseLogs, getCachedExerciseLogs,
   addPendingAction, getPendingActions, clearPendingAction, clearAllPendingActions,
   getLastSync, updateLastSync,
-  isOnline, cacheWorkoutsForUser, cacheDailyWorkout, getCachedDailyWorkout,
+  isOnline,   cacheWorkoutsForUser, cacheDailyWorkout, getCachedDailyWorkout,
   cacheLibrary, getCachedLibrary, queueWorkoutCompletion, queueFavoriteAction,
   getPendingActionsCount,
-  cacheData, getCachedData, removeCachedData, getCachedOrFallback, cleanExpiredCache, getCacheStats,
   startAutoSync, stopAutoSync, forceSyncNow,
 } from './offline';
 

@@ -6,7 +6,9 @@ import { supabase } from '../../config/supabase';
 import React, { useState, useEffect, useRef } from 'react';
 import { SECTION_TITLES, MUSCLES } from '../../data/profileTexts';
 
-export default function MuscleMiniRadar({ userId }) {
+interface Props { userId?: string }
+
+export default function MuscleMiniRadar({ userId }: Props) {
   const [data, setData] = useState(null);
   const animatedValues = useRef(MUSCLES.map(() => new Animated.Value(0))).current;
 
@@ -22,8 +24,8 @@ export default function MuscleMiniRadar({ userId }) {
           supabase.from('user_workouts').select('workouts(category)').eq('user_id', userId).gte('completed_at', sixtyAgo).lt('completed_at', thirtyAgo),
         ]);
 
-        const processWorkouts = (workouts) => {
-          const counts = {};
+        const processWorkouts = (workouts: any[]) => {
+          const counts: Record<string, number> = {};
           (workouts || []).forEach(w => {
             const cat = (w.workouts?.category || '').toLowerCase();
             if (cat.includes('peito') || cat.includes('chest')) counts.chest = (counts.chest || 0) + 1;

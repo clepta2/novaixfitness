@@ -29,7 +29,7 @@ export default function ForumScreen() {
 
   useEffect(() => {
     if (dbPosts) {
-      setPosts(dbPosts.map(p => ({
+      setPosts((dbPosts as any[]).map(p => ({
         id: p.id, category: p.category,
         author: p.profiles?.name || p.author || 'Atleta',
         authorAvatar: p.profiles?.avatar_url || p.authorAvatar || null,
@@ -46,7 +46,7 @@ export default function ForumScreen() {
   const handleCreatePost = async (postData) => {
     if (!user) return;
     const { error } = await insert({ user_id: user.id, title: postData.title, content: postData.content, category: postData.category });
-    if (error) Alert.alert('Erro', 'Ao criar post: ' + (typeof error === 'string' ? error : error.message || String(error)));
+    if (error) Alert.alert('Erro', 'Ao criar post: ' + (typeof error === 'string' ? error : (error as any).message || String(error)));
     else refetch();
   };
 
@@ -82,7 +82,7 @@ export default function ForumScreen() {
           {filteredPosts.length === 0 ? (
             <ForumEmptyState />
           ) : (
-            filteredPosts.map(post => <ForumPost key={post.id} post={post} />)
+            filteredPosts.map(post => <ForumPost key={post.id} post={post} onPress={() => {}} />)
           )}
         </View>
 

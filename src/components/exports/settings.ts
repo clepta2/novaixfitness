@@ -12,3 +12,4 @@ export { default as ArticleCard } from '../blog/ArticleCard';
 export { default as ArticleDetail } from '../blog/ArticleDetail';
 export { default as BreathingExercise } from '../recovery/BreathingExercise';
 export { default as NotificationItem } from '../notifications/NotificationItem';
+export { default as NotificationConfig } from '../notifications/NotificationConfig';

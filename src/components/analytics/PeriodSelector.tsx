@@ -34,7 +34,7 @@ export default memo(function PeriodSelector({ selected, onSelect }) {
             accessibilityRole="button"
             accessibilityState={{ selected: selected === p.key }}
           >
-            <Ionicons name={p.icon} size={14} color={selected === p.key ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={p.icon as any} size={14} color={selected === p.key ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.periodText, selected === p.key && styles.periodTextActive]}>{p.label}</Text>
           </TouchableOpacity>
         ))}

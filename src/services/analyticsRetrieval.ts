@@ -44,7 +44,7 @@ export async function getUserMetrics(userId: string, days: number = 30): Promise
       totalEvents: data.length,
       workouts: data.filter(e => e.event_name === EVENTS.WORKOUT_COMPLETE).length,
       screenViews: data.filter(e => e.event_name === EVENTS.SCREEN_VIEW).length,
-      features: data.filter(e => e.event_name === EVENTS.FEATURE_USE).length,
+      features: data.filter(e => e.event_name === EVENTS.FEATURE_USED).length,
     };
   });
   return result.ok ? result.data : { totalEvents: 0, workouts: 0, screenViews: 0, features: 0 };

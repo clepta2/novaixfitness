@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors'
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useColors } from '../../context/ThemeContext';
-type Status = 'pending' | 'active' | 'suspended' | 'warning';
+type StatusType = 'pending' | 'active' | 'suspended' | 'warning';
 interface StatusCardProps {
  status: StatusType; title: string;
  message: string;

@@ -14,7 +14,24 @@ import { useRealtimeLikes } from '../../hooks/useRealtimeLikes';
 import CommentSection from './CommentSection';
 import PostActions from './PostActions';
 
-function PostCard({ post, onLike, onComment, currentUserId }) {
+interface PostCardPost {
+  id: string;
+  isLiked: boolean;
+  likes: number;
+  comments: number;
+  user: { name: string };
+  content: string;
+  image?: string;
+  createdAt?: string;
+  userId?: string;
+}
+
+function PostCard({ post, onLike, onComment, currentUserId }: {
+  post: PostCardPost;
+  onLike?: (id: string) => void;
+  onComment?: (id: string, text: string) => void;
+  currentUserId?: string;
+}) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(post.isLiked);
@@ -33,7 +50,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
     }
   }, [showComments]);
 
-  useRealtimeComments(post.id, (newComment) => {
+  useRealtimeComments(post.id, (newComment: any) => {
     setComments(prev => {
       if (prev.some(c => c.id === newComment.id)) return prev;
       return [...prev, newComment];

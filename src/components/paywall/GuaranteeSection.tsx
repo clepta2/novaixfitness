@@ -20,7 +20,7 @@ export default function GuaranteeSection() {
         <View key={item.icon} style={styles.itemWrapper}>
           <View style={styles.item}>
             <View style={styles.iconContainer}>
-              <Ionicons name={item.icon} size={18} color={COLORS.success} />
+              <Ionicons name={item.icon as any} size={18} color={COLORS.success} />
             </View>
             <Text style={styles.text}>{item.text}</Text>
           </View>

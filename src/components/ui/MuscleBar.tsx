@@ -1,6 +1,6 @@
 // src/components/ui/MuscleBar.tsx// Barra de progresso de musculo - NOVAIX FITNESS
 
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, type ViewStyle } from 'react-native'
 
 import { COLORS } from '../../constants/colors';
 
@@ -28,8 +28,7 @@ return (    <View style=
 {percentage }%</Text>      </View>      <View style=
 {styles.track }>        <View style=
 {[styles.fill, {
-width: `$
-{percentage }%`, backgroundColor: color }]} />      </View>    </View>  );
+width: `${percentage}%`, backgroundColor: color } as ViewStyle]} />      </View>    </View>  );
 }
 
 const styles = StyleSheet.create(

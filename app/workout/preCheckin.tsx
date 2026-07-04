@@ -82,7 +82,7 @@ export default function PreCheckinScreen() {
                 accessibilityRole="button"
                 onPress={() => setSelectedSupport(option.id)}
               >
-                <Ionicons name={option.icon} size={20} color={selectedSupport === option.id ? COLORS.primary : COLORS.textMuted} />
+                <Ionicons name={option.icon as any} size={20} color={selectedSupport === option.id ? COLORS.primary : COLORS.textMuted} />
                 <Text style={[styles.supportLabel, selectedSupport === option.id && styles.supportLabelActive]}>{option.label}</Text>
               </TouchableOpacity>
             ))}

@@ -49,7 +49,7 @@ function StatItem({ icon, value, color, delay }: StatItemProps): React.ReactElem
   return (
     <Animated.View style={[styles.statItem, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
       <View style={[styles.statIcon, { backgroundColor: color + '15' }]}>
-        <Ionicons name={icon} size={16} color={color} />
+        <Ionicons name={icon as any} size={16} color={color} />
       </View>
       <Text style={styles.statValue}>{value}</Text>
     </Animated.View>

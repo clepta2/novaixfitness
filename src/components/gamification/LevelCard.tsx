@@ -22,7 +22,7 @@ export default memo(function LevelCard({ xp = 0 }) {
   return (
     <View style={styles.container} accessibilityLabel={`Nivel ${current.level} - ${current.name}`}>
       <View style={[styles.iconWrap, { backgroundColor: current.color + '20' }]}>
-        <Ionicons name={current.icon} size={32} color={current.color} />
+        <Ionicons name={current.icon as any} size={32} color={current.color} />
       </View>
 
       <View style={styles.info}>

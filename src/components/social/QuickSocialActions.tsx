@@ -16,7 +16,7 @@ function QuickSocialActions({ onPress, badgeCounts = {} }) {
       {ACTIONS.map((a) => (
         <TouchableOpacity key={a.id} style={styles.card} onPress={() => onPress(a.id)} activeOpacity={0.7} accessibilityLabel={a.label} accessibilityRole="button">
           <View style={[styles.iconCircle, { backgroundColor: a.color + '20' }]}>
-            <Ionicons name={a.icon} size={22} color={a.color} />
+            <Ionicons name={a.icon as any} size={22} color={a.color} />
             {badgeCounts[a.id] > 0 && (
               <View style={styles.badge}><Text style={styles.badgeText}>{badgeCounts[a.id]}</Text></View>
             )}

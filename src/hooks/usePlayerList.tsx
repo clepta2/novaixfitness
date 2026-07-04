@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { dailyWorkouts as fallbackWorkouts, activeWorkout as fallbackActive } from '../data/dailyWorkouts';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../config/supabase';
-import { getUserPlan } from '../services/planGenerator';
+import { getUserWorkoutPlan as getUserPlan } from '../services/planGenerator';
 import { shouldAdaptPlan, analyzeUserPerformance, adaptWorkoutPlan, saveAdaptation, getAdaptationReason } from '../services/planAdaptation';
 
 const userLevelMap: Record<string, string> = { beginner: 'Iniciante', intermediate: 'Intermediario', advanced: 'Avancado' };
@@ -83,7 +83,7 @@ async function adaptIfNeeded(userId: string, userPlan: { title?: string; categor
     }
     return { ...w, exercises };
   }) };
-  const adapted = await adaptWorkoutPlan(userId, fullPlan, performance);
+  const adapted = await adaptWorkoutPlan(fullPlan, performance);
   await saveAdaptation(userId, fullPlan, adapted, getAdaptationReason(performance));
   return await getUserPlan(userId);
 }

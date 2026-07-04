@@ -24,7 +24,7 @@ function TimeSlotItem({ slot, rating, onRate }) {
             style={[styles.ratingBtn, rating === e.level && { backgroundColor: e.color + '30', borderColor: e.color }]}
             onPress={() => onRate(slot.id, e.level)}
           >
-            <Ionicons name={e.icon} size={14} color={rating === e.level ? e.color : COLORS.textMuted} />
+            <Ionicons name={e.icon as any} size={14} color={rating === e.level ? e.color : COLORS.textMuted} />
           </TouchableOpacity>
         ))}
       </View>

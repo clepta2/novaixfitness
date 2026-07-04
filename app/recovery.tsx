@@ -95,7 +95,7 @@ export default function RecoveryScreen() {
             <View style={styles.qualityRow}>
               {qualityOptions.map(opt => (
                 <TouchableOpacity key={opt.value} style={[styles.qualityBtn, sleepQuality === opt.value && { backgroundColor: opt.color + '20', borderColor: opt.color }]} onPress={() => setSleepQuality(opt.value)} accessibilityLabel={`Sono ${opt.label}`} accessibilityRole="button">
-                  <Ionicons name={opt.icon} size={20} color={sleepQuality === opt.value ? opt.color : COLORS.textMuted} />
+                  <Ionicons name={opt.icon as any} size={20} color={sleepQuality === opt.value ? opt.color : COLORS.textMuted} />
                   <Text style={[styles.qualityLabel, sleepQuality === opt.value && { color: opt.color }]}>{opt.label}</Text>
                 </TouchableOpacity>
               ))}

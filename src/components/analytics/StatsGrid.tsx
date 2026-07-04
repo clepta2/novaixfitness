@@ -16,7 +16,7 @@ export default function StatsGrid({ analytics }) {
     <View style={styles.grid}>
       {stats.map((stat, i) => (
         <View key={i} style={styles.card}>
-          <Ionicons name={stat.icon} size={20} color={COLORS.primary} />
+          <Ionicons name={stat.icon as any} size={20} color={COLORS.primary} />
           <Text style={styles.value}>{stat.value}</Text>
           <Text style={styles.label}>{stat.label}</Text>
         </View>

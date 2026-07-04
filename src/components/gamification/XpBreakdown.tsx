@@ -37,7 +37,7 @@ function XpBreakdown({ breakdown = {} }) {
           return (
             <View key={src.key} style={styles.legendItem}>
               <View style={[styles.dot, { backgroundColor: src.color }]} />
-              <Ionicons name={src.icon} size={12} color={src.color} />
+              <Ionicons name={src.icon as any} size={12} color={src.color} />
               <Text style={styles.legendLabel}>{src.label}</Text>
               <Text style={styles.legendValue}>{amount} XP</Text>
               <Text style={styles.legendPct}>{pct}%</Text>

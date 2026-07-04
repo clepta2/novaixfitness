@@ -82,7 +82,7 @@ export default function NutritionCalculator({ onApply }) {
       <View style={styles.goalRow}>
         {GOALS.map(g => (
           <TouchableOpacity key={g.key} style={[styles.goalBtn, goal === g.key && { backgroundColor: g.color }]} onPress={() => setGoal(g.key)}>
-            <Ionicons name={g.icon} size={18} color={goal === g.key ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={g.icon as any} size={18} color={goal === g.key ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.goalText, goal === g.key && styles.goalTextActive]}>{g.label}</Text>
           </TouchableOpacity>
         ))}

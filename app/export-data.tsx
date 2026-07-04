@@ -48,7 +48,7 @@ export default function ExportDataScreen() {
                 disabled={exporting !== null}
               >
                 <View style={styles.optionIcon}>
-                  <Ionicons name={option.icon} size={24} color={COLORS.primary} />
+                  <Ionicons name={option.icon as any} size={24} color={COLORS.primary} />
                 </View>
                 <View style={styles.optionInfo}>
                   <Text style={typography.h5}>{option.title}</Text>

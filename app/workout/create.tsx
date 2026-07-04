@@ -74,7 +74,7 @@ export default function CreateWorkoutScreen() {
                     onPress={() => updateForm('category', c.id)}
                   >
                     <View style={[styles.catIconWrap, { backgroundColor: (form.category === c.id ? COLORS.background : c.color) + '20' }]}>
-                      <Ionicons name={c.icon} size={20} color={form.category === c.id ? COLORS.background : c.color} />
+                      <Ionicons name={c.icon as any} size={20} color={form.category === c.id ? COLORS.background : c.color} />
                     </View>
                     <Text style={[styles.catLabel, form.category === c.id && { color: COLORS.background }]}>{c.label}</Text>
                   </TouchableOpacity>
@@ -89,7 +89,7 @@ export default function CreateWorkoutScreen() {
                     style={[styles.levelCard, form.level === l.id && { borderColor: LEVEL_COLORS[l.id], backgroundColor: LEVEL_COLORS[l.id] + '10' }]} 
                     onPress={() => updateForm('level', l.id)}
                   >
-                    <Ionicons name={l.icon} size={18} color={form.level === l.id ? LEVEL_COLORS[l.id] : COLORS.textMuted} />
+                    <Ionicons name={l.icon as any} size={18} color={form.level === l.id ? LEVEL_COLORS[l.id] : COLORS.textMuted} />
                     <Text style={[styles.levelLabel, form.level === l.id && { color: LEVEL_COLORS[l.id] }]}>{l.label}</Text>
                   </TouchableOpacity>
                 ))}

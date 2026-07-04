@@ -1,7 +1,7 @@
 // src/utils/async/retry.ts
 // Sistema de retry avançado com backoff e circuit breaker - NOVAIX FITNESS
 
-interface RetryOptions {
+export interface RetryOptions {
   maxRetries?: number;
   baseDelay?: number;
   maxDelay?: number;

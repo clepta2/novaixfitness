@@ -26,7 +26,7 @@ function EmptyState({ icon = 'search-outline', title, description, message, acti
     <Animated.View style={[styles.container, { opacity, transform: [{ translateY }] }]}>
       <View style={[styles.iconCircle, iconColor && { backgroundColor: iconColor + '15' }]}>
         <Ionicons
-          name={icon}
+          name={icon as any}
           size={ICON_SIZES.xl}
           color={iconColor || COLORS.textMuted}
         />

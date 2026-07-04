@@ -6,7 +6,9 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 import { DAY_NAMES_FULL, DAY_KEYS, CATEGORY_COLORS } from '../../data/weekPlan';
 
-function DayChip({ icon, text, borderColor }) {
+interface DayChipProps { icon?: React.ReactNode; text?: string; borderColor?: string }
+
+function DayChip({ icon, text, borderColor }: DayChipProps) {
   return (
     <View style={[styles.chip, borderColor && { borderColor }]}>
       {icon}
@@ -15,7 +17,9 @@ function DayChip({ icon, text, borderColor }) {
   );
 }
 
-export default function DayDetailView({ dayKey, dayData, onEdit, onStart }) {
+interface Props { dayKey?: string; dayData?: any; onEdit?: () => void; onStart?: () => void }
+
+export default function DayDetailView({ dayKey, dayData, onEdit, onStart }: Props) {
   return (
     <View style={styles.card}>
       <View style={styles.header}>

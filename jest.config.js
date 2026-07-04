@@ -25,6 +25,7 @@ module.exports = {
     'expo-audio': '<rootDir>/__mocks__/expo-audio.ts',
     'expo-video': '<rootDir>/__mocks__/expo-video.ts',
     'expo-crypto': '<rootDir>/__mocks__/expo-crypto.ts',
+    'expo-image': '<rootDir>/__mocks__/expo-image.js',
     'expo-haptics': '<rootDir>/__mocks__/expo-haptics.ts',
     'react-native-svg': '<rootDir>/__mocks__/react-native-svg.ts',
     'react-native-view-shot': '<rootDir>/__mocks__/react-native-view-shot.ts',

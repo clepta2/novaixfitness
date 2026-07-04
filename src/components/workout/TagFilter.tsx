@@ -50,7 +50,7 @@ export default function TagFilter({ selectedTags, onToggleTag, onClearAll }: Tag
                 style={[styles.categoryBtn, isExpanded && styles.categoryBtnActive, catActiveCount > 0 && styles.categoryBtnSelected]}
                 onPress={() => toggleCategory(catKey)}
               >
-                <Ionicons name={cat.icon} size={14} color={isExpanded || catActiveCount > 0 ? COLORS.primary : COLORS.textMuted} />
+                <Ionicons name={cat.icon as any} size={14} color={isExpanded || catActiveCount > 0 ? COLORS.primary : COLORS.textMuted} />
                 <Text style={[styles.categoryLabel, (isExpanded || catActiveCount > 0) && styles.categoryLabelActive]}>
                   {cat.label}
                 </Text>
@@ -72,7 +72,7 @@ export default function TagFilter({ selectedTags, onToggleTag, onClearAll }: Tag
                   style={[styles.tagBtn, isActive && styles.tagBtnActive]}
                   onPress={() => onToggleTag(expandedCategory, tag.id)}
                 >
-                  <Ionicons name={tag.icon} size={12} color={isActive ? COLORS.background : COLORS.textMuted} />
+                  <Ionicons name={tag.icon as any} size={12} color={isActive ? COLORS.background : COLORS.textMuted} />
                   <Text style={[styles.tagLabel, isActive && styles.tagLabelActive]}>{tag.label}</Text>
                 </TouchableOpacity>
               );

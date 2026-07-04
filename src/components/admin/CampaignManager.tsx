@@ -119,7 +119,7 @@ export default function CampaignManager() {
       <View style={styles.audienceRow}>
         {AUDIENCE_OPTIONS.map((opt) => (
           <TouchableOpacity key={opt.value} style={[styles.audienceBtn, audience === opt.value && styles.audienceActive]} onPress={() => setAudience(opt.value)} accessibilityLabel={`Público: ${opt.label}`} accessibilityRole="button" accessibilityState={{ selected: audience === opt.value }}>
-            <Ionicons name={opt.icon} size={16} color={audience === opt.value ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={opt.icon as any} size={16} color={audience === opt.value ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.audienceLabel, audience === opt.value && styles.audienceLabelActive]}>{opt.label}</Text>
           </TouchableOpacity>
         ))}

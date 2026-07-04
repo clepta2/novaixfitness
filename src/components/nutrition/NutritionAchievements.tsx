@@ -24,7 +24,7 @@ function AchievementCard({ achievement, unlocked }) {
         <Ionicons name={achievement.icon} size={24} color={unlocked ? achievement.color : COLORS.textMuted} />
       </View>
       <View style={styles.info}>
-        <Text style={[styles.title, unlocked && styles.titleUnlocked]}>{achievement.title}</Text>
+        <Text style={[styles.cardTitle, unlocked && styles.titleUnlocked]}>{achievement.title}</Text>
         <Text style={styles.desc}>{achievement.desc}</Text>
       </View>
       {unlocked && (
@@ -36,7 +36,9 @@ function AchievementCard({ achievement, unlocked }) {
   );
 }
 
-export default function NutritionAchievements({ userId }) {
+interface Props { userId?: string }
+
+export default function NutritionAchievements({ userId }: Props) {
   const [unlocked, setUnlocked] = useState(() => new Set());
   const [loading, setLoading] = useState(true);
 
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
   cardUnlocked: { backgroundColor: COLORS.success + '08' },
   iconContainer: { width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center' },
   info: { flex: 1 },
-  title: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textMuted },
+  cardTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: COLORS.textMuted },
   titleUnlocked: { color: COLORS.textTitle },
   desc: { fontFamily: 'Inter_400Regular', fontSize: 11, color: COLORS.textMuted, marginTop: 2 },
   badge: { padding: SPACING.xs },

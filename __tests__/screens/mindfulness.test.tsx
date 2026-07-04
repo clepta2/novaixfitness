@@ -44,7 +44,7 @@ jest.mock('../../src/styles', () => ({
 }));
 
 jest.mock('../../src/data/breathingExercises', () => ({
-  breathingExercises: [
+  BREATHING_EXERCISES: [
     {
       id: '478',
       name: '4-7-8 Relaxante',
@@ -152,13 +152,13 @@ describe('BreathingExercise', () => {
 
 describe('breathingExercises data', () => {
   it('exports valid exercises array', () => {
-    const { breathingExercises } = require('../../src/data/breathingExercises');
+    const { BREATHING_EXERCISES: breathingExercises } = require('../../src/data/breathingExercises');
     expect(Array.isArray(breathingExercises)).toBe(true);
     expect(breathingExercises.length).toBeGreaterThanOrEqual(4);
   });
 
   it('each exercise has required fields', () => {
-    const { breathingExercises } = require('../../src/data/breathingExercises');
+    const { BREATHING_EXERCISES: breathingExercises } = require('../../src/data/breathingExercises');
     breathingExercises.forEach((ex) => {
       expect(ex.id).toBeDefined();
       expect(ex.name).toBeDefined();
@@ -169,7 +169,7 @@ describe('breathingExercises data', () => {
   });
 
   it('phases have valid types', () => {
-    const { breathingExercises } = require('../../src/data/breathingExercises');
+    const { BREATHING_EXERCISES: breathingExercises } = require('../../src/data/breathingExercises');
     const validTypes = ['inhale', 'hold', 'exhale'];
     breathingExercises.forEach((ex) => {
       ex.phases.forEach((phase) => {

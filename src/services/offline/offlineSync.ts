@@ -9,7 +9,7 @@ import { getQueue, saveQueue, clearPendingAction, getPendingActionsCount } from 
 
 // Re-exports de cache e queue
 export { cacheWorkouts, getCachedWorkouts, cacheWorkoutDetail, getCachedWorkoutDetail, isWorkoutCached, cacheFavorites, getCachedFavorites, cacheProfile, getCachedProfile, cacheLibrary, getCachedLibrary, cacheDailyWorkout, getCachedDailyWorkout, cacheWorkoutsForUser, cacheExerciseLogs, getCachedExerciseLogs } from './offlineCache';
-export { addPendingAction, getPendingActions, clearPendingAction, clearAllPendingActions } from './offlineQueue';
+export { addPendingAction, getPendingActions, clearPendingAction, clearAllPendingActions, getPendingActionsCount } from './offlineQueue';
 
 const SYNC_KEY = '@novaix:last_sync';
 const MAX_RETRIES = 3;

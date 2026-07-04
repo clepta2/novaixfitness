@@ -14,7 +14,7 @@ export function OnboardingFooter({
   return (
     <View style={styles.footer}>
       <View style={styles.backWrap}>
-        <Button title={backLabel} variant="secondary" icon="arrow-back" iconPosition="left" onPress={onBack} size="md" />
+        <Button title={backLabel} variant="secondary" icon="arrow-back" iconPosition="left" onPress={onBack} size="md" loading={false} disabled={!canProceed} style={{}} />
       </View>
       <View style={styles.nextWrap}>
         <Button title={nextLabel} icon={loading ? undefined : 'arrow-forward'} iconPosition="right" onPress={onNext} disabled={!canProceed} loading={loading} size="md" />

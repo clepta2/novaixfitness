@@ -22,13 +22,4 @@ export {
 
 export { syncPendingActions, getPendingActionsCount } from './offlineSync';
 
-export {
-  cacheData,
-  getCachedData,
-  removeCachedData,
-  getCachedOrFallback,
-  cleanExpiredCache,
-  getCacheStats,
-} from './offlineCache';
-
 export { startAutoSync, stopAutoSync, forceSyncNow } from './autoSync';

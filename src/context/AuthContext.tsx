@@ -14,6 +14,8 @@ interface OnboardingData {
   gender?: string;
   weight?: number;
   height?: number;
+  age?: number;
+  birth_date?: string;
   cep?: string;
   state?: string;
   city?: string;
@@ -22,6 +24,8 @@ interface OnboardingData {
   level?: string;
   days_per_week?: number;
   daysPerWeek?: number;
+  availableDays?: number;
+  sessionDuration?: number;
   workout_location?: string;
   location?: string;
   gym_type?: string;
@@ -35,6 +39,8 @@ interface OnboardingData {
   preferredMuscles?: string[];
   dietary_restrictions?: string;
   dietaryRestrictions?: string;
+  allergies?: string;
+  restrictions?: string;
   instructor_type?: string;
   instructorType?: string;
   notification_channels?: string[];

@@ -70,7 +70,7 @@ export default function ExerciseFilters({
             style={[styles.muscleBtn, selectedMuscle === m.key && { backgroundColor: m.color }]}
             onPress={() => onSelectMuscle(m.key)}
           >
-            <Ionicons name={m.icon} size={14} color={selectedMuscle === m.key ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={m.icon as any} size={14} color={selectedMuscle === m.key ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.muscleText, selectedMuscle === m.key && styles.muscleTextActive]}>{m.label}</Text>
           </TouchableOpacity>
         ))}

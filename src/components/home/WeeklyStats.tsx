@@ -24,7 +24,7 @@ function WeeklyStats({ workouts = 0, minutes = 0, calories = 0 }) {
         {stats.map((stat, i) => (
           <View key={stat.label} style={styles.statItem}>
             <View style={[styles.iconWrap, { backgroundColor: stat.color + '15' }]}>
-              <Ionicons name={stat.icon} size={20} color={stat.color} />
+              <Ionicons name={stat.icon as any} size={20} color={stat.color} />
             </View>
             <Text style={styles.statValue}>{stat.value}</Text>
             <Text style={styles.statLabel}>{stat.label}</Text>

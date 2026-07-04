@@ -6,7 +6,7 @@ import { View, StyleSheet } from 'react-native'
 
 import { SPACING } from '../../constants/spacing';
 
-import { CategoryChip } from './CategoryChip';
+import CategoryChip from './CategoryChip';
 
 
 interface CategoryGridProps {

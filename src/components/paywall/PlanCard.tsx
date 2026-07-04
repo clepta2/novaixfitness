@@ -7,7 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function PlanCard({ plan, isSelected, onSelect }) {
+interface Props { plan?: any; isSelected?: boolean; onSelect?: (id: string) => void }
+
+export default memo(function PlanCard({ plan, isSelected, onSelect }: Props) {
   const [scaleAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {

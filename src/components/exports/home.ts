@@ -12,3 +12,5 @@ export { default as QuickActions } from '../home/QuickActions';
 export { default as CategoryGrid } from '../home/CategoryGrid';
 export { default as RecentActivity } from '../home/RecentActivity';
 export { default as StoreBanner } from '../home/StoreBanner';
+export { default as HomeSkeleton } from '../home/HomeSkeleton';
+export { default as BodySummary } from '../home/BodySummary';

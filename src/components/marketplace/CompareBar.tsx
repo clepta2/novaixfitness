@@ -4,7 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default memo(function CompareBar({ selectedProducts, onCompare, onClear, maxCompare = 3 }) {
+type Props = {
+  selectedProducts: any[];
+  onCompare: () => void;
+  onClear: () => void;
+  maxCompare?: number;
+};
+
+export default memo(function CompareBar({ selectedProducts, onCompare, onClear, maxCompare = 3 }: Props) {
   if (!selectedProducts || selectedProducts.length < 2) return null;
 
   return (

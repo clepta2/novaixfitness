@@ -7,14 +7,14 @@ import { View, Text, StyleSheet } from 'react-native'
 import { SPACING } from '../../constants/spacing';
 
 
-interface ProfileStatsRowProps {
-  value: number | string; label: string;
-
+interface Stat {
+  value: number | string;
+  label: string;
 }
 
-
 interface ProfileStatsRowProps {
-  stats: Stat[]; }
+  stats: Stat[];
+}
 
 export function ProfileStatsRow(
 { stats }: ProfileStatsRowProps) 

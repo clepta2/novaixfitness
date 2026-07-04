@@ -82,7 +82,7 @@ export default function SleepTracker({ userId }) {
             style={[styles.qualityBtn, quality === q.level && { backgroundColor: q.color + '30', borderColor: q.color }]}
             onPress={() => { setQuality(q.level); setSaved(false); }}
           >
-            <Ionicons name={q.icon} size={18} color={quality === q.level ? q.color : COLORS.textMuted} />
+            <Ionicons name={q.icon as any} size={18} color={quality === q.level ? q.color : COLORS.textMuted} />
             <Text style={[styles.qualityLabel, quality === q.level && { color: q.color }]}>{q.label}</Text>
           </TouchableOpacity>
         ))}
@@ -103,7 +103,7 @@ export default function SleepTracker({ userId }) {
 
       {avgQuality && (
         <View style={styles.summaryCard}>
-          <Ionicons name={avgQuality.icon} size={20} color={avgQuality.color} />
+          <Ionicons name={avgQuality.icon as any} size={20} color={avgQuality.color} />
           <View style={styles.summaryInfo}>
             <Text style={styles.summaryLabel}>Sono: {avgQuality.label}</Text>
             <Text style={styles.summaryDetail}>{duration}h de descanso</Text>

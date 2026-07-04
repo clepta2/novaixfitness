@@ -5,7 +5,13 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { typography } from '../../styles';
 
-export default memo(function FeaturedProducts({ products, loading, onPress }) {
+type Props = {
+  products: any[];
+  loading?: boolean;
+  onPress: (product: any) => void;
+};
+
+export default memo(function FeaturedProducts({ products, loading, onPress }: Props) {
   if (loading) {
     return (
       <View style={styles.container}>

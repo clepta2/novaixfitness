@@ -1,4 +1,4 @@
-﻿
+
 // app/assessment/index.tsx
 // Avaliacao com animacoes de entrada - NOVAIX FITNESS
 
@@ -114,7 +114,7 @@ export default function AssessmentScreen() {
         {/* Teste atual */}
         <Animated.View style={[styles.testCard, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
           <View style={[styles.testIcon, { backgroundColor: test.color + '15' }]}>
-            <Ionicons name={test.icon} size={32} color={test.color} />
+            <Ionicons name={test.icon as any} size={32} color={test.color} />
           </View>
           <Text style={styles.testTitle}>{test.title}</Text>
           <Text style={styles.testDescription}>{test.description}</Text>

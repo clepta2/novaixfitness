@@ -52,6 +52,7 @@ export const TABLES = {
   XP_LOGS: 'xp_logs',
   USER_ACHIEVEMENTS: 'user_achievements',
   DAILY_CHECK_INS: 'daily_check_ins',
+  GYM_CHECK_INS: 'gym_check_ins',
   FRIEND_CHALLENGES: 'friend_challenges',
   CHALLENGE_PROGRESS: 'challenge_progress',
   CHALLENGE_HISTORY: 'challenge_history',

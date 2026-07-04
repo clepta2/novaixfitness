@@ -20,7 +20,7 @@ export default function RightsList() {
       <Text style={typography.label}>SEUS DIREITOS (LGPD Art. 18)</Text>
       {RIGHTS.map((item, i) => (
         <View key={i} style={styles.item}>
-          <Ionicons name={item.icon} size={18} color={COLORS.primary} />
+          <Ionicons name={item.icon as any} size={18} color={COLORS.primary} />
           <Text style={typography.bodySmall}>{item.text}</Text>
         </View>
       ))}

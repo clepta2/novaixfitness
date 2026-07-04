@@ -25,7 +25,7 @@ function QuickActions() {
         {ACTIONS.map((action) => (
           <TouchableOpacity key={action.route} style={styles.btn} onPress={() => router.push(action.route)} activeOpacity={0.7}>
             <View style={[styles.iconWrap, { backgroundColor: action.color + '15' }]}>
-              <Ionicons name={action.icon} size={22} color={action.color} />
+              <Ionicons name={action.icon as any} size={22} color={action.color} />
             </View>
             <Text style={styles.label} numberOfLines={1}>{action.label}</Text>
           </TouchableOpacity>

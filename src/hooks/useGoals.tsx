@@ -60,7 +60,7 @@ export function useGoals() {
         .select('id, completed_at, duration').eq('user_id', user.id).eq('completed', true);
       const { data: profile } = await supabase.from('profiles')
         .select('total_xp').eq('id', user.id).single();
-      const streak = calcStreak(workouts || []);
+      const streak = calcStreak((workouts || []).map((w: any) => ({ ...w, completed: true })));
       setStats({
         totalWorkouts: workouts?.length || 0,
         streak, maxStreak: streak, totalMeals: 0, waterStreak: 0,
@@ -95,8 +95,8 @@ export function useGoals() {
     }
   }, [newGoalType, newGoalTarget, user?.id, loadData]);
 
-  const unlockedNow = useMemo(() => getUnlockedAchievements(stats), [stats]);
-  const newAchievements = useMemo(() => unlockedNow.filter((a: Achievement) => !unlocked.includes(a.id)), [unlockedNow, unlocked]);
+  const unlockedNow = useMemo(() => getUnlockedAchievements(stats as unknown as { [key: string]: number | undefined }), [stats]);
+  const newAchievements = useMemo(() => unlockedNow.filter(a => !unlocked.includes(a.id)), [unlockedNow, unlocked]);
 
   return {
     goals, unlocked, stats, newAchievements, showAddModal,

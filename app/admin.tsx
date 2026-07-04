@@ -1,4 +1,4 @@
-﻿
+
 // app/admin.tsx
 // Painel Administrativo com animacoes de entrada - NOVAIX FITNESS
 
@@ -111,7 +111,7 @@ export default function AdminScreen() {
                 style={[styles.tab, activeTab === tab.id && styles.tabActive]}
                 onPress={() => setActiveTab(tab.id)}
               >
-                <Ionicons name={tab.icon} size={16} color={activeTab === tab.id ? COLORS.primary : COLORS.textMuted} />
+                <Ionicons name={tab.icon as any} size={16} color={activeTab === tab.id ? COLORS.primary : COLORS.textMuted} />
                 <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>{tab.label}</Text>
               </TouchableOpacity>
             ))}

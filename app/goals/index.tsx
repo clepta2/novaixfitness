@@ -56,7 +56,7 @@ export default function GoalsScreen() {
     return (
       <View style={styles.goalCard}>
         <View style={styles.goalRow}>
-          <Ionicons name={gt?.icon || 'flag'} size={18} color={COLORS.primary} />
+          <Ionicons name={(gt?.icon || 'flag') as any} size={18} color={COLORS.primary} />
           <Text style={styles.goalTitle}>{gt?.label || item.goal_type}</Text>
           <Text style={styles.goalPct}>{Math.round(progress)}%</Text>
         </View>
@@ -95,7 +95,7 @@ export default function GoalsScreen() {
             <View style={styles.gtGrid}>
               {GOAL_TYPES.map((gt) => (
                 <TouchableOpacity accessibilityLabel={gt.label} accessibilityRole="button" key={gt.id} style={[styles.gtCard, newGoalType === gt.id && styles.gtActive]} onPress={() => setNewGoalType(gt.id)}>
-                  <Ionicons name={gt.icon} size={18} color={newGoalType === gt.id ? COLORS.primary : COLORS.textMuted} />
+                  <Ionicons name={gt.icon as any} size={18} color={newGoalType === gt.id ? COLORS.primary : COLORS.textMuted} />
                   <Text style={[styles.gtLabel, newGoalType === gt.id && { color: COLORS.primary }]}>{gt.label}</Text>
                 </TouchableOpacity>
               ))}

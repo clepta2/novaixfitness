@@ -26,7 +26,7 @@ export default function AiHubScreen() {
       <View style={styles.tabBar}>
         {AI_TABS.map((tab) => (
           <TouchableOpacity key={tab.id} style={[styles.tab, activeTab === tab.id && styles.tabActive]} onPress={() => setActiveTab(tab.id)} accessibilityLabel={`Aba ${tab.label}`} accessibilityRole="button">
-            <Ionicons name={tab.icon} size={18} color={activeTab === tab.id ? COLORS.primary : COLORS.textMuted} />
+            <Ionicons name={tab.icon as any} size={18} color={activeTab === tab.id ? COLORS.primary : COLORS.textMuted} />
             <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>{tab.label}</Text>
           </TouchableOpacity>
         ))}

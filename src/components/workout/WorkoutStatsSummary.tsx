@@ -39,7 +39,7 @@ function StatCard({ icon, value, label, color, delay = 0 }: StatCardProps): Reac
   return (
     <Animated.View style={[styles.card, { borderLeftColor: color, opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
       <View style={[styles.iconContainer, { backgroundColor: color + '15' }]}>
-        <Ionicons name={icon} size={14} color={color} />
+        <Ionicons name={icon as any} size={14} color={color} />
       </View>
       <Text style={[styles.value, { color }]}>{value}</Text>
       <Text style={styles.label}>{label}</Text>
