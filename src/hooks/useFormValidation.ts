@@ -64,13 +64,25 @@ export function useFormValidation({
     
     // Validar se o campo já foi tocado
     if (touched[field]) {
-      const result = validateField(field);
-      setErrors(prev => ({
-        ...prev,
-        [field]: result.valid ? '' : result.error || '',
-      }));
+      const fieldRules = validationRules[field];
+      if (fieldRules) {
+        let valid = true;
+        let error = '';
+        for (const rule of fieldRules) {
+          const result = rule(value);
+          if (!result.valid) {
+            valid = false;
+            error = result.error || '';
+            break;
+          }
+        }
+        setErrors(prev => ({
+          ...prev,
+          [field]: valid ? '' : error,
+        }));
+      }
     }
-  }, [touched, validateField]);
+  }, [touched, validationRules]);
 
   const setTouched = useCallback((field: string) => {
     setTouchedState(prev => ({ ...prev, [field]: true }));
@@ -129,7 +141,7 @@ export function useFormValidation({
     error: touched[field] ? errors[field] : undefined,
   }), [values, errors, touched, setValue, setTouched]);
 
-  const isValid = Object.keys(errors).every(key => !errors[key]);
+  const isValid = Object.keys(validationRules).every(key => touched[key] && !errors[key]);
 
   return {
     values,

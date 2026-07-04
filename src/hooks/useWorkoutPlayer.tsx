@@ -104,14 +104,25 @@ export default function useWorkoutPlayer(): UseWorkoutPlayerReturn {
 
     if (!isOnline && user?.id && workout?.id) {
       await queueWorkoutCompletion(user.id, workout.id, mappedLogs, timer.elapsed);
-      Alert.alert('Salvo offline', 'Treino sera sincronizado quando voce estiver online.');
+      Alert.alert('Salvo offline', 'Treino será sincronizado quando você estiver online.');
       timer.stopWorkout();
       router.back();
       return;
     }
-    gamRef.current = await saveCompleteWorkout(user?.id, workout, mappedLogs, timer.elapsed);
-    if (gamRef.current?.xpGained && gamRef.current.xpGained > 0) { setXpAmount(gamRef.current.xpGained); setShowXP(true); }
-    setShowRating(true);
+
+    try {
+      gamRef.current = await saveCompleteWorkout(user?.id, workout, mappedLogs, timer.elapsed);
+      if (gamRef.current?.xpGained && gamRef.current.xpGained > 0) {
+        setXpAmount(gamRef.current.xpGained);
+        setShowXP(true);
+      }
+      setShowRating(true);
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao salvar treino:', err);
+      Alert.alert('Erro', 'Não foi possível salvar o treino. Tente novamente.');
+      timer.stopWorkout();
+      router.back();
+    }
   }, [isOnline, user, workout, timer, router]);
 
   const handleRatingSubmit = useCallback(async ({ rating, comment }: RatingData): Promise<void> => {

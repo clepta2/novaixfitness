@@ -62,7 +62,7 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
               'O Coach IA esta disponivel apenas para assinantes dos planos Intermediario, Premium e Ultra Premium com assinatura ativa.',
               [
                 { text: 'Voltar', onPress: () => router.back() },
-                { text: 'Ver Planos', onPress: () => { router.back(); router.push('/paywall'); } },
+                { text: 'Ver Planos', onPress: () => router.push('/paywall') },
               ],
               { cancelable: false },
             );

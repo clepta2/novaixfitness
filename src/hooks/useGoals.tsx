@@ -40,40 +40,48 @@ export function useGoals() {
 
   const loadData = useCallback(async () => {
     if (!user?.id) return;
-    const { data: goalsData } = await supabase.from('short_term_goals')
-      .select('*').eq('user_id', user.id).eq('completed', false)
-      .order('created_at', { ascending: false });
-    setGoals((goalsData || []) as Goal[]);
+    try {
+      const { data: goalsData } = await supabase.from('short_term_goals')
+        .select('*').eq('user_id', user.id).eq('completed', false)
+        .order('created_at', { ascending: false });
+      setGoals((goalsData || []) as Goal[]);
 
-    const { data: unlockedData } = await supabase.from('user_achievements')
-      .select('achievement_id').eq('user_id', user.id);
-    setUnlocked(unlockedData?.map(a => a.achievement_id as string) || []);
+      const { data: unlockedData } = await supabase.from('user_achievements')
+        .select('achievement_id').eq('user_id', user.id);
+      setUnlocked(unlockedData?.map(a => a.achievement_id as string) || []);
 
-    const { data: workouts } = await supabase.from('user_workouts')
-      .select('id, completed_at').eq('user_id', user.id).eq('completed', true);
-    const { data: profile } = await supabase.from('profiles')
-      .select('total_xp').eq('id', user.id).single();
-    setStats({
-      totalWorkouts: workouts?.length || 0,
-      streak: 0, totalMeals: 0, waterStreak: 0,
-      totalXp: profile?.total_xp || 0,
-    });
+      const { data: workouts } = await supabase.from('user_workouts')
+        .select('id, completed_at').eq('user_id', user.id).eq('completed', true);
+      const { data: profile } = await supabase.from('profiles')
+        .select('total_xp').eq('id', user.id).single();
+      setStats({
+        totalWorkouts: workouts?.length || 0,
+        streak: 0, totalMeals: 0, waterStreak: 0,
+        totalXp: profile?.total_xp || 0,
+      });
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar metas:', err);
+    }
   }, [user?.id]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
   const addGoal = useCallback(async () => {
     if (!newGoalType || !newGoalTarget || !user?.id) return;
-    const goalType = GOAL_TYPES.find(g => g.id === newGoalType);
-    await supabase.from('short_term_goals').insert({
-      user_id: user.id, goal_type: newGoalType,
-      target_value: parseFloat(newGoalTarget),
-      target_unit: goalType?.unit, target_days: 30,
-    });
-    setNewGoalType(null);
-    setNewGoalTarget('');
-    setShowAddModal(false);
-    loadData();
+    try {
+      const goalType = GOAL_TYPES.find(g => g.id === newGoalType);
+      await supabase.from('short_term_goals').insert({
+        user_id: user.id, goal_type: newGoalType,
+        target_value: parseFloat(newGoalTarget),
+        target_unit: goalType?.unit, target_days: 30,
+      });
+      setNewGoalType(null);
+      setNewGoalTarget('');
+      setShowAddModal(false);
+      loadData();
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao adicionar meta:', err);
+    }
   }, [newGoalType, newGoalTarget, user?.id, loadData]);
 
   const unlockedNow = getUnlockedAchievements(stats);
