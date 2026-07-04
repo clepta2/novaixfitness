@@ -127,7 +127,7 @@ export default function SocialScreen() {
     processingLikes.current.add(postId);
     try {
       await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
-        const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
+        const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).maybeSingle();
         if (ext) {
           await supabase.from('post_likes').delete().eq('id', ext.id);
           setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: false, likes: Math.max(0, p.likes - 1) } : p));
