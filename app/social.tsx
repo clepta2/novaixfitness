@@ -49,9 +49,9 @@ export default function SocialScreen() {
     loadStories();
     loadCheckIns();
     loadUserLikes();
-  }, [user?.id]);
+  }, [user?.id, loadStories, loadCheckIns, loadUserLikes]);
 
-  const loadUserLikes = async () => {
+  const loadUserLikes = useCallback(async () => {
     if (!user?.id) return;
     try {
       const { data } = await supabase.from('post_likes').select('post_id').eq('user_id', user.id);
@@ -62,8 +62,9 @@ export default function SocialScreen() {
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar likes:', err);
     }
-  };
-  const loadStories = async () => {
+  }, [user?.id]);
+
+  const loadStories = useCallback(async () => {
     if (!user?.id) return;
     try {
       const data = await getActiveStories(user.id) as any[];
@@ -78,16 +79,16 @@ export default function SocialScreen() {
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar stories:', err);
     }
-  };
+  }, [user?.id]);
 
-  const loadCheckIns = async () => {
+  const loadCheckIns = useCallback(async () => {
     try {
       const data = await getRecentCheckIns(5);
       setRecentCheckIns(data);
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar check-ins:', err);
     }
-  };
+  }, []);
   useEffect(() => {
     if (dbPosts) {
       setPosts(dbPosts.map(p => ({
@@ -98,7 +99,7 @@ export default function SocialScreen() {
       })));
       loadUserLikes();
     }
-  }, [dbPosts]);
+  }, [dbPosts, loadUserLikes]);
   const onInsert = useCallback((p) => setPosts(prev => prev.some(x => x.id === p.id) ? prev : [p, ...prev]), []);
   const onUpdate = useCallback((u) => setPosts(prev => prev.map(p => p.id === u.id ? { ...p, likes: u.likes, comments: u.comments } : p)), []);
   const onDelete = useCallback((id) => setPosts(prev => prev.filter(p => p.id !== id)), []);
@@ -116,7 +117,7 @@ export default function SocialScreen() {
     } finally {
       setRefreshing(false);
     }
-  }, [refetch, user?.id]);
+  }, [refetch, user?.id, loadStories, loadCheckIns]);
   const handleLike = async (postId) => {
     if (!user || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);
