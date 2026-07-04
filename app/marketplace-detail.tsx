@@ -53,8 +53,14 @@ export default function MarketplaceDetailScreen() {
     }
   };
 
-  const handleBuy = () => {
-    if (product?.affiliate_url) Linking.openURL(product.affiliate_url);
+  const handleBuy = async () => {
+    if (product?.affiliate_url) {
+      try {
+        await Linking.openURL(product.affiliate_url);
+      } catch (err) {
+        if (__DEV__) console.error('Erro ao abrir link:', err);
+      }
+    }
   };
 
   if (loading) return <View style={[layout.screen, styles.centered]}><ActivityIndicator size="large" color={COLORS.primary} /></View>;
