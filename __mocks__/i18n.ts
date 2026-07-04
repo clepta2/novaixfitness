@@ -11,19 +11,27 @@ const translations = {
 };
 
 const I18nContext = React.createContext({
-  t: (key, params = {}) => {
+  t: (key: string, params: Record<string, any> = {}) => {
     const tr = translations[key] || key;
-    return Object.entries(params).reduce((s, [k, v]) => s.replace(`{${k}}`, v), tr);
-  }, locale: 'pt', setLocale: () => {},
+    return Object.entries(params).reduce((s: string, [k, v]) => s.replace(`{${k}}`, String(v)), tr);
+  },
+  translateText: async (text: string) => text,
+  locale: 'pt',
+  changeLocale: () => {},
+  translator: { translate: (text: string) => ({ text, matched: false }) },
 });
 
 module.exports = {
-  I18nProvider: ({ children }) => React.createElement(I18nContext.Provider, {
+  I18nProvider: ({ children }: { children: React.ReactNode }) => React.createElement(I18nContext.Provider, {
     value: {
-      t: (key, params = {}) => {
+      t: (key: string, params: Record<string, any> = {}) => {
         const tr = translations[key] || key;
-        return Object.entries(params).reduce((s, [k, v]) => s.replace(`{${k}}`, v), tr);
-      }, locale: 'pt', setLocale: () => {},
+        return Object.entries(params).reduce((s: string, [k, v]) => s.replace(`{${k}}`, String(v)), tr);
+      },
+      translateText: async (text: string) => text,
+      locale: 'pt',
+      changeLocale: () => {},
+      translator: { translate: (text: string) => ({ text, matched: false }) },
     },
   }, children),
   useI18n: () => React.useContext(I18nContext),
