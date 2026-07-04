@@ -17,6 +17,7 @@ import { styles } from '../src/styles/marketplaceDetailStyles';
 export default function MarketplaceDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const productId = Array.isArray(id) ? id[0] : id;
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
@@ -25,15 +26,15 @@ export default function MarketplaceDetailScreen() {
 
   useEffect(() => {
     async function load() {
-      if (!id) return;
+      if (!productId) return;
       try {
-        const p = await getProductById(id);
+        const p = await getProductById(productId);
         setProduct(p);
         if (p.category_id) {
-          const rel = await getRelatedProducts(id, p.category_id);
+          const rel = await getRelatedProducts(productId, p.category_id);
           setRelated(rel);
         }
-        if (user?.id) setFavorited(await isFavorited(user.id, id));
+        if (user?.id) setFavorited(await isFavorited(user.id, productId));
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar produto:', err);
       } finally {
@@ -41,12 +42,12 @@ export default function MarketplaceDetailScreen() {
       }
     }
     load();
-  }, [id, user?.id]);
+  }, [productId, user?.id]);
 
   const handleToggleFavorite = async () => {
     if (!user?.id) return;
     try {
-      setFavorited(await toggleFavorite(user.id, id));
+      setFavorited(await toggleFavorite(user.id, productId));
     } catch (err) {
       if (__DEV__) console.error('Erro ao alternar favorito:', err);
     }
@@ -122,7 +123,7 @@ export default function MarketplaceDetailScreen() {
             </TouchableOpacity>
           </View>
 
-          <ProductReviews productId={id} />
+          <ProductReviews productId={productId} />
 
           {related.length > 0 && (
             <View style={styles.relatedSection}>
