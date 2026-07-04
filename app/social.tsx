@@ -100,7 +100,10 @@ export default function SocialScreen() {
       loadUserLikes();
     }
   }, [dbPosts, loadUserLikes]);
-  const onInsert = useCallback((p) => setPosts(prev => prev.some(x => x.id === p.id) ? prev : [p, ...prev]), []);
+  const onInsert = useCallback((p) => {
+    setPosts(prev => prev.some(x => x.id === p.id) ? prev : [{ ...p, postType: 'text', secondImage: null, isLiked: false, createdAt: 'Agora' }, ...prev]);
+    loadUserLikes();
+  }, [loadUserLikes]);
   const onUpdate = useCallback((u) => setPosts(prev => prev.map(p => p.id === u.id ? { ...p, likes: u.likes, comments: u.comments } : p)), []);
   const onDelete = useCallback((id) => setPosts(prev => prev.filter(p => p.id !== id)), []);
   useRealtimePosts(onInsert, onUpdate, onDelete);
