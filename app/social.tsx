@@ -180,7 +180,7 @@ export default function SocialScreen() {
           </TouchableOpacity>
         </View>
         <SocialHub badgeCounts={{ feed: 2, challenges: 1 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} />}>
-          {stories.length > 0 && <StoryRing currentUserId={user?.id} onViewStory={handleViewStory} />}
+          {stories.length > 0 && <StoryRing currentUserId={user?.id} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />}
           <QuickSocialActions onPress={handleQuickAction} />
           <SocialFeed posts={posts} loading={loading} currentUserId={user?.id} onLike={handleLike} onComment={handleComment} recentCheckIns={recentCheckIns} />
           <WorkoutGroups currentUserId={user?.id} onSelectGroup={handleSelectGroup} />
