@@ -49,15 +49,29 @@ export default function SocialScreen() {
     loadCheckIns();
   }, [user?.id]);
   const loadStories = async () => {
-    const data = await getActiveStories(user?.id);
-    const grouped = data.reduce((acc, s) => {
-      if (!acc[s.user_id]) acc[s.user_id] = [];
-      acc[s.user_id].push(s);
-      return acc;
-    }, {});
-    setStories(Object.entries(grouped).map(([userId, userStories]) => ({
-      userId, name: userStories[0].profiles?.name || 'User', avatar: userStories[0].profiles?.avatar_url, stories: userStories, seen: false,
-    })));
+    if (!user?.id) return;
+    try {
+      const data = await getActiveStories(user.id) as any[];
+      const grouped = data.reduce((acc: any, s: any) => {
+        if (!acc[s.user_id]) acc[s.user_id] = [];
+        acc[s.user_id].push(s);
+        return acc;
+      }, {});
+      setStories(Object.entries(grouped).map(([userId, userStories]: [string, any]) => ({
+        userId, name: userStories[0].profiles?.name || 'User', avatar: userStories[0].profiles?.avatar_url || null, stories: userStories, seen: false,
+      })));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar stories:', err);
+    }
+  };
+
+  const loadCheckIns = async () => {
+    try {
+      const data = await getRecentCheckIns(undefined, 5);
+      setRecentCheckIns(data);
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao carregar check-ins:', err);
+    }
   };
   const loadCheckIns = async () => {
     const data = await getRecentCheckIns(5);
