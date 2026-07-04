@@ -1,31 +1,42 @@
-// __tests__/services/liveWorkouts.test.js
+// __tests__/services/liveWorkouts.test.ts
+// Mock with both maybeSingle terminal and .then for non-terminal chains
 
 jest.mock('../../src/config/supabase', () => {
   const state = { data: null, error: null };
   const chain = {};
-  chain.from = jest.fn(() => chain);
-  chain.select = jest.fn(() => chain);
-  chain.eq = jest.fn(() => chain);
-  chain.insert = jest.fn(() => chain);
-  chain.update = jest.fn(() => chain);
-  chain.single = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
-  chain.maybeSingle = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
-  chain.then = (resolve) => Promise.resolve({ data: state.data, error: state.error }).then(resolve);
-  chain._setData = (d) => { state.data = d; };
-  chain._setError = (e) => { state.error = e; };
-  chain._reset = () => {
-    state.data = null; state.error = null;
-    chain.from.mockReturnValue(chain);
-    chain.select.mockReturnValue(chain);
-    chain.eq.mockReturnValue(chain);
-    chain.insert.mockReturnValue(chain);
-    chain.update.mockReturnValue(chain);
-    chain.single.mockImplementation(() => Promise.resolve({ data: null, error: null }));
-    chain.maybeSingle.mockImplementation(() => Promise.resolve({ data: null, error: null }));
+  let rpcResult = { data: null, error: null };
+
+  const resetChain = () => {
+    chain.from = jest.fn(() => chain);
+    chain.select = jest.fn(() => chain);
+    chain.eq = jest.fn(() => chain);
+    chain.insert = jest.fn(() => chain);
+    chain.update = jest.fn(() => chain);
+    chain.delete = jest.fn(() => chain);
+    chain.upsert = jest.fn(() => chain);
+    chain.single = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+    chain.maybeSingle = jest.fn(() => Promise.resolve({ data: state.data, error: state.error }));
+    chain.in = jest.fn(() => chain);
+    chain.is = jest.fn(() => chain);
+    chain.order = jest.fn(() => chain);
+    chain.limit = jest.fn(() => chain);
+    chain.channel = jest.fn(() => ({ on: jest.fn().mockReturnThis(), subscribe: jest.fn() }));
+    chain.removeChannel = jest.fn();
+    // .then for chains without terminal method (update, insert without select)
+    chain.then = (resolve, reject) => Promise.resolve({ data: state.data, error: state.error }).then(resolve, reject);
+    chain.rpc = jest.fn().mockImplementation(() => Promise.resolve(rpcResult));
   };
-  chain._reset();
-  chain.rpc = jest.fn().mockResolvedValue({ data: null, error: null });
-  return { supabase: chain };
+
+  resetChain();
+
+  return {
+    supabase: Object.defineProperties(chain, {
+      _setData: { value: (d) => { state.data = d; }, writable: true },
+      _setError: { value: (e) => { state.error = e; }, writable: true },
+      _setRpc: { value: (r) => { rpcResult = r; }, writable: true },
+      _reset: { value: () => { state.data = null; state.error = null; rpcResult = { data: null, error: null }; resetChain(); }, writable: true },
+    }),
+  };
 });
 
 const { supabase: mockSupabase } = require('../../src/config/supabase');
@@ -39,7 +50,7 @@ describe('Live Workouts Service', () => {
 
   describe('createLive', () => {
     it('should create a live workout', async () => {
-      mockSupabase.single.mockImplementation(() => Promise.resolve({
+      mockSupabase.maybeSingle.mockImplementation(() => Promise.resolve({
         data: { id: 'live-1', title: 'Morning HIIT', host_id: 'host-1', status: 'scheduled' }, error: null
       }));
 
@@ -52,7 +63,7 @@ describe('Live Workouts Service', () => {
 
   describe('joinLive', () => {
     it('should add participant to live', async () => {
-      mockSupabase.single
+      mockSupabase.maybeSingle
         .mockImplementationOnce(() => Promise.resolve({ data: null, error: { code: 'PGRST116' } }))
         .mockImplementationOnce(() => Promise.resolve({ data: { id: 'p-new', role: 'participant' }, error: null }));
 
@@ -63,7 +74,7 @@ describe('Live Workouts Service', () => {
     });
 
     it('should return existing participant if already joined', async () => {
-      mockSupabase.single.mockImplementation(() => Promise.resolve({ data: { id: 'p1' }, error: null }));
+      mockSupabase.maybeSingle.mockImplementation(() => Promise.resolve({ data: { id: 'p1' }, error: null }));
 
       const result = await joinLive('live-1', 'user-1');
 
@@ -73,7 +84,7 @@ describe('Live Workouts Service', () => {
 
   describe('sendMessage', () => {
     it('should send a message to live chat', async () => {
-      mockSupabase.single.mockImplementation(() => Promise.resolve({
+      mockSupabase.maybeSingle.mockImplementation(() => Promise.resolve({
         data: { id: 'msg-1', message: 'Hello!', type: 'chat' }, error: null
       }));
 

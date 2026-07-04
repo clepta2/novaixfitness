@@ -21,18 +21,19 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'test-workout-id' }),
 }));
 
-// Mock do Supabase
-jest.mock('../../config/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-        })),
-      })),
-    })),
-  },
-}));
+// Mock do Supabase — chain completa com maybeSingle
+jest.mock('../../config/supabase', () => {
+  const chain = {};
+  chain.from = jest.fn(() => chain);
+  chain.select = jest.fn(() => chain);
+  chain.eq = jest.fn(() => chain);
+  chain.single = jest.fn().mockResolvedValue({ data: null, error: null });
+  chain.maybeSingle = jest.fn().mockResolvedValue({
+    data: { id: 'w1', title: 'Test Workout', duration_minutes: 30, video_id: 'vid', exercises: [] },
+    error: null,
+  });
+  return { supabase: chain };
+});
 
 // Mock dos serviços
 jest.mock('../../services/workoutSaver', () => ({
@@ -115,15 +116,16 @@ describe('useWorkoutPlayer', () => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with loading state', () => {
-    const { result } = renderHook(() => useWorkoutPlayer());
-
-    expect(result.current.loading).toBe(true);
-    expect(result.current.workout).toBeNull();
+  it('should initialize with loading then finish', async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useWorkoutPlayer());
+    await waitForNextUpdate();
+    expect(result.current.loading).toBe(false);
+    expect(result.current.workout).not.toBeNull();
   });
 
-  it('should toggle voice coach', () => {
-    const { result } = renderHook(() => useWorkoutPlayer());
+  it('should toggle voice coach', async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useWorkoutPlayer());
+    await waitForNextUpdate();
 
     act(() => {
       result.current.toggleVoiceCoach();
@@ -133,7 +135,8 @@ describe('useWorkoutPlayer', () => {
   });
 
   it('should dismiss rating', async () => {
-    const { result } = renderHook(() => useWorkoutPlayer());
+    const { result, waitForNextUpdate } = renderHook(() => useWorkoutPlayer());
+    await waitForNextUpdate();
 
     await act(async () => {
       await result.current.handleWorkoutComplete();
@@ -149,7 +152,8 @@ describe('useWorkoutPlayer', () => {
   });
 
   it('should handle workout completion', async () => {
-    const { result } = renderHook(() => useWorkoutPlayer());
+    const { result, waitForNextUpdate } = renderHook(() => useWorkoutPlayer());
+    await waitForNextUpdate();
 
     await act(async () => {
       await result.current.handleWorkoutComplete();
