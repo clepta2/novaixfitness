@@ -95,7 +95,7 @@ function GamificationContent() {
       </Animated.View>
 
       <View style={styles.section}>
-        <LevelCard xp={data?.totalXP || 0} />
+        <LevelCard xp={data?.total_xp || data?.totalXP || 0} />
       </View>
 
       <View style={styles.section}>
