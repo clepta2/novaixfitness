@@ -111,7 +111,8 @@ describe('Componentes com tema reativo', () => {
 
   describe('LoadingState', () => {
     it('exporta corretamente', () => {
-      const { LoadingState } = require('../../src/components/ui/LoadingState');
+      const mod = require('../../src/components/ui/LoadingState');
+      const LoadingState = mod.default || mod.LoadingState;
       expect(LoadingState).toBeDefined();
       expect(typeof LoadingState).toBe('function');
     });
@@ -119,7 +120,8 @@ describe('Componentes com tema reativo', () => {
 
   describe('Divider', () => {
     it('exporta corretamente', () => {
-      const { Divider } = require('../../src/components/ui/Divider');
+      const mod = require('../../src/components/ui/Divider');
+      const Divider = mod.default || mod.Divider;
       expect(Divider).toBeDefined();
       expect(typeof Divider).toBe('function');
     });
