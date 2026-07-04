@@ -105,8 +105,8 @@ export default function DashboardScreen() {
               <Text style={[styles.bmiValue, { color: parseFloat(bmi) < 25 ? COLORS.success : COLORS.attention }]}>{bmi}</Text>
             </View>
             <View style={styles.bmiRight}>
-              <Text style={typography.caption}>Altura: {data.height || '-'}cm</Text>
-              <Text style={typography.caption}>Peso: {data.weight || '-'}kg</Text>
+              <Text style={typography.caption}>Altura: {data.height ?? '-'}cm</Text>
+              <Text style={typography.caption}>Peso: {data.weight ?? '-'}kg</Text>
               <Text style={[typography.bodySmall, { color: COLORS.primary }]}>Ver detalhes →</Text>
             </View>
           </TouchableOpacity>
