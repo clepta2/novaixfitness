@@ -2,11 +2,12 @@
 // app/gamification.tsx
 // Gamification com rankings animados e melhorias visuais - NOVAIX FITNESS
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, RefreshControl, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
+import { SHADOWS } from '../src/constants/shadows';
 import { ACHIEVEMENTS } from '../src/constants/gamification';
 import { Header, ErrorBoundary, LevelCard, AchievementGrid, GamificationChallenges, XpBreakdown, RankingCard, Loading, EmptyState } from '../src/components';
 import { useGamification } from '../src/hooks/useGamification';

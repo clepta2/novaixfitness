@@ -58,8 +58,9 @@ export default function LibraryScreen() {
         { text: t('library.later'), style: 'cancel' },
         { text: t('library.seePlans'), onPress: () => router.push('/paywall') }
       ]);
-      router.push({ pathname: '/workout-detail', params: { id: w.id } });
+      return;
     }
+    router.push({ pathname: '/workout-detail', params: { id: w.id } });
   }, [router, t]);
 
   return (

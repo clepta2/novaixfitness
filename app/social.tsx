@@ -91,17 +91,20 @@ export default function SocialScreen() {
   const handleLike = async (postId) => {
     if (!user || processingLikes.current.has(postId)) return;
     processingLikes.current.add(postId);
-    await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
-      const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
-      if (ext) {
-        await supabase.from('post_likes').delete().eq('id', ext.id);
-        setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: false, likes: Math.max(0, p.likes - 1) } : p));
-      } else {
-        await supabase.from('post_likes').insert({ post_id: postId, user_id: user.id });
-        setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p));
-      }
-    });
-    processingLikes.current.delete(postId);
+    try {
+      await checkAndPerform(ACTIONS.REACTION_MADE, 'reaction', async () => {
+        const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
+        if (ext) {
+          await supabase.from('post_likes').delete().eq('id', ext.id);
+          setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: false, likes: Math.max(0, p.likes - 1) } : p));
+        } else {
+          await supabase.from('post_likes').insert({ post_id: postId, user_id: user.id });
+          setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p));
+        }
+      });
+    } finally {
+      processingLikes.current.delete(postId);
+    }
   };
   const handleComment = async (postId, text) => {
     if (!user) return;
