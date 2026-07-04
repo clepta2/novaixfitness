@@ -12,6 +12,10 @@ export type LevelInfo = {
   level: number; name: string; xpRequired: number; color: string; icon: string; rewards: string[];
 };
 
+export type Level = {
+  level: number; minXp: number; maxXp: number; title: string;
+};
+
 export type ChallengeType = 'streak_30' | 'workout_count' | 'minutes';
 
 export type FriendChallenge = {

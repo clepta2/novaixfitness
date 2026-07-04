@@ -43,3 +43,17 @@ export type ChatMessage = {
   deleted: boolean; created_at: string;
   profiles?: { name: string; avatar_url: string | null };
 };
+
+export type Comment = {
+  id: string; post_id: string; user_id: string; content: string;
+  created_at: string; user?: { name: string; avatar_url: string | null };
+};
+
+export type Challenge = {
+  id: string; challenger_id: string; challenged_id: string;
+  type: 'reps' | 'duration' | 'distance';
+  duration: '1day' | '3days' | '1week';
+  stake: number; status: 'pending' | 'active' | 'completed' | 'cancelled';
+  challenger_progress?: number; challenged_progress?: number;
+  created_at: string; expires_at: string;
+};

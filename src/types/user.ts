@@ -4,6 +4,25 @@ import type { SubscriptionStatus } from './payment';
 
 export type SupabaseUser = { id: string; email: string; user_metadata: Record<string, unknown> };
 
+export type User = {
+  id: string; email: string; name?: string; avatar?: string;
+  created_at: string; updated_at: string;
+};
+
+export type AppSettings = {
+  themeMode?: 'dark' | 'light' | 'system';
+  darkMode?: boolean;
+  notifications?: NotificationSettings;
+  language?: string;
+};
+
+export type NotificationSettings = {
+  workout_reminder?: boolean; workout_completed?: boolean;
+  new_workout?: boolean; streak?: boolean; achievement?: boolean;
+  level_up?: boolean; weekly_plan?: boolean; weekly_summary?: boolean;
+  rest_day?: boolean; motivational?: boolean; system?: boolean;
+};
+
 export type Profile = {
   id: string; name: string; avatar_url: string | null; level: number; xp: number;
   total_workouts: number; current_streak: number; best_streak: number;
@@ -47,4 +66,10 @@ export type ProgressPhoto = {
 export type BodyMeasurement = {
   id: string; user_id: string; measurement_type: string;
   value: number; unit: string; measured_at: string;
+};
+
+export type UserWorkout = {
+  id: string; user_id: string; workout_id: string;
+  completed: boolean; completed_at?: string; duration?: number;
+  workout?: import('./workout').Workout;
 };
