@@ -129,7 +129,7 @@ export function useGamification(): UseGamificationReturn {
     unlockedIds,
     xpBreakdown,
     level: calculateLevel(profile?.total_xp || profile?.xp || 0),
-    xpForNext: getXPForNextLevel(profile?.total_xp || profile?.xp || 0),
+    xpForNext: getXPForNextLevel(calculateLevel(profile?.total_xp || profile?.xp || 0)),
     levelProgress: getLevelProgress(profile?.total_xp || profile?.xp || 0),
   };
 }
