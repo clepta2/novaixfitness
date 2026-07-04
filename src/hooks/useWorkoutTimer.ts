@@ -165,6 +165,7 @@ export default function useWorkoutTimer(workout: Workout | null) {
     setCurrentSet(1);
     setTimeRemaining(0);
     setTotalTime(0);
+    setElapsed(0);
   }, []);
 
   useEffect(() => {
