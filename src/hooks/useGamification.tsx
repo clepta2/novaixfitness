@@ -64,6 +64,8 @@ export function useGamification(): UseGamificationReturn {
   const [rankings, setRankings] = useState<unknown[]>([]);
   const [userRank, setUserRank] = useState<UserRank | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -73,6 +75,7 @@ export function useGamification(): UseGamificationReturn {
   async function loadData(): Promise<void> {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
+    setError(null);
     try {
       const [rankData, achievementsData, rank, profileData] = await Promise.all([
         getRankings('weekly'),
@@ -86,26 +89,16 @@ export function useGamification(): UseGamificationReturn {
       setProfile(profileData);
     } catch (err) {
       if (__DEV__) console.warn('Erro ao carregar gamificacao:', err);
+      setError('Erro ao carregar dados de gamificação');
     }
     setLoading(false);
   }
 
-  const award = useCallback(async (eventType: string, metadata: Record<string, unknown> = {}): Promise<AwardResult | null> => {
-    if (!user?.id) return null;
-    try {
-      const result = await awardXP(user.id, eventType, metadata);
-      const newAchievements = await checkAchievements(user.id);
-      if (newAchievements.length > 0) {
-        setAchievements(prev => [...prev, ...newAchievements.map((a: any) => ({ ...a, unlocked: true }))]);
-      }
-      return result;
-    } catch (err) {
-      if (__DEV__) console.error('Erro ao conceder XP:', err);
-      return null;
-    }
+  const refresh = useCallback(async (): Promise<void> => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
   }, [user?.id]);
-
-  const refresh = useCallback((): void => { loadData(); }, [user?.id]);
 
   const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
   const xpBreakdown = profile ? {
@@ -121,8 +114,8 @@ export function useGamification(): UseGamificationReturn {
     rankings,
     userRank,
     loading,
-    refreshing: false,
-    error: null,
+    refreshing,
+    error,
     award,
     refresh,
     onRefresh: refresh,

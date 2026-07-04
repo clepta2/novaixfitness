@@ -22,7 +22,16 @@ export default function GoalsScreen() {
 
   const renderAchievement = ({ item }) => {
     const isUnlocked = unlocked.includes(item.id);
-    const progress = Math.min(100, item.requirement ? ((stats[item.category] || 0) / item.requirement) * 100 : 0);
+    const categoryMap: Record<string, number> = {
+      workout: stats.totalWorkouts || 0,
+      streak: stats.streak || 0,
+      time: stats.totalMinutes || 0,
+      xp: stats.totalXp || 0,
+      social: 0,
+      level: 0,
+      weekly: 0,
+    };
+    const progress = Math.min(100, item.requirement ? ((categoryMap[item.category] || 0) / item.requirement) * 100 : 0);
     return (
       <View style={[styles.achCard, isUnlocked && styles.achUnlocked]}>
         <Ionicons name={item.icon} size={24} color={isUnlocked ? COLORS.primary : COLORS.textMuted} />
@@ -36,7 +45,15 @@ export default function GoalsScreen() {
 
   const renderGoal = ({ item }) => {
     const gt = GOAL_TYPES.find(g => g.id === item.goal_type);
-    const progress = item.target_value > 0 ? Math.min(100, ((stats.totalWorkouts || 0) / item.target_value) * 100) : 0;
+    const statMap: Record<string, number> = {
+      workouts: stats.totalWorkouts || 0,
+      streak: stats.streak || 0,
+      minutes: stats.totalMinutes || 0,
+      weight_loss: 0,
+      weight_gain: 0,
+    };
+    const currentVal = statMap[item.goal_type] || 0;
+    const progress = item.target_value > 0 ? Math.min(100, (currentVal / item.target_value) * 100) : 0;
     return (
       <View style={styles.goalCard}>
         <View style={styles.goalRow}>
