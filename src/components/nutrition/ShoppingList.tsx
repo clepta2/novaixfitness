@@ -35,7 +35,7 @@ export default function ShoppingList({ mealPlan }) {
       const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri, { mimeType: 'application/pdf', dialogTitle: 'Lista de Compras' });
     } catch (err) {
-      console.error('Erro ao exportar:', err);
+      if (__DEV__) console.error('Erro ao exportar:', err);
     }
   };
 

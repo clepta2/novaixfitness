@@ -55,7 +55,7 @@ export default function NutritionTracker({ userId, weight = 70, goal = 'manter' 
       const calProgress = data && goals.calories > 0 ? Math.min(100, (data.calories / goals.calories) * 100) : 0;
       Animated.spring(calorieAnim, { toValue: calProgress, tension: 30, friction: 8, useNativeDriver: false }).start();
     } catch (err) {
-      console.error('Erro ao carregar resumo:', err);
+      if (__DEV__) console.error('Erro ao carregar resumo:', err);
     } finally {
       setLoading(false);
     }

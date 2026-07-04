@@ -61,7 +61,7 @@ export async function loadTokenizer(tokenizerPath: string): Promise<MarianMTToke
     if (__DEV__) console.log(`[ML] Tokenizer carregado: ${Object.keys(vocab).length} tokens`);
     return cachedTokenizer;
   } catch (error) {
-    console.error('[ML] Erro ao carregar tokenizer:', error);
+    if (__DEV__) console.error('[ML] Erro ao carregar tokenizer:', error);
     throw error;
   }
 }

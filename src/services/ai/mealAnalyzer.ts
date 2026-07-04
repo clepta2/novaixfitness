@@ -39,7 +39,7 @@ Usuario: ${weight}kg. Seja preciso nas estimativas. Se nao conseguir analisar, r
     }
     return null;
   } catch (error) {
-    console.error('Erro ao analisar refeicao:', error);
+    if (__DEV__) console.error('Erro ao analisar refeicao:', error);
     return generateFallbackMealAnalysis(mealText, weight);
   }
 }

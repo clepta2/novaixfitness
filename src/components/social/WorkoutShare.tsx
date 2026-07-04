@@ -30,7 +30,7 @@ export default memo(function WorkoutShare({ workout, xp, duration, exercises, on
       await Share.share({ message });
       onShare?.();
     } catch (err) {
-      console.error('Erro ao compartilhar:', err);
+      if (__DEV__) console.error('Erro ao compartilhar:', err);
     }
   };
 

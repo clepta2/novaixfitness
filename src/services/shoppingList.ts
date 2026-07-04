@@ -75,7 +75,7 @@ Use alimentos brasileiros. Inclua quantidades para 1 pessoa. Seja pratico.`;
   }, { retries: 2, baseDelay: 500 });
 
   if (!result.ok) {
-    console.error('Erro ao gerar lista:', result.error);
+    if (__DEV__) console.error('Erro ao gerar lista:', result.error);
     return generateFallbackShoppingList();
   }
   return result.data;

@@ -49,7 +49,7 @@ export function useMemoryOptimization({
         try {
           fn();
         } catch (err) {
-          console.error(`[Memory] Error in cleanup for ${componentName}:`, err);
+          if (__DEV__) console.error(`[Memory] Error in cleanup for ${componentName}:`, err);
         }
       });
 

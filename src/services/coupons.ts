@@ -8,7 +8,7 @@ export async function applyCoupon(code, planId) {
     .select('*')
     .eq('code', code.toUpperCase())
     .eq('active', true)
-    .single();
+    .maybeSingle();
 
   if (!coupon) return null;
 
@@ -63,7 +63,7 @@ export async function applyReferral(referralCode, newUserId) {
     .from(TABLES.REFERRALS)
     .select('*')
     .eq('code', referralCode.toUpperCase())
-    .single();
+    .maybeSingle();
 
   if (!referral) return null;
 
@@ -99,7 +99,7 @@ export async function getReferralStats(userId) {
     .from(TABLES.REFERRALS)
     .select('*')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
   return data || { code: null, referral_count: 0 };
 }

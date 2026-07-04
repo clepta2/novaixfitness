@@ -63,7 +63,7 @@ function Leaderboard({ userId }) {
         })));
       }
     } catch (err) {
-      console.error('Erro ao carregar ranking:', err);
+      if (__DEV__) console.error('Erro ao carregar ranking:', err);
     } finally {
       setLoading(false);
     }

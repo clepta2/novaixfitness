@@ -30,7 +30,7 @@ export default function FinanceStats() {
 
       setStats({ mrr, active: active.length, churn, newMonth: thisMonth });
     } catch (err) {
-      console.error('Erro ao carregar stats financeiros:', err);
+      if (__DEV__) console.error('Erro ao carregar stats financeiros:', err);
     }
   }
 

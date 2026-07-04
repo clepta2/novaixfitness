@@ -77,7 +77,7 @@ export default function useWorkoutPlayer(): UseWorkoutPlayerReturn {
     
     async function fetchWorkout() {
       try {
-        const { data } = await supabase.from('workouts').select('*, exercises(*)').eq('id', params.id).single();
+        const { data } = await supabase.from('workouts').select('*, exercises(*)').eq('id', params.id).maybeSingle();
         setWorkout(data ? {
           id: data.id, name: data.title || data.name,
           duration: data.duration_minutes || data.duration || 30,

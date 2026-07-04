@@ -62,7 +62,7 @@ export function useSupabaseData(tableName: string, options: SupabaseDataOptions 
       if (fetchError) throw fetchError;
       setData(result || []);
     } catch (err) {
-      console.error(`Erro ao buscar ${tableName}:`, err);
+      if (__DEV__) console.error(`Erro ao buscar ${tableName}:`, err);
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
       setData(mockData);
     } finally {

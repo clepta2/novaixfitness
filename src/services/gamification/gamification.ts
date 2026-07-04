@@ -84,7 +84,7 @@ export async function getGamificationData(userId) {
   if (result.ok) {
     return result.data;
   } else {
-    console.error('Erro ao buscar dados de gamificação:', result.error);
+    if (__DEV__) console.error('Erro ao buscar dados de gamificação:', result.error);
     return null;
   }
 }
@@ -147,7 +147,7 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
   if (result.ok) {
     return result.data;
   } else {
-    console.error('Erro ao registrar conclusão:', result.error);
+    if (__DEV__) console.error('Erro ao registrar conclusão:', result.error);
     return { xpGained: 0, newAchievements: [] };
   }
 }
@@ -166,7 +166,7 @@ export async function updateMaxStreak(userId) {
     await supabase.from('profiles').update({ max_streak: streak }).eq('id', userId);
   }, { retries: 1, baseDelay: 500 });
   if (!result.ok) {
-    console.error('Erro ao atualizar streak:', result.error);
+    if (__DEV__) console.error('Erro ao atualizar streak:', result.error);
   }
 }
 // --- Funções implementadas ---

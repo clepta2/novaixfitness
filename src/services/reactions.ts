@@ -21,7 +21,7 @@ export async function toggleReaction(postId: string, userId: string, type: React
     .select('id, type')
     .eq('post_id', postId)
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     if (existing.type === type) {
@@ -59,7 +59,7 @@ export async function getUserReaction(postId: string, userId: string): Promise<R
     .select('type')
     .eq('post_id', postId)
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
   return (data?.type as ReactionType) || null;
 }

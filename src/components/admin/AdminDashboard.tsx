@@ -39,7 +39,7 @@ export default function AdminDashboard({ onNavigate }) {
         date: new Date(p.created_at).toLocaleDateString('pt-BR'),
       })));
     } catch (err) {
-      console.error('Erro ao carregar dashboard:', err);
+      if (__DEV__) console.error('Erro ao carregar dashboard:', err);
     }
   }
 

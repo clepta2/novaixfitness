@@ -18,7 +18,7 @@ export async function reportTamperAttempt(data: { type: string; severity?: strin
       device_info: { brand: Device.brand, model: Device.modelName, os: Platform.OS, version: Platform.Version },
     });
   } catch (err) {
-    console.error('Erro ao reportar tentativa de adulteracao:', err);
+    if (__DEV__) console.error('Erro ao reportar tentativa de adulteracao:', err);
   }
 }
 

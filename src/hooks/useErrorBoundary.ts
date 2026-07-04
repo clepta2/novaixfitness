@@ -38,7 +38,7 @@ export function useErrorBoundary(): UseErrorBoundaryResult {
 
     // Log do erro
     if (__DEV__) {
-      console.error('[ErrorBoundary]', err, info);
+      if (__DEV__) console.error('[ErrorBoundary]', err, info);
     }
   }, []);
 

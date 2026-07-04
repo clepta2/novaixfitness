@@ -60,7 +60,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
         .order('created_at', { ascending: true });
       setComments(data || []);
     } catch (err) {
-      console.error('Erro ao carregar comentários:', err);
+      if (__DEV__) console.error('Erro ao carregar comentários:', err);
     } finally {
       setLoadingComments(false);
     }
@@ -97,7 +97,7 @@ function PostCard({ post, onLike, onComment, currentUserId }) {
         message: `${post.user.name}: ${post.content}`,
       });
     } catch (err) {
-      console.error('Erro ao compartilhar:', err);
+      if (__DEV__) console.error('Erro ao compartilhar:', err);
     }
   }, [post]);
 

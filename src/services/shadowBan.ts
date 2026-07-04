@@ -32,7 +32,7 @@ export async function isShadowBanned(userId: string): Promise<boolean> {
     .from(TABLES.PROFILES)
     .select('is_shadowbanned')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   return data?.is_shadowbanned === true;
 }

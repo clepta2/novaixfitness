@@ -94,7 +94,7 @@ export function trackError(error: unknown, options: {
   if (errors.length > MAX_ERRORS) errors.shift();
 
   if (__DEV__) {
-    console.error(`[error:${entry.severity}] ${entry.message}`, entry.context);
+    if (__DEV__) console.error(`[error:${entry.severity}] ${entry.message}`, entry.context);
   }
 }
 

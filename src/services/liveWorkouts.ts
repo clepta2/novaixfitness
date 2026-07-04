@@ -32,7 +32,7 @@ export async function createLive(hostId: string, { title, description, workoutTy
       is_public: isPublic !== false,
     })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -74,7 +74,7 @@ export async function joinLive(liveId: string, userId: string): Promise<LivePart
     .select('id')
     .eq('live_id', liveId)
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
   if (existing) return existing as LiveParticipant;
 
@@ -82,7 +82,7 @@ export async function joinLive(liveId: string, userId: string): Promise<LivePart
     .from(TABLES.LIVE_PARTICIPANTS)
     .insert({ live_id: liveId, user_id: userId, role: 'participant' })
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
 
@@ -124,7 +124,7 @@ export async function getLiveById(liveId: string): Promise<LiveWorkout | null> {
     .from(TABLES.LIVE_WORKOUTS)
     .select('*, profiles:host_id(name, avatar_url)')
     .eq('id', liveId)
-    .single();
+    .maybeSingle();
 
   return data as LiveWorkout | null;
 }
@@ -145,7 +145,7 @@ export async function sendMessage(liveId: string, userId: string, message: strin
     .from(TABLES.LIVE_MESSAGES)
     .insert({ live_id: liveId, user_id: userId, message, type })
     .select('*, profiles:user_id(name, avatar_url)')
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data as LiveMessage;
@@ -176,7 +176,7 @@ export async function getWorkoutState(liveId: string): Promise<LiveWorkoutState 
     .from(TABLES.LIVE_WORKOUT_STATE)
     .select('*')
     .eq('live_id', liveId)
-    .single();
+    .maybeSingle();
 
   return data as LiveWorkoutState | null;
 }

@@ -73,7 +73,7 @@ export default function EnergyTracker({ userId }) {
       }
       setSaved(true);
     } catch (err) {
-      console.error('Erro ao salvar energia:', err);
+      if (__DEV__) console.error('Erro ao salvar energia:', err);
     }
   };
 

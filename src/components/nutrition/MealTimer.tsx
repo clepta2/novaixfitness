@@ -75,7 +75,7 @@ export default function MealTimer() {
         },
       });
     } catch (err) {
-      console.error('Erro ao agendar notificação:', err);
+      if (__DEV__) console.error('Erro ao agendar notificação:', err);
     }
   };
 

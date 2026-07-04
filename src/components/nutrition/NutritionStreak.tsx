@@ -85,7 +85,7 @@ export default function NutritionStreak({ userId }) {
       }
       setWeekDots(last7);
     } catch (err) {
-      console.error('Erro ao carregar streak:', err);
+      if (__DEV__) console.error('Erro ao carregar streak:', err);
     }
   };
 

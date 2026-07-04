@@ -18,7 +18,7 @@ export async function subscribeToCreator(creatorId, subscriberId, planType = 'mo
       .upsert({
         creator_id: creatorId, subscriber_id: subscriberId, plan_type: planType,
         price_brl: price, status: 'active', expires_at: expiresAt.toISOString(),
-      }, { onConflict: 'creator_id,subscriber_id' }).select().single();
+      }, { onConflict: 'creator_id,subscriber_id' }).select().maybeSingle();
     if (error) throw error;
     await supabase.rpc('increment_column', { table_name: 'creator_profiles', column_name: 'subscriber_count', row_id: creatorId });
     return data;
@@ -35,6 +35,6 @@ export async function cancelSubscription(subscriptionId) {
 
 export async function isSubscribedTo(creatorId, subscriberId) {
   const { data } = await supabase.from(TABLES.CREATOR_SUBSCRIPTIONS)
-    .select('id, status').eq('creator_id', creatorId).eq('subscriber_id', subscriberId).eq('status', 'active').single();
+    .select('id, status').eq('creator_id', creatorId).eq('subscriber_id', subscriberId).eq('status', 'active').maybeSingle();
   return !!data;
 }

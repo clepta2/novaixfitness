@@ -31,7 +31,7 @@ export async function completeDuel(duelId, userId) {
     .from(TABLES.DUELS)
     .select('*')
     .eq('id', duelId)
-    .single();
+    .maybeSingle();
 
   if (!duel) return;
 

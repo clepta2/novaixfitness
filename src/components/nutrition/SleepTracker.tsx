@@ -61,7 +61,7 @@ export default function SleepTracker({ userId }) {
       }, { onConflict: 'user_id,logged_at' });
       setSaved(true);
     } catch (err) {
-      console.error('Erro ao salvar sono:', err);
+      if (__DEV__) console.error('Erro ao salvar sono:', err);
     }
   };
 

@@ -77,7 +77,7 @@ export default function PersonalRecords({ userId }) {
       const sorted = Object.values(exerciseMap).sort((a, b) => b.weight - a.weight);
       setRecords(sorted.slice(0, 10));
     } catch (err) {
-      console.error('Erro ao carregar recordes:', err);
+      if (__DEV__) console.error('Erro ao carregar recordes:', err);
     } finally {
       setLoading(false);
     }

@@ -151,7 +151,7 @@ export function useFeedData(): UseFeedDataReturn {
   const handleLike = async (postId: string): Promise<void> => {
     if (!user) return;
     try {
-      const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).single();
+      const { data: ext } = await supabase.from('post_likes').select('id').eq('post_id', postId).eq('user_id', user.id).maybeSingle();
       if (ext) {
         await supabase.from('post_likes').delete().eq('id', ext.id);
         setLikedPostIds(prev => { const s = new Set(prev); s.delete(postId); return s; });
@@ -172,7 +172,7 @@ export function useFeedData(): UseFeedDataReturn {
         : postData.content;
       const { data, error } = await supabase.from('posts')
         .insert({ user_id: user.id, content: dbContent, image_url: postData.image })
-        .select('*, profiles:user_id(name, avatar_url)').single();
+        .select('*, profiles:user_id(name, avatar_url)').maybeSingle();
       if (error) throw error;
       setPosts(prev => [buildNewPostEntry(data) as any, ...prev]);
     } catch (err) {

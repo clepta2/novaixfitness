@@ -38,7 +38,7 @@ export async function createPost(userId: string, content: string, imageUrl: stri
       .from(TABLES.POSTS)
       .insert({ user_id: userId, content, image_url: imageUrl, workout_id: workoutId })
       .select('*, profiles:user_id (name, avatar_url, level)')
-      .single();
+      .maybeSingle();
     if (error) throw error;
     trackEvent(EVENT_TYPES.SHARE_CLICKED, { type: 'post' }, userId);
     return data as Post;
@@ -56,7 +56,7 @@ export async function deletePost(postId: string, userId: string): Promise<void> 
 export async function toggleLike(postId: string, userId: string): Promise<boolean> {
   const result = await guard.guard(async () => {
     const { data: existing } = await supabase.from(TABLES.POST_LIKES)
-      .select('id').eq('post_id', postId).eq('user_id', userId).single();
+      .select('id').eq('post_id', postId).eq('user_id', userId).maybeSingle();
     if (existing) {
       await supabase.from(TABLES.POST_LIKES).delete().eq('id', existing.id);
       await supabase.rpc('decrement_likes', { post_id: postId });
@@ -91,7 +91,7 @@ export async function addComment(postId: string, userId: string, content: string
       .from(TABLES.POST_COMMENTS)
       .insert({ post_id: postId, user_id: userId, content })
       .select('*, profiles:user_id (name, avatar_url)')
-      .single();
+      .maybeSingle();
     if (error) throw error;
     await supabase.rpc('increment_comments', { post_id: postId });
     return data as Comment;

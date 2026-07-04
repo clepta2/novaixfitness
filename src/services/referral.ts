@@ -35,7 +35,7 @@ export async function getReferralData(userId) {
 
   if (result.ok) return result.data;
 
-  console.error('Erro ao buscar referral:', result.error);
+  if (__DEV__) console.error('Erro ao buscar referral:', result.error);
   return {
     referral_code: generateReferralCode(userId),
     total_referrals: 0,
@@ -136,7 +136,7 @@ export async function applyReferralBonus(userId, referrerId) {
   }, { retries: 2, baseDelay: 500 });
 
   if (!result.ok) {
-    console.error('Erro ao aplicar bônus:', result.error);
+    if (__DEV__) console.error('Erro ao aplicar bônus:', result.error);
     return false;
   }
   return result.data;

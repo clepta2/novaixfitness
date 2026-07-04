@@ -174,6 +174,6 @@ export async function cleanupOldModels(activePairIds: string[]): Promise<void> {
       }
     }
   } catch (e) {
-    console.error('[ML] Erro no coletor de lixo:', e);
+    if (__DEV__) console.error('[ML] Erro no coletor de lixo:', e);
   }
 }

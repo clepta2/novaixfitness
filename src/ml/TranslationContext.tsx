@@ -82,7 +82,7 @@ export function TranslationProvider({ children, initialLocale = 'pt' }: {
       await engineRef.current.initialize(paths, config);
       setIsModelLoaded(true);
     } catch (error) {
-      console.error('[ML] Erro ao carregar modelo:', error);
+      if (__DEV__) console.error('[ML] Erro ao carregar modelo:', error);
     } finally {
       setIsLoadingModel(false);
       setDownloadProgress(0);
@@ -125,7 +125,7 @@ export function TranslationProvider({ children, initialLocale = 'pt' }: {
     try {
       return await engineRef.current.translate(text, 'pt', locale);
     } catch (error) {
-      console.error('[ML] Erro na tradução:', error);
+      if (__DEV__) console.error('[ML] Erro na tradução:', error);
       return text;
     }
   }, [locale]);

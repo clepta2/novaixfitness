@@ -51,7 +51,7 @@ export default function MealHistory({ userId }) {
       const data = await getMealLogs(userId);
       setMeals(data);
     } catch (err) {
-      console.error('Erro ao carregar histórico:', err);
+      if (__DEV__) console.error('Erro ao carregar histórico:', err);
     } finally {
       setLoading(false);
     }

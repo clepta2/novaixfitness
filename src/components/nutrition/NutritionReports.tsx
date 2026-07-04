@@ -99,7 +99,7 @@ export default function NutritionReports({ userId }) {
       const { uri } = await Print.printToFileAsync({ html, base64: false });
       await Sharing.shareAsync(uri, { mimeType: 'application/pdf', dialogTitle: `Relatório ${type}` });
     } catch (err) {
-      console.error('Erro ao gerar relatório:', err);
+      if (__DEV__) console.error('Erro ao gerar relatório:', err);
     } finally {
       setLoading(false);
     }

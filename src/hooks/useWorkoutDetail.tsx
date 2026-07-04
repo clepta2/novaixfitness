@@ -57,7 +57,7 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
     if (!id) return;
     async function loadWorkoutDetail() {
       try {
-        const { data, error } = await supabase.from('workouts').select('*').eq('id', id).single();
+        const { data, error } = await supabase.from('workouts').select('*').eq('id', id).maybeSingle();
         const w = error || !data ? null : (data as Workout);
         if (w) {
           setWorkout(w);
@@ -81,13 +81,13 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
     if (!user?.id) return;
     async function loadUserData() {
       try {
-        const { data } = await supabase.from('profiles').select('subscription_status').eq('id', user.id!).single();
+        const { data } = await supabase.from('profiles').select('subscription_status').eq('id', user.id!).maybeSingle();
         if (data) setProfile(data as Profile);
       } catch {}
       
       if (id) {
         try {
-          const { data } = await supabase.from('favorites').select('id').eq('user_id', user.id!).eq('workout_id', id).single();
+          const { data } = await supabase.from('favorites').select('id').eq('user_id', user.id!).eq('workout_id', id).maybeSingle();
           setIsFavorite(!!data);
         } catch {}
       }
@@ -132,7 +132,7 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
       const { data } = await supabase.from('user_workouts').insert({
         user_id: user.id, workout_id: id, completed: false,
         duration: workout?.duration_minutes || workout?.duration || 0,
-      }).select('id').single();
+      }).select('id').maybeSingle();
       router.push({ pathname: '/player', params: { id, user_workout_id: data?.id } });
     } catch { router.push({ pathname: '/player', params: { id } }); }
   }, [user?.id, id, workout, profile]);

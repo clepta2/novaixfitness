@@ -49,7 +49,7 @@ export function useRealtimePosts(
     const channel = supabase
       .channel('posts-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, async (payload) => {
-        const { data } = await supabase.from('posts').select(SELECT).eq('id', payload.new.id).single();
+        const { data } = await supabase.from('posts').select(SELECT).eq('id', payload.new.id).maybeSingle();
         if (data) callbacksRef.current.onInsert?.(formatPost(data));
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, (payload) => {
@@ -68,7 +68,7 @@ export function useRealtimePosts(
   }, []);
 
   return { refreshPost: useCallback(async (postId: string): Promise<FormattedPost | null> => {
-    const { data } = await supabase.from('posts').select(SELECT).eq('id', postId).single();
+    const { data } = await supabase.from('posts').select(SELECT).eq('id', postId).maybeSingle();
     return data ? formatPost(data) : null;
   }, []) };
 }

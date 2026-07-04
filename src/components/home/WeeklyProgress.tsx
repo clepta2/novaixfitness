@@ -55,7 +55,7 @@ export default memo(function WeeklyProgress() {
         }
       }
     } catch (err) {
-      console.error('Erro ao buscar metas semanais:', err);
+      if (__DEV__) console.error('Erro ao buscar metas semanais:', err);
     } finally {
       setLoading(false);
     }

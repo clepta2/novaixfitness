@@ -72,7 +72,7 @@ export class CacheManager {
     try {
       await AsyncStorage.setItem(`${this.prefix}${key}`, JSON.stringify(entry));
     } catch (error) {
-      console.error('Erro ao salvar cache:', error);
+      if (__DEV__) console.error('Erro ao salvar cache:', error);
     }
   }
 
