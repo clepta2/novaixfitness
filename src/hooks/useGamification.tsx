@@ -117,10 +117,10 @@ export function useGamification(): UseGamificationReturn {
 
   const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
   const xpBreakdown = profile ? {
-    workout: (profile.totalWorkouts || 0) * 50,
-    streak: (profile.streak || 0) * 5,
-    social: (profile.social_first_post_count || 0) * 15,
-    achievements: achievements.filter(a => a.unlocked).reduce((sum, a) => sum + (a.xpReward || 0), 0),
+    workout: (profile.totalWorkouts ?? 0) * 50,
+    streak: (profile.streak ?? 0) * 5,
+    social: (profile.social_first_post_count ?? 0) * 15,
+    achievements: achievements.filter(a => a.unlocked).reduce((sum, a) => sum + (a.xpReward ?? 0), 0),
   } : {};
 
   return {
@@ -137,9 +137,9 @@ export function useGamification(): UseGamificationReturn {
     onRefresh: refresh,
     unlockedIds,
     xpBreakdown,
-    level: calculateLevel(profile?.total_xp || profile?.xp || 0),
-    xpForNext: getXPForNextLevel(calculateLevel(profile?.total_xp || profile?.xp || 0)),
-    levelProgress: getLevelProgress(profile?.total_xp || profile?.xp || 0),
+    level: calculateLevel(profile?.total_xp ?? profile?.xp ?? 0),
+    xpForNext: getXPForNextLevel(calculateLevel(profile?.total_xp ?? profile?.xp ?? 0)),
+    levelProgress: getLevelProgress(profile?.total_xp ?? profile?.xp ?? 0),
   };
 }
 
