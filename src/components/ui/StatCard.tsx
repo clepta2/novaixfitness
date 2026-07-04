@@ -24,8 +24,8 @@ export default function StatCard({
   delay?: number;
   index?: number;
 }) {
-  const scaleAnim = useMemo(() => new Animated.Value(0.8), []);
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
+  const scaleAnim = useRef(Animated.Value(0.8)).current;
+  const fadeAnim = useRef(Animated.Value(0)).current;
 
   const animDelay = delay ?? (index != null ? index * 80 : 0);
   const animate = delay != null || index != null;

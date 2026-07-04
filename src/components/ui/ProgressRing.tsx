@@ -29,7 +29,7 @@ export default function ProgressRing({
   label,
   labelStyle,
 }: ProgressRingProps) {
-  const animatedValue = useMemo(() => new Animated.Value(0), []);
+  const animatedValue = useRef(Animated.Value(0)).current;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
 

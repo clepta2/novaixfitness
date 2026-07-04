@@ -20,7 +20,7 @@ export default function ChatScreen() {
   const [showNewChat, setShowNewChat] = useState(false);
 
   // Animacao de entrada
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
   }, []);

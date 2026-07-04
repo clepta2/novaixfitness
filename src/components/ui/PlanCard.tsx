@@ -29,9 +29,9 @@ export default function PlanCard({
   const isPopular = plan?.popular || false;
   const badge = isAnnual && plan?.annualSavings ? `-${plan.annualSavings}` : undefined;
 
-  const scaleAnim = useMemo(() => new Animated.Value(isSelected ? 1.02 : 1), []);
-  const borderAnim = useMemo(() => new Animated.Value(isSelected ? 1 : 0), []);
-  const translateYAnim = useMemo(() => new Animated.Value(isSelected ? -8 : 0), []);
+  const scaleAnim = useRef(Animated.Value(isSelected ? 1.02 : 1)).current;
+  const borderAnim = useRef(Animated.Value(isSelected ? 1 : 0)).current;
+  const translateYAnim = useRef(Animated.Value(isSelected ? -8 : 0)).current;
 
   useEffect(() => {
     Animated.parallel([

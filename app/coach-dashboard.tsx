@@ -29,8 +29,8 @@ export default function CoachDashboardScreen() {
   const [duration, setDuration] = useState('30');
   const [saving, setSaving] = useState(false);
 
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

@@ -14,7 +14,7 @@ interface Props {
 const REWARDS = [10, 15, 20, 25, 30, 40, 100];
 export default function DailyCheckInModal({
 visible, streak, onClaim, onDismiss }: Props) {
-const fadeAnim = useMemo(() => new Animated.Value(0), []);
+const fadeAnim = useRef(Animated.Value(0)).current;
  
 const scaleAnim = useMemo(() => 
 new Animated.Value(0.8), []);

@@ -2,7 +2,7 @@
 // app/analytics.tsx
 // Dashboard de Analytics com animacoes - NOVAIX FITNESS
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo , useRef} from 'react';
 import { useMountedRef } from '../src/hooks/useMountedRef';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -29,8 +29,8 @@ export default function AnalyticsScreen() {
   const mounted = useMountedRef();
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

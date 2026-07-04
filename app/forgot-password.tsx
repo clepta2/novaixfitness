@@ -3,7 +3,7 @@
 // Recuperacao de senha com animacoes - NOVAIX FITNESS
 
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect , useRef} from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, StyleSheet, ImageBackground, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,9 +27,9 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
-  const iconScale = useMemo(() => new Animated.Value(0.8), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
+  const iconScale = useRef(Animated.Value(0.8)).current;
 
   useEffect(() => {
     Animated.parallel([

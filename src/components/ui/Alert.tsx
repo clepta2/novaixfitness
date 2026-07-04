@@ -37,8 +37,8 @@ export default function Alert({
   autoHide = false,
   duration = 5000,
 }: AlertProps) {
-  const opacity = useMemo(() => new Animated.Value(0), []);
-  const slideY = useMemo(() => new Animated.Value(-20), []);
+  const opacity = useRef(Animated.Value(0)).current;
+  const slideY = useRef(Animated.Value(-20)).current;
   const config = ALERT_CONFIG[type];
 
   useEffect(() => {

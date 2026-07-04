@@ -2,7 +2,7 @@
 // app/intro.tsx
 // Intro com animacoes de entrada - NOVAIX FITNESS
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo , useRef} from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, Animated,
   StyleSheet, Dimensions,
@@ -32,7 +32,7 @@ function IntroScreen() {
   } = useIntro(router);
 
   // Animacao de entrada
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }).start();

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,7 +17,7 @@ export default function WarmupScreen() {
   const [countdown, setCountdown] = useState(null);
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState([]);
-  const anim = useMemo(() => new Animated.Value(0), []);
+  const anim = useRef(Animated.Value(0)).current;
 
   const current = EXERCISES[currentIdx];
   const progress = completed.length / EXERCISES.length;

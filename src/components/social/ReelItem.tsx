@@ -3,7 +3,7 @@
 
 
             ;
-import { useMemo } from 'react';
+import { useMemo , useRef} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Pressable, Animated } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,9 +31,9 @@ export default function ReelItem({ item, isPlaying, onClose, screenHeight }: Ree
   const [likesCount, setLikesCount] = useState(item.likes);
   const [lastTap, setLastTap] = useState(0);
 
-  const heartScale = useMemo(() => new Animated.Value(0), []);
-  const heartOpacity = useMemo(() => new Animated.Value(0), []);
-  const likeScale = useMemo(() => new Animated.Value(1), []);
+  const heartScale = useRef(Animated.Value(0)).current;
+  const heartOpacity = useRef(Animated.Value(0)).current;
+  const likeScale = useRef(Animated.Value(1)).current;
 
   const toggleLike = () => {
     try {

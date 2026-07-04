@@ -1,7 +1,7 @@
 // app/paywall.tsx
 // Paywall com melhorias visuais e animacoes - NOVAIX FITNESS
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform, Switch, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../src/constants/colors';
@@ -21,10 +21,10 @@ export default function PaywallScreen() {
   const [isAnnual, setIsAnnual] = useState(false);
 
   // Animacoes de entrada e pulso
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(30), []);
-  const heroScale = useMemo(() => new Animated.Value(0.9), []);
-  const pulseAnim = useMemo(() => new Animated.Value(1), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(30)).current;
+  const heroScale = useRef(Animated.Value(0.9)).current;
+  const pulseAnim = useRef(Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.parallel([

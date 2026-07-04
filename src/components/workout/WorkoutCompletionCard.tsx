@@ -31,7 +31,7 @@ export default function WorkoutCompletionCard({
  workoutName, duration, exercisesDone, totalExercises, xpGained, onRate, onShare, onFinish,
 }: Props) {
 const colors = useColors();
-const scaleAnim = useMemo(() => new Animated.Value(0), []);
+const scaleAnim = useRef(Animated.Value(0)).current;
  
 const xpAnim = useMemo(() => 
 new Animated.Value(0), []);

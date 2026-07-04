@@ -3,7 +3,7 @@
 // Avaliacao com animacoes de entrada - NOVAIX FITNESS
 
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect , useRef} from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -34,8 +34,8 @@ export default function AssessmentScreen() {
   const [saved, setSaved] = useState(false);
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     Animated.parallel([

@@ -26,8 +26,8 @@ export default function ActiveDuelCard({ duel }: ActiveDuelCardProps) {
   const [challengedVotes, setChallengedVotes] = useState(8);
   const [supportedSide, setSupportedSide] = useState<'challenger' | 'challenged' | null>(null);
 
-  const leftScale = useMemo(() => new Animated.Value(1), []);
-  const rightScale = useMemo(() => new Animated.Value(1), []);
+  const leftScale = useRef(Animated.Value(1)).current;
+  const rightScale = useRef(Animated.Value(1)).current;
 
   const handleSupport = (side: 'challenger' | 'challenged') => {
     if (supportedSide) return;

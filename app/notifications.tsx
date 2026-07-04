@@ -3,7 +3,7 @@
 // Notificacoes com animacoes de entrada - NOVAIX FITNESS
 
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect , useRef} from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,9 +36,9 @@ export default function NotificationsScreen() {
   } = useNotificationPrefs();
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
-  const tabIndicator = useMemo(() => new Animated.Value(0), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
+  const tabIndicator = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([

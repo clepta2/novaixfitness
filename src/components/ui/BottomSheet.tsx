@@ -29,8 +29,8 @@ export default function BottomSheet({
   showClose = true,
   maxHeight = SCREEN_HEIGHT * 0.7,
 }: BottomSheetProps) {
-  const opacity = useMemo(() => new Animated.Value(0), []);
-  const translateY = useMemo(() => new Animated.Value(SCREEN_HEIGHT), []);
+  const opacity = useRef(Animated.Value(0)).current;
+  const translateY = useRef(Animated.Value(SCREEN_HEIGHT)).current;
 
   useEffect(() => {
     if (visible) {

@@ -2,7 +2,7 @@
 // Biblioteca de Treinos com melhorias visuais - NOVAIX FITNESS
 
 
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useEffect, useCallback , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
@@ -42,8 +42,8 @@ export default function LibraryScreen() {
   const { visible: tutorialVisible, steps: tutorialSteps, handleComplete, handleSkip } = useTutorial('library', true);
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     Animated.parallel([

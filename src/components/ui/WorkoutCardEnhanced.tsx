@@ -34,8 +34,8 @@ export default function WorkoutCardEnhanced({
   onPress,
   onFavorite,
 }: WorkoutCardEnhancedProps) {
-  const scaleAnim = useMemo(() => new Animated.Value(1), []);
-  const elevationAnim = useMemo(() => new Animated.Value(0), []);
+  const scaleAnim = useRef(Animated.Value(1)).current;
+  const elevationAnim = useRef(Animated.Value(0)).current;
 
   const handlePressIn = () => {
     Animated.parallel([

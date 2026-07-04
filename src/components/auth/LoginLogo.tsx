@@ -10,7 +10,7 @@ interface LoginLogoProps {
 }
 export default function LoginLogo({
 delay = 0 }: LoginLogoProps) {
-const fadeAnim = useMemo(() => new Animated.Value(0), []);
+const fadeAnim = useRef(Animated.Value(0)).current;
  
 const logoScale = useMemo(() => 
 new Animated.Value(0.8), []);

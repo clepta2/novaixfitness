@@ -8,7 +8,7 @@ import { COLORS } from '../../constants/colors';
 export function LazyImage({ source, style, placeholderColor = COLORS.surface, resizeMode = 'cover' }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const opacity = useMemo(() => new Animated.Value(0), []);
+  const opacity = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     if (loaded) {

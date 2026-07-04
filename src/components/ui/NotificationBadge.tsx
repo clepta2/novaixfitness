@@ -18,7 +18,7 @@ export default function NotificationBadge({
   showZero = false,
   maxCount = 99,
 }: NotificationBadgeProps) {
-  const scaleAnim = useMemo(() => new Animated.Value(0), []);
+  const scaleAnim = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     if (count > 0 || showZero) {

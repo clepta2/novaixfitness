@@ -3,7 +3,7 @@
 // Configuracao de aparencia com animacoes - NOVAIX FITNESS
 
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
@@ -19,9 +19,9 @@ export default function AppearanceScreen() {
   const { isSmall } = useResponsive();
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const lightScale = useMemo(() => new Animated.Value(1), []);
-  const darkScale = useMemo(() => new Animated.Value(1), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const lightScale = useRef(Animated.Value(1)).current;
+  const darkScale = useRef(Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }).start();

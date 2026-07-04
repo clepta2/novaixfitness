@@ -43,8 +43,8 @@ export default function FeatureGrid({
 }
 
 function FeatureItem({ feature, index, onPress }: { feature: Feature; index: number; onPress: () => void }) {
-  const scaleAnim = useMemo(() => new Animated.Value(0.8), []);
-  const opacityAnim = useMemo(() => new Animated.Value(0), []);
+  const scaleAnim = useRef(Animated.Value(0.8)).current;
+  const opacityAnim = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([

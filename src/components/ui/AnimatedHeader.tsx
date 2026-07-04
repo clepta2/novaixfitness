@@ -1,5 +1,5 @@
 // src/components/ui/AnimatedHeader.tsx// Header animado reutilizavel - NOVAIX FITNESS
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo , useRef} from 'react'
 import { View, Text, Animated, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors'
 import { SPACING } from '../../constants/spacing';
@@ -16,7 +16,7 @@ export function AnimatedHeader({title,  subtitle,  rightContent,  showOffline,  
 }: AnimatedHeaderProps) {
 const colors = useColors();
  
-const fadeAnim = useMemo(() => new Animated.Value(0), []);
+const fadeAnim = useRef(Animated.Value(0)).current;
  
 const slideAnim = useMemo(() => 
 new Animated.Value(20), []);

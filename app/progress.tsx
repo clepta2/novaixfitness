@@ -2,7 +2,7 @@
 // app/progress.tsx
 // Progresso com timeline animado - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,8 +28,8 @@ export default function ProgressScreen() {
   const [previous, setPrevious] = useState(null);
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     Animated.parallel([

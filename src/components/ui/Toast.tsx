@@ -29,7 +29,7 @@ const TOAST_TYPES = {
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<ToastItem | null>(null);
-  const opacity = useMemo(() => new Animated.Value(0), []);
+  const opacity = useRef(Animated.Value(0)).current;
   const timeoutRef = useRef<any | null>(null);
 
   const show = useCallback((message: string, type: ToastType = 'info', duration = 3000) => {

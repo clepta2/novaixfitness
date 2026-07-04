@@ -41,7 +41,7 @@ function LoadingDots({ color = COLORS.primary }: { color?: string }) {
 
 // Loading com pulso
 function LoadingPulse({ color = COLORS.primary }: { color?: string }) {
-  const scale = useMemo(() => new Animated.Value(1), []);
+  const scale = useRef(Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.loop(

@@ -1,7 +1,7 @@
 // app/(tabs)/feed.tsx
 // Tela de Comunidade/Feed - NOVAIX FITNESS
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Animated, Modal, Dimensions, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../src/constants/colors';
@@ -47,7 +47,7 @@ export default function FeedScreen() {
   const [showReelsModal, setShowReelsModal] = useState(false);
   const { checkAndPerform, ACTIONS } = useSecurity();
   const { reels: feedReels } = useReelsFeed();
-  const fabAnim = useMemo(() => new Animated.Value(0), []);
+  const fabAnim = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.spring(fabAnim, { toValue: 1, friction: 5, delay: 500, useNativeDriver: true }).start();

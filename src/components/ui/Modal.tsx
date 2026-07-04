@@ -31,8 +31,8 @@ export default function Modal({
   showHandle = true,
   animationType = 'slide',
 }: ModalProps) {
-  const opacity = useMemo(() => new Animated.Value(0), []);
-  const translateY = useMemo(() => new Animated.Value(SCREEN_HEIGHT), []);
+  const opacity = useRef(Animated.Value(0)).current;
+  const translateY = useRef(Animated.Value(SCREEN_HEIGHT)).current;
 
   useEffect(() => {
     if (visible) {
@@ -88,8 +88,8 @@ export function ConfirmModal({
   visible, onClose, onConfirm, title, message,
   confirmText = 'Confirmar', cancelText = 'Cancelar', variant = 'primary',
 }: ConfirmModalProps) {
-  const opacity = useMemo(() => new Animated.Value(0), []);
-  const scale = useMemo(() => new Animated.Value(0.9), []);
+  const opacity = useRef(Animated.Value(0)).current;
+  const scale = useRef(Animated.Value(0.9)).current;
 
   useEffect(() => {
     if (visible) {

@@ -2,7 +2,7 @@
 // app/marketplace.tsx
 // Marketplace com cards animados - NOVAIX FITNESS
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Animated } from 'react-native';
 import { COLORS } from '../src/constants/colors';
 import { SPACING, BORDER_RADIUS } from '../src/constants/spacing';
@@ -34,8 +34,8 @@ export default function MarketplaceScreen() {
   const debouncedSearch = useDebounce(search, 300);
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
 
   useEffect(() => {
     if (!loading) {

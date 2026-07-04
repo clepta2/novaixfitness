@@ -3,7 +3,7 @@
 // Tela de Cadastro com animacoes de entrada - NOVAIX FITNESS
 
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect , useRef} from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -29,9 +29,9 @@ export default function RegisterScreen() {
   } = useRegister();
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(30), []);
-  const logoScale = useMemo(() => new Animated.Value(0.8), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(30)).current;
+  const logoScale = useRef(Animated.Value(0.8)).current;
 
   useEffect(() => {
     Animated.parallel([

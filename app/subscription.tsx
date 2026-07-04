@@ -3,7 +3,7 @@
 // Assinatura com animacoes de transicao - NOVAIX FITNESS
 
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect , useRef} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,9 +28,9 @@ export default function SubscriptionScreen() {
   } = useSubscription();
 
   // Animacoes
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
-  const slideAnim = useMemo(() => new Animated.Value(20), []);
-  const scaleAnim = useMemo(() => new Animated.Value(0.95), []);
+  const fadeAnim = useRef(Animated.Value(0)).current;
+  const slideAnim = useRef(Animated.Value(20)).current;
+  const scaleAnim = useRef(Animated.Value(0.95)).current;
 
   useEffect(() => {
     if (!loading) {

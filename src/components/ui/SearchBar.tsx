@@ -42,7 +42,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const borderColor = useMemo(() => new Animated.Value(0), []);
+  const borderColor = useRef(Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(borderColor, {
