@@ -36,16 +36,16 @@ export default function GoalsScreen() {
 
   const renderGoal = ({ item }) => {
     const gt = GOAL_TYPES.find(g => g.id === item.goal_type);
-    const progress = 0;
+    const progress = item.target_value > 0 ? Math.min(100, ((stats.totalWorkouts || 0) / item.target_value) * 100) : 0;
     return (
       <View style={styles.goalCard}>
         <View style={styles.goalRow}>
           <Ionicons name={gt?.icon || 'flag'} size={18} color={COLORS.primary} />
           <Text style={styles.goalTitle}>{gt?.label || item.goal_type}</Text>
-          <Text style={styles.goalPct}>Meta: {item.target_value} {item.target_unit}</Text>
+          <Text style={styles.goalPct}>{Math.round(progress)}%</Text>
         </View>
-        <View style={styles.goalBar}><View style={[styles.goalFill, { width: '0%' }]} /></View>
-        <Text style={styles.goalTarget}>{item.target_days} dias restantes</Text>
+        <View style={styles.goalBar}><View style={[styles.goalFill, { width: `${progress}%` }]} /></View>
+        <Text style={styles.goalTarget}>{item.target_value} {item.target_unit}</Text>
       </View>
     );
   };
