@@ -61,7 +61,10 @@ export function useDashboard() {
   const [refreshing, setRefreshing] = useState(false);
 
   const loadData = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setRefreshing(false);
+      return;
+    }
     try {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
       const sixtyDaysAgo = new Date(Date.now() - 60 * 86400000).toISOString();

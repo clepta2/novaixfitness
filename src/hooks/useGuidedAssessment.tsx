@@ -82,7 +82,10 @@ export function useGuidedAssessment(): UseGuidedAssessmentReturn {
   };
 
   const handleNext = useCallback((): void => {
-    if (test.metric === 'reps' && inputValue) {
+    setIsRunning(false);
+    if (test.metric === 'seconds' && elapsed > 0) {
+      setResults(prev => ({ ...prev, [test.id]: elapsed }));
+    } else if (test.metric === 'reps' && inputValue) {
       setResults(prev => ({ ...prev, [test.id]: parseInt(inputValue) || 0 }));
     }
     if (currentTest < TESTS.length - 1) {
@@ -90,7 +93,7 @@ export function useGuidedAssessment(): UseGuidedAssessmentReturn {
       setElapsed(0);
       setInputValue('');
     } else saveResults();
-  }, [test, inputValue, currentTest]);
+  }, [test, inputValue, currentTest, elapsed]);
 
   const saveResults = useCallback(async (): Promise<void> => {
     if (!user?.id) return;

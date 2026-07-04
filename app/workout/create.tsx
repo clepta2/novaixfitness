@@ -117,11 +117,11 @@ export default function CreateWorkoutScreen() {
               <View style={styles.exerciseList}>
                 {exercises.map((ex, i) => (
                   <ExerciseConfigurator 
-                    key={i} 
+                    key={`${ex.name}-${i}`}
                     exercise={ex} 
                     index={i}
-                    config={ex.config || {}} 
-                    onUpdate={(config) => updateConfig(i, config)} 
+                    config={ex}
+                    onChange={(config) => updateConfig(i, config)} 
                     onRemove={() => removeExercise(i)} 
                   />
                 ))}
