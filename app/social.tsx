@@ -136,8 +136,9 @@ export default function SocialScreen() {
           setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: true, likes: p.likes + 1 } : p));
         }
       });
-    } catch {
+    } catch (err) {
       setPosts(prev => prev.map(p => p.id === postId ? { ...p, isLiked: wasLiked, likes: prevLikes } : p));
+      if (__DEV__) console.error('Erro ao curtir:', err);
     } finally {
       processingLikes.current.delete(postId);
     }
