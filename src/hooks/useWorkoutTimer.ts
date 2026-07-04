@@ -70,6 +70,7 @@ export default function useWorkoutTimer(workout: Workout | null) {
     } else if (phaseRef.current === 'exercising') {
       playPhaseEnd();
       phaseChange();
+      setPhase('completed');
     }
   }, [startExercise]);
 
