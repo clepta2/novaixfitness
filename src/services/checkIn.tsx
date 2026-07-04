@@ -66,10 +66,11 @@ export async function performCheckIn(userId: string): Promise<CheckInResult> {
       .eq('id', userId)
       .single();
 
-    await supabase
+    const { error: updateError } = await supabase
       .from(TABLES.PROFILES)
       .update({ total_xp: (profile?.total_xp || 0) + xp })
       .eq('id', userId);
+    if (updateError) throw updateError;
 
     return { streakDay, xp, isNew: true };
   } catch (err) {
