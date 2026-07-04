@@ -12,6 +12,8 @@ interface FormattedPost {
   user: { name: string; avatar: string | null };
   content: string;
   image: string | null;
+  postType: string;
+  secondImage: string | null;
   createdAt: string;
   likes: number;
   comments: number;
@@ -26,6 +28,8 @@ function formatPost(p: Record<string, unknown>): FormattedPost {
     user: { name: (profiles?.name as string) || 'Atleta', avatar: (profiles?.avatar_url as string) || null },
     content: p.content as string,
     image: p.image_url as string | null,
+    postType: (p.post_type as string) || 'text',
+    secondImage: (p.second_image_url as string) || null,
     createdAt: 'Agora',
     likes: (p.likes_count as number) || 0,
     comments: (p.comments_count as number) || 0,
