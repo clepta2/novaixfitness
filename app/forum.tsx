@@ -52,7 +52,7 @@ export default function ForumScreen() {
 
   const filteredPosts = posts.filter(post => {
     const matchCategory = selectedCategory === 'all' || post.category === selectedCategory;
-    const matchSearch = !search || post.title.toLowerCase().includes(search.toLowerCase()) || post.content.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = !search || post.title.toLowerCase().includes(search.toLowerCase()) || (post.content || '').toLowerCase().includes(search.toLowerCase());
     return matchCategory && matchSearch;
   });
 
