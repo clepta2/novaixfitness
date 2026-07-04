@@ -1,6 +1,6 @@
 // src/components/common/SyncStatusIndicator.tsx
 // Indicador de status de sincronização offline/online
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -16,7 +16,7 @@ export default function SyncStatusIndicator({ pendingCount = 0 }: Props) {
   const { isOnline } = useNetworkStatus();
   const colors = useColors();
 
-  const fadeAnim = useMemo(() => new Animated.Value(0), []);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
