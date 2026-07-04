@@ -35,6 +35,7 @@ export default function MarketplaceDetailScreen() {
       try {
         const p = await getProductById(productId);
         if (!mountedRef.current) return;
+        if (!p) { setLoading(false); return; }
         setProduct(p);
         if (p.category_id) {
           const rel = await getRelatedProducts(productId, p.category_id);
