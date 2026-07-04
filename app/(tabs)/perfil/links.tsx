@@ -14,9 +14,13 @@ export default function LinksScreen() {
   const [showReferral, setShowReferral] = useState(false);
 
   const openLink = async (url) => {
-    const canOpen = await Linking.canOpenURL(url);
-    if (canOpen) {
-      await Linking.openURL(url);
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+      if (canOpen) {
+        await Linking.openURL(url);
+      }
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao abrir link:', err);
     }
   };
 
