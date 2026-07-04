@@ -164,7 +164,7 @@ export default function useWorkoutTimer(workout: Workout | null) {
     if (phase === 'exercising' || phase === 'resting') {
       intervalRef.current = setInterval(() => {
         setTimeRemaining((prev) => {
-          if (prev <= 1) { handlePhaseComplete(); return 0; }
+          if (prev <= 1) { return 0; }
           if (phaseRef.current === 'resting' && prev <= 4 && prev > 1) {
             countdownTick(prev - 1);
             playCountdownTick();
@@ -180,6 +180,12 @@ export default function useWorkoutTimer(workout: Workout | null) {
       if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
     };
   }, [phase, handlePhaseComplete]);
+
+  useEffect(() => {
+    if (timeRemaining === 0 && (phase === 'exercising' || phase === 'resting')) {
+      handlePhaseComplete();
+    }
+  }, [timeRemaining, phase, handlePhaseComplete]);
 
   const exerciseProgress = totalExercises > 0 ? (currentExerciseIndex / totalExercises) * 100 : 0;
   const setProgress = totalSets > 0 ? ((currentSet - 1) / totalSets) * 100 : 0;
