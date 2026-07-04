@@ -23,9 +23,13 @@ interface Goal {
 interface GoalStats {
   totalWorkouts: number;
   streak: number;
+  maxStreak: number;
   totalMeals: number;
   waterStreak: number;
   totalXp: number;
+  totalXP: number;
+  totalMinutes: number;
+  level: number;
 }
 
 export function useGoals() {
