@@ -147,7 +147,7 @@ export default function SocialScreen() {
     }
   };
   const handleComment = async (postId, text) => {
-    if (!user || !text?.trim()) return;
+    if (!user?.id || !text?.trim()) return;
     try {
       await checkAndPerform(ACTIONS.COMMENT_MADE, 'comment', async () => {
         const { error } = await supabase.from('post_comments').insert({ post_id: postId, user_id: user.id, content: text });
@@ -163,7 +163,7 @@ export default function SocialScreen() {
     }
   };
   const handleNewPost = async (postData) => {
-    if (!user) return;
+    if (!user?.id) return;
     try {
       await checkAndPerform(ACTIONS.POST_CREATED, 'post', async () => {
         const { data, error } = await supabase.from('posts').insert({
