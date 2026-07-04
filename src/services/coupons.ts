@@ -36,6 +36,7 @@ export async function applyCoupon(code, planId) {
 }
 
 export async function recordCouponUsage(couponCode, userId) {
+  if (!couponCode || !userId) return;
   await supabase
     .from(TABLES.COUPON_USAGE)
     .insert({ coupon_code: couponCode, user_id: userId });
