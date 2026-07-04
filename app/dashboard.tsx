@@ -8,7 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { COLORS } from '../src/constants/colors';
 import { useDashboard } from '../src/hooks/useDashboard';
-import { useResponsive } from '../src/hooks/useResponsive';
 import { layout, typography } from '../src/styles';
 import { DashboardStats, MuscleRadarChart, ErrorBoundary, WeeklySummary, QuickAccessGrid } from '../src/components';
 import { shareProgress } from '../src/services/share';
