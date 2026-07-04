@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { getMealLogs } from '../../services/mealAnalyzer';
+import { getMealLogs } from '../../services/mealAnalyzerService';
 import { MEAL_ICONS, MEAL_COLORS, formatDate, formatMealTime } from '../../data/mealHistory';
 
 function MealItem({ meal }) {

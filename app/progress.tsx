@@ -109,16 +109,16 @@ export default function ProgressScreen() {
                     <StatsCard icon="resize" value={latest.waist || '--'} label="Cintura" color={COLORS.attention} suffix="cm" />
                   </View>
                 )}
-                <ProgressOverview latest={latest} previous={previous} />
+                <ProgressOverview photos={photos as any} measurements={measurements as any} latest={latest} previous={previous} onNavigate={(tab: string) => setActiveTab(tab)} />
               </View>
             )}
 
             {activeTab === 'measurements' && (
-              <ProgressMeasurements measurements={measurements} />
+              <ProgressMeasurements userId={user?.id} />
             )}
 
             {activeTab === 'photos' && (
-              <ProgressPhotosTab photos={photos} />
+              <ProgressPhotosTab userId={user?.id} />
             )}
           </Animated.View>
         </ScrollView>

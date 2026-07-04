@@ -162,10 +162,10 @@ export default function WorkoutDetailScreen() {
           {exercises.map((ex, i) => (
             <ExerciseAccordion
               key={ex.id || ex.name}
-              exercise={ex}
+              exercise={ex as any}
               index={i}
-              isOpen={expanded === (ex.id || ex.name)}
-              onToggle={() => setExpanded(expanded === (ex.id || ex.name) ? null : (ex.id || ex.name))}
+              isOpen={expanded === i}
+              onToggle={() => setExpanded(expanded === i ? null : i)}
             />
           ))}
         </View>

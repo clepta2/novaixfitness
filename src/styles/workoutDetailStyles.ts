@@ -44,6 +44,15 @@ export function useWorkoutDetailStyles() {
       right: 0,
       zIndex: 90,
     },
+    musclesSection: { marginHorizontal: SPACING.lg, marginBottom: SPACING.xl },
+    musclesTitle: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textMuted, letterSpacing: 1, marginBottom: SPACING.md },
+    musclesContainer: { gap: SPACING.sm },
+    muscleRow: { marginBottom: SPACING.xs },
+    muscleInfo: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
+    muscleName: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.textTitle },
+    musclePct: { fontFamily: 'Montserrat_700Bold', fontSize: 12, color: COLORS.textMuted },
+    muscleTrack: { height: 6, backgroundColor: COLORS.surfaceOverlay, borderRadius: 3, overflow: 'hidden' },
+    muscleFill: { height: '100%', borderRadius: 3 },
   }), [COLORS.background, COLORS.primary, COLORS.surface, COLORS.border, COLORS.surfaceOverlay, COLORS.textMuted]);
 }
 

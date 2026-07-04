@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { getDailySummary, calculateNutritionGoals } from '../../services/mealAnalyzer';
+import { getDailySummary, calculateNutritionGoals } from '../../services/mealAnalyzerService';
 
 function MacroBar({ label, current, goal, color, icon, delay = 0 }) {
   const animatedValue = useRef(new Animated.Value(0)).current;

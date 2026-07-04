@@ -86,7 +86,7 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
   return (
     <ErrorBoundary screenName={screenName}>
       <ScrollView style={layout.screen} contentContainerStyle={[layout.scroll, { paddingBottom: 120 }]} showsVerticalScrollIndicator={false}>
-        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} />
+        <TutorialOverlay visible={tutorialVisible} steps={tutorialSteps} onComplete={handleComplete} onSkip={handleSkip} onRestart={() => {}} />
         <View style={styles.header}>
           <View style={{ width: 24 }} />
           <View style={styles.headerIconWrap}><Ionicons name={headerIcon as any} size={20} color={COLORS.primary} /></View>

@@ -8,7 +8,7 @@ import { supabase } from '../../config/supabase';
 const PLAN_PRICES = { basic: 49.9, intermediate: 79.9, premium: 119.9, ultra: 199.9 };
 
 export default function FinanceStats() {
-  const [stats, setStats] = useState({ mrr: 0, active: 0, churn: 0, newMonth: 0 });
+  const [stats, setStats] = useState({ mrr: 0, active: 0, churn: 0 as number | string, newMonth: 0 });
 
   useEffect(() => { loadStats(); }, []);
 

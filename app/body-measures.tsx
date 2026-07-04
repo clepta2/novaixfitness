@@ -120,7 +120,7 @@ export default function BodyMeasuresScreen() {
         </Animated.View>
       </ScrollView>
 
-      {showForm && <MeasurementForm form={form} onChangeForm={setForm} onSave={handleSave} saving={saving} /> as any}
+      {showForm && <MeasurementForm form={form} onChangeForm={(f) => setForm(f as typeof form)} onSave={handleSave} saving={saving} />}
     </ErrorBoundary>
   );
 }

@@ -40,7 +40,7 @@ export default function OnboardingScreen() {
         router.push(currentStep.redirectScreen as string);
         return;
       }
-      const nextStepId = getNextStep(currentStepId, data) as any;
+      const nextStepId = getNextStep(currentStepId, data as Record<string, unknown>) as any;
       if (nextStepId === 'processing') {
         await saveOnboarding(data);
         router.push('/onboarding/processando');

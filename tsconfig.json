@@ -37,6 +37,7 @@
     "backend",
     "scripts",
     "securit",
-    ".storybook"
+    ".storybook",
+    "**/tradninja/**"
   ]
 }

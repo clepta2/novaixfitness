@@ -8,7 +8,8 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { getMealLogs, getDailySummary } from '../../services/mealAnalyzer';
+import { getMealLogs } from '../../services/mealAnalyzerService';
+import { getDailySummary } from '../../services/mealAnalyzerService';
 
 const REPORT_TYPES = [
   { id: 'daily', title: 'Relatório Diário', icon: 'calendar', color: COLORS.primary, desc: 'Resumo de hoje' },

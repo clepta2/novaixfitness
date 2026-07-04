@@ -48,14 +48,13 @@ export default function CreateWorkoutScreen() {
           {/* Step 0: Informacoes basicas */}
           {step === 0 && (
             <View>
-              <Input 
-                label="Nome do Treino" 
-                value={form.name} 
-                onChangeText={(v: string) => updateForm('name', v)} 
-                placeholder="Ex: Treino A - Peito" 
-                icon="create-outline" 
-                error={errors.name} 
-                success={form.name && !errors.name ? 'Nome valido' : undefined}
+              <Input
+                label="Nome do Treino"
+                value={form.name}
+                onChangeText={(v: string) => updateForm('name', v)}
+                placeholder="Ex: Treino A - Peito"
+                icon="create-outline"
+                error={errors.name}
               />
               
               {errors.category && (

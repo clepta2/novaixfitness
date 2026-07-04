@@ -92,7 +92,7 @@ export default memo(function WeeklyProgress() {
         )}
       </View>
 
-      <ProgressBar value={completedThisWeek} max={targetWeekly} label={progressText} />
+      <ProgressBar value={completedThisWeek} max={targetWeekly} label={progressText} showValue={false} style={undefined} />
     </Card>
   );
 });

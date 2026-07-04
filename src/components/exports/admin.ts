@@ -10,3 +10,4 @@ export { default as TwoFactorPrompt } from '../admin/TwoFactorPrompt';
 export { default as AdminDashboard } from '../admin/AdminDashboard';
 export { default as StudentEditModal } from '../admin/StudentEditModal';
 export { default as ReferralCard } from '../referral/ReferralCard';
+export { default as MonitoringDashboard } from '../admin/MonitoringDashboard';

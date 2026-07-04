@@ -152,7 +152,7 @@ export default function LibraryScreen() {
                   workout={workout as any}
                   onPress={() => handleWorkoutPress(workout)}
                   onFavorite={() => toggleFavorite(workout.id as string)}
-                  isFavorite={favorites.includes(workout.id as string)}
+                  isFavorite={favorites.some((f: any) => f.id === workout.id)}
                   isOfflineCached={cachedIds?.has?.(workout.id as string)}
                 />
               </View>

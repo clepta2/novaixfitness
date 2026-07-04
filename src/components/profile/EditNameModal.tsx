@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   title: { fontFamily: 'Montserrat_700Bold', fontSize: 16, color: COLORS.textTitle, letterSpacing: 1 },
   inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.background, borderRadius: BORDER_RADIUS.md, borderWidth: 1, borderColor: COLORS.border, paddingHorizontal: SPACING.md, height: 48, marginBottom: SPACING.xl },
   inputIcon: { marginRight: SPACING.sm },
-  input: { flex: 1, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14, outlineStyle: 'none' },
+  input: { flex: 1, color: COLORS.textTitle, fontFamily: 'Inter_400Regular', fontSize: 14 } as any,
   actions: { flexDirection: 'row', gap: SPACING.md },
   cancelBtn: { flex: 1, height: 48, borderRadius: BORDER_RADIUS.md, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border },
   cancelText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: COLORS.textMuted },

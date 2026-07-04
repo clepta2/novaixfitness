@@ -110,7 +110,9 @@ declare module '../../core/types' {
   }
 }
 
-declare module 'module' {}
+declare module 'module' {
+  const exports: any;
+}
 declare module 'fs' {
   export function readFileSync(path: string, encoding?: string): any;
   export function writeFileSync(path: string, data: any, encoding?: string): void;

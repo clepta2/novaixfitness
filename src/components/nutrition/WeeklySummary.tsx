@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
-import { getMealLogs } from '../../services/mealAnalyzer';
+import { getMealLogs } from '../../services/mealAnalyzerService';
 
 function StatBar({ label, value, avg, max, color, unit = '' }) {
   const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;

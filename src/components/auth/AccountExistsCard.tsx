@@ -44,8 +44,8 @@ export default function AccountExistsCard({ type, email, onClear, onGoogleSignIn
         <View style={{ flex: 1, height: 1, backgroundColor: '#333' }} />
       </View>
 
-      <SocialButton icon="google" iconColor={COLORS.googleBlue} label="Entrar com Google" onPress={onGoogleSignIn} />
-      <SocialButton icon="apple" iconColor="#FFF" label="Entrar com Apple" onPress={onAppleSignIn} />
+      <SocialButton icon="google" iconColor={COLORS.googleBlue} label="Entrar com Google" onPress={onGoogleSignIn} bgColor={undefined} translucent={undefined} />
+      <SocialButton icon="apple" iconColor="#FFF" label="Entrar com Apple" onPress={onAppleSignIn} bgColor={undefined} translucent={undefined} />
 
       <TouchableOpacity onPress={onClear} style={{ alignItems: 'center', marginTop: 10 }} accessibilityLabel={type === 'email' ? 'Usar outro e-mail' : 'Usar outro CPF'} accessibilityRole="button">
         <Text style={{ color: COLORS.primary, fontSize: 13, textDecorationLine: 'underline' }}>
