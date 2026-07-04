@@ -162,18 +162,22 @@ export default function SocialScreen() {
   };
   const handleNewPost = async (postData) => {
     if (!user) return;
-    await checkAndPerform(ACTIONS.POST_CREATED, 'post', async () => {
-      const { data, error } = await supabase.from('posts').insert({
-        user_id: user.id, content: postData.content, image_url: postData.image,
-        post_type: postData.postType || 'text', second_image_url: postData.secondImage || null, filter_applied: postData.filter || null,
-      }).select('*, profiles:user_id(name, avatar_url)').single();
-      if (error) throw error;
-      setPosts(prev => [{
-        id: data.id, userId: data.user_id, user: { name: data.profiles?.name || 'Você', avatar: data.profiles?.avatar_url || null },
-        content: data.content, image: data.image_url, postType: data.post_type, secondImage: data.second_image_url,
-        createdAt: t('social.justNow'), likes: 0, comments: 0, isLiked: false,
-      }, ...prev]);
-    }, t('social.errorPost'));
+    try {
+      await checkAndPerform(ACTIONS.POST_CREATED, 'post', async () => {
+        const { data, error } = await supabase.from('posts').insert({
+          user_id: user.id, content: postData.content, image_url: postData.image,
+          post_type: postData.postType || 'text', second_image_url: postData.secondImage || null, filter_applied: postData.filter || null,
+        }).select('*, profiles:user_id(name, avatar_url)').single();
+        if (error) throw error;
+        setPosts(prev => [{
+          id: data.id, userId: data.user_id, user: { name: data.profiles?.name || 'Você', avatar: data.profiles?.avatar_url || null },
+          content: data.content, image: data.image_url, postType: data.post_type, secondImage: data.second_image_url,
+          createdAt: t('social.justNow'), likes: 0, comments: 0, isLiked: false,
+        }, ...prev]);
+      }, t('social.errorPost'));
+    } catch (err) {
+      if (__DEV__) console.error('Erro ao criar post:', err);
+    }
   };
   const handleQuickAction = (actionId) => {
     if (actionId === 'post') setShowCreatePost(true);
