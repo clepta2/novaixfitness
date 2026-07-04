@@ -38,7 +38,7 @@ interface WorkoutCompletionResult {
 }
 
 export async function addXP(userId: string, type: string, amount?: number): Promise<number> {
-  const xpGain = amount || XP_VALUES[type as keyof typeof XP_VALUES] || 0;
+  const xpGain = amount ?? XP_VALUES[type as keyof typeof XP_VALUES] ?? 0;
   if (!userId || xpGain <= 0) return 0;
 
   try {
