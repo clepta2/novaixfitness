@@ -28,7 +28,10 @@ export default function MarketplaceDetailScreen() {
   useEffect(() => {
     mountedRef.current = true;
     async function load() {
-      if (!productId) return;
+      if (!productId) {
+        setLoading(false);
+        return;
+      }
       try {
         const p = await getProductById(productId);
         if (!mountedRef.current) return;
