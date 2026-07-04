@@ -56,8 +56,11 @@ export default function MarketplaceDetailScreen() {
     return () => { mountedRef.current = false; };
   }, [productId, user?.id]);
 
+  const isTogglingRef = useRef(false);
+
   const handleToggleFavorite = async () => {
-    if (!user?.id) return;
+    if (!user?.id || isTogglingRef.current) return;
+    isTogglingRef.current = true;
     const previousState = favorited;
     setFavorited(!favorited);
     try {
@@ -66,6 +69,8 @@ export default function MarketplaceDetailScreen() {
     } catch (err) {
       setFavorited(previousState);
       if (__DEV__) console.error('Erro ao alternar favorito:', err);
+    } finally {
+      isTogglingRef.current = false;
     }
   };
 
