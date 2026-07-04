@@ -49,11 +49,10 @@ export default function GoalsScreen() {
       workouts: stats.totalWorkouts || 0,
       streak: stats.streak || 0,
       minutes: stats.totalMinutes || 0,
-      weight_loss: 0,
-      weight_gain: 0,
     };
-    const currentVal = statMap[item.goal_type] || 0;
-    const progress = item.target_value > 0 ? Math.min(100, (currentVal / item.target_value) * 100) : 0;
+    const hasTracking = item.goal_type in statMap;
+    const currentVal = hasTracking ? (statMap[item.goal_type] || 0) : 0;
+    const progress = hasTracking && item.target_value > 0 ? Math.min(100, (currentVal / item.target_value) * 100) : 0;
     return (
       <View style={styles.goalCard}>
         <View style={styles.goalRow}>
