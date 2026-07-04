@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../config/supabase';
 import { COLORS } from '../constants/colors';
 
-export const STEPS: string[] = ['Info', 'Exercícios', 'Configurar', 'Preview'];
+export const STEPS: string[] = ['Info', 'Exercícios', 'Preview'];
 
 interface LevelOption {
   id: string;
