@@ -121,4 +121,5 @@ export async function getConversionFunnel(startDate: string, endDate: string): P
 }
 
 // Re-exportar analytics de usuario para compatibilidade
-export { getWorkoutAnalytics, getNutritionAnalytics, getProgressAnalytics, getEngagementMetrics, generateAnalyticsReport } from './analyticsUser';
+export { getWorkoutAnalytics, getEngagementMetrics, generateAnalyticsReport } from './analytics/analytics';
+export { getNutritionAnalytics, getProgressAnalytics } from './analytics/analytics-nutrition';

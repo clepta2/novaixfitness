@@ -12,7 +12,7 @@ import { calculateCustomWorkoutXP } from '../../config/gamificationConfig';
 import { calcStreak } from '../../helpers/streaks';
 
 export async function addXP(userId, type, amount) {
-  const xpGain = amount || XP_VALUES[type] || 0;
+  const xpGain = amount ?? XP_VALUES[type] ?? 0;
   if (!userId || xpGain <= 0) return 0;
 
   const result = await tryIf(async () => {
@@ -22,13 +22,14 @@ export async function addXP(userId, type, amount) {
       .eq('id', userId)
       .single();
 
-    const currentXP = profile?.total_xp || 0;
+    const currentXP = profile?.total_xp ?? 0;
     const newXP = currentXP + xpGain;
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('profiles')
       .update({ total_xp: newXP })
       .eq('id', userId);
+    if (updateError) throw updateError;
 
     return newXP;
   }, { retries: 2, baseDelay: 500 });
@@ -55,9 +56,9 @@ export async function getGamificationData(userId) {
     const { count: likesCount } = await supabase.from('post_likes').select('*', { count: 'exact', head: true }).eq('user_id', userId);
     const { count: commentsCount } = await supabase.from('post_comments').select('*', { count: 'exact', head: true }).eq('user_id', userId);
 
-    const totalXP = profile?.total_xp || 0;
-    const totalWorkouts = profile?.total_workouts || userWorkouts?.filter(w => w.completed).length || 0;
-    const totalMinutes = profile?.total_minutes || userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) || 0;
+    const totalXP = profile?.total_xp ?? 0;
+    const totalWorkouts = profile?.total_workouts ?? userWorkouts?.filter(w => w.completed).length ?? 0;
+    const totalMinutes = profile?.total_minutes ?? userWorkouts?.reduce((s, w) => s + (w.duration || 0), 0) ?? 0;
     const streak = calcStreak(userWorkouts || []);
     const maxStreak = Math.max(profile?.max_streak || 0, streak);
 
@@ -70,10 +71,10 @@ export async function getGamificationData(userId) {
       streak,
       maxStreak,
       level: level.level,
-      social_first_post_count: postsCount || 0,
-      social_10_posts_count: postsCount || 0,
-      social_50_likes_count: likesCount || 0,
-      social_25_comments_count: commentsCount || 0,
+      social_first_post_count: (postsCount ?? 0) >= 1 ? 1 : 0,
+      social_10_posts_count: (postsCount ?? 0) >= 10 ? 1 : 0,
+      social_50_likes_count: (likesCount ?? 0) >= 50 ? 1 : 0,
+      social_25_comments_count: (commentsCount ?? 0) >= 25 ? 1 : 0,
     };
 
     const achievements = getUnlockedAchievements(stats);
