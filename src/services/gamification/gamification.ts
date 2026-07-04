@@ -4,6 +4,7 @@
 import { supabase } from '../../config/supabase';
 import { XP_VALUES, getLevelForXP, calculateLevel, getUnlockedAchievements, checkNewAchievements } from '../../constants/gamification';
 import { tryIf } from '../../utils/tryIf';
+import { incrementXP } from '../../utils/atomicUpdates';
 
 export { calculateLevel };
 import { sendPushToUser } from '../notifications/pushNotifications';
@@ -16,22 +17,15 @@ export async function addXP(userId, type, amount) {
   if (!userId || xpGain <= 0) return 0;
 
   const result = await tryIf(async () => {
+    await incrementXP(userId, xpGain);
+
+    // Return updated total for callers
     const { data: profile } = await supabase
       .from('profiles')
       .select('total_xp')
       .eq('id', userId)
       .single();
-
-    const currentXP = profile?.total_xp ?? 0;
-    const newXP = currentXP + xpGain;
-
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({ total_xp: newXP })
-      .eq('id', userId);
-    if (updateError) throw updateError;
-
-    return newXP;
+    return profile?.total_xp ?? 0;
   }, { retries: 2, baseDelay: 500 });
 
   return result.ok ? result.data : 0;
@@ -210,4 +204,3 @@ export async function getUserGamificationProfile(userId: string) {
 
 // Re-export rankings and helpers from sub-module
 export { getRankings, getUserRank, getUserAchievements, getXPForNextLevel, getLevelProgress } from './rankings';
-}

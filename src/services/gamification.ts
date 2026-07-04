@@ -42,24 +42,15 @@ export async function addXP(userId: string, type: string, amount?: number): Prom
   if (!userId || xpGain <= 0) return 0;
 
   try {
+    await incrementXP(userId, xpGain);
+
     const { data: profile } = await supabase
       .from('profiles')
       .select('total_xp')
       .eq('id', userId)
       .single();
-
-    const currentXP = profile?.total_xp ?? 0;
-    const newXP = currentXP + xpGain;
-
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({ total_xp: newXP })
-      .eq('id', userId);
-    if (updateError) throw updateError;
-
-    return newXP;
+    return profile?.total_xp ?? 0;
   } catch (err) {
-    if (__DEV__) console.error('Erro ao adicionar XP:', err);
     return 0;
   }
 }
