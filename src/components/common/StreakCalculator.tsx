@@ -59,7 +59,7 @@ export function StreakCalculator({
       marginTop: SPACING.xs,
     },
   }), [colors]);
-  const streakData: StreakResult = calculateStreakData(workouts as { completed: boolean; completed_at?: string }[]);
+  const streakData: StreakResult = calculateStreakData(workouts as any);
   
   const sizeStyles = {
     sm: { iconSize: 20, fontSize: 14, padding: SPACING.sm },

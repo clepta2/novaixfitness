@@ -48,7 +48,7 @@ export function FrequencyChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="FREQÜÊNCIA SEMANAL" subtitle="Treinos por semana" icon="calendar" onPress={onPress}>
-      <BarChart data={{ labels: data.map(f => f.week), datasets: [{ data: data.map(f => f.count || 0) }] }} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
+      <BarChart data={{ labels: data.map(f => f.week), datasets: [{ data: data.map(f => f.count || 0) }] }} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" {...{} as any} />
     </ChartCard>
   );
 }
@@ -56,7 +56,7 @@ export function FrequencyChart({ data, onPress }) {
 export function CategoryChart({ data, onPress }) {
   if (!data || Object.keys(data).length === 0) {
     return (
-      <ChartCard title="TREINOS POR CATEGORIA" icon="pie-chart">
+      <ChartCard title="TREINOS POR CATEGORIA" icon="pie-chart" subtitle="" onPress={undefined}>
         <View style={styles.emptyChart}>
           <Ionicons name="pie-chart-outline" size={32} color={COLORS.textMuted} />
           <Text style={styles.emptyText}>Sem dados</Text>
@@ -65,7 +65,7 @@ export function CategoryChart({ data, onPress }) {
     );
   }
   return (
-    <ChartCard title="TREINOS POR CATEGORIA" icon="pie-chart" onPress={onPress}>
+    <ChartCard title="TREINOS POR CATEGORIA" icon="pie-chart" subtitle="" onPress={onPress}>
       <PieChart data={Object.entries(data).map(([name, count]) => ({ name, population: count, color: CATEGORY_COLORS[name] || COLORS.textDescription, legendFontColor: COLORS.textMuted, legendFontSize: 11 }))} width={SCREEN_WIDTH - 80} height={180} chartConfig={chartConfig} accessor="population" backgroundColor="transparent" paddingLeft="15" />
     </ChartCard>
   );
@@ -75,7 +75,7 @@ export function DayOfWeekChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="TREINOS POR DIA" subtitle="Qual dia você mais treina?" icon="calendar-outline" onPress={onPress}>
-      <BarChart data={{ labels: data.map(d => d.day), datasets: [{ data: data.map(d => d.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
+      <BarChart data={{ labels: data.map(d => d.day), datasets: [{ data: data.map(d => d.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" {...{} as any} />
     </ChartCard>
   );
 }
@@ -93,7 +93,7 @@ export function HourChart({ data, onPress }) {
   if (!data || data.length === 0) return null;
   return (
     <ChartCard title="HORÁRIOS PREFERIDOS" subtitle="Quando você treina?" icon="time" onPress={onPress}>
-      <BarChart data={{ labels: data.slice(0, 8).map(h => h.hour), datasets: [{ data: data.slice(0, 8).map(h => h.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" />
+      <BarChart data={{ labels: data.slice(0, 8).map(h => h.hour), datasets: [{ data: data.slice(0, 8).map(h => h.count) }] }} width={SCREEN_WIDTH - 80} height={160} chartConfig={chartConfig} showValuesOnTopOfBars fromZero yAxisLabel="" yAxisSuffix="" {...{} as any} />
     </ChartCard>
   );
 }

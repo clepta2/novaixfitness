@@ -63,7 +63,7 @@ export function ToastProvider({ children }) {
     error: (msg: string) => addToast(msg, 'error'),
     warning: (msg: string) => addToast(msg, 'warning'),
     info: (msg: string) => addToast(msg, 'info'),
-  };
+  } as any;
 
   return (
     <ToastContext.Provider value={toast}>

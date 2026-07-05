@@ -28,7 +28,7 @@ export default function FinanceStats() {
       const lastMonth = profiles.filter(p => p.created_at >= lastMonthStart && p.created_at < monthStart).length;
       const churn = lastMonth > 0 ? Math.max(0, ((lastMonth - thisMonth) / lastMonth) * 100).toFixed(1) : '0.0';
 
-      setStats({ mrr, active: active.length, churn, newMonth: thisMonth });
+      setStats({ mrr: Number(mrr), active: active.length, churn: Number(churn), newMonth: thisMonth });
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar stats financeiros:', err);
     }
