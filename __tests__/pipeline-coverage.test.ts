@@ -34,6 +34,7 @@ describe('Pipeline Coverage — frases reais', () => {
     'treinamos':'train','perdemos':'lose','fazemos':'do','temos':'have',
     'falamos':'speak','pensamos':'think','dormimos':'sleep',
     'vou':'go','estou':'am','sou':'am','tenho':'have','posso':'can',
+    'como':'eat','dorme':'sleeps','fala':'speaks','bebe':'drinks',
     'governo':'government','presidente':'president','mercado':'market',
     'empresa':'company','pesquisa':'research','universidade':'university',
     'notícia':'news','médico':'doctor','professor':'teacher',
@@ -44,6 +45,10 @@ describe('Pipeline Coverage — frases reais', () => {
     'cedo':'early','longe':'far','perto':'near',
     'estou':'am','sou':'am','tenho':'have','posso':'can',
     'comer':'eat','beber':'drink','correr':'run','dormir':'sleep',
+    'bebo':'drink','como':'eat','corro':'run','durmo':'sleep',
+    'falo':'speak','penso':'think','come':'eat','bebe':'drinks',
+    'alto':'tall','cedo':'early','rápido':'fast','bonita':'pretty',
+    'preto':'black','forte':'strong','novo':'new',
   };
 
   // Pipeline completo (espelha o tradutor real)
