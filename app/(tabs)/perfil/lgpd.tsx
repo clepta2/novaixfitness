@@ -37,7 +37,7 @@ export default function LGPDScreen() {
       { text: 'Exportar', onPress: async () => {
         setLoading(true);
         try { await downloadUserData(user.id); Alert.alert('Sucesso', 'Dados exportados com sucesso!'); }
-        catch (err) { Alert.alert('Erro', 'Não foi possível exportar: ' + err.message); }
+        catch (err: any) { Alert.alert('Erro', 'Não foi possível exportar: ' + err.message); }
         finally { setLoading(false); }
       }},
     ]);
@@ -53,7 +53,7 @@ export default function LGPDScreen() {
           { text: 'DELETAR CONTA', style: 'destructive', onPress: async () => {
             setLoading(true);
             try { await deleteAccount(user.id); Alert.alert('Conta Deletada', 'Sua conta foi removida.', [{ text: 'OK', onPress: () => router.replace('/') }]); }
-            catch (err) { Alert.alert('Erro', 'Não foi possível deletar: ' + err.message); }
+            catch (err: any) { Alert.alert('Erro', 'Não foi possível deletar: ' + err.message); }
             finally { setLoading(false); }
           }},
         ]);

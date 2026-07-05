@@ -136,7 +136,7 @@ Retorne JSON: { week: [{ day, name, exercises: [{name, sets, reps, rest, muscle}
 }
 
 // ─── Fallbacks ─────────────────────────────────────────────
-function generateFallbackMealPlan(profile) {
+function generateFallbackMealPlan(profile: any) {
   const goal = profile.goal || 'manter';
   const multiplier = goal === 'emagrecer' ? 0.85 : goal === 'ganhar' ? 1.15 : 1;
   const baseCalories = Math.round(1800 * multiplier);
@@ -158,7 +158,7 @@ function generateFallbackMealPlan(profile) {
   };
 }
 
-function generateFallbackWorkoutPlan(profile) {
+function generateFallbackWorkoutPlan(profile: any) {
   const days = profile.availableDays || 4;
   const dayNames = ['Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo'];
   const templates = [

@@ -7,7 +7,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 const WEEKDAYS = ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'];
 const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-export default function MiniCalendar({ visible, selectedDate, onSelect, onClose }) {
+export default function MiniCalendar({ visible, selectedDate, onSelect, onClose }: { visible: boolean; selectedDate?: string; onSelect: (date: string) => void; onClose: () => void }) {
   const initDate = useRef(() => {
     if (selectedDate && selectedDate.length === 10) {
       const [d, m, y] = selectedDate.split('/').map(Number);
@@ -27,7 +27,7 @@ export default function MiniCalendar({ visible, selectedDate, onSelect, onClose 
   for (let i = 0; i < firstDay; i++) days.push(null);
   for (let i = 1; i <= daysInMonth; i++) days.push(i);
 
-  const handleSelect = (day) => {
+  const handleSelect = (day: number) => {
     const dd = String(day).padStart(2, '0');
     const mm = String(month + 1).padStart(2, '0');
     onSelect(`${dd}/${mm}/${year}`);

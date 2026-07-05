@@ -63,9 +63,9 @@ export default function WeeklyProgressScreen() {
           <FilterBar selected={period} onSelect={setPeriod} style={{ marginBottom: SPACING.md }} />
 
           <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-            <WeekSummary data={weekData} />
+            <WeekSummary data={weekData as any} />
 
-            {period === 'week' && <DayGrid byDay={weekData?.byDay} />}
+            {period === 'week' && <DayGrid byDay={weekData?.byDay as any} />}
 
             {period === 'week' && weekData?.byDay && (
               <View style={styles.chartCard}>
@@ -88,9 +88,9 @@ export default function WeeklyProgressScreen() {
               </View>
             )}
 
-            <CategoryBars categories={weekData?.categories} total={weekData?.totalWorkouts} />
-            <DayDetails byDay={weekData?.byDay} />
-            <GlobalStats totalWorkouts={weekData?.globalWorkouts} streak={weekData?.streak} totalXP={weekData?.totalXP} />
+            <CategoryBars categories={weekData?.categories as any} total={weekData?.totalWorkouts as any} />
+            <DayDetails byDay={weekData?.byDay as any} />
+            <GlobalStats totalWorkouts={weekData?.globalWorkouts as any} streak={weekData?.streak as any} totalXP={weekData?.totalXP as any} />
           </Animated.View>
 
           <View style={{ height: 40 }} />

@@ -8,14 +8,14 @@ import { COLORS } from '../../constants/colors';
 import { useI18n } from '../../i18n';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function SetLogger({ exerciseId, onLogSet, previousData }) {
+export default function SetLogger({ exerciseId, onLogSet, previousData }: { exerciseId?: string; onLogSet?: (data: any) => void; previousData?: { weight?: number; reps?: number } }) {
   const { t } = useI18n();
   const [sets, setSets] = useState<any[]>([]);
   const [weight, setWeight] = useState(previousData?.weight?.toString() || '');
   const [reps, setReps] = useState(previousData?.reps?.toString() || '12');
   const [isRunning, setIsRunning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<any>(null);
 
   useEffect(() => {
     return () => clearInterval(intervalRef.current);
@@ -48,11 +48,11 @@ export default function SetLogger({ exerciseId, onLogSet, previousData }) {
     setElapsed(0);
   };
 
-  const handleRemoveSet = (index) => {
+  const handleRemoveSet = (index: number) => {
     setSets(prev => prev.filter((_, i) => i !== index));
   };
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;

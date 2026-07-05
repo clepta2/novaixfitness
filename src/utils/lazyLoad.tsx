@@ -1,7 +1,7 @@
 // src/utils/lazyLoad.ts
 // Utilitarios de lazy loading - NOVAIX FITNESS
 
-import React, { Suspense, lazy, ComponentType } from 'react';
+import React, { Suspense, lazy, ComponentType, useState, useCallback } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/colors';
 
@@ -75,8 +75,6 @@ export function useLazyLoad<T>(
 
   return { data, loading, error, load };
 }
-
-import { useState, useCallback } from 'react';
 
 const styles = StyleSheet.create({
   fallback: {

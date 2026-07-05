@@ -4,15 +4,15 @@
 import { supabase } from '../../config/supabase';
 import { tryIf } from '../../utils/tryIf';
 
-let userId = null;
-let sessionId = null;
+let userId: string | null = null;
+let sessionId: string | null = null;
 
-export function setTrackerUser(id) {
+export function setTrackerUser(id: string | null) {
   userId = id;
   sessionId = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export async function trackEvent(eventName, params = {}) {
+export async function trackEvent(eventName: string, params: Record<string, unknown> = {}) {
   if (!userId) return;
 
   const event = {
@@ -50,19 +50,19 @@ export const Events = {
   NOTIFICATION_OPEN: 'notification_open',
 };
 
-export function trackScreen(screenName) {
+export function trackScreen(screenName: string) {
   trackEvent(Events.SCREEN_VIEW, { screen: screenName });
 }
 
-export function trackWorkoutStart(workoutId, workoutName) {
+export function trackWorkoutStart(workoutId: string, workoutName: string) {
   trackEvent(Events.WORKOUT_START, { workout_id: workoutId, workout_name: workoutName });
 }
 
-export function trackWorkoutComplete(workoutId, duration) {
+export function trackWorkoutComplete(workoutId: string, duration: number) {
   trackEvent(Events.WORKOUT_COMPLETE, { workout_id: workoutId, duration });
 }
 
-export function trackError(errorName, screen, message) {
+export function trackError(errorName: string, screen: string, message: string) {
   trackEvent('error', { error_name: errorName, screen, message });
 }
 export const EVENT_TYPES = { PAGE_VIEW: 'page_view', BUTTON_CLICK: 'button_click', FEATURE_USE: 'feature_use', ERROR: 'error' };

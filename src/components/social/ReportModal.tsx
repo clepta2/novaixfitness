@@ -11,7 +11,7 @@ import { REPORT } from '../../data/socialTexts';
 
 const REPORT_REASONS = REPORT.reasons;
 
-export default function ReportModal({ visible, onClose, onSubmit, targetUser, targetPost }) {
+export default function ReportModal({ visible, onClose, onSubmit, targetUser, targetPost }: { visible: boolean; onClose: () => void; onSubmit?: (data: any) => void; targetUser?: string; targetPost?: string }) {
   const { t } = useI18n();
   const [selectedReason, setSelectedReason] = useState(null);
   const [details, setDetails] = useState('');

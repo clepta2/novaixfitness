@@ -44,9 +44,9 @@ export function useAuthState() {
   }, []);
 
   const signInWithEmail = async (email: string, password: string) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
-    const passCheck = validate('password', password);
+    const passCheck = validate('password', password) as any;
     if (!passCheck.valid) throw new Error(passCheck.error);
     const rateCheck = rateLimit('login_' + email, 5, 60000);
     if (!rateCheck.allowed) throw new Error('Muitas tentativas. Aguarde ' + rateCheck.retryAfter + 's');
@@ -72,9 +72,9 @@ export function useAuthState() {
   };
 
   const signUpWithEmail = async (email: string, password: string, metadata: { name?: string; [key: string]: unknown } = {}) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
-    const passCheck = validate('password', password);
+    const passCheck = validate('password', password) as any;
     if (!passCheck.valid) throw new Error(passCheck.error);
     if (metadata.name) { const nameCheck = validate('name', sanitizeString(metadata.name)) as any; if (!nameCheck.valid) throw new Error(nameCheck.error); }
     const signupIp = await getClientIp();

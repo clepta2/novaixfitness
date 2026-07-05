@@ -21,19 +21,19 @@ export default function WearablesScreen() {
   const { profile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [syncing, setSyncing] = useState(null);
+  const [syncing, setSyncing] = useState<string | null>(null);
   const [wAvail, setWAvail] = useState(false);
   const [hAvail, setHAvail] = useState(false);
   const [wConn, setWConn] = useState(false);
   const [hConn, setHConn] = useState(false);
-  const [heartRate, setHeartRate] = useState(null);
-  const [restingHR, setRestingHR] = useState(null);
-  const [maxHR, setMaxHR] = useState(null);
+  const [heartRate, setHeartRate] = useState<number | null>(null);
+  const [restingHR, setRestingHR] = useState<number | null>(null);
+  const [maxHR, setMaxHR] = useState<number | null>(null);
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
   const [activities, setActivities] = useState<any[]>([]);
-  const [activeActivity, setActiveActivity] = useState(null);
+  const [activeActivity, setActiveActivity] = useState<string | null>(null);
 
   const init = useCallback(async () => {
     try {

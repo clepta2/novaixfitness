@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { Button } from '../ui/Button';
 import { FORUM_CATEGORIES } from '../../data/forumCategories';
 
-export default function CreateForumPostModal({ visible, onClose, onSubmit }) {
+export default function CreateForumPostModal({ visible, onClose, onSubmit }: { visible: boolean; onClose: () => void; onSubmit?: (data: { title: string; content: string; category: string }) => Promise<void> }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState(FORUM_CATEGORIES[0]?.id || 'treino');
@@ -27,7 +27,7 @@ export default function CreateForumPostModal({ visible, onClose, onSubmit }) {
       setContent('');
       setCategory(FORUM_CATEGORIES[0]?.id || 'treino');
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message || 'Falha ao criar post');
     } finally {
       setLoading(false);

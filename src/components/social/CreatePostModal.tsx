@@ -9,7 +9,7 @@ import { Button } from '../ui/Button';
 import { COMPOSER } from '../../data/socialTexts';
 import { validateContent } from '../../middleware/communityGuard';
 
-export default function CreatePostModal({ visible, onClose, onSubmit, userId }) {
+export default function CreatePostModal({ visible, onClose, onSubmit, userId }: { visible: boolean; onClose: () => void; onSubmit?: (data: any) => void; userId?: string }) {
   const [content, setContent] = useState('');
   const [imageUri, setImageUri] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -32,7 +32,7 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
     }
   };
 
-  const uploadImage = async (userId) => {
+  const uploadImage = async (userId: string | undefined) => {
     if (!imageUri) return null;
     setUploading(true);
     try {
@@ -42,8 +42,8 @@ export default function CreatePostModal({ visible, onClose, onSubmit, userId }) 
       const { error: uploadError } = await supabase.storage.from('posts').upload(fileName, formData, { contentType: 'image/jpeg', upsert: false });
       if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage.from('posts').getPublicUrl(fileName);
-      return urlData.publicUrl;
-    } catch (err) {
+      return urlData.publicUrl || '';
+    } catch (err: any) {
       Alert.alert(COMPOSER.errorTitle, COMPOSER.uploadError + err.message);
       return null;
     } finally {

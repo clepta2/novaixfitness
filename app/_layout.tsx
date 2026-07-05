@@ -162,7 +162,7 @@ export default function RootLayout() {
   if (!fontsLoaded) return <LoadingScreen />;
 
   return (
-    <I18nProvider initialLocale={null}>
+    <I18nProvider initialLocale={undefined}>
       <AuthProvider>
         <ThemeProvider>
           <AuthRedirect />

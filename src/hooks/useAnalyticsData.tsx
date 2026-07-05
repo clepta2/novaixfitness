@@ -87,7 +87,7 @@ export function useWorkoutAnalytics(period: string = 'month') {
     async function load() {
       setLoading(true);
       try {
-        const res = await getWorkoutAnalytics(user.id, period);
+        const res = await getWorkoutAnalytics(user!.id, period);
         setData(res as any);
       } catch {}
       setLoading(false);
@@ -108,7 +108,7 @@ export function useNutritionAnalytics(period: string = 'month') {
     async function load() {
       setLoading(true);
       try {
-        const res = await getNutritionAnalytics(user.id, period);
+        const res = await getNutritionAnalytics(user!.id, period);
         setData(res as any);
       } catch {}
       setLoading(false);
@@ -129,7 +129,7 @@ export function useProgressAnalytics() {
     async function load() {
       setLoading(true);
       try {
-        const res = await getProgressAnalytics(user.id);
+        const res = await getProgressAnalytics(user!.id);
         setData(res as any);
       } catch {}
       setLoading(false);
@@ -150,7 +150,7 @@ export function useEngagementMetrics() {
     async function load() {
       setLoading(true);
       try {
-        const res = await getEngagementMetrics(user.id);
+        const res = await getEngagementMetrics(user!.id);
         setData(res as any);
       } catch {}
       setLoading(false);

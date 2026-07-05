@@ -11,8 +11,8 @@ const guard = createServiceGuard({ serviceName: 'featureFlags' });
 const FLAGS_CACHE_KEY = '@novaix:feature_flags';
 const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
 
-let flagsCache = null;
-let cacheTimestamp = null;
+let flagsCache: Record<string, boolean> | null = null;
+let cacheTimestamp: number | null = null;
 
 const DEFAULT_FLAGS = {
   new_onboarding_flow: false,
@@ -37,7 +37,7 @@ const DEFAULT_FLAGS = {
   achievements: true,
 };
 
-export async function getFeatureFlags(userId = null) {
+export async function getFeatureFlags(userId: string | null = null) {
   const cached = await getCachedFlags();
   if (cached) return cached;
 
@@ -69,12 +69,12 @@ export async function getFeatureFlags(userId = null) {
   }
 }
 
-export async function isFeatureEnabled(flagKey, userId = null) {
+export async function isFeatureEnabled(flagKey: string, userId: string | null = null) {
   const flags = await getFeatureFlags(userId);
   return flags[flagKey] ?? false;
 }
 
-export async function getVariant(flagKey, userId, variants = ['control', 'variant_a', 'variant_b']) {
+export async function getVariant(flagKey: string, userId: string, variants: string[] = ['control', 'variant_a', 'variant_b']) {
   const { data } = await supabase
     .from(TABLES.AB_TEST_ASSIGNMENTS)
     .select('variant')
@@ -99,7 +99,7 @@ export async function getVariant(flagKey, userId, variants = ['control', 'varian
   return variant;
 }
 
-export async function trackConversion(flagKey, userId, event) {
+export async function trackConversion(flagKey: string, userId: string, event: string) {
   await supabase
     .from(TABLES.AB_TEST_CONVERSIONS)
     .insert({
@@ -109,7 +109,7 @@ export async function trackConversion(flagKey, userId, event) {
     });
 }
 
-export async function createFeatureFlag(key, value, description, userId = null) {
+export async function createFeatureFlag(key: string, value: boolean, description: string, userId: string | null = null) {
   const result = await guard.guard(async () => {
     const { data, error } = await supabase
       .from(TABLES.FEATURE_FLAGS)
@@ -129,7 +129,7 @@ export async function createFeatureFlag(key, value, description, userId = null) 
   return result.ok ? result.data : null;
 }
 
-export async function toggleFeatureFlag(key, enabled) {
+export async function toggleFeatureFlag(key: string, enabled: boolean) {
   await guard.guard(async () => {
     const { error } = await supabase
       .from(TABLES.FEATURE_FLAGS)
@@ -150,7 +150,7 @@ async function getCachedFlags() {
   return flagsCache;
 }
 
-async function cacheFlags(flags) {
+async function cacheFlags(flags: Record<string, boolean>) {
   flagsCache = flags;
   cacheTimestamp = Date.now();
   try {
@@ -166,7 +166,7 @@ async function clearFlagsCache() {
   } catch (e) { if (__DEV__) console.warn('featureFlags:', e); }
 }
 
-function hashString(str) {
+function hashString(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);

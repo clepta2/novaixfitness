@@ -6,7 +6,7 @@ import { TUTORIALS, TUTORIAL_STORAGE_KEY } from '../data/tutorials';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { tryIf } from '../utils/tryIf';
 
-export async function hasCompletedTutorial(userId, screenId = 'home') {
+export async function hasCompletedTutorial(userId: string, screenId: string = 'home') {
   if (!userId) return false;
 
   const result = await tryIf(async () => {
@@ -28,7 +28,7 @@ export async function hasCompletedTutorial(userId, screenId = 'home') {
   return result.ok ? result.data! : false;
 }
 
-export async function completeTutorial(userId, screenId = 'home') {
+export async function completeTutorial(userId: string, screenId: string = 'home') {
   if (!userId) return;
 
   await tryIf(async () => {
@@ -46,7 +46,7 @@ export async function completeTutorial(userId, screenId = 'home') {
   }, { retries: 2, baseDelay: 500 });
 }
 
-export async function markTutorialSkipped(userId, screenId = 'home') {
+export async function markTutorialSkipped(userId: string, screenId: string = 'home') {
   if (!userId) return;
 
   await tryIf(async () => {
@@ -64,7 +64,7 @@ export async function markTutorialSkipped(userId, screenId = 'home') {
   }, { retries: 2, baseDelay: 500 });
 }
 
-export function getTutorialSteps(screenId = 'home') {
+export function getTutorialSteps(screenId: string = 'home') {
   const tutorial = TUTORIALS[screenId];
   return tutorial ? tutorial.steps : [];
 }
@@ -73,7 +73,7 @@ export function getAllTutorials() {
   return TUTORIALS;
 }
 
-export function getStepForScreen(screenName) {
+export function getStepForScreen(screenName: string) {
   const steps = [];
   Object.values(TUTORIALS).forEach(tutorial => {
     const screenSteps = tutorial.steps.filter(step => step.screen === screenName);
@@ -82,7 +82,7 @@ export function getStepForScreen(screenName) {
   return steps;
 }
 
-export async function hasCompletedAnyTutorial(userId) {
+export async function hasCompletedAnyTutorial(userId: string) {
   const result = await tryIf(async () => {
     const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
     if (stored) {
@@ -106,7 +106,7 @@ export async function hasCompletedAnyTutorial(userId) {
   return supaResult.ok ? supaResult.data! : false;
 }
 
-export async function resetAllTutorials(userId) {
+export async function resetAllTutorials(userId?: string) {
   await tryIf(async () => {
     await AsyncStorage.removeItem(TUTORIAL_STORAGE_KEY);
     if (userId) {
@@ -118,7 +118,7 @@ export async function resetAllTutorials(userId) {
   }, { retries: 2, baseDelay: 500 });
 }
 
-export async function resetTutorialForScreen(userId, screenId) {
+export async function resetTutorialForScreen(userId: string, screenId: string) {
   await tryIf(async () => {
     const stored = await AsyncStorage.getItem(TUTORIAL_STORAGE_KEY);
     const completed = stored ? JSON.parse(stored) : {};

@@ -33,7 +33,7 @@ export function useMarketplaceData(userId: string | undefined) {
       return await getProducts(params);
     }, { retries: 1, baseDelay: 500 });
     if (result.ok) {
-      setProducts(prev => reset ? result.data : [...prev, ...(result.data || [])]);
+      setProducts(prev => reset ? (result.data || []) : [...prev, ...(result.data || [])]);
       setHasMore((result.data || []).length >= PAGE_SIZE);
       setOffset(reset ? (result.data || []).length : newOffset + (result.data || []).length);
     } else {

@@ -96,7 +96,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Deletar', style: 'destructive', onPress: async () => {
         await deleteMeasurement(id, userId);
-        setHistory(await getMeasurements(userId));
+        setHistory((await getMeasurements(userId)) || []);
       }},
     ]);
   };

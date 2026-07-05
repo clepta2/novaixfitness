@@ -71,7 +71,7 @@ export default function FeedScreen() {
   };
 
   const loadStories = async () => {
-    const data = await getActiveStories(user?.id) as any[];
+    const data = await getActiveStories(user?.id || '') as any[];
     const grouped: Record<string, any[]> = {};
     data.forEach((s: any) => {
       if (!grouped[s.user_id]) grouped[s.user_id] = [];
@@ -128,7 +128,7 @@ export default function FeedScreen() {
         ) : (
           filteredPosts.map((post, index) => (
             <View key={post.id} style={[styles.postWrapper, { opacity: Math.min(1, 0.8 + index * 0.05) }]}>
-              <PostCard post={post} onLike={handleLike} onComment={handleComment} currentUserId={user?.id} />
+              <PostCard post={post as any} onLike={handleLike} onComment={handleComment} currentUserId={user?.id} />
             </View>
           ))
         )}

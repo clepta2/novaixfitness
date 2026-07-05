@@ -16,7 +16,7 @@ export async function getWorkoutRecommendation(userId: string, preferences: Reco
   try {
     const response = await callGemini(prompt, forceRegenerate);
     return parseWorkoutRecommendation(response);
-  } catch (err) {
+  } catch (err: any) {
     if (err.message === 'COINS_INSUFFICIENT') throw err;
     if (__DEV__) console.warn('Erro na recomendacao IA:', err);
     return getFallbackRecommendation(userProfile, recentWorkouts);
@@ -31,7 +31,7 @@ export async function getNutritionAdvice(userId: string, goal: string, restricti
   try {
     const response = await callGemini(prompt, forceRegenerate);
     return parseNutritionAdvice(response);
-  } catch (err) {
+  } catch (err: any) {
     if (err.message === 'COINS_INSUFFICIENT') throw err;
     if (__DEV__) console.warn('Erro no conselho nutricional IA:', err);
     return getFallbackNutrition(userProfile, goal);
@@ -47,7 +47,7 @@ export async function analyzeProgress(userId: string, forceRegenerate = false) {
   try {
     const response = await callGemini(prompt, forceRegenerate);
     return parseProgressAnalysis(response);
-  } catch (err) {
+  } catch (err: any) {
     if (err.message === 'COINS_INSUFFICIENT') throw err;
     if (__DEV__) console.warn('Erro na analise IA:', err);
     return getFallbackAnalysis(stats);
@@ -57,7 +57,7 @@ export async function analyzeProgress(userId: string, forceRegenerate = false) {
 export async function getMotivationalMessage(userId: string, forceRegenerate = false) {
   const stats = await getUserStats(userId);
   const prompt = `Generate a short motivational message in Portuguese for a fitness app user. They have completed ${stats.total_workouts} workouts and have a ${stats.current_streak}-day streak. Keep it under 50 words.`;
-  try { return await callGemini(prompt, forceRegenerate); } catch (err) { if (err.message === 'COINS_INSUFFICIENT') throw err; return getFallbackMotivation(stats); }
+  try { return await callGemini(prompt, forceRegenerate); } catch (err: any) { if (err.message === 'COINS_INSUFFICIENT') throw err; return getFallbackMotivation(stats); }
 }
 
 const GEMINI_API_URL = `${APP_CONFIG.apis.geminiBaseUrl}`;

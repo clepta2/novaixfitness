@@ -38,7 +38,7 @@ export default function LiveScreen() {
 
   const handleCreateLive = async ({ title, description, workoutType, isPublic }) => {
     await checkAndPerform(ACTIONS.LIVE_CREATED, 'live', async () => {
-      const live = await createLive(user.id, { title, description, workoutType, isPublic });
+      const live = await createLive(user?.id || '', { title, description, workoutType, isPublic });
       await startLive(live.id);
       router.push({ pathname: '/live-room', params: { id: live.id } });
     }, 'Erro ao criar live');

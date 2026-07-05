@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function ProgressPhotoGrid({ photos = [] }) {
+export default function ProgressPhotoGrid({ photos = [] }: { photos?: any[] }) {
   if (photos.length === 0) return null;
 
   return (

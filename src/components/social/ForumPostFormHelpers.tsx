@@ -7,7 +7,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { FORUM_CATEGORIES } from '../../data/forumCategories';
 
-export function useForumPostForm(defaultCategory) {
+export function useForumPostForm(defaultCategory?: string) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState(defaultCategory || FORUM_CATEGORIES[0]?.id || 'treino');
@@ -27,14 +27,14 @@ export function useForumPostForm(defaultCategory) {
     return true;
   };
 
-  const submit = async (onSubmit, onClose) => {
+  const submit = async (onSubmit: (data: { title: string; content: string; category: string }) => Promise<void>, onClose: () => void) => {
     if (!validate()) return;
     setLoading(true);
     try {
       await onSubmit?.({ title: title.trim(), content: content.trim(), category });
       reset();
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message || 'Falha ao criar post');
     } finally {
       setLoading(false);
@@ -44,7 +44,7 @@ export function useForumPostForm(defaultCategory) {
   return { title, setTitle, content, setContent, category, setCategory, loading, submit };
 }
 
-export function CategorySelector({ category, setCategory }) {
+export function CategorySelector({ category, setCategory }: { category: string; setCategory: (c: string) => void }) {
   return (
     <View style={s.container}>
       {FORUM_CATEGORIES.map((cat) => (

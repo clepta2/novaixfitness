@@ -50,7 +50,7 @@ export default memo(function DailySummaryCard({ summary, goals }: DailySummaryCa
   const calAnim = useRef(new Animated.Value(0)).current;
   const data = summary || { calories: 0, protein: 0, carbs: 0, fat: 0, meals: 0 };
   const remaining = Math.max(0, (goals?.calories || 0) - Math.round(data.calories));
-  const calProgress = (goals?.calories || 0) > 0 ? Math.min(100, (data.calories / goals.calories) * 100) : 0;
+  const calProgress = (goals?.calories || 0) > 0 ? Math.min(100, (data.calories / (goals?.calories || 1)) * 100) : 0;
 
   useEffect(() => {
     Animated.spring(calAnim, {
@@ -70,7 +70,7 @@ export default memo(function DailySummaryCard({ summary, goals }: DailySummaryCa
           <Text style={styles.calLabel}>kcal</Text>
         </View>
         <View style={styles.calInfo}>
-          <Text style={styles.calGoal}>Meta: {goals.calories} kcal</Text>
+          <Text style={styles.calGoal}>Meta: {goals?.calories || 0} kcal</Text>
           <View style={styles.calBarBg}>
             <Animated.View style={[styles.calBarFill, { width: calBarWidth }]} />
           </View>
@@ -78,9 +78,9 @@ export default memo(function DailySummaryCard({ summary, goals }: DailySummaryCa
         </View>
       </View>
       <View style={styles.macros}>
-        <MacroBar label="Proteína" current={data.protein} goal={goals.protein} color={COLORS.success} icon="flash" />
-        <MacroBar label="Carboidratos" current={data.carbs} goal={goals.carbs} color={COLORS.primary} icon="leaf" delay={100} />
-        <MacroBar label="Gordura" current={data.fat} goal={goals.fat} color={COLORS.secondary} icon="water" delay={200} />
+        <MacroBar label="Proteína" current={data.protein} goal={goals?.protein || 0} color={COLORS.success} icon="flash" />
+        <MacroBar label="Carboidratos" current={data.carbs} goal={goals?.carbs || 0} color={COLORS.primary} icon="leaf" delay={100} />
+        <MacroBar label="Gordura" current={data.fat} goal={goals?.fat || 0} color={COLORS.secondary} icon="water" delay={200} />
       </View>
     </View>
   );

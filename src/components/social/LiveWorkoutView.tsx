@@ -89,7 +89,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutView
     if (!newMessage.trim()) return;
 
     if (!user?.id) return;
-    const textCheck = moderateText(newMessage, user.id);
+    const textCheck = moderateText(newMessage, user?.id as any);
     if (textCheck.blocked) {
       Alert.alert(t('live.messageBlocked'), textCheck.message);
       return;
@@ -122,7 +122,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutView
   };
 
   const renderMessage = ({ item }) => (
-    <View style={[styles.message, item.user_id === user.id && styles.messageOwn]}>
+    <View style={[styles.message, item.user_id === user?.id && styles.messageOwn]}>
       <Avatar name={item.profiles?.name} size="xs" />
       <View style={styles.messageContent}>
         <Text style={styles.messageAuthor}>{item.profiles?.name || t('live.defaultUser')}</Text>

@@ -14,7 +14,7 @@ export default function LiveRoomScreen() {
   const { id: rawId } = useLocalSearchParams();
   const id = rawId as string;
   const { user } = useAuth();
-  const [live, setLive] = useState(null);
+  const [live, setLive] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { if (id) loadLive(); }, [id]);
@@ -23,7 +23,7 @@ export default function LiveRoomScreen() {
     const data = await getLiveById(id as string);
     setLive(data);
     if (data && data.status !== 'ended') {
-      await joinLive(id as string, user.id);
+      await joinLive(id as string, user?.id || '');
     }
     setLoading(false);
   };
@@ -40,7 +40,7 @@ export default function LiveRoomScreen() {
 
   if (loading || !live) return <View style={styles.center} />;
 
-  const isHost = live.host_id === user.id;
+  const isHost = live.host_id === user?.id;
 
   return (
     <ErrorBoundary screenName="LiveRoom">

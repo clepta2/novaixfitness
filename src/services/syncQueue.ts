@@ -81,7 +81,7 @@ export async function syncPendingActions(executeActionFn: (action: QueuedAction)
 }
 
 export async function isOnline(): Promise<boolean> {
-  try { const state = await NetInfo.fetch(); return state.isConnected; }
+  try { const state = await NetInfo.fetch(); return state.isConnected ?? true; }
   catch { return true; }
 }
 

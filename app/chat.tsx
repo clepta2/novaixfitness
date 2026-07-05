@@ -30,6 +30,7 @@ export default function ChatScreen() {
   };
 
   const handleNewChat = async (selectedUser: any) => {
+    if (!user) return;
     const convId = await getOrCreateDirectConversation(user.id, selectedUser.id);
     setSelectedConversation({
       id: convId,
@@ -38,7 +39,7 @@ export default function ChatScreen() {
         { user_id: user.id, profiles: { name: user.user_metadata?.name || 'Voce' } },
         { user_id: selectedUser.id, profiles: { name: selectedUser.name, avatar_url: selectedUser.avatar_url } },
       ],
-    });
+    } as any);
   };
 
   if (selectedConversation) {

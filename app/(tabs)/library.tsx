@@ -107,7 +107,7 @@ export default function LibraryScreen() {
           <View style={styles.activeFilters}>
             <View style={styles.pillsRow}>
               {activePills.map((pill, i) => (
-                <TouchableOpacity key={i} style={styles.pill} onPress={() => removePill(pill.label)}>
+                <TouchableOpacity key={i} style={styles.pill} onPress={() => removePill(pill.label || '')}>
                   <Text style={styles.pillText}>{pill.label}</Text>
                   <Ionicons name="close-circle" size={14} color={COLORS.primary} />
                 </TouchableOpacity>

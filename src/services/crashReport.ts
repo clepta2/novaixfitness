@@ -5,14 +5,14 @@ import { supabase } from '../config/supabase';
 import { Platform } from 'react-native';
 import { tryIf } from '../utils/tryIf';
 
-let currentUser = null;
-let breadcrumbs = [];
+let currentUser: { id?: string } | null = null;
+let breadcrumbs: any[] = [];
 
-export function setCrashUser(user) {
+export function setCrashUser(user: { id?: string } | null) {
   currentUser = user;
 }
 
-export function addBreadcrumb(category, message, data) {
+export function addBreadcrumb(category: string, message: string, data?: any) {
   breadcrumbs.push({
     timestamp: new Date().toISOString(),
     category,
@@ -22,7 +22,7 @@ export function addBreadcrumb(category, message, data) {
   if (breadcrumbs.length > 50) breadcrumbs = breadcrumbs.slice(-50);
 }
 
-export async function reportCrash(error, extra = {}) {
+export async function reportCrash(error: any, extra: any = {}) {
   if (!error) return;
 
   const crashData = {
@@ -43,7 +43,7 @@ export async function reportCrash(error, extra = {}) {
   if (!result.ok && __DEV__) console.error('Falha ao reportar crash');
 }
 
-export async function reportHandledError(error, context = '') {
+export async function reportHandledError(error: any, context: string = '') {
   if (!error) return;
 
   const errorData = {
@@ -63,7 +63,7 @@ export async function reportHandledError(error, context = '') {
 export function setupCrashHandler() {
   const originalHandler = ErrorUtils.getGlobalHandler();
 
-  ErrorUtils.setGlobalHandler((error, isFatal) => {
+  ErrorUtils.setGlobalHandler((error: any, isFatal: boolean) => {
     if (isFatal) {
       reportCrash(error, { fatal: true });
     } else {

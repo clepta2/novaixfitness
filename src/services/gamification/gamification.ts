@@ -12,7 +12,7 @@ import { APP_CONFIG } from '../../config/app';
 import { calculateCustomWorkoutXP } from '../../config/gamificationConfig';
 import { calcStreak } from '../../helpers/streaks';
 
-export async function addXP(userId, type, amount) {
+export async function addXP(userId: string, type: string, amount?: number) {
   const xpGain = amount ?? XP_VALUES[type] ?? 0;
   if (!userId || xpGain <= 0) return 0;
 
@@ -31,7 +31,7 @@ export async function addXP(userId, type, amount) {
   return result.ok ? result.data : 0;
 }
 
-export async function getGamificationData(userId) {
+export async function getGamificationData(userId: string) {
   if (!userId) return null;
 
   const result = await tryIf(async () => {
@@ -89,7 +89,7 @@ export async function getGamificationData(userId) {
   }
 }
 
-export async function recordWorkoutCompletion(userId, workoutData, logs = [], duration = 0) {
+export async function recordWorkoutCompletion(userId: string, workoutData: any, logs: any[] = [], duration: number = 0) {
   if (!userId) return { xpGained: 0, newAchievements: [], streak: 0 };
 
   const result = await tryIf(async () => {
@@ -152,13 +152,13 @@ export async function recordWorkoutCompletion(userId, workoutData, logs = [], du
   }
 }
 
-export async function awardActionXP(userId, action) {
+export async function awardActionXP(userId: string, action: string) {
   const xpGain = XP_VALUES[action] || 0;
   if (!userId || xpGain <= 0) return 0;
   return addXP(userId, action, xpGain);
 }
 
-export async function updateMaxStreak(userId) {
+export async function updateMaxStreak(userId: string) {
   if (!userId) return;
   const result = await tryIf(async () => {
     const { data: workouts } = await supabase.from('user_workouts').select('completed, completed_at').eq('user_id', userId);

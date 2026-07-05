@@ -109,7 +109,7 @@ export function useSecurity(): UseSecurityReturn {
 
     if (result.blocked) {
       Alert.alert('Conteúdo Bloqueado', result.message, [{ text: 'OK' }]);
-      return { allowed: false, ...result } as ModerationResult;
+      return { ...result, allowed: false } as ModerationResult;
     }
 
     if (result.warning) {

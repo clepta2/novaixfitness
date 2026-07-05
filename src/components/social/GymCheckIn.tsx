@@ -8,7 +8,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useI18n } from '../../i18n';
 
-export default function GymCheckIn({ visible, onClose, onCheckIn, recentCheckIns = [] }) {
+export default function GymCheckIn({ visible, onClose, onCheckIn, recentCheckIns = [] }: { visible: boolean; onClose: () => void; onCheckIn?: (data: { gymName: string }) => void; recentCheckIns?: { name: string; gymName: string }[] }) {
   const { t } = useI18n();
   const [gymName, setGymName] = useState('');
 

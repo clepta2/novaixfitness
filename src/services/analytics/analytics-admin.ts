@@ -115,7 +115,7 @@ export async function getMonthlyComparison(userId: string): Promise<Record<strin
       change: ((thisMonthData.count || 0) - (lastMonthData.count || 0)),
     };
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : { thisMonth: 0, lastMonth: 0, change: 0 };
+  return result.ok ? result.data! : { thisMonth: 0, lastMonth: 0, change: 0 };
 }
 
 export async function getWeeklyConsistencyScore(userId: string): Promise<{ score: number; completedCount: number; targetCount: number }> {
@@ -139,7 +139,7 @@ export async function getWeeklyConsistencyScore(userId: string): Promise<{ score
 
     return { score, completedCount, targetCount };
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : { score: 0, completedCount: 0, targetCount: 0 };
+  return result.ok ? result.data! : { score: 0, completedCount: 0, targetCount: 0 };
 }
 
 export async function getCalorieBurnSummary(userId: string, period: string = 'month'): Promise<{ totalCalories: number; avgCaloriesPerWorkout: number; history: Array<{ date: string; calories: number }> }> {
@@ -167,5 +167,5 @@ export async function getCalorieBurnSummary(userId: string, period: string = 'mo
 
     return { totalCalories, avgCaloriesPerWorkout: list.length > 0 ? Math.round(totalCalories / list.length) : 0, history };
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : { totalCalories: 0, avgCaloriesPerWorkout: 0, history: [] };
+  return result.ok ? result.data! : { totalCalories: 0, avgCaloriesPerWorkout: 0, history: [] };
 }

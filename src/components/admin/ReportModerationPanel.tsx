@@ -97,7 +97,7 @@ export default function ReportModerationPanel() {
 
             Alert.alert('Sucesso', 'Usuário bloqueado e denúncia resolvida.');
             setReports(prev => prev.filter(r => r.id !== reportId));
-          } catch (err) {
+          } catch (err: any) {
             Alert.alert('Erro', err.message);
           }
         }

@@ -4,7 +4,7 @@ import { tryIf } from '../../utils/tryIf';
 
 const { defaultPrefs, types } = APP_CONFIG.notifications;
 
-export async function getNotificationPrefs(userId) {
+export async function getNotificationPrefs(userId: string) {
   if (!userId) return defaultPrefs;
   const result = await tryIf(async () => {
     const { data } = await supabase.from('profiles').select('notification_prefs').eq('id', userId).single();
@@ -13,7 +13,7 @@ export async function getNotificationPrefs(userId) {
   return result.ok ? result.data : defaultPrefs;
 }
 
-export async function setNotificationPref(userId, type, enabled) {
+export async function setNotificationPref(userId: string, type: string, enabled: boolean) {
   if (!userId) return;
   const result = await tryIf(async () => {
     const current = await getNotificationPrefs(userId);
@@ -25,7 +25,7 @@ export async function setNotificationPref(userId, type, enabled) {
   return result.ok ? result.data : undefined;
 }
 
-export async function isNotificationEnabled(userId, type) {
+export async function isNotificationEnabled(userId: string, type: string) {
   if (!userId) return true;
   const prefs = await getNotificationPrefs(userId);
   return prefs[type] !== false;

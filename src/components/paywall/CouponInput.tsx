@@ -20,14 +20,14 @@ function CouponInput({ onApply }) {
     setLoading(true);
     setError(null);
 
-    const result = await validateCoupon(code);
+    const result: any = await validateCoupon(code);
     setLoading(false);
 
-    if (result.valid) {
+    if (result?.valid) {
       setApplied(result);
       onApply?.(result);
     } else {
-      setError(result.error);
+      setError(result?.error);
       setApplied(null);
       onApply?.(null);
     }

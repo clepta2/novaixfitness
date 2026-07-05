@@ -26,7 +26,7 @@ export default function SavedPostsScreen() {
     const { data } = await supabase
       .from('saved_posts')
       .select('post_id, posts(*, profiles:user_id(name, avatar_url))')
-      .eq('user_id', user.id)
+      .eq('user_id', user?.id || '')
       .order('created_at', { ascending: false });
 
     setPosts((data as any[] || []).map((s: any) => ({

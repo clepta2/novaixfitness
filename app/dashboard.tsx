@@ -49,7 +49,7 @@ export default function DashboardScreen() {
           weekWorkouts={data?.weekWorkouts || 0}
           weekMinutes={data?.weekMinutes || 0}
           weekCalories={data?.weekCalories || 0}
-          recentWorkouts={data?.recentWorkouts || []}
+          recentWorkouts={(data?.recentWorkouts || []) as any}
         />
 
         {freqChartData && (
@@ -64,7 +64,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        {data?.muscleBalance && <MuscleRadarChart data={data.muscleBalance} previousData={data.prevMuscleBalance} />}
+        {data?.muscleBalance && <MuscleRadarChart data={data.muscleBalance} previousData={data.prevMuscleBalance as any} />}
 
         {monthlyChartData && (
           <TouchableOpacity style={styles.chartCard} onPress={() => router.push('/analytics')} accessibilityLabel="Ver gráfico evolução mensal" accessibilityRole="button">
@@ -102,8 +102,8 @@ export default function DashboardScreen() {
               <Text style={[styles.bmiValue, { color: parseFloat(bmi) < 25 ? COLORS.success : COLORS.attention }]}>{bmi}</Text>
             </View>
             <View style={styles.bmiRight}>
-              <Text style={typography.caption}>Altura: {data.height ?? '-'}cm</Text>
-              <Text style={typography.caption}>Peso: {data.weight ?? '-'}kg</Text>
+              <Text style={typography.caption}>Altura: {data?.height ?? '-'}cm</Text>
+              <Text style={typography.caption}>Peso: {data?.weight ?? '-'}kg</Text>
               <Text style={[typography.bodySmall, { color: COLORS.primary }]}>Ver detalhes →</Text>
             </View>
           </TouchableOpacity>

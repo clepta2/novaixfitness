@@ -12,7 +12,7 @@ import { supabase } from '../../config/supabase';
 import { Button } from '../ui/Button';
 import { useI18n } from '../../i18n';
 
-export default function StoryCreateModal({ visible, onClose, userId }) {
+export default function StoryCreateModal({ visible, onClose, userId }: { visible: boolean; onClose: () => void; userId?: string }) {
   const { t } = useI18n();
   const [imageUri, setImageUri] = useState(null);
   const [caption, setCaption] = useState('');
@@ -55,7 +55,7 @@ export default function StoryCreateModal({ visible, onClose, userId }) {
       setImageUri(null);
       setCaption('');
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert(t('common.error'), t('social.storyPublishError', { error: err.message }));
     } finally {
       setLoading(false);
