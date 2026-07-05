@@ -59,7 +59,7 @@ export function StreakCalculator({
       marginTop: SPACING.xs,
     },
   }), [colors]);
-  const streakData: StreakResult = calculateStreakData(workouts);
+  const streakData: StreakResult = calculateStreakData(workouts as { completed: boolean; completed_at?: string }[]);
   
   const sizeStyles = {
     sm: { iconSize: 20, fontSize: 14, padding: SPACING.sm },
@@ -88,7 +88,7 @@ export function StreakCalculator({
           <Text style={styles.detailText}>
             Recorde: {streakData.longest} dias
           </Text>
-          {streakData.isActiveToday && (
+          {streakData.current > 0 && (
             <Text style={styles.activeText}>Ativo hoje!</Text>
           )}
         </View>

@@ -23,7 +23,7 @@ export interface CachedPaths {
 async function ensureDirectory(path: string): Promise<void> {
   const dirInfo = await FileSystem.getInfoAsync(path);
   if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(path, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(path, { intermediates: true } as any);
   }
 }
 

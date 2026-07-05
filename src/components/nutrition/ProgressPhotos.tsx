@@ -57,7 +57,7 @@ interface ProgressPhotosProps {
 }
 
 export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState<Record<string, string>>({});
   const [lastEntry, setLastEntry] = useState(null);
   const [loading, setLoading] = useState(true);
   const { signal } = useAbortController();

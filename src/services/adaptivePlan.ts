@@ -27,7 +27,7 @@ interface WorkoutConfig {
   sessionDuration: number;
   exercisesPerSession: number;
   setsRange: number[];
-  repsRange: string;
+  repsRange: string | [number, number];
   restBetweenSets: number;
   cardioPerSession: number;
 }
@@ -59,15 +59,15 @@ export async function generateAdaptivePlan(
 
   const workoutConfig: WorkoutConfig = {
     ...config,
-    setsRange: [config.setsRange[0] + (goalAdj.setsBonus || 0), config.setsRange[1] + (goalAdj.setsBonus || 0)],
-    repsRange: goalAdj.repsRange || config.repsRange,
+    setsRange: [config.setsRange[0] + (goalAdj.setsBonus || 0), config.setsRange[1] + (goalAdj.setsBonus || 0)] as any,
+    repsRange: goalAdj.repsRange || String(config.repsRange),
     restBetweenSets: config.restBetweenSets + (goalAdj.restIncrease || 0) - (goalAdj.restReduction || 0),
     cardioPerSession: goalAdj.cardioPerSession || 0,
   };
 
-  if (ageAdj.volumeReduction > 0) {
-    workoutConfig.sessionDuration = Math.round(workoutConfig.sessionDuration * (1 - ageAdj.volumeReduction));
-    workoutConfig.exercisesPerSession = Math.max(3, Math.round(workoutConfig.exercisesPerSession * (1 - ageAdj.volumeReduction)));
+  if ((ageAdj as any).volumeReduction > 0) {
+    workoutConfig.sessionDuration = Math.round(workoutConfig.sessionDuration * (1 - (ageAdj as any).volumeReduction));
+    workoutConfig.exercisesPerSession = Math.max(3, Math.round(workoutConfig.exercisesPerSession * (1 - (ageAdj as any).volumeReduction)));
   }
 
   const waterConfig = calculateWater(userProfile?.weight || 70, userProfile?.height || 170, level, userProfile?.ageRange, userProfile?.injuries || []);

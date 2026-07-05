@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import Input from './Input';
+import { Input } from './Input';
 import { COLORS } from '../../constants/colors';
 
 export default {

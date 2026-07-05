@@ -8,8 +8,8 @@ import { typography } from '../../styles';
 import { StatCard } from '../ui';
 import { useI18n } from '../../i18n';
 import { styles } from './monitoringDashboardStyles';
-import { errorTracker } from '../../services/errorTracker';
-import { performanceMonitor } from '../../services/performanceMonitor';
+const errorTracker = require('../../services/errorTracker').errorTracker;
+const performanceMonitor = require('../../services/performanceMonitor').performanceMonitor;
 import MetricRow from './MetricRow';
 import ErrorRow from './ErrorRow';
 

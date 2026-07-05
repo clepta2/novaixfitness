@@ -68,7 +68,7 @@ export default memo(function WorkoutHeaderDetail({ workout, isFavorite, isOfflin
             <Text style={[styles.tagText, { color: categoryColor }]}>{workout?.category || 'Geral'}</Text>
           </View>
           <View style={styles.tag}>
-            <Ionicons name="level" size={12} color={COLORS.textMuted} />
+            <Ionicons name="barbell" size={12} color={COLORS.textMuted} />
             <Text style={styles.tagText}>{workout?.level || 'Intermediário'}</Text>
           </View>
           {workout?.rating != null && workout.rating > 0 && (

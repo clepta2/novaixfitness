@@ -72,9 +72,9 @@ export async function encryptField(plaintext: string, userKey: string): Promise<
 
     const encoded = new TextEncoder().encode(plaintext);
     const encrypted = await crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv, tagLength: TAG_LENGTH * 8 },
+      { name: 'AES-GCM', iv: iv as unknown as ArrayBuffer, tagLength: TAG_LENGTH * 8 },
       cryptoKey,
-      encoded
+      encoded as unknown as BufferSource
     );
 
     // Separa ciphertext e tag (ultimos 16 bytes)
@@ -82,7 +82,7 @@ export async function encryptField(plaintext: string, userKey: string): Promise<
     const ciphertext = encryptedBytes.slice(0, encryptedBytes.length - TAG_LENGTH);
     const tag = encryptedBytes.slice(encryptedBytes.length - TAG_LENGTH);
 
-    return `${bufferToBase64(iv.buffer)}:${bufferToBase64(ciphertext.buffer)}:${bufferToBase64(tag.buffer)}:${salt}`;
+    return `${bufferToBase64(iv.buffer as ArrayBuffer)}:${bufferToBase64(ciphertext.buffer as ArrayBuffer)}:${bufferToBase64(tag.buffer as ArrayBuffer)}:${salt}`;
   } catch {
     throw new Error('Falha na criptografia do campo');
   }

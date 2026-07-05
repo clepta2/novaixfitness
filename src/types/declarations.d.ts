@@ -97,19 +97,6 @@ declare module '@sentry/react-native' {
   export function close(timeout?: number): Promise<void>;
 }
 
-declare module '../../core/engine' {
-  export function createTranslator(options: any): any;
-}
-
-declare module '../../core/types' {
-  export type Language = string;
-  export interface TranslationContextValue {
-    t: (key: string, params?: Record<string, any>) => string;
-    locale: string;
-    setLocale: (locale: string) => void;
-  }
-}
-
 declare module 'module' {
   const exports: any;
 }
@@ -125,3 +112,8 @@ declare module 'path' {
   export function basename(path: string, ext?: string): string;
   export function dirname(path: string): string;
 }
+
+// Node global types for TS2591
+declare var __DEV__: boolean;
+declare function btoa(data: string): string;
+declare function atob(data: string): string;

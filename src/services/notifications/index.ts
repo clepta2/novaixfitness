@@ -53,7 +53,7 @@ export {
 
 // Aliases para compatibilidade com testes
 export async function requestNotificationPermission(): Promise<boolean> {
-  const token = await registerForPushNotificationsAsync();
+  const token = await registerForPushNotificationsAsync(undefined);
   return token !== null;
 }
 

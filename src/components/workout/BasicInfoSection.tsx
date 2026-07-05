@@ -62,7 +62,7 @@ export default function BasicInfoSection({ name, setName, description, setDescri
         <View style={styles.halfField}>
           <Text style={styles.fieldLabel}>PREMIUM</Text>
           <TouchableOpacity style={[styles.toggleBtn, isPremium && styles.toggleActive]} onPress={() => setIsPremium(!isPremium)} accessibilityLabel={isPremium ? 'Marcar como não premium' : 'Marcar como premium'} accessibilityRole="button" accessibilityState={{ checked: isPremium }}>
-            <Ionicons name={isPremium ? 'lock' : 'lock-open'} size={16} color={isPremium ? COLORS.background : COLORS.textMuted} />
+            <Ionicons name={(isPremium ? 'lock' : 'lock-open') as any} size={16} color={isPremium ? COLORS.background : COLORS.textMuted} />
             <Text style={[styles.toggleText, isPremium && styles.toggleTextActive]}>{isPremium ? 'Sim' : 'Não'}</Text>
           </TouchableOpacity>
         </View>

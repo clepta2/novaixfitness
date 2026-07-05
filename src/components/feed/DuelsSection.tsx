@@ -4,7 +4,7 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { SPACING } from '../../constants/spacing';
-import { ActiveDuelCard } from '../social/ActiveDuelCard';
+import ActiveDuelCard from '../social/ActiveDuelCard';
 import { MOCK_DUELS } from '../../data/duels';
 import { SOCIAL_FEED } from '../../data/socialTexts';
 

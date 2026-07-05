@@ -33,7 +33,7 @@ function TimeSlotItem({ slot, rating, onRate }) {
 }
 
 export default function EnergyTracker({ userId }) {
-  const [ratings, setRatings] = useState({});
+  const [ratings, setRatings] = useState<Record<string, number>>({});
   const [saved, setSaved] = useState(false);
 
   useEffect(() => { loadToday(); }, [userId]);
@@ -79,7 +79,7 @@ export default function EnergyTracker({ userId }) {
 
   const ratedCount = Object.keys(ratings).length;
   const avgEnergy = ratedCount > 0
-    ? (Object.values(ratings).reduce((a: any, b: any) => Number(a) + Number(b), 0) / ratedCount).toFixed(1)
+    ? (Object.values(ratings).reduce((a: number, b: any) => Number(a) + Number(b), 0) / ratedCount).toFixed(1)
     : '--';
 
   const avgColor = avgEnergy !== '--' && Number(avgEnergy) >= 4 ? COLORS.success : avgEnergy !== '--' && Number(avgEnergy) >= 3 ? COLORS.attention : avgEnergy !== '--' && Number(avgEnergy) >= 2 ? COLORS.secondary : COLORS.error;

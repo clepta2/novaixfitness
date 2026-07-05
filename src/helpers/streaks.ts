@@ -10,11 +10,12 @@ export interface StreakResult {
   longest: number;
   totalDays: number;
   lastWorkoutDate: string | null;
+  isActiveToday: boolean;
 }
 
 export function calculateStreakData(workouts: { completed: boolean; completed_at?: string }[]): StreakResult {
   if (!workouts?.length) {
-    return { current: 0, longest: 0, totalDays: 0, lastWorkoutDate: null };
+    return { current: 0, longest: 0, totalDays: 0, lastWorkoutDate: null, isActiveToday: false };
   }
 
   const dates = [...new Set(
@@ -24,7 +25,7 @@ export function calculateStreakData(workouts: { completed: boolean; completed_at
   )].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   if (!dates.length) {
-    return { current: 0, longest: 0, totalDays: 0, lastWorkoutDate: null };
+    return { current: 0, longest: 0, totalDays: 0, lastWorkoutDate: null, isActiveToday: false };
   }
 
   const today = new Date().toDateString();
@@ -59,5 +60,6 @@ export function calculateStreakData(workouts: { completed: boolean; completed_at
     longest: Math.max(longest, current),
     totalDays: dates.length,
     lastWorkoutDate: dates[0],
+    isActiveToday: current > 0,
   };
 }

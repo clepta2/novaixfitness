@@ -18,7 +18,7 @@ export default function BodyComposition() {
 
   const bmi = useMemo(() => calculateBMI(parseFloat(weight), parseFloat(height)), [weight, height]);
   const bodyFat = useMemo(() => calculateBodyFat(parseFloat(weight), parseFloat(height), parseInt(age), gender as 'F' | 'M', parseFloat(waist), parseFloat(neck), parseFloat(hip)), [weight, height, age, gender, waist, neck, hip]);
-  const tdee = useMemo(() => calculateTDEE(parseFloat(weight), parseFloat(height), parseInt(age), gender as 'F' | 'M', activity), [weight, height, age, gender, activity]);
+  const tdee = useMemo(() => calculateTDEE(parseFloat(weight), parseFloat(height), parseInt(age), gender as 'F' | 'M', activity as any), [weight, height, age, gender, activity]);
 
   return (
     <View style={styles.container}>

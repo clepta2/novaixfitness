@@ -69,11 +69,10 @@ export default function MealTimer() {
           data: { mealId: meal.id },
         },
         trigger: {
-          type: 'calendar' as const,
           hour: meal.hour,
           minute: meal.min,
           repeats: true,
-        },
+        } as any,
       });
     } catch (err) {
       if (__DEV__) console.error('Erro ao agendar notificação:', err);

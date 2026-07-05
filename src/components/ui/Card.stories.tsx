@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Card from './Card';
+import { Card } from './Card';
 import { COLORS } from '../../constants/colors';
 
 export default {

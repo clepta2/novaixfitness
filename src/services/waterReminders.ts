@@ -27,7 +27,7 @@ export async function scheduleWaterReminders(dailyGoal: number, preferredTime: P
         body: getWaterTip(),
         data: { type: 'water_reminder' },
       },
-      trigger: { hour, minute: 0, repeats: true },
+      trigger: { hour, minute: 0, repeats: true } as any,
     });
   }
 

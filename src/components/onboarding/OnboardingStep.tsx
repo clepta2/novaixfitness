@@ -49,15 +49,15 @@ export default function OnboardingStep({ step, data, onUpdate, onNext }: Onboard
 
   switch (step.type) {
     case 'info':
-      return <InfoStep step={step} onNext={onNext} />;
+      return <InfoStep step={step as any} onNext={onNext} />;
     case 'single_select':
-      return <SingleSelectStep step={step} value={localData[step.field || '']} onSelect={(v) => handleUpdate(step.field || '', v)} />;
+      return <SingleSelectStep step={step as any} value={localData[step.field || '']} onSelect={(v) => handleUpdate(step.field || '', v)} />;
     case 'multi_section':
-      return <MultiSectionStep step={step} data={localData} onUpdate={handleUpdate} />;
+      return <MultiSectionStep step={step as any} data={localData} onUpdate={handleUpdate} />;
     case 'cep_auto':
-      return <CepStep step={step} data={localData} onUpdate={handleUpdate} />;
+      return <CepStep step={step as any} data={localData as any} onUpdate={handleUpdate as any} />;
     case 'injury_flow':
-      return <InjuryStep step={step} data={localData} onUpdate={handleUpdate} />;
+      return <InjuryStep step={step as any} data={localData as any} onUpdate={handleUpdate} />;
     case 'toggles':
       return <TogglesStep step={step} data={localData} onUpdate={handleUpdate} />;
     case 'summary':

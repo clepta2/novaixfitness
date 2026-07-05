@@ -135,7 +135,7 @@ export async function recordWorkoutCompletion(
     }
 
     const updatedData = await getGamificationData(userId);
-    const newAchievements = updatedData ? checkNewAchievements(updatedData, prevAchievements) : [];
+    const newAchievements = updatedData ? checkNewAchievements(updatedData as any, prevAchievements) : [];
 
     const streakMilestones = Object.keys(APP_CONFIG.notifications.streakMessages).map(Number);
     const newStreak = updatedData?.streak || 0;

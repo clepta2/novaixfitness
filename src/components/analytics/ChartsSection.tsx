@@ -33,7 +33,7 @@ function ChartCard({ title, subtitle, children, onPress, icon }: { title: string
     <TouchableOpacity style={[styles.chartCard, { opacity: fadeAnim }]} onPress={onPress} activeOpacity={onPress ? 0.8 : 1} accessibilityLabel={title} accessibilityRole={onPress ? 'button' : undefined} accessibilityHint={onPress ? 'Expande o gráfico' : undefined}>
       <View style={styles.chartHeader}>
         <View style={styles.chartHeaderLeft}>
-          {icon && <Ionicons name={icon} size={16} color={COLORS.primary} />}
+          {icon && <Ionicons name={icon as any} size={16} color={COLORS.primary} />}
           <Text style={styles.chartTitle}>{title}</Text>
         </View>
         {subtitle && <Text style={styles.chartSubtitle}>{subtitle}</Text>}
