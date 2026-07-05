@@ -32,7 +32,7 @@ export default function ReportModerationPanel() {
 
       if (error) throw error;
       setReports(data || []);
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao buscar denúncias:', err.message);
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function ReportModerationPanel() {
       if (error) throw error;
       Alert.alert('Sucesso', 'Denúncia ignorada.');
       setReports(prev => prev.filter(r => r.id !== reportId));
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     }
   };
@@ -70,7 +70,7 @@ export default function ReportModerationPanel() {
 
             Alert.alert('Sucesso', 'Post excluído e denúncia resolvida.');
             setReports(prev => prev.filter(r => r.id !== reportId));
-          } catch (err) {
+          } catch (err: any) {
             Alert.alert('Erro', err.message);
           }
         }
@@ -87,7 +87,7 @@ export default function ReportModerationPanel() {
         style: 'destructive',
         onPress: async () => {
           try {
-            await blockUser(reportedUserId, null, {
+            await blockUser(reportedUserId, null as any, {
               reason: 'Violação repetida das diretrizes da comunidade',
               severity: 'permanent',
               blockType: 'full'

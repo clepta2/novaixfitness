@@ -38,7 +38,7 @@ export default function ConsistencyHeatmap() {
     return weeks;
   };
 
-  const [gridData] = useState(generateMockGrid());
+  const [gridData] = useState<any[]>(generateMockGrid());
 
   return (
     <View style={styles.card}>

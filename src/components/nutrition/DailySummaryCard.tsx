@@ -49,8 +49,8 @@ interface DailySummaryCardProps {
 export default memo(function DailySummaryCard({ summary, goals }: DailySummaryCardProps) {
   const calAnim = useRef(new Animated.Value(0)).current;
   const data = summary || { calories: 0, protein: 0, carbs: 0, fat: 0, meals: 0 };
-  const remaining = Math.max(0, goals.calories - Math.round(data.calories));
-  const calProgress = goals.calories > 0 ? Math.min(100, (data.calories / goals.calories) * 100) : 0;
+  const remaining = Math.max(0, (goals?.calories || 0) - Math.round(data.calories));
+  const calProgress = (goals?.calories || 0) > 0 ? Math.min(100, (data.calories / goals.calories) * 100) : 0;
 
   useEffect(() => {
     Animated.spring(calAnim, {

@@ -51,7 +51,7 @@ export default function WeeklyChallenges({ userId, compact = false }: Props) {
     if (userId) loadProgress();
   }, [userId]);
 
-  const getProgress = (challenge) => {
+  const getProgress = (challenge: any) => {
     let current = 0;
     switch (challenge.type) {
       case 'workouts': current = progress.workouts || 0; break;
@@ -63,7 +63,7 @@ export default function WeeklyChallenges({ userId, compact = false }: Props) {
     return Math.min(1, current / challenge.target);
   };
 
-  const getCurrentValue = (challenge) => {
+  const getCurrentValue = (challenge: any) => {
     switch (challenge.type) {
       case 'workouts': return progress.workouts || 0;
       case 'minutes': return progress.minutes || 0;

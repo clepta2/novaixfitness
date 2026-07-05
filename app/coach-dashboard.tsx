@@ -48,13 +48,13 @@ export default function CoachDashboardScreen() {
   const fetchCoachData = async () => {
     try {
       const [profileRes, workoutsRes] = await Promise.all([
-        supabase.from('creator_profiles').select('*').eq('user_id', user.id).single(),
-        supabase.from('workouts').select('*').eq('creator_id', user.id).order('created_at', { ascending: false })
+        supabase.from('creator_profiles').select('*').eq('user_id', user!.id).single(),
+        supabase.from('workouts').select('*').eq('creator_id', user!.id).order('created_at', { ascending: false })
       ]);
       if (profileRes.error) throw profileRes.error;
       setStats(profileRes.data);
       setWorkouts(workoutsRes.data || []);
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Erro ao carregar dados do painel do coach:', err.message);
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ export default function CoachDashboardScreen() {
     try {
       const { data, error } = await supabase
         .from('workouts')
-        .insert({ title, name: title, category, level, duration: parseInt(duration) || 30, creator_id: user.id, equipment: '[]', exercises: '[]', tags: '[]' })
+        .insert({ title, name: title, category, level, duration: parseInt(duration) || 30, creator_id: user!.id, equipment: '[]', exercises: '[]', tags: '[]' })
         .select()
         .single();
       if (error) throw error;
@@ -75,7 +75,7 @@ export default function CoachDashboardScreen() {
       setWorkouts(prev => [data, ...prev]);
       setModalVisible(false);
       setTitle('');
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     } finally {
       setSaving(false);

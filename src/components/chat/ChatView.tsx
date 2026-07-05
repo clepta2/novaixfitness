@@ -14,7 +14,7 @@ import { getMessages, sendMessage, markAsRead, subscribeToConversation } from '.
 import { useI18n } from '../../i18n';
 
 interface ChatViewProps {
-  conversation: { id: string; name?: string; avatar_url?: string; [key: string]: any };
+  conversation: { id: string; name?: string; avatar_url?: string; type?: string; members?: any[]; [key: string]: any };
   onBack: () => void;
 }
 
@@ -25,7 +25,7 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [typingUsers, setTypingUsers] = useState<any[]>([]);
-  const flatListRef = useRef(null);
+  const flatListRef = useRef<any>(null);
   const { checkAndPerform, log, ACTIONS } = useSecurity();
 
   useEffect(() => {
@@ -34,10 +34,10 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
       onNewMessage: (payload: any) => {
         if (payload.eventType === 'INSERT') {
           setMessages(prev => [...prev, payload.new]);
-          markAsRead(conversation.id, user.id);
+          if (user?.id) markAsRead(conversation.id, user.id);
         }
       },
-      onMessageUpdate: (payload) => {
+      onMessageUpdate: (payload: any) => {
         setMessages(prev => prev.map(m => m.id === payload.new.id ? payload.new : m));
       },
       onPresenceSync: () => {},
@@ -45,7 +45,7 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
       onPresenceLeave: () => {},
     });
 
-    markAsRead(conversation.id, user.id);
+    if (user?.id) markAsRead(conversation.id, user.id);
     return () => unsub();
   }, [conversation.id]);
 
@@ -56,10 +56,9 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
   };
 
   const handleSend = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !user?.id) return;
 
-    // Moderar texto antes de enviar
-    const textCheck = moderateText(newMessage, user.id);
+    const textCheck = moderateText(newMessage, user.id as any);
     if (textCheck.blocked) {
       Alert.alert(t('chat.messageBlocked'), textCheck.message);
       return;
@@ -73,16 +72,16 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
   };
 
   const getOtherName = () => {
-    const other = conversation.members?.find(m => m.user_id !== user.id);
+    const other = conversation.members?.find(m => m.user_id !== user?.id);
     return other?.profiles?.name || conversation.name || 'Chat';
   };
 
-  const formatTime = (dateStr) => {
+  const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   };
 
-  const renderMessage = ({ item, index }) => {
-    const isOwn = item.user_id === user.id;
+  const renderMessage = ({ item, index }: { item: any; index: number }) => {
+    const isOwn = item.user_id === user?.id;
     const showAvatar = index === 0 || messages[index - 1]?.user_id !== item.user_id;
 
     if (item.type === 'system') {
@@ -132,7 +131,7 @@ export default function ChatView({ conversation, onBack }: ChatViewProps) {
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={item => item.id}
+        keyExtractor={(item: any) => item.id}
         renderItem={renderMessage}
         style={styles.chatArea}
         contentContainerStyle={styles.chatContent}

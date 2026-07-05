@@ -20,11 +20,11 @@ export default function MarketplaceDetailScreen() {
   const productId = Array.isArray(id) ? id[0] : id;
   const { user } = useAuth();
   const styles = useMarketplaceDetailStyles();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<any>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function MarketplaceDetailScreen() {
           const fav = await isFavorited(user.id, productId);
           if (!cancelled) setFavorited(fav);
         }
-      } catch (err) {
+      } catch (err: any) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Erro ao carregar produto');
           if (__DEV__) console.error('Erro ao carregar produto:', err);
@@ -74,7 +74,7 @@ export default function MarketplaceDetailScreen() {
     try {
       const result = await toggleFavorite(user.id, productId);
       setFavorited(result);
-    } catch (err) {
+    } catch (err: any) {
       setFavorited(prev => !prev);
       if (__DEV__) console.error('Erro ao alternar favorito:', err);
     } finally {
@@ -86,7 +86,7 @@ export default function MarketplaceDetailScreen() {
     if (product?.affiliate_url) {
       try {
         await Linking.openURL(product.affiliate_url);
-      } catch (err) {
+      } catch (err: any) {
         if (__DEV__) console.error('Erro ao abrir link:', err);
       }
     }
@@ -158,7 +158,7 @@ export default function MarketplaceDetailScreen() {
             </TouchableOpacity>
           </View>
 
-          <ProductReviews productId={productId} />
+          <ProductReviews productId={productId as string} />
 
           {related.length > 0 && (
             <View style={styles.relatedSection}>

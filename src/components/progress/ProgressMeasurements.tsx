@@ -50,7 +50,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
           supabase.from('profiles').select('physical_data, onboarding').eq('id', userId).single(),
         ]);
         setLatest(lat);
-        setHistory(hist);
+        setHistory(hist || []);
         setPhysicalData(profile.data?.physical_data || profile.data?.onboarding || {});
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar:', err);
@@ -65,7 +65,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
     async function loadChart(): Promise<void> {
       if (!userId) return;
       const data = await getMeasurementHistory(userId, selectedChart);
-      setChartData(data);
+      setChartData(data || []);
     }
     loadChart();
   }, [userId, selectedChart]);
@@ -86,7 +86,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
       setShowForm(false);
       setForm({ weight: '', chest: '', waist: '', hips: '', arms: '', thighs: '', body_fat: '', notes: '' });
       const [lat, hist] = await Promise.all([getLatestMeasurement(userId), getMeasurements(userId)]);
-      setLatest(lat); setHistory(hist);
+      setLatest(lat); setHistory(hist || []);
     } catch { Alert.alert('Erro', 'Nao foi possivel salvar.'); }
     finally { setSaving(false); }
   };
@@ -117,7 +117,7 @@ export default function ProgressMeasurements({ userId }: ProgressMeasurementsPro
         <MeasurementForm form={form as any} onChangeForm={setForm as any} onSave={handleSave} saving={saving} />
       ) : latest ? (
         <>
-          <BMICard bmi={bmi} />
+          <BMICard bmi={bmi as any} />
           <MeasurementChart selectedChart={selectedChart} onSelectChart={setSelectedChart} chartData={chartData} />
         </>
       ) : (

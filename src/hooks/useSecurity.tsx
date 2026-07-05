@@ -105,11 +105,11 @@ export function useSecurity(): UseSecurityReturn {
   }, [user?.id]);
 
   const checkText = useCallback((text: string): ModerationResult => {
-    const result = moderateText(text, user?.id);
+    const result = moderateText(text, user?.id as any);
 
     if (result.blocked) {
       Alert.alert('Conteúdo Bloqueado', result.message, [{ text: 'OK' }]);
-      return { allowed: false, ...result };
+      return { allowed: false, ...result } as ModerationResult;
     }
 
     if (result.warning) {
@@ -117,18 +117,18 @@ export function useSecurity(): UseSecurityReturn {
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Publicar Mesmo Assim', onPress: () => {} },
       ]);
-      return { allowed: true, warned: true, ...result };
+      return { ...result, allowed: true, warned: true } as ModerationResult;
     }
 
     return { allowed: true, clean: true };
   }, [user?.id]);
 
   const checkImage = useCallback((file: unknown): ModerationResult => {
-    const result = moderateImage(file, user?.id);
+    const result = moderateImage(file, user?.id as any);
 
     if (result.blocked) {
       Alert.alert('Imagem Bloqueada', result.message, [{ text: 'OK' }]);
-      return { allowed: false, ...result };
+      return { ...result, allowed: false } as ModerationResult;
     }
 
     return { allowed: true, clean: true };
@@ -139,7 +139,7 @@ export function useSecurity(): UseSecurityReturn {
 
     if (!result.allowed) {
       Alert.alert('Nome Inválido', result.message, [{ text: 'OK' }]);
-      return { allowed: false, ...result };
+      return { ...result, allowed: false } as ModerationResult;
     }
 
     return { allowed: true };

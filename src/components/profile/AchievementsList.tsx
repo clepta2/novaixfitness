@@ -8,8 +8,8 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { LABELS } from '../../data/profileTexts';
 
-function AchievementsList({ achievements = [], totalAchievements = 25 }) {
-  const unlockedIds = new Set(achievements.map(a => a.id));
+function AchievementsList({ achievements = [], totalAchievements = 25 }: { achievements?: any[]; totalAchievements?: number }) {
+  const unlockedIds = new Set(achievements.map((a: any) => a.id));
 
   const allAchievements = [
     ...achievements,
@@ -22,7 +22,7 @@ function AchievementsList({ achievements = [], totalAchievements = 25 }) {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {allAchievements.map((achievement) => (
+        {allAchievements.map((achievement: any) => (
           <View key={achievement.id} style={[styles.card, !unlockedIds.has(achievement.id) && styles.locked]}>
             <View style={[styles.icon, { backgroundColor: (achievement.color || COLORS.textMuted) + '20' }]}>
               <Ionicons

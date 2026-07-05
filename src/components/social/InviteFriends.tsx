@@ -8,7 +8,7 @@ import { getReferralData, shareReferral } from '../../services/referral';
 
 function InviteFriends() {
   const { user } = useAuth();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     if (user?.id) getReferralData(user.id).then(setData);

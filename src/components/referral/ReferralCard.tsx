@@ -12,7 +12,7 @@ import { typography } from '../../styles';
 
 function ReferralCard() {
   const { user } = useAuth();
-  const [referralData, setReferralData] = useState(null);
+  const [referralData, setReferralData] = useState<any>(null);
 
   useEffect(() => {
     const load = async () => {

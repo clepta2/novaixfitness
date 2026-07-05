@@ -9,7 +9,7 @@ import { SECTION_TITLES, MUSCLES } from '../../data/profileTexts';
 interface Props { userId?: string }
 
 export default function MuscleMiniRadar({ userId }: Props) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const animatedValues = useRef(MUSCLES.map(() => new Animated.Value(0))).current;
 
   useEffect(() => {

@@ -25,7 +25,7 @@ export default function CampaignManager() {
   const [body, setBody] = useState('');
   const [audience, setAudience] = useState('all');
   const [sending, setSending] = useState(false);
-  const [lastResult, setLastResult] = useState(null);
+  const [lastResult, setLastResult] = useState<any>(null);
 
   const applyQuickMessage = (msg) => {
     setTitle(msg.title);
@@ -80,7 +80,7 @@ export default function CampaignManager() {
       Alert.alert('Sucesso', `Notificação enviada para ${tokens.length} usuários`);
       setTitle('');
       setBody('');
-    } catch (err) {
+    } catch (err: any) {
       setLastResult({ sent: 0, success: false, error: err.message });
       Alert.alert('Erro', err.message);
     } finally {

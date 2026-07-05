@@ -9,9 +9,9 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 import { useI18n } from '../../i18n';
 
-export default function DuelInvite({ visible, onClose, currentUserId, friends = [] }) {
+export default function DuelInvite({ visible, onClose, currentUserId, friends = [] }: { visible: boolean; onClose: () => void; currentUserId: string; friends?: any[] }) {
   const { t } = useI18n();
-  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [selectedFriend, setSelectedFriend] = useState<any>(null);
 
   const handleInvite = async () => {
     if (!selectedFriend) { Alert.alert(t('common.error'), t('social.selectFriendError')); return; }
@@ -44,7 +44,7 @@ export default function DuelInvite({ visible, onClose, currentUserId, friends = 
           <Text style={styles.title}>DESAFIAR AMIGO</Text>
           <Text style={styles.subtitle}>Escolha um amigo para um duelo de treino</Text>
 
-          {friends.map(friend => (
+          {friends.map((friend: any) => (
             <TouchableOpacity
               key={friend.id}
               style={[styles.friendBtn, selectedFriend?.id === friend.id && styles.friendActive]}

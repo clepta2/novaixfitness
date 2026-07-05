@@ -92,10 +92,10 @@ export function useGamification(): UseGamificationReturn {
         getUserRank(user.id),
         getUserGamificationProfile(user.id),
       ]);
-      setRankings(rankData);
+      setRankings(rankData || []);
       setAchievements(achievementsData as any);
-      setUserRank(rank);
-      setProfile(profileData);
+      setUserRank(rank as any);
+      setProfile(profileData as any);
     } catch (err) {
       if (__DEV__) console.warn('Erro ao carregar gamificacao:', err);
       setError('Erro ao carregar dados de gamificação');
@@ -114,7 +114,7 @@ export function useGamification(): UseGamificationReturn {
     try {
       const result = await awardXP(user.id, eventType, metadata);
       const newAchievements = await checkAchievements(user.id);
-      if (newAchievements.length > 0) {
+      if (newAchievements && newAchievements.length > 0) {
         setAchievements(prev => [...prev, ...newAchievements.map((a: any) => ({ ...a, unlocked: true }))]);
       }
       return result;
@@ -174,8 +174,8 @@ export function useRankings(period: string = 'weekly'): UseRankingsReturn {
 
   useEffect(() => {
     setLoading(true);
-    getRankings(period)
-      .then(setRankings)
+      getRankings(period)
+        .then(data => setRankings(data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [period]);

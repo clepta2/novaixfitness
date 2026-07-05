@@ -26,8 +26,8 @@ export default function ProgressScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [photos, setPhotos] = useState<any[]>([]);
   const [measurements, setMeasurements] = useState<any[]>([]);
-  const [latest, setLatest] = useState(null);
-  const [previous, setPrevious] = useState(null);
+  const [latest, setLatest] = useState<any>(null);
+  const [previous, setPrevious] = useState<any>(null);
 
   // Animacoes
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -47,10 +47,10 @@ export default function ProgressScreen() {
         getProgressPhotos(user.id),
         getMeasurements(user.id),
       ]);
-      setPhotos(photosData);
-      setMeasurements(measurementsData);
-      setLatest(measurementsData[0] || null);
-      setPrevious(measurementsData[1] || null);
+      setPhotos(photosData || []);
+      setMeasurements(measurementsData || []);
+      setLatest((measurementsData || [])[0] || null);
+      setPrevious((measurementsData || [])[1] || null);
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar progresso:', err);
     } finally {

@@ -40,7 +40,7 @@ export default function CoachCommissionsPanel() {
 
       if (balanceRes.data?.[0]) setBalance(balanceRes.data[0]);
       if (withdrawalsRes.data) setWithdrawals(withdrawalsRes.data);
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao carregar comissões:', err.message);
     } finally {
       setLoading(false);
@@ -82,7 +82,7 @@ export default function CoachCommissionsPanel() {
       setAmount('');
       setPixKey('');
       fetchCommissionsData();
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro no Saque', err.message);
     } finally {
       setWithdrawing(false);

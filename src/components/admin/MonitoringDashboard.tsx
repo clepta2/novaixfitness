@@ -15,7 +15,11 @@ import ErrorRow from './ErrorRow';
 
 export default function MonitoringDashboard() {
   const { t } = useI18n();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    errors: number;
+    performance: any;
+    recentErrors: any[];
+  }>({
     errors: 0,
     performance: null,
     recentErrors: [],
@@ -75,20 +79,20 @@ export default function MonitoringDashboard() {
           <View style={styles.metricsList}>
             <MetricRow
               label={t('admin.monitoring.avgRender')}
-              value={`${(stats.performance.renders.avgDuration || 0).toFixed(1)}ms`}
+              value={`${(stats.performance.renders?.avgDuration || 0).toFixed(1)}ms`}
             />
             <MetricRow
               label={t('admin.monitoring.avgApi')}
-              value={`${(stats.performance.asyncOps.avgDuration || 0).toFixed(1)}ms`}
+              value={`${(stats.performance.asyncOps?.avgDuration || 0).toFixed(1)}ms`}
             />
             <MetricRow
               label={t('admin.monitoring.interactions')}
-              value={stats.performance.interactions.count}
+              value={stats.performance.interactions?.count || 0}
             />
             <MetricRow
               label={t('admin.monitoring.apiFailures')}
-              value={stats.performance.asyncOps.failures}
-              isWarning={stats.performance.asyncOps.failures > 0}
+              value={stats.performance.asyncOps?.failures || 0}
+              isWarning={(stats.performance.asyncOps?.failures || 0) > 0}
             />
           </View>
         )}
@@ -99,7 +103,7 @@ export default function MonitoringDashboard() {
         {stats.recentErrors.length === 0 ? (
           <Text style={styles.emptyText}>{t('admin.monitoring.noErrors')}</Text>
         ) : (
-          stats.recentErrors.map((error) => (
+          stats.recentErrors.map((error: any) => (
             <ErrorRow key={error.id} error={error} />
           ))
         )}
@@ -107,5 +111,3 @@ export default function MonitoringDashboard() {
     </ScrollView>
   );
 }
-
-

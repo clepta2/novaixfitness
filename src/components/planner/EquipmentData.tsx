@@ -3,21 +3,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export function extractEquipments(exercises = []) {
+export function extractEquipments(exercises: any[] = []) {
   const raw = exercises
     .map(ex => ex.equipment || ex.equipamento || '')
     .filter(Boolean);
   return [...new Set(raw)];
 }
 
-export function equipmentToCategory(equipment) {
+export function equipmentToCategory(equipment: string) {
   const lower = equipment.toLowerCase();
   if (lower.includes('haltere') || lower.includes('barra') || lower.includes('anilha') || lower.includes('banco')) return 'equipamentos';
   if (lower.includes('elástico') || lower.includes('corda') || lower.includes('roda') || lower.includes('cinto')) return 'acessorios';
   return 'equipamentos';
 }
 
-export function ProductChip({ product, onPress }) {
+export function ProductChip({ product, onPress }: any) {
   const hasDiscount = product.original_price && product.original_price > product.price;
   return (
     <TouchableOpacity style={styles.chip} onPress={() => onPress(product)} activeOpacity={0.8}>

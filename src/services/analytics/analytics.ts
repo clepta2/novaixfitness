@@ -65,7 +65,7 @@ export async function getWorkoutFrequency(userId: string) {
 
   const result = await tryIf(async () => {
     const now = new Date();
-    const weeks = [];
+    const weeks: any[] = [];
     for (let i = 11; i >= 0; i--) {
       const weekStart = new Date(now);
       weekStart.setDate(now.getDate() - (i * 7 + now.getDay()));
@@ -101,7 +101,7 @@ export async function getMonthlyComparison(userId: string) {
   if (!userId) return [];
 
   const result = await tryIf(async () => {
-    const months = [];
+    const months: any[] = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date();
       d.setMonth(d.getMonth() - i);

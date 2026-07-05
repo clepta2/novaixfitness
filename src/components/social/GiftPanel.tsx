@@ -9,16 +9,17 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { useAuth } from '../../context/AuthContext';
 import { getWallet, getGiftCatalog, sendGift } from '../../services/virtualGifting';
 
-export default function GiftPanel({ receiverId, liveId, onClose }) {
+export default function GiftPanel({ receiverId, liveId, onClose }: { receiverId: string; liveId: string; onClose: () => void }) {
   const { user } = useAuth();
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState<any>(null);
   const [catalog, setCatalog] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(null);
+  const [sending, setSending] = useState<string | null>(null);
 
   useEffect(() => { loadData(); }, [user?.id]);
 
   const loadData = async () => {
+    if (!user?.id) return;
     const [w, c] = await Promise.all([
       getWallet(user.id),
       getGiftCatalog(),
@@ -28,7 +29,8 @@ export default function GiftPanel({ receiverId, liveId, onClose }) {
     setLoading(false);
   };
 
-  const handleSendGift = async (gift) => {
+  const handleSendGift = async (gift: any) => {
+    if (!user?.id) return;
     if (wallet.balance < gift.coin_value) {
       Alert.alert('Saldo insuficiente', 'Compre mais coins para enviar presentes.');
       return;
@@ -37,9 +39,9 @@ export default function GiftPanel({ receiverId, liveId, onClose }) {
     setSending(gift.id);
     try {
       const result = await sendGift(user.id, receiverId, gift.id, liveId);
-      setWallet(prev => ({ ...prev, balance: prev.balance - gift.coin_value }));
+      setWallet((prev: any) => ({ ...prev, balance: prev.balance - gift.coin_value }));
       Alert.alert('Presente enviado!', `${gift.emoji} ${gift.name} enviado!`);
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     }
     setSending(null);
@@ -66,7 +68,7 @@ export default function GiftPanel({ receiverId, liveId, onClose }) {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.giftsScroll}>
-        {catalog.map((gift) => (
+        {catalog.map((gift: any) => (
           <TouchableOpacity
             key={gift.id}
             style={[styles.giftCard, sending === gift.id && styles.giftSending]}
@@ -91,8 +93,8 @@ export default function GiftPanel({ receiverId, liveId, onClose }) {
   );
 }
 
-function getRarityColor(rarity) {
-  const colors = { rare: COLORS.info, epic: COLORS.purple, legendary: COLORS.star };
+function getRarityColor(rarity: string) {
+  const colors: Record<string, string> = { rare: COLORS.info, epic: COLORS.purple, legendary: COLORS.star };
   return colors[rarity] || COLORS.textMuted;
 }
 

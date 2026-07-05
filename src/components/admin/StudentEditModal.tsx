@@ -61,11 +61,11 @@ export default function StudentEditModal({ visible, student, onClose, onSave }) 
           subscription_status: form.subscription_status,
           current_step: form.current_step,
         })
-        .eq('id', student.id);
+        .eq('id', student?.id);
       if (error) throw error;
       onSave?.();
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     } finally {
       setSaving(false);

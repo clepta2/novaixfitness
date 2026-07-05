@@ -20,7 +20,7 @@ const formatAction = (action: string): string => {
 };
 
 export default function UserSecurityPanel({ userId, userName, userAvatar, onClose }) {
-  const [trust, setTrust] = useState(null);
+  const [trust, setTrust] = useState<any>(null);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [blocks, setBlocks] = useState<any[]>([]);
   const [activeBlocks, setActiveBlocks] = useState<any[]>([]);
@@ -43,13 +43,13 @@ export default function UserSecurityPanel({ userId, userName, userAvatar, onClos
     setLoading(false);
   };
 
-  const handleBlock = async (blockData) => {
+  const handleBlock = async (blockData: any) => {
     await blockUser(userId, null, blockData);
     setShowBlockModal(false);
     loadData();
   };
 
-  const handleUnblock = async (blockId) => {
+  const handleUnblock = async (blockId: any) => {
     await unblockUser(blockId, null);
     loadData();
   };

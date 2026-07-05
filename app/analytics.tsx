@@ -2,7 +2,7 @@
 // app/analytics.tsx
 // Dashboard de Analytics com animacoes - NOVAIX FITNESS
 
-import { useState, useEffect, useMemo , useRef} from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useMountedRef } from '../src/hooks/useMountedRef';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -21,14 +21,13 @@ export default function AnalyticsScreen() {
   const { user } = useAuth();
   const { isSmall } = useResponsive();
   const [period, setPeriod] = useState('month');
-  const [analytics, setAnalytics] = useState(null);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [frequency, setFrequency] = useState<any[]>([]);
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const mounted = useMountedRef();
 
-  // Animacoes
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -54,9 +53,9 @@ export default function AnalyticsScreen() {
       ]);
       if (!mounted.current) return;
       setAnalytics(data);
-      setFrequency(freq);
-      setMonthlyData(monthly);
-    } catch (err) {
+      setFrequency(freq as any[]);
+      setMonthlyData(monthly as any[]);
+    } catch (err: any) {
       if (__DEV__) console.error('Erro ao carregar analytics:', err);
     } finally {
       if (!mounted.current) return;
@@ -95,7 +94,6 @@ export default function AnalyticsScreen() {
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
         >
-          {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back" size={24} color={COLORS.textTitle} />
@@ -104,7 +102,6 @@ export default function AnalyticsScreen() {
             <View style={{ width: 24 }} />
           </View>
 
-          {/* Conteudo animado */}
           <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
             <FilterBar selected={period} onSelect={setPeriod} style={{ marginBottom: SPACING.md }} />
             <ComparisonCard comparison={analytics?.comparison} />

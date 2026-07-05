@@ -47,7 +47,7 @@ export default function DayDetailView({ dayKey, dayData, onEdit, onStart }: Prop
   );
 }
 
-export function TodayCard({ dayData }) {
+export function TodayCard({ dayData }: any) {
   return (
     <View style={styles.card}>
       <Text style={typography.label}>HOJE</Text>

@@ -69,7 +69,7 @@ export default function StudentExporter() {
         await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Exportar alunos' });
       }
       Alert.alert('Sucesso', `Arquivo ${filename} exportado!`);
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     } finally {
       setExporting(false);

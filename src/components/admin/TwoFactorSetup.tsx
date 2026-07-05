@@ -41,7 +41,7 @@ export default function TwoFactorSetup({ userId, onComplete }) {
       Alert.alert('Sucesso', '2FA configurado com sucesso!', [
         { text: 'OK', onPress: onComplete },
       ]);
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message || 'Código inválido.');
     } finally {
       setLoading(false);

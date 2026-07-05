@@ -4,10 +4,10 @@
 import { supabase } from '../config/supabase';
 import { Platform } from 'react-native';
 
-const EVENT_QUEUE = [];
+const EVENT_QUEUE: any[] = [];
 const FLUSH_INTERVAL = 30000;
-let flushTimer = null;
-let sessionId = null;
+let flushTimer: any = null;
+let sessionId: string | null = null;
 
 const EVENT_TYPES = {
   WORKOUT_STARTED: 'workout_started',
@@ -59,11 +59,11 @@ export function trackScreenView(screenName: string, userId: string | null = null
   trackEvent(EVENT_TYPES.SCREEN_VIEWED, { screen: screenName }, userId);
 }
 
-export function trackWorkoutStarted(workoutId: string, workoutName: string, userId: string) {
+export function trackWorkoutStarted(workoutId: string, workoutName: string, userId?: string | null) {
   trackEvent(EVENT_TYPES.WORKOUT_STARTED, { workout_id: workoutId, workout_name: workoutName }, userId);
 }
 
-export function trackWorkoutCompleted(workoutId: string, duration: number, exercisesCompleted: number, userId: string) {
+export function trackWorkoutCompleted(workoutId: string, duration: number, exercisesCompleted: number, userId?: string | null) {
   trackEvent(EVENT_TYPES.WORKOUT_COMPLETED, {
     workout_id: workoutId,
     duration_seconds: duration,
@@ -71,27 +71,27 @@ export function trackWorkoutCompleted(workoutId: string, duration: number, exerc
   }, userId);
 }
 
-export function trackMealLogged(mealType: string, calories: number, userId: string) {
+export function trackMealLogged(mealType: string, calories: number, userId?: string | null) {
   trackEvent(EVENT_TYPES.MEAL_LOGGED, { meal_type: mealType, calories }, userId);
 }
 
-export function trackWaterLogged(amountMl: number, userId: string) {
+export function trackWaterLogged(amountMl: number, userId?: string | null) {
   trackEvent(EVENT_TYPES.WATER_LOGGED, { amount_ml: amountMl }, userId);
 }
 
-export function trackWeightLogged(weight: number, userId: string) {
+export function trackWeightLogged(weight: number, userId?: string | null) {
   trackEvent(EVENT_TYPES.WEIGHT_LOGGED, { weight }, userId);
 }
 
-export function trackAchievementUnlocked(achievementId: string, achievementName: string, userId: string) {
+export function trackAchievementUnlocked(achievementId: string, achievementName: string, userId?: string | null) {
   trackEvent(EVENT_TYPES.ACHIEVEMENT_UNLOCKED, { achievement_id: achievementId, achievement_name: achievementName }, userId);
 }
 
-export function trackSubscriptionStarted(planId: string, planName: string, userId: string) {
+export function trackSubscriptionStarted(planId: string, planName: string, userId?: string | null) {
   trackEvent(EVENT_TYPES.SUBSCRIPTION_STARTED, { plan_id: planId, plan_name: planName }, userId);
 }
 
-export function trackSearchPerformed(query: string, resultsCount: number, userId: string) {
+export function trackSearchPerformed(query: string, resultsCount: number, userId?: string | null) {
   trackEvent(EVENT_TYPES.SEARCH_PERFORMED, { query, results_count: resultsCount }, userId);
 }
 

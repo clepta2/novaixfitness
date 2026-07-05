@@ -88,25 +88,25 @@ export function useNotificationPrefs(): UseNotificationPrefsReturn {
   };
 
   const markAllAsRead = async (): Promise<void> => {
-    await supabase.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+    await supabase.from('notifications').update({ read: true }).eq('user_id', user!.id).eq('read', false);
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
   const clearAll = async (): Promise<void> => {
-    await supabase.from('notifications').delete().eq('user_id', user.id);
+    await supabase.from('notifications').delete().eq('user_id', user!.id);
     setNotifications([]);
   };
 
   const handleNotifToggle = async (key: string): Promise<void> => {
     const enabled = !prefs[key];
     setPrefs(prev => ({ ...prev, [key]: enabled }));
-    await setNotificationPref(user.id, key, enabled);
+    await setNotificationPref(user!.id, key, enabled);
   };
 
   const handlePushToggle = async (value: boolean): Promise<void> => {
     setPushEnabled(value);
-    await supabase.from('profiles').update({ notification_settings: { push_enabled: value } }).eq('id', user.id);
-    if (value) await registerForPushNotificationsAsync(user.id);
+    await supabase.from('profiles').update({ notification_settings: { push_enabled: value } }).eq('id', user!.id);
+    if (value) await registerForPushNotificationsAsync(user!.id);
   };
 
   const unreadCount: number = notifications.filter(n => !n.read).length;

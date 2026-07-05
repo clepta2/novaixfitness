@@ -36,19 +36,19 @@ export default function ConversationList({ onSelectConversation, onNewChat }: Co
     setRefreshing(false);
   };
 
-  const getConversationTitle = (conv) => {
+  const getConversationTitle = (conv: any) => {
     if (conv.type === 'group') return conv.name;
     const other = conv.members?.find(m => m.user_id !== user.id);
     return other?.profiles?.name || 'Chat';
   };
 
-  const getConversationAvatar = (conv) => {
+  const getConversationAvatar = (conv: any) => {
     if (conv.type === 'group') return null;
     const other = conv.members?.find(m => m.user_id !== user.id);
     return other?.profiles?.avatar_url;
   };
 
-  const getOtherUserId = (conv) => {
+  const getOtherUserId = (conv: any) => {
     if (conv.type === 'group') return null;
     const other = conv.members?.find(m => m.user_id !== user.id);
     return other?.user_id;
@@ -64,7 +64,7 @@ export default function ConversationList({ onSelectConversation, onNewChat }: Co
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: any) => (
     <TouchableOpacity
       style={styles.item}
       onPress={() => onSelectConversation?.({ ...item, otherUserId: getOtherUserId(item) })}
@@ -111,7 +111,7 @@ export default function ConversationList({ onSelectConversation, onNewChat }: Co
         keyExtractor={item => item.id}
         renderItem={renderItem}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
-        contentContainerStyle={conversations.length === 0 && styles.emptyContainer}
+        contentContainerStyle={conversations.length === 0 ? styles.emptyContainer as any : undefined}
         ListEmptyComponent={
           <View style={styles.empty}>
             <Ionicons name="chatbubbles-outline" size={48} color={COLORS.textMuted} />

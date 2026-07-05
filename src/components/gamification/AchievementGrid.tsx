@@ -32,7 +32,7 @@ function AchievementBadge({ achievement, unlocked, onInfo }) {
 
 function AchievementGrid({ unlockedIds = [], onAchievementPress }) {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [selectedInfo, setSelectedInfo] = useState<any>(null);
   const filtered = activeCategory === 'all' ? ACHIEVEMENTS : ACHIEVEMENTS.filter(a => a.category === activeCategory);
   const unlockedSet = new Set(unlockedIds);
   const handleInfo = (a) => onAchievementPress ? onAchievementPress(a) : setSelectedInfo(selectedInfo?.id === a.id ? null : a);

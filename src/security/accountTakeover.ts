@@ -4,8 +4,8 @@
 import { supabase } from '../config/supabase';
 import { calculateRiskLevel } from './anomalyDetection';
 
-export async function checkAccountTakeover(userId, loginData) {
-  const risks = [];
+export async function checkAccountTakeover(userId: string, loginData: any) {
+  const risks: any[] = [];
 
   const { data: knownDevices } = await supabase.from('user_devices')
     .select('device_id').eq('user_id', userId);

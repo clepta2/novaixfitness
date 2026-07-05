@@ -10,7 +10,7 @@ export default function ExerciseManager() {
   const [exercises, setExercises] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState({ name: '', category: 'Musculacao', muscle_group: '', equipment: '' });
 
   useEffect(() => { loadExercises(); }, []);

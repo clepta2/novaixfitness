@@ -17,7 +17,7 @@ export default function ShoppingScreen() {
   const router = useRouter();
   const { user, onboarding } = useAuth();
   const mounted = useMountedRef();
-  const [list, setList] = useState(null);
+  const [list, setList] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
 
@@ -37,34 +37,35 @@ export default function ShoppingScreen() {
     try {
       const newList = await generateShoppingList(null, { weight: onboarding?.weight, goal: onboarding?.goal, dietaryRestrictions: onboarding?.dietaryRestrictions });
       if (!mounted.current) return;
-      if (newList) { setList(newList); await saveShoppingList(user.id, newList); }
-    } catch (err) { Alert.alert('Erro', 'Não foi possível gerar a lista'); }
+      if (newList) { setList(newList); if (user?.id) await saveShoppingList(user.id, newList); }
+    } catch (err: any) { Alert.alert('Erro', 'Nao foi possivel gerar a lista'); }
     finally { if (mounted.current) { setGenerating(false); setLoading(false); } }
   };
 
-  const toggleItem = (catIndex, itemIndex) => {
+  const toggleItem = (catIndex: number, itemIndex: number) => {
+    if (!list) return;
     const newList = { ...list };
     newList.categories = [...list.categories];
     newList.categories[catIndex] = { ...newList.categories[catIndex] };
     newList.categories[catIndex].items = [...newList.categories[catIndex].items];
     newList.categories[catIndex].items[itemIndex] = { ...newList.categories[catIndex].items[itemIndex], checked: !newList.categories[catIndex].items[itemIndex].checked };
     setList(newList);
-    saveShoppingList(user.id, newList);
+    if (user?.id) saveShoppingList(user.id, newList);
   };
 
   const shareList = () => {
     if (!list) return;
-    let text = '🛒 LISTA DE COMPRAS NOVAIX\n\n';
-    list.categories?.forEach(cat => {
+    let text = 'LISTA DE COMPRAS NOVAIX\n\n';
+    list.categories?.forEach((cat: any) => {
       text += `${cat.name}:\n`;
-      cat.items?.forEach(item => { text += `${item.checked ? '✅' : '⬜'} ${item.name} - ${item.amount}\n`; });
+      cat.items?.forEach((item: any) => { text += `${item.checked ? 'X' : 'O'} ${item.name} - ${item.amount}\n`; });
       text += '\n';
     });
     Alert.alert('Compartilhar', text, [{ text: 'OK' }]);
   };
 
-  const totalItems = list?.categories?.reduce((sum, cat) => sum + (cat.items?.length || 0), 0) || 0;
-  const checkedItems = list?.categories?.reduce((sum, cat) => sum + (cat.items?.filter(i => i.checked)?.length || 0), 0) || 0;
+  const totalItems = list?.categories?.reduce((sum: number, cat: any) => sum + (cat.items?.length || 0), 0) || 0;
+  const checkedItems = list?.categories?.reduce((sum: number, cat: any) => sum + (cat.items?.filter((i: any) => i.checked)?.length || 0), 0) || 0;
 
   return (
     <ErrorBoundary screenName="Shopping">
@@ -94,10 +95,10 @@ export default function ShoppingScreen() {
           <Text style={styles.loadingText}>Gerando lista com IA...</Text>
         </View>
       ) : list?.categories ? (
-        <FlatList data={list.categories} keyExtractor={(item, i) => String(i)} contentContainerStyle={styles.list} renderItem={({ item: cat, index: catIndex }) => (
+        <FlatList data={list.categories} keyExtractor={(item: any, i: number) => String(i)} contentContainerStyle={styles.list} renderItem={({ item: cat, index: catIndex }: any) => (
           <View style={styles.categoryCard}>
             <Text style={styles.categoryName}>{cat.name}</Text>
-            {cat.items?.map((item, itemIndex) => (
+            {cat.items?.map((item: any, itemIndex: number) => (
               <TouchableOpacity key={itemIndex} style={styles.itemRow} accessibilityLabel={`Marcar ${item.name}`} accessibilityRole="checkbox" onPress={() => toggleItem(catIndex, itemIndex)}>
                 <Ionicons name={item.checked ? 'checkbox' : 'square-outline'} size={20} color={item.checked ? COLORS.primary : COLORS.textMuted} />
                 <Text style={[styles.itemName, item.checked && styles.itemChecked]}>{item.name}</Text>
@@ -150,4 +151,3 @@ const styles = StyleSheet.create({
   tipsBox: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, margin: SPACING.lg, padding: SPACING.md, backgroundColor: COLORS.primary + '10', borderRadius: BORDER_RADIUS.md },
   tipsText: { fontFamily: 'Inter_400Regular', fontSize: 12, color: COLORS.primary, flex: 1 },
 });
-

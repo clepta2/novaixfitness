@@ -71,10 +71,10 @@ export function useAuthActions(
   setOnboarding: (data: OnboardingData | null) => void,
 ) {
   const signInWithEmail = useCallback(async (email: string, password: string) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
 
-    const passCheck = validate('password', password);
+    const passCheck = validate('password', password) as any;
     if (!passCheck.valid) throw new Error(passCheck.error);
 
     const rateCheck = rateLimit('login_' + email, 5, 60000);
@@ -102,12 +102,12 @@ export function useAuthActions(
   }, []);
 
   const signUpWithEmail = useCallback(async (email: string, password: string, metadata: Record<string, any> = {}) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
-    const passCheck = validate('password', password);
+    const passCheck = validate('password', password) as any;
     if (!passCheck.valid) throw new Error(passCheck.error);
     if (metadata.name) {
-      const nameCheck = validate('name', sanitizeString(metadata.name));
+      const nameCheck = validate('name', sanitizeString(metadata.name)) as any;
       if (!nameCheck.valid) throw new Error(nameCheck.error);
     }
 
@@ -140,7 +140,7 @@ export function useAuthActions(
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;

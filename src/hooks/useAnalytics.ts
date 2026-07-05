@@ -16,24 +16,24 @@ import {
 } from '../services/analyticsTracker';
 
 interface TrackWorkout {
-  start: (_workoutId: string, _workoutName: string) => void;
-  complete: (_workoutId: string, _duration: number, _exercises: number) => void;
+  start: (workoutId: string, workoutName: string) => void;
+  complete: (workoutId: string, duration: number, exercises: number) => void;
 }
 
 interface TrackNutrition {
-  meal: (_mealType: string, _calories: number) => void;
-  water: (_amountMl: number) => void;
-  weight: (_weight: number) => void;
+  meal: (mealType: string, calories: number) => void;
+  water: (amountMl: number) => void;
+  weight: (weight: number) => void;
 }
 
 interface UseAnalyticsReturn {
-  track: (_eventName: string, _properties?: Record<string, unknown>) => void;
-  trackScreen: (_screenName: string) => void;
+  track: (eventName: string, properties?: Record<string, unknown>) => void;
+  trackScreen: (screenName: string) => void;
   trackWorkout: TrackWorkout;
   trackNutrition: TrackNutrition;
-  trackAchievement: (_achievementId: string, _achievementName: string) => void;
-  trackSubscription: (_planId: string, _planName: string) => void;
-  trackSearch: (_query: string, _resultsCount: number) => void;
+  trackAchievement: (achievementId: string, achievementName: string) => void;
+  trackSubscription: (planId: string, planName: string) => void;
+  trackSearch: (query: string, resultsCount: number) => void;
 }
 
 export function useAnalytics(): UseAnalyticsReturn {

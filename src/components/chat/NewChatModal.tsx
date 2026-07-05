@@ -33,7 +33,7 @@ export default function NewChatModal({ visible, onClose, onSelectUser }: NewChat
   const searchUsersList = async () => {
     setLoading(true);
     const results = await searchUsers(query, 10);
-    setUsers(results.filter(u => u.id !== user.id));
+    setUsers(results.filter(u => u.id !== user?.id));
     setLoading(false);
   };
 

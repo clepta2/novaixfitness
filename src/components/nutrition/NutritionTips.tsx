@@ -66,7 +66,7 @@ const TIPS = [
   },
 ];
 
-function TipCard({ tip, isExpanded, onToggle }) {
+function TipCard({ tip, isExpanded, onToggle }: any) {
   return (
     <TouchableOpacity style={[styles.tipCard, isExpanded && styles.tipCardExpanded]} onPress={onToggle}>
       <View style={styles.tipHeader}>
@@ -84,7 +84,7 @@ function TipCard({ tip, isExpanded, onToggle }) {
 }
 
 export default function NutritionTips() {
-  const [expandedId, setExpandedId] = useState(null);
+  const [expandedId, setExpandedId] = useState<any>(null);
 
   return (
     <View style={styles.container}>

@@ -14,7 +14,7 @@ import { styles } from '../src/styles/mindfulnessStyles';
 
 export default function MindfulnessScreen() {
   const router = useRouter();
-  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState<any>(null);
   const [completedSessions, setCompletedSessions] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
 

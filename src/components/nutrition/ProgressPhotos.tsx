@@ -58,7 +58,7 @@ interface ProgressPhotosProps {
 
 export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
   const [values, setValues] = useState<Record<string, string>>({});
-  const [lastEntry, setLastEntry] = useState(null);
+  const [lastEntry, setLastEntry] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { signal } = useAbortController();
 
@@ -116,7 +116,7 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
     }
   };
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: any, value: any) => {
     // Validar e sanitizar
     const sanitized = sanitizeInput(value);
     setValues(prev => ({ ...prev, [key]: sanitized }));

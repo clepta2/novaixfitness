@@ -26,8 +26,8 @@ function formatTime(timestamp: any) {
 
 export default function OfflineSettings() {
   const { isOnline } = useNetworkStatus();
-  const [info, setInfo] = useState(null);
-  const [lastSync, setLastSync] = useState(null);
+  const [info, setInfo] = useState<any>(null);
+  const [lastSync, setLastSync] = useState<any>(null);
   const [pendingCount, setPendingCount] = useState(0);
   const [syncing, setSyncing] = useState(false);
 
@@ -51,7 +51,7 @@ export default function OfflineSettings() {
     }
     setSyncing(true);
     try {
-      const result = await forceSyncNow();
+      const result = await forceSyncNow() as any;
       Alert.alert(OFFLINE.syncTitle, OFFLINE.syncMessage.replace('{synced}', String(result.synced)).replace('{failed}', String(result.failed)));
       await loadInfo();
     } catch {
@@ -103,10 +103,10 @@ export default function OfflineSettings() {
           </View>
 
           <View style={styles.bar}>
-            <View style={[styles.barFill, { width: `${Math.min((info.totalSize / (50 * 1024 * 1024)) * 100, 100)}%` }, !info.withinLimit && styles.barWarning]} />
+            <View style={[styles.barFill, { width: `${Math.min((info.totalSize / (50 * 1024 * 1024)) * 100, 100)}%` as any }, !info.withinLimit && styles.barWarning]} />
           </View>
 
-          {Object.entries(info.breakdown).map(([key, data]: [string, { size: number }]) => (
+          {Object.entries(info.breakdown).map(([key, data]: [string, any]) => (
             <View key={key} style={styles.itemRow}>
               <Text style={styles.itemLabel}>{key}</Text>
               <Text style={styles.itemValue}>{formatSize(data.size)}</Text>

@@ -25,8 +25,8 @@ const SLEEP_DURATION = [
 ];
 
 export default function SleepTracker({ userId }) {
-  const [quality, setQuality] = useState(null);
-  const [duration, setDuration] = useState(null);
+  const [quality, setQuality] = useState<any>(null);
+  const [duration, setDuration] = useState<any>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => { loadToday(); }, [userId]);

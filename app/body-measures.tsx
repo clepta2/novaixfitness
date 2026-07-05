@@ -47,8 +47,8 @@ export default function BodyMeasuresScreen() {
       if (!user?.id) return;
       try {
         const [lat, hist] = await Promise.all([getLatestMeasurement(user.id), getMeasurements(user.id)]);
-        setLatest(lat); setHistory(hist);
-      } catch (err) { if (__DEV__) console.error('Erro ao carregar:', err); }
+        setLatest(lat); setHistory(hist || []);
+      } catch (err: any) { if (__DEV__) console.error('Erro ao carregar:', err); }
       finally { setLoading(false); }
     }
     load();
@@ -57,7 +57,8 @@ export default function BodyMeasuresScreen() {
   useEffect(() => {
     async function loadChart() {
       if (!user?.id) return;
-      setChartData(await getMeasurementHistory(user.id, selectedChart));
+      if (!user?.id) return;
+      setChartData(await getMeasurementHistory(user.id, selectedChart) as any[]);
     }
     loadChart();
   }, [user?.id, selectedChart]);
@@ -73,12 +74,13 @@ export default function BodyMeasuresScreen() {
       if (Object.keys(measurement).filter(k => k !== 'notes').length === 0) {
         Alert.alert(t('common.error'), t('bodyMeasures.fillAtLeastOne')); return;
       }
-      await saveMeasurement(user.id, measurement);
+      await saveMeasurement(user?.id as string, measurement);
       Alert.alert(t('common.success'), t('bodyMeasures.saved'));
       setShowForm(false);
       setForm({ weight: '', chest: '', waist: '', hips: '', arms: '', thighs: '', body_fat: '', notes: '' });
+      if (!user?.id) return;
       const [lat, hist] = await Promise.all([getLatestMeasurement(user.id), getMeasurements(user.id)]);
-      setLatest(lat); setHistory(hist);
+      setLatest(lat); setHistory(hist || []);
     } catch { Alert.alert(t('common.error'), t('bodyMeasures.saveError')); }
     finally { setSaving(false); }
   };

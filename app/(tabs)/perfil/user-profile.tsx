@@ -1,5 +1,5 @@
 // app/(tabs)/perfil/user-profile.js
-// Página de perfil público de outro usuário
+// Pagina de perfil publico de outro usuario
 
 import { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
@@ -18,7 +18,7 @@ export default function UserProfileScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams() as { id: string };
   const { user } = useAuth();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [following, setFollowing] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +38,7 @@ export default function UserProfileScreen() {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    setPosts((postData || []).map(p => ({
+    setPosts((postData || []).map((p: any) => ({
       id: p.id, userId: p.user_id,
       user: { name: p.profiles?.name || 'Atleta', avatar: p.profiles?.avatar_url || null },
       content: p.content, image: p.image_url,
@@ -54,14 +54,15 @@ export default function UserProfileScreen() {
   };
 
   const handleFollow = async () => {
+    if (!user?.id) return;
     if (following) {
       await unfollowUser(user.id, id);
       setFollowing(false);
-      setProfile(prev => ({ ...prev, followers_count: Math.max(0, (prev?.followers_count || 1) - 1) }));
+      setProfile((prev: any) => ({ ...prev, followers_count: Math.max(0, (prev?.followers_count || 1) - 1) }));
     } else {
       await followUser(user.id, id);
       setFollowing(true);
-      setProfile(prev => ({ ...prev, followers_count: (prev?.followers_count || 0) + 1 }));
+      setProfile((prev: any) => ({ ...prev, followers_count: (prev?.followers_count || 0) + 1 }));
     }
   };
 
@@ -103,7 +104,7 @@ export default function UserProfileScreen() {
               </View>
               <View style={styles.stat}>
                 <Text style={styles.statValue}>{profile.level || 1}</Text>
-                <Text style={styles.statLabel}>Nível</Text>
+                <Text style={styles.statLabel}>Nivel</Text>
               </View>
               <View style={styles.stat}>
                 <Text style={styles.statValue}>{profile.followers_count || 0}</Text>

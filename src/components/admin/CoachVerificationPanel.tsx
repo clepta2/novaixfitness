@@ -26,7 +26,7 @@ export default function CoachVerificationPanel() {
       if (response.ok) {
         setPending(data.coaches || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao buscar solicitações de coach:', err.message);
     } finally {
       setLoading(false);
@@ -47,7 +47,7 @@ export default function CoachVerificationPanel() {
 
       Alert.alert('Sucesso', `Solicitação de Coach ${action === 'approve' ? 'aprovada' : 'rejeitada'} com sucesso!`);
       setPending(prev => prev.filter(c => c.user_id !== id));
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     } finally {
       setLoading(false);

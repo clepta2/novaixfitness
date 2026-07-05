@@ -70,8 +70,8 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
           }
         }
         const history = await getChatHistory(user.id);
-        if (history.length > 0) {
-          setMessages(history);
+        if (history && history.length > 0) {
+          setMessages(history as any[]);
         } else {
           const welcome = createWelcomeMessage(data?.name || 'Atleta');
           setMessages([welcome]);
@@ -98,7 +98,7 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
 
     if (detectMealLog(msg)) {
       try {
-        const context = buildChatContext(profile);
+        const context = buildChatContext(profile as any);
         (context as any).userId = user.id;
         const mealData = await analyzeMealText(msg, context);
         if (mealData) {
@@ -114,11 +114,11 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
     }
 
     try {
-      const context = buildChatContext(profile);
+      const context = buildChatContext(profile as any);
       (context as any).userId = user.id;
       const reply = await askGeminiCoach(msg, context, [...messages, userMsg]);
-      setMessages(prev => [...prev, createCoachMessage(reply)]);
-      await saveChatMessage(user.id, reply, false);
+      setMessages(prev => [...prev, createCoachMessage(reply as any)]);
+      await saveChatMessage(user.id, reply as any, false);
     } catch (err) {
       if ((err as Error).message === 'LIMIT_EXCEEDED') {
         setMessages(prev => prev.filter(m => m.id !== userMsg.id));

@@ -10,7 +10,7 @@ export default function WorkoutManager() {
   const [workouts, setWorkouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState({ title: '', category: 'Musculacao', level: 'Iniciante', duration_minutes: 30, video_id: '', is_premium: false });
 
   useEffect(() => { loadWorkouts(); }, []);

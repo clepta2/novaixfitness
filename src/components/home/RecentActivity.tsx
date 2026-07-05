@@ -5,7 +5,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { formatRelativeDate } from '../../helpers/dates';
 
-function RecentActivity({ workouts = [], onPress }) {
+function RecentActivity({ workouts = [], onPress }: { workouts?: any[]; onPress?: (w: any) => void }) {
   if (workouts.length === 0) return null;
 
   return (
@@ -14,8 +14,8 @@ function RecentActivity({ workouts = [], onPress }) {
         <Ionicons name="time-outline" size={16} color={COLORS.textMuted} />
         <Text style={styles.title}>ATIVIDADE RECENTE</Text>
       </View>
-      {workouts.slice(0, 3).map((w, i) => (
-        <TouchableOpacity key={w.id || i} style={styles.row} onPress={() => onPress?.(w)} activeOpacity={0.7} accessibilityLabel={`${w.name || w.title || 'Treino'}, ${w.completed ? 'concluído' : 'pendente'}, ${w.duration_minutes || w.duration || 30} minutos`} accessibilityRole="button">
+      {workouts.slice(0, 3).map((w: any, i: number) => (
+        <TouchableOpacity key={w.id || i} style={styles.row} onPress={() => onPress?.(w)} activeOpacity={0.7} accessibilityLabel={`${w.name || w.title || 'Treino'}, ${w.completed ? 'concluido' : 'pendente'}, ${w.duration_minutes || w.duration || 30} minutos`} accessibilityRole="button">
           <View style={[styles.dot, { backgroundColor: w.completed ? COLORS.success : COLORS.primary }]} />
           <View style={styles.info}>
             <Text style={styles.name} numberOfLines={1}>{w.name || w.title || 'Treino'}</Text>

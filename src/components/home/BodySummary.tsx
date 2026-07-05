@@ -6,9 +6,9 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
-export default function BodySummary({ userId }) {
+export default function BodySummary({ userId }: { userId?: string }) {
   const router = useRouter();
-  const [latest, setLatest] = useState(null);
+  const [latest, setLatest] = useState<any>(null);
   const [photos, setPhotos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ export default function BodySummary({ userId }) {
           supabase.from('physical_progress').select('weight, body_fat, recorded_at').eq('user_id', userId).order('recorded_at', { ascending: false }).limit(1),
           supabase.from('progress_photos').select('id, image_url, label').eq('user_id', userId).order('created_at', { ascending: false }).limit(3),
         ]);
-        if (measurementsRes.data?.length > 0) setLatest(measurementsRes.data[0]);
+        if (measurementsRes.data && measurementsRes.data.length > 0) setLatest(measurementsRes.data[0]);
         if (photosRes.data) setPhotos(photosRes.data);
       } catch {}
       finally { setLoading(false); }
@@ -36,7 +36,7 @@ export default function BodySummary({ userId }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="body" size={18} color={COLORS.primary} />
-        <Text style={styles.title}>EVOLUÇÃO CORPORAL</Text>
+        <Text style={styles.title}>EVOLUCAO CORPORAL</Text>
         <TouchableOpacity onPress={() => router.push('/body-measures')} style={styles.seeAll}>
           <Text style={styles.seeAllText}>Ver tudo</Text>
           <Ionicons name="chevron-forward" size={14} color={COLORS.primary} />
@@ -71,7 +71,7 @@ export default function BodySummary({ userId }) {
         <View style={styles.photosRow}>
           <Text style={styles.photosLabel}>Fotos recentes</Text>
           <TouchableOpacity onPress={() => router.push('/progress-photos')}>
-            <Text style={styles.photosSeeAll}>Ver todas →</Text>
+            <Text style={styles.photosSeeAll}>Ver todas</Text>
           </TouchableOpacity>
         </View>
       )}

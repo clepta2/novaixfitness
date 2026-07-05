@@ -2,20 +2,20 @@ import { Platform } from 'react-native';
 import { supabase } from '../config/supabase';
 import { TABLES } from '../config/tables';
 
-let HealthKit = null;
-let GoogleFit = null;
+let HealthKit: any = null;
+let GoogleFit: any = null;
 
 if (Platform.OS === 'ios') {
-  try { HealthKit = require('expo-health'); } catch (e) { if (__DEV__) console.warn('healthSync:', e); }
+  try { HealthKit = require('expo-health'); } catch (e: any) { if (__DEV__) console.warn('healthSync:', e); }
 } else if (Platform.OS === 'android') {
-  try { GoogleFit = require('react-native-google-fit'); } catch (e) { if (__DEV__) console.warn('healthSync:', e); }
+  try { GoogleFit = require('react-native-google-fit'); } catch (e: any) { if (__DEV__) console.warn('healthSync:', e); }
 }
 
 export function getHealthLibs() {
   return { HealthKit, GoogleFit };
 }
 
-export async function syncWeightFromHealth(userId) {
+export async function syncWeightFromHealth(userId: string) {
   if (Platform.OS === 'ios' && HealthKit) {
     try {
       const end = new Date();
@@ -27,7 +27,7 @@ export async function syncWeightFromHealth(userId) {
         }, { onConflict: 'user_id,recorded_at' });
       }
       return samples.length;
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar peso Apple Health:', err);
       return 0;
     }
@@ -42,7 +42,7 @@ export async function syncWeightFromHealth(userId) {
         }, { onConflict: 'user_id,recorded_at' });
       }
       return data.length;
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar peso Google Fit:', err);
       return 0;
     }
@@ -50,7 +50,7 @@ export async function syncWeightFromHealth(userId) {
   return 0;
 }
 
-export async function syncStepsFromHealth(userId) {
+export async function syncStepsFromHealth(userId: string) {
   if (Platform.OS === 'ios' && HealthKit) {
     try {
       const end = new Date();
@@ -67,7 +67,7 @@ export async function syncStepsFromHealth(userId) {
         }, { onConflict: 'user_id,recorded_at' });
       }
       return Object.values(dailySteps).reduce((a, b) => a + b, 0);
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar passos Apple Health:', err);
       return 0;
     }
@@ -88,7 +88,7 @@ export async function syncStepsFromHealth(userId) {
         }
       }
       return totalSteps;
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar passos Google Fit:', err);
       return 0;
     }
@@ -96,7 +96,7 @@ export async function syncStepsFromHealth(userId) {
   return 0;
 }
 
-export async function syncCaloriesFromHealth(userId) {
+export async function syncCaloriesFromHealth(userId: string) {
   if (Platform.OS === 'ios' && HealthKit) {
     try {
       const end = new Date();
@@ -113,7 +113,7 @@ export async function syncCaloriesFromHealth(userId) {
         }, { onConflict: 'user_id,recorded_at' });
       }
       return Object.values(dailyCalories).reduce((a, b) => a + b, 0);
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar calorias Apple Health:', err);
       return 0;
     }
@@ -130,7 +130,7 @@ export async function syncCaloriesFromHealth(userId) {
         }, { onConflict: 'user_id,recorded_at' });
       }
       return totalCalories;
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.warn('Erro ao sincronizar calorias Google Fit:', err);
       return 0;
     }

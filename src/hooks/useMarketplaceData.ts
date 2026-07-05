@@ -18,8 +18,8 @@ export function useMarketplaceData(userId: string | undefined) {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [favorites, setFavorites] = useState(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [favorites, setFavorites] = useState<any>(new Set());
   const [recentSearches, setRecentSearches] = useState<any[]>([]);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -33,9 +33,9 @@ export function useMarketplaceData(userId: string | undefined) {
       return await getProducts(params);
     }, { retries: 1, baseDelay: 500 });
     if (result.ok) {
-      setProducts(prev => reset ? result.data : [...prev, ...result.data]);
-      setHasMore(result.data.length >= PAGE_SIZE);
-      setOffset(reset ? result.data.length : newOffset + result.data.length);
+      setProducts(prev => reset ? result.data : [...prev, ...(result.data || [])]);
+      setHasMore((result.data || []).length >= PAGE_SIZE);
+      setOffset(reset ? (result.data || []).length : newOffset + (result.data || []).length);
     } else {
       if (__DEV__) console.error('Erro ao carregar produtos:', result.error);
     }
@@ -44,7 +44,7 @@ export function useMarketplaceData(userId: string | undefined) {
 
   const loadFeatured = useCallback(async () => {
     const result = await tryIf(() => getFeaturedProducts(6), { retries: 1, baseDelay: 500 });
-    if (result.ok) setFeatured(result.data);
+    if (result.ok) setFeatured(result.data || []);
   }, []);
 
   const loadFavorites = useCallback(async () => {

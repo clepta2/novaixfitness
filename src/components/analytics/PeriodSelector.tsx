@@ -34,7 +34,7 @@ export default memo(function PeriodSelector({ selected = 'week', onSelect }: Per
           <TouchableOpacity
             key={p.key}
             style={[styles.periodBtn, selected === p.key && styles.periodActive]}
-            onPress={() => onSelect(p.key)}
+            onPress={() => onSelect?.(p.key)}
             accessibilityLabel={`Período: ${p.label}`}
             accessibilityRole="button"
             accessibilityState={{ selected: selected === p.key }}

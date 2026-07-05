@@ -16,28 +16,28 @@ const PHASE_COLORS = {
 const MIN_SIZE = 120;
 const MAX_SIZE = 220;
 
-export default function BreathingExercise({ exercise, onComplete }) {
+export default function BreathingExercise({ exercise, onComplete }: any) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isActive, setIsActive] = useState(false);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [phaseCountdown, setPhaseCountdown] = useState(0);
   const [currentCycle, setCurrentCycle] = useState(1);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const intervalRef = useRef(null);
-  const timerRef = useRef(null);
+  const intervalRef = useRef<any>(null);
+  const timerRef = useRef<any>(null);
 
   const currentPhase = exercise.phases[currentPhaseIndex];
   const phaseColor = PHASE_COLORS[currentPhase?.type] || COLORS.primary;
   const totalCycles = exercise.cycles;
   const totalPhases = exercise.phases.length;
 
-  const formatTime = useCallback((seconds) => {
+  const formatTime = useCallback((seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }, []);
 
-  const animatePhase = useCallback((phase) => {
+  const animatePhase = useCallback((phase: any) => {
     const toValue = phase.type === 'inhale' ? 1.6 : phase.type === 'exhale' ? 1 : 1.6;
     Animated.timing(scaleAnim, {
       toValue,

@@ -25,7 +25,7 @@ export async function requestHealthPermissions() {
   return false;
 }
 
-export async function syncAllHealthData(userId) {
+export async function syncAllHealthData(userId: string) {
   const [weight, steps, calories] = await Promise.all([
     syncWeightFromHealth(userId),
     syncStepsFromHealth(userId),
@@ -39,7 +39,7 @@ export function isHealthAvailable() {
   return (Platform.OS === 'ios' && HealthKit) || (Platform.OS === 'android' && GoogleFit);
 }
 
-export async function getHealthSummary(userId) {
+export async function getHealthSummary(userId: string) {
   const { data: weights } = await supabase.from(TABLES.WEIGHT_LOGS).select('weight')
     .eq('user_id', userId).order('recorded_at', { ascending: false }).limit(1);
   const { data: steps } = await supabase.from(TABLES.STEP_LOGS).select('steps')

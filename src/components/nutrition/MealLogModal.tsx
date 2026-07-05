@@ -16,7 +16,7 @@ export default function MealLogModal({ visible, onClose, userId, profileContext,
   const [text, setText] = useState('');
   const [mealType, setMealType] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
   const handleAnalyze = async () => {
@@ -35,7 +35,7 @@ export default function MealLogModal({ visible, onClose, userId, profileContext,
     if (!result) return;
     setSaving(true);
     try {
-      await saveMealLog(userId, { ...result, mealType: mealType || result.mealType });
+      await saveMealLog(userId, { ...(result as any), mealType: mealType || (result as any).mealType });
       setText('');
       setResult(null);
       setMealType('');

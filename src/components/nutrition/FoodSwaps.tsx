@@ -25,7 +25,7 @@ const FALLBACK_SWAPS = [
 const ICON_MAP = { Proteínas: 'flash', Carboidratos: 'leaf', Gorduras: 'water', Lanches: 'cafe' };
 const COLOR_MAP = { Proteínas: COLORS.success, Carboidratos: COLORS.primary, Gorduras: COLORS.secondary, Lanches: COLORS.attention };
 
-function SwapCard({ swap }) {
+function SwapCard({ swap }: any) {
   return (
     <View style={styles.swapCard}>
       <View style={styles.swapFrom}>
@@ -45,7 +45,7 @@ function SwapCard({ swap }) {
 export default function FoodSwaps() {
   const [swaps, setSwaps] = useState(FALLBACK_SWAPS);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   useEffect(() => { loadSwaps(); }, []);
 
@@ -69,8 +69,8 @@ export default function FoodSwaps() {
 
   const categories = [...new Set(swaps.map(s => s.category))];
 
-  const grouped = {};
-  swaps.forEach(s => {
+  const grouped: any = {};
+  swaps.forEach((s: any) => {
     if (!grouped[s.category]) grouped[s.category] = [];
     grouped[s.category].push(s);
   });

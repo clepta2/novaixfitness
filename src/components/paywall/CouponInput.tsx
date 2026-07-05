@@ -12,8 +12,8 @@ import { typography } from '../../styles';
 function CouponInput({ onApply }) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [applied, setApplied] = useState(null);
-  const [error, setError] = useState(null);
+  const [applied, setApplied] = useState<any>(null);
+  const [error, setError] = useState<any>(null);
 
   const handleApply = async () => {
     if (!code.trim()) return;

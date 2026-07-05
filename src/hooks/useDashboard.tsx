@@ -82,7 +82,7 @@ export function useDashboard() {
       ]);
 
       const p: any = profile.data || {};
-      const weekData = weekWorkouts.data || [];
+      const weekData: any[] = weekWorkouts.data || [];
 
       const formattedFreq = Object.entries(freq || {}).map(([week, count]) => ({ week, count: Number(count) || 0 }));
       const formattedMonthly = Object.entries(monthly || {}).map(([month, workouts]) => ({ month, workouts: Number(workouts) || 0 }));
@@ -100,7 +100,7 @@ export function useDashboard() {
         analytics,
         freq: formattedFreq,
         monthly: formattedMonthly,
-        weightHistory: weight,
+        weightHistory: weight as WeightPoint[],
         muscleBalance: calculateMuscleBalance(mappedRecent),
         prevMuscleBalance: calculateMuscleBalance(mappedPrev),
         xp: p.total_xp || 0,
@@ -111,10 +111,10 @@ export function useDashboard() {
         weight: p.physical_data?.weight,
         recentWorkouts: recentWorkouts.data || [],
         weekWorkouts: weekData.length,
-        weekMinutes: weekData.reduce((s: number, w: { duration?: number }) => s + (w.duration || 0), 0),
-        weekCalories: Math.round(weekData.reduce((s: number, w: { duration?: number }) => s + (w.duration || 0), 0) * 8),
+        weekMinutes: weekData.reduce((s: number, w: any) => s + (w.duration || 0), 0),
+        weekCalories: Math.round(weekData.reduce((s: number, w: any) => s + (w.duration || 0), 0) * 8),
       });
-    } catch (err) {
+    } catch (err: any) {
       if (__DEV__) console.error('Erro ao carregar dashboard:', err);
     } finally {
       setRefreshing(false);
@@ -130,19 +130,19 @@ export function useDashboard() {
   }, [data?.weight, data?.height]);
 
   const freqChartData = useMemo<ChartData | null>(() => {
-    return data?.freq?.length > 0
+    return data?.freq?.length && data.freq.length > 0
       ? { labels: data.freq.map(f => f.week), datasets: [{ data: data.freq.map(f => f.count || 0) }] }
       : null;
   }, [data?.freq]);
 
   const monthlyChartData = useMemo<ChartData | null>(() => {
-    return data?.monthly?.length > 1
+    return data?.monthly?.length && data.monthly.length > 1
       ? { labels: data.monthly.map(m => m.month), datasets: [{ data: data.monthly.map(m => m.workouts) }] }
       : null;
   }, [data?.monthly]);
 
   const weightChartData = useMemo<ChartData | null>(() => {
-    return data?.weightHistory?.length > 1
+    return data?.weightHistory?.length && data.weightHistory.length > 1
       ? { labels: data.weightHistory.map(w => w.date), datasets: [{ data: data.weightHistory.map(w => w.weight) }] }
       : null;
   }, [data?.weightHistory]);

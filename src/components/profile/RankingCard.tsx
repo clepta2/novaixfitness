@@ -15,7 +15,7 @@ interface Props { userId?: string; compact?: boolean }
 export default memo(function RankingCard({ userId, compact = false }: Props) {
   const router = useRouter();
   const [rankings, setRankings] = useState<any[]>([]);
-  const [userRank, setUserRank] = useState(null);
+  const [userRank, setUserRank] = useState<any>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default memo(function RankingCard({ userId, compact = false }: Props) {
     loadRanking();
   }, [userId]);
 
-  const getMedalColor = (rank) => {
+  const getMedalColor = (rank: any) => {
     if (rank === 1) return COLORS.gold;
     if (rank === 2) return COLORS.textMuted;
     if (rank === 3) return COLORS.bronze;

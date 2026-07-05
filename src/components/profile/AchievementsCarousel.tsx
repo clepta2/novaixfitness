@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS, ICON_SIZES } from '../../constants/spacing';
 import { scale } from '../../utils/responsive';
 import { SECTION_TITLES, LABELS } from '../../data/profileTexts';
 
-function AchievementCard({ achievement, unlocked }) {
+function AchievementCard({ achievement, unlocked }: any) {
   const color = unlocked ? (achievement.color || COLORS.primary) : COLORS.textMuted;
   return (
     <View style={[styles.card, !unlocked && styles.locked]}>

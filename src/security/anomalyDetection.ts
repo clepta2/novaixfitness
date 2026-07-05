@@ -18,8 +18,8 @@ async function checkCount(userId: string, action: string, timeWindow: number) {
   return count || 0;
 }
 
-export async function detectAnomalies(userId) {
-  const anomalies = [];
+export async function detectAnomalies(userId: string) {
+  const anomalies: any[] = [];
 
   const loginCount = await checkCount(userId, 'login', 60 * 60 * 1000);
   if (loginCount > BASELINE.loginFrequency.maxPerHour) {
@@ -54,7 +54,7 @@ export async function detectAnomalies(userId) {
   return { hasAnomalies: anomalies.length > 0, anomalies, riskLevel: calculateRiskLevel(anomalies) };
 }
 
-async function checkLocationAnomaly(userId) {
+async function checkLocationAnomaly(userId: string) {
   const { data: recentLogins } = await supabase.from('audit_log')
     .select('details, created_at').eq('user_id', userId).eq('action', 'login')
     .order('created_at', { ascending: false }).limit(5);
@@ -67,7 +67,7 @@ async function checkLocationAnomaly(userId) {
   return { type: 'location_anomaly', detected: hasAnomaly, severity: hasAnomaly ? 'high' : 'none', locations: uniqueLocations };
 }
 
-export function calculateRiskLevel(items) {
+export function calculateRiskLevel(items: any[]) {
   const severities = items.map(i => i.severity || i.riskLevel);
   if (severities.includes('critical')) return 'critical';
   if (severities.includes('high')) return 'high';

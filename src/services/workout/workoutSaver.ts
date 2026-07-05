@@ -39,9 +39,9 @@ export async function saveCompleteWorkout(userId: string, workout: any, logs: an
 
     await incrementProfileStats(userId, { workouts: 1, minutes: duration });
 
-    const gamResult = await recordWorkoutCompletion(userId, workout, logs, duration);
+    const gamResult: any = await recordWorkoutCompletion(userId, workout, logs as any, duration);
 
-    if (gamResult.xpGained > 0) {
+    if (gamResult?.xpGained > 0) {
       await sendWorkoutCompletedNotification(workout?.name || 'Treino', gamResult.xpGained, userId);
       await sendPushToUser(userId, 'Treino concluido!', `${workout?.name || 'Treino'} finalizado. +${gamResult.xpGained} XP!`, {
         type: 'workout_completed', workout_id: workout?.id,

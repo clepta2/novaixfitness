@@ -76,7 +76,7 @@ export function useAuthState() {
     if (!emailCheck.valid) throw new Error(emailCheck.error);
     const passCheck = validate('password', password);
     if (!passCheck.valid) throw new Error(passCheck.error);
-    if (metadata.name) { const nameCheck = validate('name', sanitizeString(metadata.name)); if (!nameCheck.valid) throw new Error(nameCheck.error); }
+    if (metadata.name) { const nameCheck = validate('name', sanitizeString(metadata.name)) as any; if (!nameCheck.valid) throw new Error(nameCheck.error); }
     const signupIp = await getClientIp();
     const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { ...metadata, signup_ip: signupIp } } });
     if (error) throw error;
@@ -100,7 +100,7 @@ export function useAuthState() {
   };
 
   const resetPassword = async (email: string) => {
-    const emailCheck = validate('email', email);
+    const emailCheck = validate('email', email) as any;
     if (!emailCheck.valid) throw new Error(emailCheck.error);
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;

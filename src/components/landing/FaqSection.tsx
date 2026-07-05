@@ -11,7 +11,7 @@ const faqs = [
 ];
 
 export default function FaqSection() {
-  const [activeFaq, setActiveFaq] = useState(null);
+  const [activeFaq, setActiveFaq] = useState<any>(null);
 
   return (
     <View style={styles.section}>

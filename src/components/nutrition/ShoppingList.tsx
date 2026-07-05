@@ -49,7 +49,7 @@ export default function ShoppingList({ mealPlan }) {
   }
 
   const flatData = useMemo(() => {
-    const result = [];
+    const result: any[] = [];
     Object.entries(grouped).forEach(([category, catItems]) => {
       result.push({ type: 'header', category, id: `header-${category}` });
       (catItems as any[]).forEach(item => {

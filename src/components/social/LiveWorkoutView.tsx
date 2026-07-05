@@ -29,8 +29,8 @@ export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutView
   const [currentExercise, setCurrentExercise] = useState('');
   const [isResting, setIsResting] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
-  const flatListRef = useRef(null);
-  const timerRef = useRef(null);
+  const flatListRef = useRef<any>(null);
+  const timerRef = useRef<any>(null);
   const { checkAndPerform, log, ACTIONS } = useSecurity();
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutView
   const handleSend = async () => {
     if (!newMessage.trim()) return;
 
-    // Moderar texto antes de enviar
+    if (!user?.id) return;
     const textCheck = moderateText(newMessage, user.id);
     if (textCheck.blocked) {
       Alert.alert(t('live.messageBlocked'), textCheck.message);
@@ -180,7 +180,7 @@ export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutView
         keyExtractor={item => item.id}
         renderItem={renderMessage}
         style={styles.chatArea}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd?.()}
       />
 
       <View style={styles.inputBar}>
