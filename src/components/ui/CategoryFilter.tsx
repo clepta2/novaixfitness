@@ -1,5 +1,5 @@
 // src/components/ui/CategoryFilter.tsx// Filtro de categorias horizontal - NOVAIX FITNESS
-import React  from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing'
@@ -15,8 +15,8 @@ null) => void;
  showAll?: boolean;
  allLabel?: string;
 }
-export default function CategoryFilter({
-categories, selected, onSelect, showAll = true, allLabel = 'Todos' 
+export default memo(function CategoryFilter({
+  categories, selected, onSelect, showAll = true, allLabel = 'Todos' 
 }: CategoryFilterProps) {
 return ( <View style={styles.container
 }>      {showAll && ( <TouchableOpacity          style={[styles.chip, !selected && styles.chipActive]

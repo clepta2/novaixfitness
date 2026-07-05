@@ -55,7 +55,7 @@ export default function CoachDashboardScreen() {
       setStats(profileRes.data);
       setWorkouts(workoutsRes.data || []);
     } catch (err: any) {
-      console.warn('Erro ao carregar dados do painel do coach:', err.message);
+      if (__DEV__) console.warn('Erro ao carregar dados do painel do coach:', err.message);
     } finally {
       setLoading(false);
     }

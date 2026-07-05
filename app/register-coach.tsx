@@ -46,7 +46,7 @@ export default function RegisterCoachScreen() {
         setDocumentUrl(data.coach.document_url || '');
       }
     } catch (err: any) {
-      console.warn('Erro ao carregar status do coach:', err.message);
+      if (__DEV__) console.warn('Erro ao carregar status do coach:', err.message);
     } finally {
       setChecking(false);
     }

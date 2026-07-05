@@ -73,7 +73,7 @@ export function measureRenderTime(componentName: string, renderFn: () => void): 
   const end = performance.now();
 
   if (end - start > 16) {
-    console.warn(`[Performance] ${componentName} render took ${(end - start).toFixed(2)}ms`);
+    if (__DEV__) console.warn(`[Performance] ${componentName} render took ${(end - start).toFixed(2)}ms`);
   }
 }
 

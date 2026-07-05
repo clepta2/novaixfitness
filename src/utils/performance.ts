@@ -18,7 +18,7 @@ class PerformanceMonitor {
   measure(name: string, startMark: string): number {
     const startTime = this.marks.get(startMark);
     if (startTime === undefined) {
-      console.warn(`Mark "${startMark}" not found`);
+      if (__DEV__) console.warn(`Mark "${startMark}" not found`);
       return 0;
     }
 
@@ -55,9 +55,9 @@ class PerformanceMonitor {
   logSlowOperations(threshold: number = 100): void {
     const slowOps = this.entries.filter(e => e.duration > threshold);
     if (slowOps.length > 0) {
-      console.warn(`[Performance] ${slowOps.length} slow operations detected:`);
+      if (__DEV__) console.warn(`[Performance] ${slowOps.length} slow operations detected:`);
       slowOps.forEach(op => {
-        console.warn(`  ${op.name}: ${op.duration.toFixed(2)}ms`);
+        if (__DEV__) console.warn(`  ${op.name}: ${op.duration.toFixed(2)}ms`);
       });
     }
   }

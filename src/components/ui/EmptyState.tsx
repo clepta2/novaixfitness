@@ -1,7 +1,7 @@
 // src/components/ui/EmptyState.tsx
 // Componente de estado vazio - NOVAIX FITNESS
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -18,7 +18,7 @@ interface EmptyStateProps {
   iconColor?: string;
 }
 
-export default function EmptyState({
+export default memo(function EmptyState({
   icon = 'folder-open-outline',
   title,
   description,

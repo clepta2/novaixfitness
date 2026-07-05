@@ -1,7 +1,7 @@
 // src/components/ui/PlanCard.tsx
 // Card de plano com animacao e destaque - NOVAIX FITNESS
 
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
@@ -16,7 +16,7 @@ interface PlanCardProps {
   isAnnual?: boolean;
 }
 
-export default function PlanCard({
+export default memo(function PlanCard({
   plan,
   isSelected = false,
   onSelect,

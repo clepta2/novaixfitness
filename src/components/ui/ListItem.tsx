@@ -1,5 +1,5 @@
 // src/components/ui/ListItem.tsx// Item de lista reutilizável
-import React  from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors'
@@ -14,7 +14,7 @@ interface ListItemProps {
  variant?: 'default' | 'compact' | 'detailed';
  style?: ViewStyle;
 }
-export function ListItem({title,  subtitle,  icon,  iconColor = COLORS.primary,  rightElement,  onPress,  variant = 'default',  style,
+export const ListItem = memo(function ListItem({title,  subtitle,  icon,  iconColor = COLORS.primary,  rightElement,  onPress,  variant = 'default',  style,
 }: ListItemProps) {
 const colors = useColors();
  

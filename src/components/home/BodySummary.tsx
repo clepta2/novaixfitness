@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -6,7 +6,7 @@ import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
-export default function BodySummary({ userId }: { userId?: string }) {
+export default memo(function BodySummary({ userId }: { userId?: string }) {
   const router = useRouter();
   const [latest, setLatest] = useState<any>(null);
   const [photos, setPhotos] = useState<any[]>([]);

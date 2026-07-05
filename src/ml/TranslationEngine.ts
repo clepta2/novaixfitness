@@ -114,7 +114,7 @@ export class TranslationEngine {
       this.isWarmedUp = true;
       if (__DEV__) console.log('[ML] Warm-up concluído');
     } catch (e) {
-      console.warn('[ML] Warm-up falhou (não crítico):', e);
+      if (__DEV__) console.warn('[ML] Warm-up falhou (não crítico):', e);
     }
   }
 
