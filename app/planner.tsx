@@ -19,7 +19,7 @@ export default function PlannerScreen() {
   const { loading: planLoading, call } = useServiceCall();
   const [weekPlan, setWeekPlan] = useState(defaultWeekPlan);
   const [selectedDay, setSelectedDay] = useState(null);
-  const [adaptReason, setAdaptReason] = useState(null);
+  const [adaptReason, setAdaptReason] = useState<string | null>(null);
   const [adapting, setAdapting] = useState(false);
   const [editingDay, setEditingDay] = useState(null);
 
@@ -93,7 +93,7 @@ export default function PlannerScreen() {
 
         {selectedData && !selectedData.isRest ? (
           <DayDetailView
-            dayKey={selectedDay}
+            dayKey={selectedDay as any}
             dayData={selectedData}
             onEdit={() => setEditingDay(selectedDay)}
             onStart={() => router.push({ pathname: '/workout-detail', params: { id: selectedData.workoutId } })}

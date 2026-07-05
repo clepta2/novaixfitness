@@ -24,9 +24,10 @@ export async function saveQueue(queue: PendingAction[]) {
 
 export async function addPendingAction(action: { type: string; [key: string]: unknown }) {
   const queue = await getQueue();
+  const { type: actionType, ...rest } = action;
   const newItem: PendingAction = {
-    type: action.type,
-    ...action,
+    type: actionType,
+    ...rest,
     id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: Date.now(),
     retries: 0,

@@ -87,7 +87,7 @@ function GamificationContent() {
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary] as any} />}
+      refreshControl={<RefreshControl refreshing={!!refreshing} onRefresh={onRefresh as any} tintColor={COLORS.primary} colors={[COLORS.primary]} /> as any}
       showsVerticalScrollIndicator={false}
     >
       <Header title={t('gamification.title')} showBack />

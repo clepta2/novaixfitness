@@ -26,10 +26,10 @@ export default function PreCheckinScreen() {
   
   const router = useRouter();
   const { saveOnboarding, onboarding } = useAuth();
-  const [mood, setMood] = useState(null);
+  const [mood, setMood] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [showSupport, setShowSupport] = useState(false);
-  const [selectedSupport, setSelectedSupport] = useState(null);
+  const [selectedSupport, setSelectedSupport] = useState<string | null>(null);
 
   const handleFinish = async () => {
     try {

@@ -74,10 +74,10 @@ export function getAllTutorials() {
 }
 
 export function getStepForScreen(screenName: string) {
-  const steps = [];
+  const steps: any[] = [];
   Object.values(TUTORIALS).forEach(tutorial => {
     const screenSteps = tutorial.steps.filter(step => step.screen === screenName);
-    steps.push(...screenSteps);
+    steps.push(...(screenSteps as any[]));
   });
   return steps;
 }

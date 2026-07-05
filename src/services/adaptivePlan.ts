@@ -70,7 +70,7 @@ export async function generateAdaptivePlan(
     workoutConfig.exercisesPerSession = Math.max(3, Math.round(workoutConfig.exercisesPerSession * (1 - (ageAdj as any).volumeReduction)));
   }
 
-  const waterConfig = calculateWater(userProfile?.weight || 70, userProfile?.height || 170, level, userProfile?.ageRange, userProfile?.injuries || []);
+  const waterConfig = calculateWater(userProfile?.weight || 70, userProfile?.height || 170, level, userProfile?.ageRange, userProfile?.injuries as any || []);
 
   return {
     level,

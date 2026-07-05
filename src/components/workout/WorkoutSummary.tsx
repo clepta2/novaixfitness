@@ -113,9 +113,9 @@ export default function WorkoutSummary({
           )}
 
           <WorkoutAchievements achievements={achievements as any} />
-          <WorkoutComparison current={{ duration, exercises: exercisesCompleted, sets: setsCompleted }} previous={previousWorkout} />
+          <WorkoutComparison current={{ duration, exercises: exercisesCompleted, sets: setsCompleted }} previous={previousWorkout as any} />
 
-          {muscleGroups?.length > 0 && (
+          {muscleGroups && muscleGroups.length > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="body" size={16} color={COLORS.success} />

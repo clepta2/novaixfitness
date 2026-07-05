@@ -21,7 +21,7 @@ export async function getMessages(conversationId: string, limit: number = 50, be
     const { data } = await query;
     return ((data || []).reverse()) as ChatMessage[];
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : [];
+  return result.ok ? result.data ?? [] : [];
 }
 
 export async function sendMessage(
@@ -38,7 +38,7 @@ export async function sendMessage(
     await supabase.from(TABLES.CONVERSATIONS).update({ updated_at: new Date().toISOString() }).eq('id', conversationId);
     return data as ChatMessage;
   });
-  return result.ok ? result.data : null;
+  return result.ok ? (result.data as ChatMessage) : (null as unknown as ChatMessage);
 }
 
 export async function editMessage(messageId: string, userId: string, newContent: string): Promise<void> {
@@ -71,5 +71,5 @@ export async function searchMessages(conversationId: string, query: string): Pro
       .limit(20);
     return (data || []) as ChatMessage[];
   });
-  return result.ok ? result.data : [];
+  return result.ok ? (result.data as ChatMessage[]) : [];
 }

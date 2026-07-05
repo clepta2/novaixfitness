@@ -67,7 +67,7 @@ export default function SocialScreen() {
           </TouchableOpacity>
         </View>
         <SocialHub badgeCounts={{ feed: 2, challenges: 1 }} refreshControl={<RefreshControl refreshing={feed.refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} />}>
-          {feed.stories.length > 0 && <StoryRing currentUserId={user?.id} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />}
+          {feed.stories.length > 0 && <StoryRing currentUserId={user?.id as string} onViewStory={handleViewStory} onAddStory={() => setShowStoryCreate(true)} />}
           <QuickSocialActions onPress={handleQuickAction} />
           <SocialFeed posts={feed.posts as any} loading={loading} userId={user?.id} onLike={feed.handleLike} onComment={feed.handleComment} />
           <WorkoutGroups currentUserId={user?.id} onSelectGroup={(g) => router.push({ pathname: '/(tabs)/group', params: { id: g.id } })} />
@@ -78,7 +78,7 @@ export default function SocialScreen() {
         <CreatePostModal visible={showCreatePost} onClose={() => setShowCreatePost(false)} onSubmit={feed.handleNewPost} userId={user?.id} />
         <NotificationModal visible={showNotifications} onClose={() => setShowNotifications(false)} />
         <GymCheckIn visible={showGymCheckIn} onClose={() => setShowGymCheckIn(false)} onCheckIn={({ gymName }) => feed.handleGymCheckIn(gymName)} recentCheckIns={feed.recentCheckIns} />
-        <FeedStoryViewer visible={showStoryViewer} stories={feed.stories} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
+        <FeedStoryViewer visible={showStoryViewer} stories={feed.stories as any} initialIndex={selectedStoryIndex} onClose={() => setShowStoryViewer(false)} />
         <StoryCreateModal visible={showStoryCreate} onClose={() => { setShowStoryCreate(false); feed.loadInitial(); }} userId={user?.id} />
       </View>
     </ErrorBoundary>

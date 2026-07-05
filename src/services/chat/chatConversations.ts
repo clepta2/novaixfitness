@@ -139,7 +139,7 @@ export async function getUserConversations(userId: string): Promise<Conversation
 
     return results;
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : [];
+  return result.ok ? (result.data as ConversationResult[]) : [];
 }
 
 export async function markAsRead(conversationId: string, userId: string): Promise<void> {

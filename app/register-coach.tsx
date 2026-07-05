@@ -22,7 +22,7 @@ export default function RegisterCoachScreen() {
   const [category, setCategory] = useState('fitness');
   const [cref, setCref] = useState('');
   const [documentUrl, setDocumentUrl] = useState('');
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
 
@@ -45,7 +45,7 @@ export default function RegisterCoachScreen() {
         setCref(data.coach.cref || '');
         setDocumentUrl(data.coach.document_url || '');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Erro ao carregar status do coach:', err.message);
     } finally {
       setChecking(false);
@@ -80,7 +80,7 @@ export default function RegisterCoachScreen() {
 
       Alert.alert('Sucesso', 'Solicitação de Coach enviada para análise!');
       setStatus('pending');
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro', err.message);
     } finally {
       setLoading(false);

@@ -27,7 +27,7 @@ function MeasurementInput({ measurement, value, onChange }: {
   const handleChange = (text: string) => {
     // Sanitizar entrada: apenas números e ponto/vírgula
     const sanitized = text.replace(/[^0-9.,]/g, '').replace(',', '.');
-    onChange(sanitized);
+    onChange?.(sanitized);
   };
 
   return (
@@ -141,7 +141,7 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps) {
             key={m.key}
             measurement={m}
             value={values[m.key] || ''}
-            onChange={(v) => handleChange(m.key, v)}
+            onChange={(v: string) => handleChange(m.key, v)}
           />
         ))}
       </View>

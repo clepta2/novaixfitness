@@ -38,19 +38,19 @@ export default function ConversationList({ onSelectConversation, onNewChat }: Co
 
   const getConversationTitle = (conv: any) => {
     if (conv.type === 'group') return conv.name;
-    const other = conv.members?.find(m => m.user_id !== user.id);
+    const other = conv.members?.find((m: any) => m.user_id !== user?.id);
     return other?.profiles?.name || 'Chat';
   };
 
   const getConversationAvatar = (conv: any) => {
     if (conv.type === 'group') return null;
-    const other = conv.members?.find(m => m.user_id !== user.id);
+    const other = conv.members?.find((m: any) => m.user_id !== user?.id);
     return other?.profiles?.avatar_url;
   };
 
   const getOtherUserId = (conv: any) => {
     if (conv.type === 'group') return null;
-    const other = conv.members?.find(m => m.user_id !== user.id);
+    const other = conv.members?.find((m: any) => m.user_id !== user?.id);
     return other?.user_id;
   };
 

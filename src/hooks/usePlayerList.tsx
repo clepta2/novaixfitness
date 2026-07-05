@@ -101,7 +101,7 @@ export default function usePlayerList(): UsePlayerListReturn {
     if (!user?.id) return;
     async function loadProfileData() {
       try {
-        const { data } = await supabase.from('profiles').select('subscription_status, onboarding').eq('id', user.id).single();
+        const { data } = await supabase.from('profiles').select('subscription_status, onboarding').eq('id', user!.id).single();
         if (data) setProfile(data as PlayerProfile);
       } catch (err) {
         if (__DEV__) console.error('Erro ao carregar perfil:', err);

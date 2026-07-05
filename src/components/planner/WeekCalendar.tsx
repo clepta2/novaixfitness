@@ -23,7 +23,7 @@ function getWeekDates(refDate: any) {
 }
 
 export default function WeekCalendar({ weekPlan, onDayPress }: any) {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<ScrollView>(null);
   const todayKey = DAY_KEYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
   const [weekDates] = useState(() => getWeekDates(new Date()));
 

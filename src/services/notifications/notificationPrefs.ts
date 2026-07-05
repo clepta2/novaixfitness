@@ -44,7 +44,7 @@ export function getNotificationGroups() {
 
 export function getPrefsForSettings() {
   const groups = getNotificationGroups();
-  return Object.entries(groups).map(([group, items]: [string, any[]]) => ({
+  return Object.entries(groups).map(([group, items]: [string, any]) => ({
     title: group.toUpperCase(),
     items: (items as any[]).map(item => ({
       key: item.key,

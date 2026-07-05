@@ -26,7 +26,7 @@ export default function NotificationsSettingsScreen() {
   const togglePref = async (key) => {
     const newValue = !prefs[key];
     setPrefs(prev => ({ ...prev, [key]: newValue }));
-    await setNotificationPref(user.id, key, newValue);
+    await setNotificationPref(user!.id, key, newValue);
   };
 
   return (

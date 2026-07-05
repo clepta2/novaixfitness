@@ -80,7 +80,7 @@ export default function DirectChatDrawer({ visible, onClose, conversationId, use
         >
           {/* Header */}
           <View style={styles.header}>
-            <Avatar name={userName} uri={userAvatar} size="sm" />
+            <Avatar name={userName} uri={userAvatar ?? undefined} size="sm" />
             <View style={styles.userInfo}>
               <Text style={styles.userName}>{userName}</Text>
               <View style={styles.statusRow}>

@@ -74,7 +74,7 @@ export default function WeightLogger() {
       const { error } = await supabase
         .from('physical_progress')
         .insert({
-          user_id: user.id,
+          user_id: user!.id,
           weight: parsedWeight,
           body_fat: parsedFat && !isNaN(parsedFat) ? parsedFat : null,
         });

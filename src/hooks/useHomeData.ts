@@ -116,7 +116,7 @@ export function useHomeData(userId: string | undefined) {
         setDailyWorkout({ id: dw.id, name: dw.title || dw.name, type: dw.category || 'Treino', videoId: dw.video_id || 'dQw4w9WgXcQ', timer: `00:${String(dw.duration_minutes || dw.duration || 30).padStart(2, '0')}:00`, is_premium: dw.is_premium || false });
         isWorkoutCached(dw.id).then(setDailyOffline);
       }
-      if (recent?.length > 0) {
+      if (recent && recent.length > 0) {
         setRecentWorkouts(recent.map((w: any) => ({ id: w.id, name: w.workouts?.title || 'Treino', category: w.workouts?.category, completed: w.completed, completed_at: w.completed_at, created_at: w.created_at, duration_minutes: w.duration_minutes || w.workouts?.duration_minutes })));
       }
       if (catData) {

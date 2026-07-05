@@ -24,7 +24,7 @@ export default function ReportScreen() {
   const handleGenerate = async () => {
     setGenerating(true);
     try {
-      await generateMonthlyReport(user.id, selectedMonth + 1, selectedYear);
+      await generateMonthlyReport(user!.id, selectedMonth + 1, selectedYear);
       Alert.alert('Sucesso', 'Relatório gerado com sucesso!');
     } catch (err) {
       Alert.alert('Erro', 'Não foi possível gerar o relatório');

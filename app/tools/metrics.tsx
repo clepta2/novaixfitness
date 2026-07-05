@@ -15,7 +15,7 @@ export default function MetricsScreen() {
   const [waist, setWaist] = useState('');
   const [hip, setHip] = useState('');
   const [gender, setGender] = useState('male');
-  const [hasTape, setHasTape] = useState(null);
+  const [hasTape, setHasTape] = useState<boolean | null>(null);
 
   const w = parseFloat(weight) || 0;
   const h = parseFloat(height) || 0;
@@ -49,12 +49,12 @@ export default function MetricsScreen() {
         ))}
       </View>
 
-      {imc && <ResultCard title="IMC" value={imc} label={imcClass.label} color={imcClass.color} />}
+      {imc && imcClass && <ResultCard title="IMC" value={imc} label={imcClass.label} color={imcClass.color} />}
 
       <Text style={styles.section}>TEM FITA MÉTRICA?</Text>
       <View style={styles.genderRow}>
         {[{ id: true, label: 'Sim' }, { id: false, label: 'Não' }].map(o => (
-          <TouchableOpacity key={String(o.id)} accessibilityLabel={o.label} accessibilityRole="button" style={[styles.genderBtn, hasTape === o.id && styles.genderActive]} onPress={() => setHasTape(o.id)}>
+          <TouchableOpacity key={String(o.id)} accessibilityLabel={o.label} accessibilityRole="button" style={[styles.genderBtn, hasTape === o.id && styles.genderActive]} onPress={() => setHasTape(o.id as any)}>
             <Text style={[styles.genderText, hasTape === o.id && styles.genderTextActive]}>{o.label}</Text>
           </TouchableOpacity>
         ))}

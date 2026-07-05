@@ -7,7 +7,7 @@ import { DAY_NAMES_FULL, DAY_KEYS } from '../../data/weekPlan';
 
 interface Props { weekPlan?: Record<string, any>; todayKey?: string }
 
-export default function WeekOverview({ weekPlan, todayKey }: Props) {
+export default function WeekOverview({ weekPlan = {}, todayKey }: Props) {
   return (
     <View style={styles.container}>
       <Text style={typography.label}>RESUMO DA SEMANA</Text>

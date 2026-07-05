@@ -23,7 +23,7 @@ export default function DayDetailView({ dayKey, dayData, onEdit, onStart }: Prop
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Text style={typography.label}>{DAY_NAMES_FULL[DAY_KEYS.indexOf(dayKey)]}</Text>
+        <Text style={typography.label}>{DAY_NAMES_FULL[DAY_KEYS.indexOf(dayKey || '')]}</Text>
         <TouchableOpacity onPress={onEdit}>
           <Ionicons name="create-outline" size={18} color={COLORS.primary} />
         </TouchableOpacity>

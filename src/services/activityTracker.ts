@@ -137,7 +137,7 @@ export async function getActivityHistory(userId: string, limit: number = 20): Pr
     return data || [];
   }, { retries: 1, baseDelay: 500 });
 
-  return result.ok ? result.data : [];
+  return result.ok ? (result.data ?? []) : [];
 }
 
 // Obter estatísticas agregadas
@@ -188,7 +188,7 @@ export async function getActivityStats(userId: string, period: string = 'month')
     };
   }, { retries: 1, baseDelay: 500 });
 
-  return result.ok ? result.data : { totalActivities: 0, totalDistance: 0, totalDuration: 0, totalCalories: 0, byType: {} };
+  return result.ok ? (result.data ?? { totalActivities: 0, totalDistance: 0, totalDuration: 0, totalCalories: 0, byType: {} }) : { totalActivities: 0, totalDistance: 0, totalDuration: 0, totalCalories: 0, byType: {} };
 }
 
 // Obter atividade ativa

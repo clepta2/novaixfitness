@@ -25,10 +25,10 @@ export default function NutritionScreen() {
   const { user, profile } = useAuth();
   const { t } = useI18n();
   const router = useRouter();
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState<any>(null);
   const [meals, setMeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const weight = profile?.physical_data?.weight;

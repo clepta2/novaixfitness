@@ -110,7 +110,7 @@ export default function PlayerScreen() {
         <RestOverlay timeRemaining={timer.timeRemaining} totalTime={timer.totalTime} nextExercise={timer.currentExercise} onSkip={timer.skipRest} nextSet={timer.currentSet} nextIndex={timer.currentExerciseIndex} totalExercises={timer.totalExercises} />
       )}
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <ExerciseProgress exercises={workout.exercises} currentIndex={timer.currentExerciseIndex} currentSet={timer.currentSet} totalSets={timer.totalSets} />
+        <ExerciseProgress exercises={workout!.exercises} currentIndex={timer.currentExerciseIndex} currentSet={timer.currentSet} totalSets={timer.totalSets} />
         
         {timer.currentExercise && (
           <View style={styles.videoSection}>

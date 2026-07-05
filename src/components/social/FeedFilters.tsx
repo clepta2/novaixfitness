@@ -15,7 +15,7 @@ export default memo(function FeedFilters({ filters = [], selected = '', onSelect
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
       <View style={styles.container}>
         {filters.map((f) => (
-          <TouchableOpacity key={f} style={[styles.chip, selected === f && styles.chipActive]} onPress={() => onSelect(f)} accessibilityLabel={f} accessibilityRole="button">
+          <TouchableOpacity key={f} style={[styles.chip, selected === f && styles.chipActive]} onPress={() => onSelect?.(f)} accessibilityLabel={f} accessibilityRole="button">
             <Text style={[typography.bodySmall, selected === f && styles.chipTextActive]}>{f}</Text>
           </TouchableOpacity>
         ))}

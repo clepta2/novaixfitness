@@ -112,8 +112,8 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps): React.J
       <PhotoGrid
         photos={filteredPhotos}
         selectedIds={comparePhotos}
-        onSelect={(p: Photo) => compareMode ? toggleCompare(p) : setSelectedPhoto(p)}
-        onLongPress={handleDelete}
+        onSelect={(p: any) => compareMode ? toggleCompare(p) : setSelectedPhoto(p)}
+        onLongPress={handleDelete as any}
         compareMode={compareMode}
       />
 
@@ -124,7 +124,7 @@ export default function ProgressPhotos({ userId }: ProgressPhotosProps): React.J
         </TouchableOpacity>
       )}
 
-      <PhotoModal photo={selectedPhoto} onCompare={toggleCompare} onDelete={handleDelete} onClose={() => setSelectedPhoto(null)} />
+      <PhotoModal photo={selectedPhoto} onCompare={toggleCompare as any} onDelete={handleDelete as any} onClose={() => setSelectedPhoto(null)} />
       {showPicker && (
         <PhotoPicker
           selectedLabel={selectedLabel}

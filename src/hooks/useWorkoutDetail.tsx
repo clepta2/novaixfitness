@@ -81,13 +81,13 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
     if (!user?.id) return;
     async function loadUserData() {
       try {
-        const { data } = await supabase.from('profiles').select('subscription_status').eq('id', user.id!).maybeSingle();
+        const { data } = await supabase.from('profiles').select('subscription_status').eq('id', user!.id!).maybeSingle();
         if (data) setProfile(data as Profile);
       } catch {}
       
       if (id) {
         try {
-          const { data } = await supabase.from('favorites').select('id').eq('user_id', user.id!).eq('workout_id', id).maybeSingle();
+          const { data } = await supabase.from('favorites').select('id').eq('user_id', user!.id).eq('workout_id', id).maybeSingle();
           setIsFavorite(!!data);
         } catch {}
       }
@@ -110,10 +110,10 @@ export function useWorkoutDetail(id: string): UseWorkoutDetailReturn {
 
   const handleOption = useCallback(async (opt: string): Promise<void> => {
     setShowOptions(false);
-    if (opt === 'share') shareWorkout(workout);
+    if (opt === 'share') shareWorkout(workout as any);
     if (opt === 'rate') return setShowRating(true);
     if (opt === 'save') {
-      await cacheWorkoutDetail(workout);
+      await cacheWorkoutDetail(workout as any);
       setIsOffline(true);
       Alert.alert('Salvo', 'Treino disponível offline');
     }

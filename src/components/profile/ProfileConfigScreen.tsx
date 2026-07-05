@@ -113,7 +113,7 @@ export default function ProfileConfigScreen({ headerIcon = 'person', screenName 
             </View>
           )}
 
-          {activeTab === 'opcoes' && <ProfileOptionsTab themeMode={themeMode} setThemeMode={setThemeMode} signOut={signOut} isCreator={profile?.role === 'creator' || profile?.role === 'admin'} />}
+          {activeTab === 'opcoes' && <ProfileOptionsTab themeMode={themeMode} setThemeMode={setThemeMode as any} signOut={signOut} isCreator={profile?.role === 'creator' || profile?.role === 'admin'} />}
         </Animated.View>
 
         <EditNameModal visible={showEditName} onClose={() => setShowEditName(false)} initialName={userName} onSave={updateProfileName} />

@@ -33,7 +33,7 @@ function AchievementCard({ achievement, unlocked }: any) {
 
 const PLACEHOLDER_LOCKED = Array.from({ length: 5 }, (_, i) => ({ id: `locked_${i}` }));
 
-function AchievementsCarousel({ achievements = [], totalAchievements = 25 }) {
+function AchievementsCarousel({ achievements = [] as any[], totalAchievements = 25 }) {
   const locked = PLACEHOLDER_LOCKED.slice(0, Math.max(0, Math.min(5, totalAchievements - achievements.length)));
 
   return (

@@ -91,7 +91,7 @@ export default function LiveScreen() {
           </TouchableOpacity>
         </View>
 
-        <CreateLiveModal visible={showCreateModal} onClose={() => setShowCreateModal(false)} onCreate={handleCreateLive} />
+        <CreateLiveModal visible={showCreateModal} onClose={() => setShowCreateModal(false)} onCreate={handleCreateLive as any} />
       </View>
     </ErrorBoundary>
   );

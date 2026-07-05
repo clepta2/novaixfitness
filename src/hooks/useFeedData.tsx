@@ -110,7 +110,7 @@ export function useFeedData(): UseFeedDataReturn {
     if (!user?.id) return;
     async function loadLikes() {
       try {
-        const { data } = await supabase.from('post_likes').select('post_id').eq('user_id', user.id!);
+        const { data } = await supabase.from('post_likes').select('post_id').eq('user_id', user!.id);
         if (data) {
           const likedIds = new Set(data.map((l: { post_id: string }) => l.post_id));
           setLikedPostIds(likedIds);
@@ -192,7 +192,7 @@ export function useFeedData(): UseFeedDataReturn {
   };
 
   const popularThreshold: number = useMemo(() => computePopularThreshold(posts), [posts]);
-  const filteredPosts: FeedPost[] = useMemo(() => filterFeedPosts(posts, selectedFilter, popularThreshold, user?.id) as FeedPost[], [posts, selectedFilter, popularThreshold, user?.id]);
+  const filteredPosts: FeedPost[] = useMemo(() => filterFeedPosts(posts, selectedFilter, popularThreshold, user?.id as string) as FeedPost[], [posts, selectedFilter, popularThreshold, user?.id]);
   const showEmpty: boolean = !loading && filteredPosts.length === 0;
 
   return {

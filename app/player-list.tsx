@@ -28,8 +28,8 @@ export default function PlayerListScreen() {
       >
         <WorkoutListView
           dailyWorkouts={workouts}
-          activeWorkout={active}
-          startWorkout={startWorkout}
+          activeWorkout={active as any}
+          startWorkout={startWorkout as any}
         />
       </ScrollView>
     </View>

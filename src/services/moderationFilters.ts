@@ -4,7 +4,7 @@
 import { analyzeText, analyzeImage, censorText, USERNAME_BLACKLIST } from '../data/bannedWords';
 import { logAction, ACTIONS } from './security/audit';
 
-export function moderateText(text, userId = null) {
+export function moderateText(text: string, userId: string | null = null) {
   const analysis = analyzeText(text);
   if (!analysis.clean) {
     if (userId) {
@@ -22,7 +22,7 @@ export function moderateText(text, userId = null) {
   return { allowed: true, clean: true };
 }
 
-export function moderateImage(file, userId = null) {
+export function moderateImage(file: any, userId: string | null = null) {
   const analysis = analyzeImage(file);
   if (!analysis.clean) {
     if (userId) {

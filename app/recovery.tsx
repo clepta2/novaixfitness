@@ -25,7 +25,7 @@ export default function RecoveryScreen() {
   const { user } = useAuth();
   const [waterGlasses, setWaterGlasses] = useState(0);
   const [sleepHours, setSleepHours] = useState('');
-  const [sleepQuality, setSleepQuality] = useState(null);
+  const [sleepQuality, setSleepQuality] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {

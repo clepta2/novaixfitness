@@ -85,7 +85,7 @@ export async function getCachedResponse(query: string): Promise<string | null> {
     return null;
   }, { retries: 1 });
 
-  return result.ok ? result.data : null;
+  return result.ok ? (result.data as string | null) : null;
 }
 
 /**

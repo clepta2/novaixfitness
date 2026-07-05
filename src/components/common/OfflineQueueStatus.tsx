@@ -34,7 +34,7 @@ export default function OfflineQueueStatus() {
       const actions = await getPendingActions();
       return actions.length;
     }, { retries: 1, baseDelay: 500 });
-    setPendingCount(result.ok ? result.data : 0);
+    setPendingCount(result.ok ? (result.data ?? 0) : 0);
   };
 
   if (pendingCount === 0) return null;

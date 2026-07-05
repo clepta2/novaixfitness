@@ -20,7 +20,7 @@ const STREAK_BADGES = [
 export default function NutritionStreak({ userId }) {
   const [currentStreak, setCurrentStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [weekDots, setWeekDots] = useState<any[]>([]);
+  const [weekDots, setWeekDots] = useState<{ day: string; active: boolean; isToday: boolean }[]>([]);
 
   useEffect(() => { loadStreak(); }, [userId]);
 
@@ -73,7 +73,7 @@ export default function NutritionStreak({ userId }) {
       best = Math.max(best, current);
       setBestStreak(best);
 
-      const last7 = [];
+      const last7: Array<{ day: string; active: boolean; isToday: boolean }> = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);

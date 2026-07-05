@@ -82,7 +82,7 @@ export default function WeeklyChallenges({ userId, compact = false }: Props) {
         user_id: userId, achievement_id: challenge.id, unlocked_at: new Date().toISOString(),
       }, { onConflict: 'user_id,achievement_id' });
 
-      await addXP(userId, 'CHALLENGE_COMPLETED', challenge.xpReward);
+      await addXP(userId!, 'CHALLENGE_COMPLETED', challenge.xpReward);
       setClaimed(prev => new Set([...prev, challenge.id]));
       Alert.alert(MESSAGES.challengeComplete, MESSAGES.challengeReward(challenge.xpReward));
     } catch (err) {

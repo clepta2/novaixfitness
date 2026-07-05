@@ -32,7 +32,7 @@ export default function AccountScreen() {
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ data: { name: name.trim() } });
     if (!error) {
-      await supabase.from('profiles').update({ name: name.trim() }).eq('id', user.id);
+      await supabase.from('profiles').update({ name: name.trim() }).eq('id', user!.id);
       Alert.alert(t('common.success'), t('settings.nameUpdated'));
     } else {
       Alert.alert(t('common.error'), error.message);

@@ -29,7 +29,7 @@ function SwipeableItem({
 }: SwipeableItemProps) {
   const swipeableRef = useRef<Swipeable>(null);
 
-  const renderRightActions = (progress: Animated.Value) => {
+  const renderRightActions = (progress: any) => {
     return (
       <View style={styles.actionsContainer}>
         {rightActions.map((action, index) => {
@@ -56,7 +56,7 @@ function SwipeableItem({
     );
   };
 
-  const renderLeftActions = (progress: Animated.Value) => {
+  const renderLeftActions = (progress: any) => {
     return (
       <View style={styles.actionsContainer}>
         {leftActions.map((action, index) => {

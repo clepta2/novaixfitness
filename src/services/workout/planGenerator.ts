@@ -56,9 +56,9 @@ export async function generateMealPlan(profileContext: any = {}) {
   const { weight = 70, height = 170, age = 25, goal = 'manter', dietaryRestrictions = '', stressSleep = '', preferredTime = '' } = profileContext;
 
   const weightCheck = validate('weight', weight);
-  if (!weightCheck.valid) throw new Error(weightCheck.error);
+  if (!weightCheck.valid) throw new Error(weightCheck.error ?? 'Peso inválido');
   const heightCheck = validate('height', height);
-  if (!heightCheck.valid) throw new Error(heightCheck.error);
+  if (!heightCheck.valid) throw new Error(heightCheck.error ?? 'Altura inválida');
 
   const systemPrompt = `${MEAL_PLAN_SYSTEM_INSTRUCTION}
 
@@ -105,7 +105,7 @@ export async function generateWorkoutPlan(profileContext: any = {}) {
   const { weight = 70, goal = 'manter', level = 'intermediario', gymType = 'academia', availableDays = 4, injuries = [], preferredMuscles = [], preferredTime = '', stressSleep = '', ageRange = '', gender = '' } = profileContext;
 
   const weightCheck = validate('weight', weight);
-  if (!weightCheck.valid) throw new Error(weightCheck.error);
+  if (!weightCheck.valid) throw new Error(weightCheck.error ?? 'Peso inválido');
 
   const availableExercises = getAvailableExercises({ level, injuries, gymType });
 

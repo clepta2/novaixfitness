@@ -39,7 +39,7 @@ export default function DeleteAccountScreen() {
                 deleted_at: new Date().toISOString(),
                 name: 'Conta Excluída',
                 email: null,
-              }).eq('id', user.id);
+              }).eq('id', user!.id);
 
               await supabase.auth.signOut();
               Alert.alert('Conta excluída', 'Sua conta foi excluída com sucesso.');

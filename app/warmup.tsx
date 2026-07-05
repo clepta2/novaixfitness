@@ -14,7 +14,7 @@ import { styles } from '../src/styles/warmupStyles';
 export default function WarmupScreen() {
   const router = useRouter();
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [countdown, setCountdown] = useState(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState<any[]>([]);
   const anim = useRef(new Animated.Value(0)).current;
@@ -33,13 +33,13 @@ export default function WarmupScreen() {
       completeExercise();
       return;
     }
-    const id = setInterval(() => setCountdown(c => c - 1), 1000);
+    const id = setInterval(() => setCountdown(c => (c ?? 0) - 1), 1000);
     return () => clearInterval(id);
   }, [countdown, started]);
 
   const startExercise = () => {
     setStarted(true);
-    setCountdown(current.duration);
+    setCountdown(current.duration ?? 0);
     anim.setValue(0);
     Animated.spring(anim, { toValue: 1, tension: 30, friction: 8, useNativeDriver: true }).start();
   };

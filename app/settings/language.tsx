@@ -20,13 +20,13 @@ export default function LanguageScreen() {
   }, [user?.id]);
 
   const loadLanguage = async () => {
-    const { data } = await supabase.from('profiles').select('language').eq('id', user.id).single();
+    const { data } = await supabase.from('profiles').select('language').eq('id', user!.id).single();
     if (data?.language) setSelected(data.language);
   };
 
   const handleSelect = async (langId) => {
     setSelected(langId);
-    await supabase.from('profiles').update({ language: langId }).eq('id', user.id);
+    await supabase.from('profiles').update({ language: langId }).eq('id', user!.id);
     Alert.alert('Idioma', 'Idioma alterado. Reinicie o app para aplicar.');
   };
 

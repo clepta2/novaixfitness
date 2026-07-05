@@ -127,7 +127,7 @@ export default memo(function SetsTracker({ userWorkoutId, workout }: SetsTracker
 
   return (
     <Card variant="surface" style={styles.card}>
-      <ExerciseSelector exercises={exercises} selected={selectedEx} onSelect={setSelectedEx} voiceEnabled={voiceEnabled} onToggleVoice={(): void => { const v = !voiceEnabled; setVoiceCoachEnabled(v); setVoiceEnabled(v); }} />
+      <ExerciseSelector exercises={exercises} selected={selectedEx as string} onSelect={setSelectedEx} voiceEnabled={voiceEnabled} onToggleVoice={(): void => { const v = !voiceEnabled; setVoiceCoachEnabled(v); setVoiceEnabled(v); }} />
       {countdown !== null && <RestCountdown countdown={countdown} onAdd={(): void => setCountdown((c: number | null) => c !== null ? c + 15 : null)} onSubtract={(): void => setCountdown((c: number | null) => c !== null ? Math.max(0, c - 15) : null)} onSkip={(): void => setCountdown(null)} />}
       <SetInput weight={weight} setWeight={setWeight} reps={reps} setReps={setReps} onAdd={handleAddSet} saving={saving} />
       <SetLogList logs={logs} loading={loadingLogs} />

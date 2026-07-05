@@ -59,7 +59,7 @@ export function calculateBestStreak(uniqueDays: any[]) {
 export function generateWeekDots(uniqueDays: any[]) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const last7 = [];
+  const last7: Array<{ day: string; active: boolean; isToday: boolean }> = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);

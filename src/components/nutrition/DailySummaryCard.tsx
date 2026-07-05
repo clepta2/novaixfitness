@@ -15,7 +15,7 @@ interface MacroBarProps {
 
 function MacroBar({ label, current, goal, color, icon, delay = 0 }: MacroBarProps) {
   const animatedValue = useRef(new Animated.Value(0)).current;
-  const progress = goal > 0 ? Math.min(100, (current / goal) * 100) : 0;
+  const progress = (goal ?? 0) > 0 ? Math.min(100, ((current ?? 0) / (goal ?? 1)) * 100) : 0;
 
   useEffect(() => {
     Animated.spring(animatedValue, {
@@ -32,7 +32,7 @@ function MacroBar({ label, current, goal, color, icon, delay = 0 }: MacroBarProp
       <View style={styles.macroHeader}>
         <Ionicons name={icon as any} size={14} color={color} />
         <Text style={styles.macroLabel}>{label}</Text>
-        <Text style={styles.macroValue}>{Math.round(current)}/{goal}g</Text>
+        <Text style={styles.macroValue}>{Math.round(current ?? 0)}/{goal ?? 0}g</Text>
       </View>
       <View style={styles.barBg}>
         <Animated.View style={[styles.barFill, { width: barWidth, backgroundColor: color }]} />

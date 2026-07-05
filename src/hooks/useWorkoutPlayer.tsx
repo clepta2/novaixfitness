@@ -111,9 +111,9 @@ export default function useWorkoutPlayer(): UseWorkoutPlayerReturn {
     }
 
     try {
-      gamRef.current = await saveCompleteWorkout(user?.id, workout, mappedLogs, timer.elapsed);
+      gamRef.current = await saveCompleteWorkout(user?.id ?? '', workout, mappedLogs, timer.elapsed) as GamResult | null;
       if (gamRef.current?.xpGained && gamRef.current.xpGained > 0) {
-        setXpAmount(gamRef.current.xpGained);
+        setXpAmount(gamRef.current.xpGained as number);
         setShowXP(true);
       }
       setShowRating(true);

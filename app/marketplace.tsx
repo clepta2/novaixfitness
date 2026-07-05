@@ -28,7 +28,7 @@ export default function MarketplaceScreen() {
   const [offset, setOffset] = useState(0);
   const [_hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [recentSearches, setRecentSearches] = useState<any[]>([]);
   const debouncedSearch = useDebounce(search, 300);

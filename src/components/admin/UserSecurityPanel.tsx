@@ -44,13 +44,13 @@ export default function UserSecurityPanel({ userId, userName, userAvatar, onClos
   };
 
   const handleBlock = async (blockData: any) => {
-    await blockUser(userId, null, blockData);
+    await blockUser(userId, '', blockData);
     setShowBlockModal(false);
     loadData();
   };
 
-  const handleUnblock = async (blockId: any) => {
-    await unblockUser(blockId, null);
+  const handleUnblock = async (blockId: string) => {
+    await unblockUser(blockId, '');
     loadData();
   };
 

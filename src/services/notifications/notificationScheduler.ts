@@ -23,7 +23,7 @@ async function schedule(title: string, body: string, type: string, trigger: Noti
     });
   }, { retries: 1, baseDelay: 500 });
   if (result.ok) {
-    return result.data;
+    return result.data ?? null;
   } else {
     return null;
   }
@@ -56,7 +56,7 @@ export async function setupWorkoutReminders(userId: string) {
     const result = await supabase.from('profiles').select('notification_settings').eq('id', userId).single();
     return result.data;
   }, { retries: 1, baseDelay: 500 });
-  const profile = profileResult.ok ? profileResult.data : null;
+  const profile = profileResult.ok ? (profileResult.data as any) : null;
 
   const obv2Result = await tryIf(async () => {
     const result = await supabase.from('onboarding_v2').select('days_per_week').eq('user_id', userId).maybeSingle();
@@ -160,7 +160,7 @@ export async function scheduleHydrationReminder() {
     return await Notifications.requestPermissionsAsync();
   }, { retries: 1, baseDelay: 500 });
   if (permResult.ok) {
-    status = permResult.data.status;
+    status = permResult.data?.status ?? 'denied';
   }
   if (status !== 'granted') return;
 

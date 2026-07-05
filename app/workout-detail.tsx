@@ -92,7 +92,7 @@ export default function WorkoutDetailScreen() {
     <View style={layout.screen}>
       <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: 180 }]} showsVerticalScrollIndicator={false}>
         <WorkoutHeaderDetail
-          workout={workout}
+          workout={workout as any}
           isFavorite={isFavorite}
           isOffline={isOffline}
           onBack={() => router.back()}
@@ -100,7 +100,7 @@ export default function WorkoutDetailScreen() {
           onOptions={() => setShowOptions(true)}
         />
 
-        <VideoPreview videoId={workout?.video_id} showVideo={showVideo} onToggle={() => setShowVideo(!showVideo)} />
+        <VideoPreview videoId={workout?.video_id as string} showVideo={showVideo} onToggle={() => setShowVideo(!showVideo)} />
 
         {/* Stats com novos componentes */}
         <View style={styles.statsContainer}>

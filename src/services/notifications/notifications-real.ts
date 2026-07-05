@@ -19,7 +19,7 @@ export async function getNotifications(userId: string, limit = 30): Promise<Noti
     if (error) throw error;
     return (data || []) as NotificationRow[];
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : [];
+  return result.ok ? (result.data as NotificationRow[]) : [];
 }
 
 export async function markAsRead(notifId: string): Promise<void> {
@@ -53,7 +53,7 @@ export async function getUnreadCount(userId: string): Promise<number> {
     if (error) throw error;
     return count || 0;
   }, { retries: 1, baseDelay: 500 });
-  return result.ok ? result.data : 0;
+  return result.ok ? (result.data as number) : 0;
 }
 
 const NOTIF_ICON_MAP: Record<string, { icon: string; color: string }> = {

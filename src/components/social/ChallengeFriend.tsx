@@ -44,7 +44,11 @@ export default function ChallengeFriend({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
   const [step, setStep] = useState(1);
-  const [challengeConfig, setChallengeConfig] = useState({
+  const [challengeConfig, setChallengeConfig] = useState<{
+    type: 'reps' | 'duration' | 'distance';
+    duration: '1day' | '3days' | '1week';
+    stake: number;
+  }>({
     type: 'reps' as const,
     duration: '3days' as const,
     stake: 0,
@@ -70,7 +74,7 @@ export default function ChallengeFriend({
     setStep(2);
   };
 
-  const handleConfigChange = (config: Partial<typeof challengeConfig>) => {
+  const handleConfigChange = (config: Partial<{ type: 'reps' | 'duration' | 'distance'; duration: '1day' | '3days' | '1week'; stake: number }>) => {
     setChallengeConfig(prev => ({ ...prev, ...config }));
   };
 

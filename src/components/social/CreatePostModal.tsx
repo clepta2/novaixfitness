@@ -11,7 +11,7 @@ import { validateContent } from '../../middleware/communityGuard';
 
 export default function CreatePostModal({ visible, onClose, onSubmit, userId }: { visible: boolean; onClose: () => void; onSubmit?: (data: any) => void; userId?: string }) {
   const [content, setContent] = useState('');
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
 

@@ -79,7 +79,7 @@ export function setUser(user: { id?: string; email?: string; name?: string } | n
       username: user.name,
     });
   } else {
-    Sentry.setUser(null);
+    Sentry.setUser(null as any);
   }
 }
 

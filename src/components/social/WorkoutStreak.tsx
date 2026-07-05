@@ -42,7 +42,7 @@ type Props = {
 export default function WorkoutStreak({ userId }: Props) {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [weekDots, setWeekDots] = useState<any[]>([]);
+  const [weekDots, setWeekDots] = useState<{ day: string; active: boolean; isToday: boolean }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadStreak(); }, [userId]);
@@ -86,7 +86,7 @@ export default function WorkoutStreak({ userId }: Props) {
       }
       setBestStreak(Math.max(best, curr));
 
-      const last7 = [];
+      const last7: Array<{ day: string; active: boolean; isToday: boolean }> = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);

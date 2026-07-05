@@ -59,7 +59,7 @@ export async function checkTokenLimit(
   }, { retries: 1 });
 
   return result.ok
-    ? result.data
+    ? result.data!
     : { allowed: true, remaining: TOKEN_LIMIT, retryAfterMs: 0 };
 }
 

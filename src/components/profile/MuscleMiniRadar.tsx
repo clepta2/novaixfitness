@@ -38,8 +38,8 @@ export default function MuscleMiniRadar({ userId }: Props) {
           return counts;
         };
 
-        const currentCounts = processWorkouts(currentWorkouts.data);
-        const prevCounts = processWorkouts(prevWorkouts.data);
+        const currentCounts = processWorkouts(currentWorkouts.data ?? []);
+        const prevCounts = processWorkouts(prevWorkouts.data ?? []);
         const max = Math.max(...Object.values(currentCounts), 1);
 
         const balanced = MUSCLES.map(m => {

@@ -61,7 +61,7 @@ export default function ActiveDuelCard({ duel }: ActiveDuelCardProps) {
       <View style={styles.versusContainer}>
         {/* Challenger info */}
         <View style={styles.userColumn}>
-          <Avatar name={duel.challenger.name} uri={duel.challenger.avatar} size="md" />
+          <Avatar name={duel.challenger.name} uri={duel.challenger.avatar ?? undefined} size="md" />
           <Text style={styles.userName} numberOfLines={1}>{duel.challenger.name}</Text>
           <Text style={styles.userProgress}>{duel.challenger.progress} / {duel.target} séries</Text>
         </View>
@@ -70,7 +70,7 @@ export default function ActiveDuelCard({ duel }: ActiveDuelCardProps) {
 
         {/* Challenged info */}
         <View style={styles.userColumn}>
-          <Avatar name={duel.challenged.name} uri={duel.challenged.avatar} size="md" />
+          <Avatar name={duel.challenged.name} uri={duel.challenged.avatar ?? undefined} size="md" />
           <Text style={styles.userName} numberOfLines={1}>{duel.challenged.name}</Text>
           <Text style={styles.userProgress}>{duel.challenged.progress} / {duel.target} séries</Text>
         </View>

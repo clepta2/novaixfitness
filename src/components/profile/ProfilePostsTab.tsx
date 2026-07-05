@@ -28,7 +28,7 @@ export default function ProfilePostsTab({ userName, userAvatar, posts, loadingPo
     <View>
       <View style={styles.composerCard}>
         <View style={styles.composerRow}>
-          <Avatar name={userName} uri={userAvatar} size="md" />
+          <Avatar name={userName} uri={userAvatar ?? undefined} size="md" />
           <TouchableOpacity style={styles.composerInputMock} onPress={onOpenComposer}>
             <Text style={styles.composerInputText}>{SECTION_TITLES.composerPlaceholder.replace('{name}', userName?.split(' ')[0] || '')}</Text>
           </TouchableOpacity>

@@ -21,7 +21,7 @@ export function createLazyComponent<P>(
           </View>
         )}
       >
-        <LazyComponent {...props} />
+        <LazyComponent {...(props as any)} />
       </Suspense>
     );
   }

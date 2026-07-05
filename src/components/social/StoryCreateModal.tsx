@@ -14,7 +14,7 @@ import { useI18n } from '../../i18n';
 
 export default function StoryCreateModal({ visible, onClose, userId }: { visible: boolean; onClose: () => void; userId?: string }) {
   const { t } = useI18n();
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(false);
 

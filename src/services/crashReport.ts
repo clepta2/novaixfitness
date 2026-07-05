@@ -63,7 +63,7 @@ export async function reportHandledError(error: any, context: string = '') {
 export function setupCrashHandler() {
   const originalHandler = ErrorUtils.getGlobalHandler();
 
-  ErrorUtils.setGlobalHandler((error: any, isFatal: boolean) => {
+  ErrorUtils.setGlobalHandler(((error: any, isFatal: boolean) => {
     if (isFatal) {
       reportCrash(error, { fatal: true });
     } else {
@@ -73,5 +73,5 @@ export function setupCrashHandler() {
     if (originalHandler) {
       originalHandler(error, isFatal);
     }
-  });
+  }) as any);
 }

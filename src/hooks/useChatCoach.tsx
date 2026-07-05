@@ -116,13 +116,13 @@ export function useChatCoach(user: SupabaseUser | null, router: Router): UseChat
     try {
       const context = buildChatContext(profile as any);
       (context as any).userId = user.id;
-      const reply: any = await askGeminiCoach(msg, context, [...messages, userMsg]);
-      setMessages(prev => [...prev, createCoachMessage(reply as any)]);
+      const reply: any = await askGeminiCoach(msg, context, ([...messages, userMsg] as any));
+      setMessages((prev: any[]) => [...prev, createCoachMessage(reply as any)] as any[]);
       await saveChatMessage(user.id, reply as any, false);
     } catch (err) {
       if ((err as Error).message === 'LIMIT_EXCEEDED') {
         setMessages(prev => prev.filter(m => m.id !== userMsg.id));
-        await cleanupLimitExceededMessage(user, msg, supabase);
+        await cleanupLimitExceededMessage(user as any, msg, supabase);
         Alert.alert('Limite Excedido', 'Voce atingiu seu limite diario de mensagens do Coach IA. Faca um upgrade para enviar mais mensagens!', [
           { text: 'OK' },
           { text: 'Ver Planos', onPress: () => router.push('/paywall') },

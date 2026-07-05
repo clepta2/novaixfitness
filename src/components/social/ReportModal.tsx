@@ -13,7 +13,7 @@ const REPORT_REASONS = REPORT.reasons;
 
 export default function ReportModal({ visible, onClose, onSubmit, targetUser, targetPost }: { visible: boolean; onClose: () => void; onSubmit?: (data: any) => void; targetUser?: string; targetPost?: string }) {
   const { t } = useI18n();
-  const [selectedReason, setSelectedReason] = useState(null);
+  const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [details, setDetails] = useState('');
 
   const handleSubmit = () => {

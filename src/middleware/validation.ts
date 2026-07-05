@@ -17,8 +17,8 @@ interface ValidateAllResult {
 
 const VALIDATORS: Record<string, (v: any) => boolean> = {
   email: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-  password: (v: string) => v && v.length >= 8,
-  name: (v: string) => v && v.length >= 2 && v.length <= 100,
+  password: (v: string) => !!v && v.length >= 8,
+  name: (v: string) => !!v && v.length >= 2 && v.length <= 100,
   weight: (v: number) => v >= 30 && v <= 200,
   height: (v: number) => v >= 120 && v <= 220,
   cep: (v: string) => /^\d{5}-?\d{3}$/.test(v),
@@ -37,7 +37,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 export function validate(field: string, value: any): ValidationResult {
   const validator = VALIDATORS[field];
-  if (!validator) return { valid: true };
+  if (!validator) return { valid: true, error: null };
   const valid = validator(value);
   return { valid, error: valid ? null : ERROR_MESSAGES[field] };
 }
@@ -46,7 +46,7 @@ export function validateAll(data: Record<string, any>): ValidateAllResult {
   const errors: ValidationErrors = {};
   for (const [field, value] of Object.entries(data)) {
     const result = validate(field, value);
-    if (!result.valid) errors[field] = result.error;
+    if (!result.valid) errors[field] = result.error ?? null;
   }
   return { valid: Object.keys(errors).length === 0, errors };
 }

@@ -34,6 +34,6 @@ export async function preModerateContent(
   if (trust && trust.trust_score < 20) return { allowed: false, blocked: true, message: 'Sua conta esta restrita devido a violacoes repetidas.' };
 
   if (typeof content === 'string') return moderateText(content, userId);
-  if (content?.uri) return moderateImage(content, userId);
+  if ((content as ContentInput)?.uri) return moderateImage(content as ContentInput, userId);
   return { allowed: true };
 }

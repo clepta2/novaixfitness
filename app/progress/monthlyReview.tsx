@@ -16,8 +16,8 @@ export default function MonthlyReviewScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [stats, setStats] = useState({ completed: 0, total: 4, rate: 0 });
-  const [mood, setMood] = useState(null);
-  const [action, setAction] = useState(null);
+  const [mood, setMood] = useState<string | null>(null);
+  const [action, setAction] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadStats() {

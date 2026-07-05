@@ -19,10 +19,10 @@ export default function ConsistencyHeatmap() {
 
   // Gerar grid mock de 14 semanas (98 dias)
   const generateMockGrid = () => {
-    const weeks = [];
+    const weeks: any[] = [];
     const today = new Date();
     for (let w = 13; w >= 0; w--) {
-      const days = [];
+      const days: any[] = [];
       for (let d = 0; d < 7; d++) {
         // Gera valores fictícios baseados em probabilidade
         const val = Math.random() > 0.65 ? Math.floor(Math.random() * 3) + 1 : 0;

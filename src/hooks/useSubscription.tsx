@@ -168,7 +168,7 @@ export function useReferral(): UseReferralReturn {
     setLoading(true);
     try {
       const data = await getReferralStats(user.id);
-      setStats(data);
+      setStats(data as ReferralStats | null);
     } catch (err) {
       if (__DEV__) console.error('Erro ao carregar stats referral:', err);
     }

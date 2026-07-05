@@ -103,8 +103,8 @@ export async function recordWorkoutCompletion(userId: string, workoutData: any, 
     await addXP(userId, 'WORKOUT_COMPLETED', workoutXP);
 
     let streakBonus = 0;
-    if (currentData?.streak > 0) {
-      streakBonus = XP_VALUES.STREAK_BONUS_PER_DAY * currentData.streak;
+    if ((currentData?.streak ?? 0) > 0) {
+      streakBonus = XP_VALUES.STREAK_BONUS_PER_DAY * (currentData?.streak ?? 0);
       await addXP(userId, 'STREAK_BONUS_PER_DAY', streakBonus);
     }
 

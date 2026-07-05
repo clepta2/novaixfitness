@@ -2,9 +2,9 @@
 // Script para inserir treinos reais no Supabase para popular o banco de dados
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-AsyncStorage.getItem = async () => null;
-AsyncStorage.setItem = async () => null;
-AsyncStorage.removeItem = async () => null;
+AsyncStorage.getItem = async () => null as any;
+AsyncStorage.setItem = async () => { return; };
+AsyncStorage.removeItem = async () => { return; };
 
 import { supabase } from './src/config/supabase.js';
 

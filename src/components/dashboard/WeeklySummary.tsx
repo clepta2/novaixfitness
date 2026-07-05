@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
-export default function WeeklySummary({ weekWorkouts = 0, weekMinutes = 0, weekCalories = 0, recentWorkouts = [] }) {
+export default function WeeklySummary({ weekWorkouts = 0, weekMinutes = 0, weekCalories = 0, recentWorkouts = [] as any[] }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

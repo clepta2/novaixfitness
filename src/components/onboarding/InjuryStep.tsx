@@ -75,7 +75,7 @@ export default function InjuryStep({ step, data, onUpdate }: InjuryStepProps): R
                   <Text style={styles.formTitle}>Descreva sua condição</Text>
                   <TextInput style={styles.textArea} multiline placeholder="Ex: Machuquei essa semana jogando futebol" placeholderTextColor={COLORS.textMuted} value={injuries.find((i: Injury) => i.bodyPart === currentInjury)?.description || ''} onChangeText={(t: string) => {
                     const updated = injuries.filter((i: Injury) => i.bodyPart !== currentInjury);
-                    updated.push({ bodyPart: currentInjury, description: t });
+                    updated.push({ bodyPart: currentInjury || '', description: t });
                     onUpdate('injuries', updated);
                   }} />
                   <TouchableOpacity style={styles.closeForm} onPress={() => setShowForm(false)}>

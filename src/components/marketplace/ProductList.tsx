@@ -55,7 +55,7 @@ export default memo(function ProductList({ products, onProductPress, favorites, 
           product={item}
           onPress={() => onProductPress(item)}
           isFavorited={favorites?.has(item.id)}
-          onToggleFavorite={() => onToggleFavorite(item.id)}
+          onToggleFavorite={() => onToggleFavorite?.(item.id)}
         />
       )}
     />

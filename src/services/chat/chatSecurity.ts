@@ -17,7 +17,7 @@ export async function validateChatToken(userId: string): Promise<boolean> {
     return session?.user?.id === userId;
   }, { retries: 1 });
   
-  return result.ok ? result.data : false;
+  return result.ok ? (result.data ?? false) : false;
 }
 
 // ═══════════════════════════════════════════
@@ -26,7 +26,7 @@ export async function validateChatToken(userId: string): Promise<boolean> {
 
 export async function validateChannelAccess(userId: string, conversationId: string): Promise<boolean> {
   if (!userId || !conversationId) return false;
-  
+
   const result = await tryIf(async () => {
     const { data } = await supabase
       .from(TABLES.CONVERSATION_MEMBERS)
@@ -34,11 +34,11 @@ export async function validateChannelAccess(userId: string, conversationId: stri
       .eq('user_id', userId)
       .eq('conversation_id', conversationId)
       .maybeSingle();
-    
+
     return !!data;
   }, { retries: 1 });
-  
-  return result.ok ? result.data : false;
+
+  return result.ok ? (result.data ?? false) : false;
 }
 
 // ═══════════════════════════════════════════
@@ -208,5 +208,5 @@ export async function safeGetMessages(
     return (data || []).reverse();
   }, { retries: 1 });
   
-  return result.ok ? result.data : [];
+  return result.ok ? (result.data ?? []) : [];
 }
