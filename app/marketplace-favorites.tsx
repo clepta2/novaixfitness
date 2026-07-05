@@ -19,7 +19,7 @@ export default function MarketplaceFavoritesScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const mounted = useMountedRef();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
 

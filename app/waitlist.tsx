@@ -11,7 +11,7 @@ import { WAITLIST_FEATURES } from '../src/data/waitlistFeatures';
 export default function WaitlistScreen() {
   const { user } = useAuth();
   const router = useRouter();
-  const [joined, setJoined] = useState([]);
+  const [joined, setJoined] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleJoin = useCallback(async (featureId) => {

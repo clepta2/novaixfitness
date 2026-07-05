@@ -14,7 +14,7 @@ import { NOTIFICATIONS } from '../../src/data/settingsTexts';
 export default function NotificationsSettingsScreen() {
   const { user } = useAuth();
   const [prefs, setPrefs] = useState({});
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState<any[]>([]);
 
   useEffect(() => {
     if (user?.id) {

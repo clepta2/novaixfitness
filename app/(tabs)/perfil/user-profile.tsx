@@ -19,7 +19,7 @@ export default function UserProfileScreen() {
   const { id } = useLocalSearchParams() as { id: string };
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [following, setFollowing] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);

@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
 export default function WorkoutGroups({ currentUserId, onSelectGroup }) {
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadGroups(); }, []);

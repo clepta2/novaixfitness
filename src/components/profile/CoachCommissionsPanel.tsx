@@ -16,7 +16,7 @@ export default function CoachCommissionsPanel() {
     pending_amount: 0,
     withdrawn_amount: 0,
   });
-  const [withdrawals, setWithdrawals] = useState([]);
+  const [withdrawals, setWithdrawals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState('');
   const [pixKey, setPixKey] = useState('');

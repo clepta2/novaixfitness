@@ -13,7 +13,7 @@ import { HISTORY_FILTERS } from '../../../src/data/filters';
 export default function HistoryScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('all');

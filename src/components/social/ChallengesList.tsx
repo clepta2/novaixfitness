@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default memo(function ChallengesList({ userId }: Props) {
-  const [challenges, setChallenges] = useState([]);
+  const [challenges, setChallenges] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
 

@@ -21,8 +21,8 @@ const PAGE_SIZE = 20;
 export default function MarketplaceScreen() {
   const { user } = useAuth();
   const { isSmall } = useResponsive();
-  const [products, setProducts] = useState([]);
-  const [featured, setFeatured] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [featured, setFeatured] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [offset, setOffset] = useState(0);
@@ -30,7 +30,7 @@ export default function MarketplaceScreen() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [recentSearches, setRecentSearches] = useState([]);
+  const [recentSearches, setRecentSearches] = useState<any[]>([]);
   const debouncedSearch = useDebounce(search, 300);
 
   // Animacoes

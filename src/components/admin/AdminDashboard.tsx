@@ -8,7 +8,7 @@ import { typography } from '../../styles';
 
 export default function AdminDashboard({ onNavigate }) {
   const [stats, setStats] = useState({ total: 0, active: 0, newMonth: 0, workouts: 0 });
-  const [recentActivity, setRecentActivity] = useState([]);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
   useEffect(() => { loadDashboard(); }, []);
 

@@ -9,7 +9,7 @@ import { supabase } from '../../config/supabase';
 export default function BodySummary({ userId }) {
   const router = useRouter();
   const [latest, setLatest] = useState(null);
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

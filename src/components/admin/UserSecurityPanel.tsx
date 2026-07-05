@@ -21,9 +21,9 @@ const formatAction = (action: string): string => {
 
 export default function UserSecurityPanel({ userId, userName, userAvatar, onClose }) {
   const [trust, setTrust] = useState(null);
-  const [auditLogs, setAuditLogs] = useState([]);
-  const [blocks, setBlocks] = useState([]);
-  const [activeBlocks, setActiveBlocks] = useState([]);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [blocks, setBlocks] = useState<any[]>([]);
+  const [activeBlocks, setActiveBlocks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [activeTab, setActiveTab] = useState('audit');

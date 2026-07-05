@@ -18,7 +18,7 @@ export default function ForumScreen() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const { data: dbPosts, refetch, loading, insert } = useSupabaseData('forum_posts', {

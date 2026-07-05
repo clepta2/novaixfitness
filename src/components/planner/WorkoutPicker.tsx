@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
 export default function WorkoutPicker({ selectedId, onSelect }) {
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 

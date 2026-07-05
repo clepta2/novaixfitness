@@ -21,10 +21,10 @@ interface ChatViewProps {
 export default function ChatView({ conversation, onBack }: ChatViewProps) {
   const { t } = useI18n();
   const { user } = useAuth();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [typingUsers, setTypingUsers] = useState([]);
+  const [typingUsers, setTypingUsers] = useState<any[]>([]);
   const flatListRef = useRef(null);
   const { checkAndPerform, log, ACTIONS } = useSecurity();
 

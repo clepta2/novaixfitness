@@ -21,7 +21,7 @@ export default function MarketplaceDetailScreen() {
   const { user } = useAuth();
   const styles = useMarketplaceDetailStyles();
   const [product, setProduct] = useState(null);
-  const [related, setRelated] = useState([]);
+  const [related, setRelated] = useState<any[]>([]);
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

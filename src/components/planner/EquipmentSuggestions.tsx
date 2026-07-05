@@ -13,7 +13,7 @@ interface EquipmentSuggestionsProps {
 
 export default memo(function EquipmentSuggestions({ exercises = [] }: EquipmentSuggestionsProps) {
   const router = useRouter();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

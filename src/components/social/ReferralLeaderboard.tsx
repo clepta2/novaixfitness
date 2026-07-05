@@ -10,7 +10,7 @@ import { Avatar } from '../ui/Avatar';
 import { supabase } from '../../config/supabase';
 
 export default function ReferralLeaderboard({ currentUserId }: { currentUserId: string }) {
-  const [leaders, setLeaders] = useState([]);
+  const [leaders, setLeaders] = useState<any[]>([]);
 
   useEffect(() => { loadLeaders(); }, []);
 

@@ -20,7 +20,7 @@ const STREAK_BADGES = [
 export default function NutritionStreak({ userId }) {
   const [currentStreak, setCurrentStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [weekDots, setWeekDots] = useState([]);
+  const [weekDots, setWeekDots] = useState<any[]>([]);
 
   useEffect(() => { loadStreak(); }, [userId]);
 

@@ -12,7 +12,7 @@ import { getWallet, getGiftCatalog, sendGift } from '../../services/virtualGifti
 export default function GiftPanel({ receiverId, liveId, onClose }) {
   const { user } = useAuth();
   const [wallet, setWallet] = useState(null);
-  const [catalog, setCatalog] = useState([]);
+  const [catalog, setCatalog] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(null);
 

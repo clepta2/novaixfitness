@@ -17,7 +17,7 @@ interface ConversationListProps {
 
 export default function ConversationList({ onSelectConversation, onNewChat }: ConversationListProps) {
   const { user } = useAuth();
-  const [conversations, setConversations] = useState([]);
+  const [conversations, setConversations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 

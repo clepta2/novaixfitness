@@ -9,7 +9,7 @@ import { SPACING, BORDER_RADIUS, SHADOWS } from '../../constants/spacing';
 import { supabase } from '../../config/supabase';
 
 export default function CoachVerificationPanel() {
-  const [pending, setPending] = useState([]);
+  const [pending, setPending] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

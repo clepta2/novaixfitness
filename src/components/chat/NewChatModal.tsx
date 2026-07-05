@@ -19,7 +19,7 @@ interface NewChatModalProps {
 export default function NewChatModal({ visible, onClose, onSelectUser }: NewChatModalProps) {
   const { user } = useAuth();
   const [query, setQuery] = useState('');
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

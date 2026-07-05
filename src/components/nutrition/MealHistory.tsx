@@ -39,7 +39,7 @@ function MealItem({ meal }) {
 }
 
 export default function MealHistory({ userId }) {
-  const [meals, setMeals] = useState([]);
+  const [meals, setMeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 

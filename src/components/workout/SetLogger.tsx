@@ -10,7 +10,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 
 export default function SetLogger({ exerciseId, onLogSet, previousData }) {
   const { t } = useI18n();
-  const [sets, setSets] = useState([]);
+  const [sets, setSets] = useState<any[]>([]);
   const [weight, setWeight] = useState(previousData?.weight?.toString() || '');
   const [reps, setReps] = useState(previousData?.reps?.toString() || '12');
   const [isRunning, setIsRunning] = useState(false);

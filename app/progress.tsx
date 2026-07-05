@@ -24,8 +24,8 @@ export default function ProgressScreen() {
   const { isSmall } = useResponsive();
   const [activeTab, setActiveTab] = useState('overview');
   const [refreshing, setRefreshing] = useState(false);
-  const [photos, setPhotos] = useState([]);
-  const [measurements, setMeasurements] = useState([]);
+  const [photos, setPhotos] = useState<any[]>([]);
+  const [measurements, setMeasurements] = useState<any[]>([]);
   const [latest, setLatest] = useState(null);
   const [previous, setPrevious] = useState(null);
 

@@ -28,7 +28,7 @@ function StatBar({ label, value, avg, max, color, unit = '' }) {
 }
 
 export default function WeeklySummary({ userId }) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadWeek(); }, [userId]);

@@ -7,7 +7,7 @@ import { supabase } from '../../config/supabase';
 import { typography } from '../../styles';
 
 export default function WorkoutManager() {
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [editing, setEditing] = useState(null);

@@ -16,7 +16,7 @@ import { getActiveLives, createLive, startLive } from '../src/services/liveWorko
 export default function LiveScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const [lives, setLives] = useState([]);
+  const [lives, setLives] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);

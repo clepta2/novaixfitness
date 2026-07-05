@@ -15,7 +15,7 @@ import { formatRelativeDate } from '../../../src/helpers/dates';
 export default function SavedPostsScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 

@@ -22,8 +22,8 @@ export default function ChallengesScreen() {
   const { user } = useAuth();
   const { isSmall } = useResponsive();
   const mounted = useMountedRef();
-  const [challenges, setChallenges] = useState([]);
-  const [completed, setCompleted] = useState([]);
+  const [challenges, setChallenges] = useState<any[]>([]);
+  const [completed, setCompleted] = useState<any[]>([]);
   const [stats, setStats] = useState({ workoutsToday: 0, waterToday: 0 });
   const [loading, setLoading] = useState(true);
 

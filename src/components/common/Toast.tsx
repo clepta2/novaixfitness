@@ -47,7 +47,7 @@ function ToastItem({ toast, onDismiss }) {
 }
 
 export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([]);
+  const [toasts, setToasts] = useState<any[]>([]);
 
   const addToast = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now().toString();

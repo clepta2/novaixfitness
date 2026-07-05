@@ -32,7 +32,7 @@ export default function WearablesScreen() {
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [activeActivity, setActiveActivity] = useState(null);
 
   const init = useCallback(async () => {

@@ -22,8 +22,8 @@ export default function AnalyticsScreen() {
   const { isSmall } = useResponsive();
   const [period, setPeriod] = useState('month');
   const [analytics, setAnalytics] = useState(null);
-  const [frequency, setFrequency] = useState([]);
-  const [monthlyData, setMonthlyData] = useState([]);
+  const [frequency, setFrequency] = useState<any[]>([]);
+  const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const mounted = useMountedRef();

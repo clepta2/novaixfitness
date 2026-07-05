@@ -43,7 +43,7 @@ function RecordItem({ record }: { record: { exercise: string; weight: number; re
 }
 
 export default function PersonalRecords({ userId }: { userId: string }) {
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadRecords(); }, [userId]);

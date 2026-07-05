@@ -8,7 +8,7 @@ import { SPACING, BORDER_RADIUS } from '../../constants/spacing';
 import { extractShoppingItems, generateShoppingHTML } from '../../helpers/shoppingListHelper';
 
 export default function ShoppingList({ mealPlan }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<any[]>([]);
 
   useEffect(() => {
     if (mealPlan) setItems(extractShoppingItems(mealPlan));

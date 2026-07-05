@@ -26,7 +26,7 @@ export default function NutritionScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const [summary, setSummary] = useState(null);
-  const [meals, setMeals] = useState([]);
+  const [meals, setMeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);

@@ -10,7 +10,7 @@ import { supabase } from '../../config/supabase';
 import { blockUser } from '../../services/security';
 
 export default function ReportModerationPanel() {
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

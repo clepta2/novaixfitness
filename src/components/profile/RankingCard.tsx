@@ -14,7 +14,7 @@ interface Props { userId?: string; compact?: boolean }
 
 export default memo(function RankingCard({ userId, compact = false }: Props) {
   const router = useRouter();
-  const [rankings, setRankings] = useState([]);
+  const [rankings, setRankings] = useState<any[]>([]);
   const [userRank, setUserRank] = useState(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 

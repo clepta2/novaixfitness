@@ -13,7 +13,7 @@ const MAX_COMMENT_LENGTH = 500;
 
 function ProductReviews({ productId }) {
   const { user } = useAuth();
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);

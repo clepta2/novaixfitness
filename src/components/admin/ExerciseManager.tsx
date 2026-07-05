@@ -7,7 +7,7 @@ import { supabase } from '../../config/supabase';
 import { typography } from '../../styles';
 
 export default function ExerciseManager() {
-  const [exercises, setExercises] = useState([]);
+  const [exercises, setExercises] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [editing, setEditing] = useState(null);

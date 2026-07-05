@@ -16,7 +16,7 @@ export default function WarmupScreen() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [countdown, setCountdown] = useState(null);
   const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState([]);
+  const [completed, setCompleted] = useState<any[]>([]);
   const anim = useRef(new Animated.Value(0)).current;
 
   const current = EXERCISES[currentIdx];

@@ -22,8 +22,8 @@ interface LiveWorkoutViewProps {
 export default function LiveWorkoutView({ live, isHost, onEnd }: LiveWorkoutViewProps) {
   const { t } = useI18n();
   const { user } = useAuth();
-  const [messages, setMessages] = useState([]);
-  const [participants, setParticipants] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [participants, setParticipants] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [timer, setTimer] = useState(0);
   const [currentExercise, setCurrentExercise] = useState('');

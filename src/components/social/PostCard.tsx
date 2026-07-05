@@ -36,7 +36,7 @@ function PostCard({ post, onLike, onComment, currentUserId }: {
   const [commentText, setCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likes, setLikes] = useState(post.likes);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<any[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
 
   useEffect(() => {

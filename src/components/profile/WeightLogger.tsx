@@ -19,7 +19,7 @@ export default function WeightLogger() {
   const { user } = useAuth();
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
